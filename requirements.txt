@@ -53,3 +53,5 @@ cloudsight==0.9.2
 newspaper==0.0.9.8
 requests==2.6.0
 bat-country==0.2
+colour==0.1.2
+cairosvg==1.0.22

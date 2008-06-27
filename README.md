@@ -9,8 +9,6 @@ a fork of mycroft-core , the following things were added
 
 [Mood Quotes Skill](https://github.com/JarbasAI/mycroft-mood-quotes) - Random stuff to say depending on mood
 
-[Chatbot Skill](https://github.com/JarbasAI/mycroft---wolphram-alpha-chatbot---skill) - chatbot response when dont know what to do  ---- BROKEN
-
 [Sentiment Analisys Skill](https://github.com/JarbasAI/mycroft---sentiment-analisys---skill)  - Classifies sentences into positive and negative
 
 [Feedback Skill](https://github.com/JarbasAI/mycroft-feedback-skill) - Gives positive or negative feedback to last executed action

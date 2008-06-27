@@ -13,4 +13,12 @@ Get near real time pictures form earth orbit
         2017-03-21 21:33:16,564 - CLIClient - INFO - Speak: showing EPIC satelite imagery
         --- shows this -> https://epic.gsfc.nasa.gov/epic-archive/jpg/epic_1b_20170318005516_02.jpg
 
+        previous EPIC
+        2017-03-21 23:55:06,113 - CLIClient - INFO - Speak: Near Real time picture of earth from 2017-03-18 02:38:30
+
+        previous EPIC
+        2017-03-21 23:55:14,897 - CLIClient - INFO - Speak: Near Real time picture of earth from 2017-03-18 00:50:27
+
+
+
 dialog and vocab files need polishing

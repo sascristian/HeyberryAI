@@ -41,7 +41,7 @@ last_modified_skill = 0
 skills_directories = []
 skill_reload_thread = None
 id_counter = 0
-prioritary_skills = ["intent" , "objective_skill" , "feedback", "obj_test"]
+prioritary_skills = ["intent" , "objectives" , "feedback"]
 
 def connect():
     global ws

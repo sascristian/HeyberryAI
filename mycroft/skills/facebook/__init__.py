@@ -158,7 +158,7 @@ class FacebookSkill(MycroftSkill):
         client.emitter.on("diagnostics_request", diagnostics)
         thread.start_new_thread(connect, ())
 
-        self.dreampath = "/home/user/jarbas-core/mycroft/skills/dreamskill/dream_output/"
+        self.dreampath = "/home/user/jarbas-core/mycroft/skills/deep_dream/dream_output/"
 
     def load_agended_posts(self):
         path = os.path.dirname(__file__) + '/agenda'
@@ -292,7 +292,7 @@ class FacebookSkill(MycroftSkill):
     # graph API use-cases
 
     def handle_post_pickupline_intent(self, message):
-        text = "Here is a pickupline, let me know if it ever works...\n"
+        text = "Here is a pickup_line, let me know if it ever works...\n"
         self.post_text_to_wall(text+PickupLine().get_line(type="random"))
         self.emit_results()
 
@@ -806,7 +806,7 @@ class FacebookSkill(MycroftSkill):
 
         '''save to file'''
         timestamp = strftime("%d, %b, %Y, %H, %M, %S", gmtime())
-        wfile = open("/home/user/jarbas-core/mycroft/skills/proxyskill/harvest/proxies" + timestamp + ".txt", "w")
+        wfile = open("/home/user/jarbas-core/mycroft/skills/proxy/harvest/proxies" + timestamp + ".txt", "w")
         for proxy in proxies:
             wfile.write(str(proxy) + "\n")
         wfile.close()
