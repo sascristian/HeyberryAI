@@ -2,6 +2,9 @@ from mycroft.messagebus.api import BusQuery, BusResponder
 from mycroft.util.log import getLogger
 import time
 from mycroft.configuration import ConfigurationManager
+from mycroft.messagebus.client.ws import WebsocketClient
+from threading import Thread
+
 
 class ResponderBackend(object):
     """
@@ -25,7 +28,15 @@ class ResponderBackend(object):
            initialize emitter, register events, initialize internal variables
         """
         self.name = name or self.__class__.__name__
-        self.emitter = emitter
+        if emitter is None:
+            self.emitter = WebsocketClient()
+            def connect():
+                self.emitter.run_forever()
+            ws_thread = Thread(connect)
+            ws_thread.setDaemon(True)
+            ws_thread.start()
+        else:
+            self.emitter = emitter
         self.response_type = "default.reply"
         self.responder = None
         self.server_responder = None
@@ -186,7 +197,7 @@ class QueryBackend(object):
             timeout: time in seconds to wait for response (int)
             server: send this query to jarbas server
             client: send this query to jarbas client
-            override: get client and server params from config file
+            override: get client and server params from config file (at name)
     """
 
     def __init__(self, name=None, emitter=None, timeout=5, logger=None,
@@ -195,7 +206,15 @@ class QueryBackend(object):
            initialize emitter, register events, initialize internal variables
         """
         self.name = name or self.__class__.__name__
-        self.emitter = emitter
+        if emitter is None:
+            self.emitter = WebsocketClient()
+            def connect():
+                self.emitter.run_forever()
+            ws_thread = Thread(connect)
+            ws_thread.setDaemon(True)
+            ws_thread.start()
+        else:
+            self.emitter = emitter
         self.timeout = timeout
         self.query = None
         if logger is None:
