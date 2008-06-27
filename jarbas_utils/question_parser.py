@@ -6,12 +6,12 @@ from requests import ConnectionError, HTTPError
 from nltk.stem.wordnet import WordNetLemmatizer
 
 
-class EnglishQuestionParser():
+class RegexQuestionParser():
     """
     Poor-man's english question parser. Not even close to conclusive, but
     appears to construct some decent w|a queries and responses.
     
-    __author__ = 'seanfitz'
+    __author__ = 'seanfitz', 'jarbas
     
     """
 
@@ -86,7 +86,7 @@ class LILACSQuestionParser():
     def __init__(self, host="http://model.dbpedia-spotlight.org/en/annotate"):
         # 222 2en 8pt 5fr
         #host = "http://spotlight.sztaki.hu:2222/rest/annotate"
-        self.parser = EnglishQuestionParser()
+        self.parser = RegexQuestionParser()
         self.host = host
         self.lmtzr = WordNetLemmatizer()
 
