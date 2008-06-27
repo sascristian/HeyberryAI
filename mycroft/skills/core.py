@@ -324,6 +324,14 @@ class MycroftSkill(object):
             name = str(self.skill_id) + ':' + name
             self.emitter.emit(Message("detach_intent", {"intent_name": name}))
 
+    def request_reload(self):
+        self.emitter.emit(
+            Message("reload_skill_request", {"skill_id": self.skill_id}))
+
+    def request_shutdown(self):
+        self.emitter.emit(
+            Message("shutdown_skill_request", {"skill_id": self.skill_id}))
+
     def initialize(self):
         """
         Initialization function to be implemented by all Skills.
