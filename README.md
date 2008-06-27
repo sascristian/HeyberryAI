@@ -2,7 +2,7 @@
 
 ![alt tag](https://github.com/JarbasAI/jarbas---pygtk---GUI/blob/master/screenshot.jpg)
 
-a fork of mycroft-core , the following things were added
+a fork of mycroft-core , the following things are available
 
 
 ### Basic Skills
@@ -109,7 +109,7 @@ a fork of mycroft-core , the following things were added
 
 [Near Earth Object Tracking Skill](https://github.com/JarbasAI/mycroft---near-earth-object-tracker/) - tracks near earth objects
 
-### New Client
+### New Clients
 
 - [Facebook Chat Client](https://github.com/JarbasAI/mycroft---facebookchat---client)
 - [Graphic User Interface](https://github.com/JarbasAI/jarbas---pygtk---GUI)
@@ -127,7 +127,187 @@ a fork of mycroft-core , the following things were added
 
 - desktop_launcher - added ability to open urls instead of google searching (non-vocal skill usecase)
 
-# Privacy Enhancements
+# Other Changes
+
+- created a folder named database that is populated with created/scraped content during jarbas life-time (offline backups)
+- added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
+- added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
+- added feedback method to allow skills to process feedback/reinforcement learning [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
+- centralized APIs in config file, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
+- ip skill blacklisted, using the7erm diagnostics skill for this
+- configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
+- allowed intents to be de-registered [PR#558](https://github.com/MycroftAI/mycroft-core/pull/558)
+- added audioservice backend[PR#433](https://github.com/MycroftAI/mycroft-core/pull/433)
+- added screenservice backend
+
+
+# Developing skills for Jarbas
+
+### Adding Results
+
+to add a result and emit a message of the format "register_result" : "resultname_result"
+
+        self.add_result("resultname", result)
+
+to emit a message of the format "resultname_result" with result data and clear added results list
+
+        self.emit_results()
+
+this allows other services/skills to process skill results, wikipedia skill could add a Wikipedia Link result to be consumed by a GUI for example
+
+
+### Showing pictures
+
+        from mycroft.skills.displayservice import DisplayService
+
+        in initialize -> self.display_service = DisplayService(self.emitter)
+
+        in skill_handling -> self.display_service.show([pic_path], utterance)
+
+### Playing Sound
+
+        from mycroft.skills.audioservice import AudioService
+
+        in initialize -> self.audio_service = AudioService(self.emitter)
+
+        in skill_handling -> self.audio_service.play([file_path], utterance)
+
+### Objective Builder
+
+to use objectives in other skill an helper class has been coded
+
+        from mycroft.skills.core import MycroftSkill
+        from mycroft.skills.objective_skill import ObjectiveBuilder
+
+        __author__ = 'jarbas'
+
+        class TestRegisterObjectiveSkill(MycroftSkill):
+            def __init__(self):
+                super(TestRegisterObjectiveSkill, self).__init__(name="TestRegisterObjectiveSkill")
+
+            def initialize(self):
+
+                # objective name
+                name = "test"
+                my_objective = ObjectiveBuilder(name)
+
+                # create way
+                goal = "test this shit"
+                intent = "speak"
+                intent_params = {"utterance":"this is test"}
+                # register way for goal
+                # if goal doesnt exist its created
+                my_objective.add_way(goal, intent, intent_params)
+
+                # do my_objective.add_way() as many times as needed for as many goals as desired
+                intent = "speak"
+                intent_params = {"utterance": "testing alright"}
+                my_objective.add_way(goal, intent, intent_params)
+
+                # get objective intent and handler
+
+                # get an intent to execute this objective by its name
+                # intent , self.handler = my_objective.get_objective_intent()
+
+                # instead of name to trigger objective lets register a keyword from voc
+                # required keywords same as doing .require(keyword) in intent
+                keyword = "TestKeyword"
+                intent, self.handler = my_objective.get_objective_intent(keyword)
+
+                # objective can still be executed without registering intent by saying
+                # objective objective_name , and directly using objective skill
+
+                self.register_intent(intent, self.handler)
+
+            def stop(self):
+                pass
+
+
+        def create_skill():
+            return TestRegisterObjectiveSkill()
+
+
+in the above example saying "stupid test" , which is the sentence in TestKeyword.voc, will trigger one of the objective ways,
+in this case "speak" intent and say "this is test" or "testing alright"
+
+### Feedback
+
+on every skill you can add a feedback method, when reinforcement words (good work, dont do that) are heard the skill can adjust what it does
+
+objectives use feedback to adjust probabilities for last executed goal/way
+
+        def feedback(self, feedback, utterance):
+            if feedback == "positive":
+                # do stuff
+                self.speak("Glad i could help")
+            elif feedback == "negative":
+                # do stuff
+                self.speak("You are the one who coded me!")
+
+
+
+### Continuous Dialog
+
+on every skill there is a converse method, this can be used to allow last executed skill to process next utterance
+
+returning True will stop the utterance from triggering an intent and allow it to be processed by the skill
+
+If you expect a response right away in order to make the dialog more realistic you can do
+
+            self.speak("Listening to you ", expect_response=True)
+
+This will be the same as mycroft hearing the wakeword so you dont' need to say his name again
+
+Here is an example of parrot skill, that will talk back everything to user
+
+            def converse(self, transcript, lang="en-us"):
+                if self.parroting:
+                    if "stop" in transcript[0].lower():
+                        self.parroting = False
+                        self.speak("Parrot Mode Stopped")
+                    else:
+                        # keep listening without wakeword
+                        self.speak(transcript[0], expect_response=True)
+                    return True
+                else:
+                    return False
+
+### Sequential Events
+
+It is also possible to require a few steps in order to achieve some action, a simple example was coded with konami code skill
+
+We can use converse method to (de)register intents in case correct utterance is heard and always return false so the utterance is processed in intent skill
+
+So you dont need to parse the utterance to determine intent, just determine if it is expected/valid somehow
+
+            def initialize(self):
+                ....
+                self.disable_intent('KonamiLeftIntent')
+                self.disable_intent('KonamiRightIntent')
+                self.disable_intent('KonamiBIntent')
+                self.disable_intent('KonamiAIntent')
+
+            def handle_up_intent(self, message):
+                .....
+                self.disable_intent('KonamiUpIntent')
+                self.enable_intent("KonamiDownIntent")
+                self.next_cheat = "down"
+
+            def converse(self, transcript, lang="en-us"):
+                if self.next_cheat not in transcript:
+                    self.enable_intent('KonamiUpIntent')
+                    self.disable_intent('KonamiDownIntent')
+                    self.disable_intent('KonamiLeftIntent')
+                    self.disable_intent('KonamiRightIntent')
+                    self.disable_intent('KonamiBIntent')
+                    self.disable_intent('KonamiAIntent')
+                    self.next_cheat = "up"
+                return False
+
+
+
+
+# Privacy Enhancements (requires network manager)
 
 - wifi disable/enable
 
@@ -153,17 +333,6 @@ gets you a https proxy
 
 the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start" , "wifi disable" whenever intenert connection is not needed
 
-# Other Changes
-
-- created a folder named database that is populated with created/scraped content during jarbas life-time (offline backups)
-- added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
-- added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
-- added feedback method to allow skills to process feedback/reinforcement learning [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
-- centralized APIs in config file, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
-- ip skill blacklisted, using the7erm diagnostics skill for this
-- configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
-- allowed intents to be de-registered [PR#558](https://github.com/MycroftAI/mycroft-core/pull/558)
-- added audioservice backend[PR#433](https://github.com/MycroftAI/mycroft-core/pull/433)
 
 Forked from Mycroft 
 ==========
