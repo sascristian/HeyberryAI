@@ -234,20 +234,19 @@ class ContextService():
         self.signals_dict["last_fail"] = message.data.get("utterance")
 
     def handle_skill_results(self, message):
-        key = message
+        key = message.type
         results = message.data
-        print results
         self.context_dict[key] = results
         self.results_dict[key] = results
         #logger.info("Updated context for results from "+key)
         for result in results:
-            params = [result]  # if you send a string instead it is taken like a list of chars
+            params = [key]  # if you send a string instead it is taken like a list of chars
             if result not in self.vocab:
                 self.register_context(params, type="skill_result")
             try:
-                self.context_dict[result] = message.data[result]
-                self.results_dict[result] = message.data[result]
-                print result + " updated with " + self.context_dict[result]
+                self.context_dict[key] = result
+                self.results_dict[key] = result
+                print key + " updated with " + result
             except:
                 pass
 
