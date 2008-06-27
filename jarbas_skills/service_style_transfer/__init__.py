@@ -17,6 +17,8 @@ from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft import MYCROFT_ROOT_PATH
 from mycroft.skills.displayservice import DisplayService
+from jarbas_utils.skill_dev_tools import ResponderBackend
+
 
 __author__ = 'jarbas'
 
@@ -47,8 +49,8 @@ class StyleTransferSkill(MycroftSkill):
 
         # imgur
         try:
-            client_id = self.config_core.get("APIS")["ImgurKey"]
-            client_secret = self.config_core.get("APIS")["ImgurSecret"]
+            client_id = self.APIS["ImgurKey"]
+            client_secret = self.APIS["ImgurSecret"]
         except:
             try:
                 client_id = self.config.get("ImgurKey")
@@ -72,9 +74,8 @@ class StyleTransferSkill(MycroftSkill):
                 "Network %s does not exist. (Did you forget to download it?)" % VGG_PATH)
 
     def initialize(self):
-        self.emitter.on("style.transfer.request", self.handle_style_transfer)
-        self.emitter.on("style.transfer.result",
-                        self.handle_receive_transfer_result)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("style.transfer.request", self.handle_style_transfer)
 
         style_transfer_intent = IntentBuilder("StyleTransferIntent") \
             .require("styletransfer").optionally("PicturePath").build()
@@ -82,9 +83,6 @@ class StyleTransferSkill(MycroftSkill):
                              self.handle_style_transfer_intent)
         self.display_service = DisplayService(self.emitter)
 
-    def handle_receive_transfer_result(self, message):
-        self.log.info(
-            "Style transfer result received " + message.data.get("url"))
 
     def handle_style_transfer_intent(self, message):
         if message.context is None:
@@ -237,31 +235,13 @@ class StyleTransferSkill(MycroftSkill):
             minutes) + " minutes")
         # send result
         out_path = self.save_path + "/" + name + '.jpg'
-        self.send_result(out_path, e_time)
-
-    def send_result(self, out_path=None, e_time=None, error=None):
-        if error is not None:
-            self.speak(error)
-        msg_type = "style.transfer.result"
         msg_data = {"file": None, "url": None, "elapsed_time": e_time}
         if out_path is not None:
             # upload pic
             data = self.client.upload_from_path(out_path)
             msg_data["url"] = data["link"]
-
-        # to source socket
-        if ":" in self.message_context["destinatary"]:
-            if self.message_context["destinatary"].split(":")[1].isdigit():
-                self.emitter.emit(Message("message_request",
-                                          {"context": self.message_context,
-                                           "data": msg_data,
-                                           "type": msg_type}, self.message_context))
-        # to bus
-        msg_data["file"] = out_path
-        self.emitter.emit(Message(msg_type,
-                                  msg_data, self.message_context))
-        self.speak("style transfer result: " + out_path + " " + str(e_time),
-                   metadata=msg_data)
+            msg_data["file"] = out_path
+        self.responder.update_response_data(msg_data, self.message_context)
 
     def stop(self):
         pass

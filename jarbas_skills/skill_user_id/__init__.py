@@ -18,7 +18,7 @@
 
 from adapt.intent import IntentBuilder
 
-from jarbas_utils.jarbas_services import FaceRecognitionService, VisionService
+from jarbas_utils.skill_tools import FaceRecognitionQuery, WebcamQuery
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
@@ -48,12 +48,12 @@ class UserIdSkill(MycroftSkill):
     def handle_who_am_i_intent(self, message):
         user_id = message.context.get("destinatary")
         user = ""
-        face_recog = FaceRecognitionService(self.emitter)
+        face_recog = FaceRecognitionQuery(self.emitter)
         if "fbchat" in user_id:
             url = message.context.get("photo")
             vision_user = face_recog.face_recognition_from_url(url, self.message_context, server=True)
         else:
-            vision = VisionService(self.emitter)
+            vision = WebcamQuery(self.emitter)
             feed = vision.get_feed(self.message_context)
             vision_user = face_recog.face_recognition_from_file(feed, self.message_context, server=True)
 

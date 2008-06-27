@@ -23,6 +23,7 @@ from mycroft.skills.displayservice import DisplayService
 
 import bs4
 import requests
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 __author__ = 'jarbas'
 
@@ -35,7 +36,8 @@ class LILACSWikiHowSkill(MycroftSkill):
             name="LILACS_Wikihow_Skill")
 
     def initialize(self):
-        self.emitter.on("wikihow.request", self.handle_ask_wikihow)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("wikihow.request", self.handle_ask_wikihow)
         test_intent = IntentBuilder("TestWikihowIntent") \
             .require("testh").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
@@ -74,7 +76,7 @@ class LILACSWikiHowSkill(MycroftSkill):
         self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("wikihow.result", result, self.message_context))
+        self.responder.update_response_data(result, self.message_context)
 
     def adquire(self, subject):
         logger.info('WikihowKnowledge_Adquire')

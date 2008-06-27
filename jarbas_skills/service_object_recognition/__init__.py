@@ -18,7 +18,8 @@
 from adapt.intent import IntentBuilder
 
 from mycroft.skills.core import MycroftSkill
-from jarbas_utils.jarbas_services import ObjectRecogService
+from jarbas_utils.skill_dev_tools import ResponderBackend
+from jarbas_utils.skill_tools import ObjectRecognitionQuery
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 from mycroft import MYCROFT_ROOT_PATH as root_path
@@ -98,16 +99,16 @@ class ObjectRecognitionSkill(MycroftSkill):
         self.register_intent(view_objects_intent,
                              self.handle_view_objects_intent)
 
-        self.emitter.on("object.recognition.request",
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("object.recognition.request",
                         self.handle_recognition_request)
         self.display_service = DisplayService(self.emitter)
 
     def handle_view_objects_intent(self, message):
         self.speak('Testing object recognition')
-        objrecog = ObjectRecogService(self.emitter, timeout=30)
+        objrecog = ObjectRecognitionQuery(self.emitter, timeout=30)
         path = message.data.get("PicturePath", dirname(__file__) + "/test.jpg")
-        result = objrecog.recognize_objects(path,
-                                            server=False)
+        result = objrecog.recognize_objects(path)
         labels = result.get("labels", {})
         ut = ""
         for object in labels:
@@ -180,18 +181,8 @@ class ObjectRecognitionSkill(MycroftSkill):
                 labels[obj["label"]] += 1
 
         self.log.info("detected : " + str(objects))
-        self.emitter.emit(Message("object.recognition.result",
-                                  {"labels": labels, "objects": objects},
-                                  self.message_context))
-        # to source socket
-        if ":" in self.message_context.get("source", ""):
-            if self.message_context["source"].split(":")[1].isdigit():
-                self.emitter.emit(Message("message_request",
-                                          {"context": self.message_context,
-                                           "data": {"labels": labels,
-                                                    "objects": objects},
-                                           "type": "object.recognition.result"},
-                                          self.message_context))
+        data = {"labels": labels, "objects": objects}
+        self.responder.update_response_data(data, self.message_context)
 
     def stop(self):
         pass

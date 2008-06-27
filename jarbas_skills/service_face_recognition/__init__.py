@@ -1,7 +1,8 @@
 import face_recognition
 import os
 from mycroft.skills.core import MycroftSkill
-from mycroft.messagebus.message import Message
+from jarbas_utils.skill_dev_tools import ResponderBackend
+from jarbas_utils.skill_tools import FaceRecognitionQuery
 
 __author__ = 'jarbas'
 
@@ -23,10 +24,11 @@ class FaceRecognitionSkill(MycroftSkill):
             self.known_faces[face] = face_recognition.face_encodings(face_recognition.load_image_file(os.path.dirname(__file__) + "/known faces/" + face))[0]
 
     def initialize(self):
-        self.emitter.on("face.recognition.request", self.handle_recog)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("face.recognition.request", self.handle_face_recognition_request)
         # TODO test face recog intent
 
-    def handle_recog(self, message):
+    def handle_face_recognition_request(self, message):
         if message.context is not None:
             self.message_context.update(message.context)
         face = message.data.get("file", message.data.get("PicturePath"))
@@ -57,26 +59,17 @@ class FaceRecognitionSkill(MycroftSkill):
         except:
             self.log.error("no face detected in provided image")
 
-        try:
-            # server message context, safe to ignore
-            self.message_context=self.get_message_context(message.context)
-            user_id = self.message_context.get("destinatary", "")
-            if ":" in user_id:
-                if user_id.split(":")[1].isdigit():
-                    self.emitter.emit(Message("message_request",
-                                              {"context": self.message_context,
-                                               "data": {"result": result},
-                                               "type": "face.recognition.result"},
-                                              self.message_context))
+        self.message_context = self.get_message_context(message.context)
+        data = {"result": result}
+        self.responder.update_response_data(data, self.message_context)
 
-        except:
-            self.message_context = message.context
-
-        self.emitter.emit(Message("face.recognition.result",
-                                  {"result": result}, self.message_context))
-
-    def handle_test_face_recognition(self, message):
-        pass
+    def handle_test_face_recognition_intent(self, message):
+        picture_path = message.data.get("file", message.data.get("PicturePath"))
+        if not picture_path:
+            picture_path = os.path.dirname(__file__) + "/test.jpg"
+        recognizer = FaceRecognitionQuery(self.name, self.emitter, 60)
+        result = recognizer.face_recognition_from_file(picture_path,
+                                                      context=self.message_context)
 
     def stop(self):
         pass

@@ -21,6 +21,7 @@ from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 
 from wordnik import *
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 __author__ = 'jarbas'
 
@@ -41,7 +42,8 @@ class LILACSWordnikSkill(MycroftSkill):
         self.limit = 5
 
     def initialize(self):
-        self.emitter.on("wordnik.request", self.handle_ask_wordnik)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("wordnik.request", self.handle_ask_wordnik)
         test_intent = IntentBuilder("TestWordnikIntent") \
             .require("testn").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
@@ -72,7 +74,7 @@ class LILACSWordnikSkill(MycroftSkill):
         self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("wordnik.result", result, self.message_context))
+        self.responder.update_response_data(result, self.message_context)
 
     def adquire(self, subject):
         logger.info('WordnikKnowledge_Adquire')

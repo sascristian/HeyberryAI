@@ -10,11 +10,13 @@ from os import makedirs
 # try to load display service
 from os.path import dirname, exists
 
-from jarbas_utils.jarbas_services import VisionService, ObjectRecogService, \
-    ImageRecogService
+from jarbas_utils.skill_tools import WebcamQuery, ObjectRecognitionQuery, \
+    ImageRecognitionQuery
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.skills.displayservice import DisplayService
+from jarbas_utils.skill_dev_tools import ResponderBackend
+
 
 __author__ = "jarbas"
 
@@ -39,9 +41,21 @@ class VisionSkill(MycroftSkill):
     def initialize(self):
        # self.display_service = DisplayService(self.emitter)
         self.init_vision()
-        self.emitter.on("vision_request", self.handle_vision_request)
-        self.emitter.on("vision.feed.request", self.handle_feed_request)
-        self.emitter.on("vision.faces.request", self.handle_face_request)
+
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("vision.request",
+                                            self.handle_vision_request)
+
+        self.feed_responder = ResponderBackend(self.name, self.emitter,
+                                               self.log)
+        self.feed_responder.set_response_handler("vision.feed.request",
+                                             self.handle_feed_request)
+
+        self.face_responder = ResponderBackend(self.name, self.emitter,
+                                               self.log)
+        self.face_responder.set_response_handler("vision.faces.request",
+                                             self.handle_face_request)
+
         self.build_intents()
 
         self.display_service = DisplayService(self.emitter)
@@ -147,38 +161,23 @@ class VisionSkill(MycroftSkill):
         self.filter = "None"
         self.faces = []
 
-    def emit_result(self, path, server=False):
-        requester = "vision_service"
-        message_type = "vision_result"
-        print self.faces
-        message_data = {"movement": self.movement,
-                        "num_persons": len(self.faces), "smile_detected": self.smiling}#, "faces": self.faces}
-        message_data["file"] = path
-        if server:
-            # send server a message
-            stype = "file"
-            self.emitter.emit(Message("server_request",
-                                      {"server_msg_type": stype, "requester": requester, "message_type": message_type,
-                                       "message_data": message_data}, self.message_context))
-        self.emitter.emit(Message(message_type, message_data, self.message_context))
-
     def handle_vision_request(self, message):
         if message.context is not None:
             self.message_context.update(message.context)
         feed = self.process_frame()
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
         self.set_context("WebcamFeed", path)
-        source = message.context.get("source")
-        if source is not None and "server" in source:
-            self.emit_result(path, True)
-        else:
-            self.emit_result(path, False)
+        message_data = {"movement": self.movement,
+                        "num_persons": len(self.faces),
+                        "smile_detected": self.smiling}  # , "faces": self.faces}
+        message_data["file"] = path
+        self.responder.update_response_data(message_data, self.message_context)
 
     def handle_feed_request(self, message):
         if message.context is not None:
             self.message_context.update(message.context)
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
-        self.emitter.emit(Message("vision.feed.result", {"file": path}, self.message_context))
+        self.feed_responder.update_response_data({"file": path}, self.message_context)
         self.set_context("WebcamFeed", path)
 
     def handle_face_request(self, message):
@@ -195,14 +194,13 @@ class VisionSkill(MycroftSkill):
 
         # detect faces
         faces = self.find_faces(gray)
-        self.emitter.emit(Message("vision.faces.result", {"file": path, "faces": faces}, self.message_context))
+        self.face_responder.update_response_data({"file": path, "faces": faces}, self.message_context)
 
     # intents
     def handle_webcam_intent(self, message):
         self.process_frame()
         self.speak_dialog("webcam")
         path = self.save_feed(self.webcam_path+"/"+asctime()+".jpg")
-        self.emit_result(path, False)
         self.display_service.display([path],
                                      utterance=message.data.get("utterance"))
 
@@ -212,7 +210,6 @@ class VisionSkill(MycroftSkill):
         self.display_service.display([path],
                                      utterance=message.data.get("utterance"))
         self.speak("There are " + str(self.num_persons) + " persons on view")
-        self.emit_result(path, False)
         # TODO more context, movement, face recog
 
     def handle_reset_vision_intent(self, message):
@@ -226,12 +223,11 @@ class VisionSkill(MycroftSkill):
         self.display_service.display([path],
                                      utterance=message.data.get("utterance"))
         self.speak_dialog("vision")
-        self.emit_result(path, False)
 
     def handle_describe_what_do_you_see_intent(self, message):
         # get vision feed and haar-cascade processing
         self.speak("Testing open cv vision")
-        vision = VisionService(self.emitter)
+        vision = WebcamQuery(self.emitter)
         data = vision.get_data()
         feed = vision.get_feed()
         #faces = vision.get_faces()
@@ -240,16 +236,16 @@ class VisionSkill(MycroftSkill):
                                      utterance=message.data.get("utterance"))
         # get tensor flow object recog api objects
         self.speak('Testing tensorflow object recognition')
-        objrecog = ObjectRecogService(self.emitter)
-        result = objrecog.recognize_objects(feed, server=True)
+        objrecog = ObjectRecognitionQuery(self.emitter)
+        result = objrecog.recognize_objects(feed)
         objects = result.get("objects", []) # list of all detected objects
         labels = result.get("labels", {}) # label and ocurrences of each object with score > 30%
         self.speak("object_recog: " + str(labels))
 
         # get bvlc googlenet top 5 classification labels
         self.speak('Testing bvlc googlenet image recognition')
-        imgrecog = ImageRecogService(self.emitter)
-        results = imgrecog.get_classification(feed, server=True)
+        imgrecog = ImageRecognitionQuery(self.emitter)
+        results = imgrecog.get_classification(feed)
         # quick cleanup of ugly label names
         i = 0
         for result in list(results):

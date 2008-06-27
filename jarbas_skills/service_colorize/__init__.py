@@ -1,7 +1,7 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
-from jarbas_utils.jarbas_services import url_to_pic
+from jarbas_utils.skill_tools import url_to_pic
 from mycroft import MYCROFT_ROOT_PATH as root_path
 
 import tensorflow as tf
@@ -14,6 +14,8 @@ from os.path import dirname, exists
 from jarbas_models.tf_colorization.net import Net
 from jarbas_models.tf_colorization.utils import *
 from mycroft.skills.displayservice import DisplayService
+from jarbas_utils.skill_dev_tools import ResponderBackend
+from jarbas_utils.skill_tools import ColorizationQuery
 
 from imgurpython import ImgurClient
 
@@ -30,8 +32,8 @@ class ColorizationService(MycroftSkill):
             # TODO download model
             self.log.error("no model for colorize, download from https://drive.google.com/file/d/0B-yiAeTLLamRWVVDQ1VmZ3BxWG8/view")
         try:
-            client_id = self.config_core.get("APIS")["ImgurKey"]
-            client_secret = self.config_core.get("APIS")["ImgurSecret"]
+            client_id = self.APIS["ImgurKey"]
+            client_secret = self.APIS["ImgurSecret"]
         except:
             if self.config is not None:
                 client_id = self.config.get("ImgurKey")
@@ -42,11 +44,9 @@ class ColorizationService(MycroftSkill):
                 client_secret = 'yyyyyyyyy'
         self.client = ImgurClient(client_id, client_secret)
 
-
     def initialize(self):
-        self.emitter.on("colorization.request",
-                        self.handle_colorize_request)
-
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("colorization.request", self.handle_colorize_request)
         intent = IntentBuilder("ColorizeIntent") \
             .require("ColorizeKeyword").optionally(
             "PicturePath").optionally("picture_url").optionally(
@@ -56,7 +56,7 @@ class ColorizationService(MycroftSkill):
         self.display_service = DisplayService(self.emitter)
 
     def handle_colorize_intent(self, message):
-        pic = message.data.get("picture_url")
+        pic = message.data.get("picture_url", message.data.get("PictureUrl"))
         if not pic:
             pic = message.data.get("PicturePath")
             if not pic:
@@ -64,9 +64,11 @@ class ColorizationService(MycroftSkill):
         else:
             pic = url_to_pic(pic)
 
-        path, url = self.colorize([pic])
-        self.speak("Here is your colorized picture ", metadata={"url": url,
-                                                                "file": path})
+        colorize_tool = ColorizationQuery(self.name, self.emitter, 200)
+        result = colorize_tool.colorize(picture_path=pic, context=message.context)
+        path = result.get("file")
+        self.speak("Here is your colorized picture ", metadata=result,
+                   message_context=colorize_tool.get_result(context=True))
         self.display_service.display([path, path.replace(".jpg", "_bw.jpg")],
                                      utterance=message.data.get("utterance"))
 
@@ -77,10 +79,9 @@ class ColorizationService(MycroftSkill):
         else:
             pic = message.data.get("PicturePath")
         file, url = self.colorize([pic])
-        self.emitter.emit(Message("colorization.result",
-                                  {"url": url, "file": file,
-                                   "original": file.replace(".jpg", "_bw.jpg")},
-                                  self.get_message_context(message.context)))
+        data = {"url": url, "file": file, "original": file.replace(".jpg", "_bw.jpg")}
+        context = self.get_message_context(message.context)
+        self.responder.update_response_data(data, context)
 
     def colorize(self, file_path, name=None):
         img = cv2.imread(file_path)

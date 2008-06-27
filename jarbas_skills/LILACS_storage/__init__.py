@@ -22,6 +22,7 @@ from mycroft.messagebus.message import Message
 from os.path import dirname
 import json
 import os
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 __author__ = 'jarbas'
 
@@ -38,28 +39,32 @@ class LILACSJsonStorageSkill(MycroftSkill):
             os.mkdir(self.storage)
 
     def initialize(self):
-        self.emitter.on("LILACS.node.json.load.request", self.handle_load_node)
-        self.emitter.on("LILACS.node.json.save.request", self.handle_save_node)
+        self.load_responder = ResponderBackend(self.name, self.emitter,
+                                               self.log)
+        self.load_responder.set_response_handler(
+            "LILACS.node.json.load.request", self.handle_load_node)
+        self.save_responder = ResponderBackend(self.name, self.emitter,
+                                               self.log)
+        self.save_responder.set_response_handler(
+            "LILACS.node.json.save.request", self.handle_save_node)
 
     def handle_load_node(self, message):
         node = message.data.get("node")
+        self.handle_update_message_context(message)
         data = self.load(node)
         if data:
             sucess = True
         else:
             sucess = False
-        self.emitter.emit(Message("LILACS.node.json.load.result", {"node":
-                                                                       data,
-                                                              "sucess":
-                                                                  sucess}))
+        self.load_responder.update_response_data(
+            {"node": node, "sucess": sucess}, self.message_context)
 
     def handle_save_node(self, message):
+        self.handle_update_message_context(message)
         node = message.data.get("node")
         sucess = self.save(node)
-        self.emitter.emit(Message("LILACS.node.json.save.result", {"node":
-                                                                       node,
-                                                              "sucess":
-                                                                  sucess}))
+        self.save_responder.update_response_data(
+            {"node": node, "sucess": sucess}, self.message_context)
 
     def save(self, node_dict, data_source=None):
         # TODO check hash before writing to file?

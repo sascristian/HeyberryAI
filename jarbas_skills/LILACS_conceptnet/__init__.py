@@ -18,7 +18,7 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from mycroft.messagebus.message import Message
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 __author__ = 'jarbas'
 
@@ -33,7 +33,8 @@ class LILACSConceptNetSkill(MycroftSkill):
             name="LILACS_ConceptNet_Skill")
 
     def initialize(self):
-        self.emitter.on("conceptnet.request", self.handle_ask_conceptnet)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("conceptnet.request", self.handle_ask_conceptnet)
         test_intent = IntentBuilder("TestconceptnetIntent") \
             .require("testc").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
@@ -92,8 +93,7 @@ class LILACSConceptNetSkill(MycroftSkill):
         node = message.data.get("TargetKeyword")
         self.set_context("TargetKeyword", node)
         result = self.adquire(node)
-        #self.speak(str(result))
-        self.emitter.emit(Message("conceptnet.result", result, self.message_context))
+        self.responder.update_response_data(result, self.message_context)
 
     def adquire(self, subject):
         logger.info('ConceptNetKnowledge_Adquire')

@@ -4,7 +4,7 @@ from mycroft.skills.displayservice import DisplayService
 from os.path import dirname
 from mycroft.skills.core import MycroftSkill
 from adapt.intent import IntentBuilder
-from jarbas_utils.jarbas_services import url_to_pic
+from jarbas_utils.skill_tools import url_to_pic
 from time import sleep
 
 config = ConfigurationManager.get().get('Displays')

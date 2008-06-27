@@ -3,7 +3,6 @@
 import time
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
-from mycroft.messagebus.message import Message
 from mycroft import MYCROFT_ROOT_PATH as root_path
 from imgurpython import ImgurClient
 import urllib2
@@ -20,7 +19,8 @@ from os.path import dirname
 import tensorflow as tf
 from PIL import Image
 
-from jarbas_utils.jarbas_services import DreamService as DD
+from jarbas_utils.skill_tools import DeepDreamQuery as DD
+from jarbas_utils.skill_dev_tools import ResponderBackend
 from mycroft.skills.displayservice import DisplayService
 
 __author__ = 'jarbas'
@@ -34,16 +34,11 @@ class DreamService(MycroftSkill):
 
         # TODO get from config
         try:
-            client_id = self.config_core.get("APIS")["ImgurKey"]
-            client_secret = self.config_core.get("APIS")["ImgurSecret"]
+            client_id = self.APIS["ImgurKey"]
+            client_secret = self.APIS["ImgurSecret"]
         except:
-            if self.config is not None:
-                client_id = self.config.get("ImgurKey")
-                client_secret = self.config.get("ImgurSecret")
-            else:
-                # TODO throw error
-                client_id = 'xx'
-                client_secret = 'yyyyyyyyy'
+            client_id = self.config.get("ImgurKey")
+            client_secret = self.config.get("ImgurSecret")
 
         self.client = ImgurClient(client_id, client_secret)
 
@@ -456,21 +451,21 @@ class DreamService(MycroftSkill):
         self.t_input = None
         self.iter = self.config.get("iter_num", 40) #dreaming iterations
 
-        self.outputdir = self.config_core["database_path"] + "/dreams/"
+        self.outputdir = self.config_core.get("database_path", dirname( __file__)) + \
+                         "/dreams/"
 
         # check if folders exist
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
 
         # check if model exists, if not download!
-        self.maybe_download_and_extract()
+        # self.maybe_download_and_extract()
         # helper resize function using TF
         self.resize = tffunc(self.sess, np.float32, np.int32)(resize)
 
     def maybe_download_and_extract(self):
         # """Download and extract model zip file."""
-        # TODO extract, maybe use a thread so this doesnt hang here on load?
-        return
+        # TODO get out of skill runtime, put in install
         ## wget https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
         # unzip -d model inception5h.zip
         url = "https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip"
@@ -486,17 +481,19 @@ class DreamService(MycroftSkill):
             self.log.info('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
 
     def initialize(self):
-        self.emitter.on("deep.dream.request", self.handle_dream)
-
         dream_intent = IntentBuilder("DreamIntent") \
-            .require("dream").optionally("Subject").optionally("Nickname").build()
+            .require("dream").optionally("TargetKeyword").optionally(
+            "Nickname").build()
         self.register_intent(dream_intent,
                              self.handle_dream_intent)
+
         self.display_service = DisplayService(self.emitter)
 
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("deep.dream.request", self.handle_dream_response)
 
     def handle_dream_intent(self, message):
-        search = message.data.get("Subject")
+        search = message.data.get("TargetKeyword")
         cat = message.data.get("Nickname")
         if cat:
             search = search.replace(cat, "").replace(" in ","")
@@ -512,12 +509,13 @@ class DreamService(MycroftSkill):
         urllib.urlretrieve(url, filepath)
 
         dreamer = DD(self.emitter)
-        dreamer.dream_from_file(filepath, categorie=cat, context=message.context, server=False)
+        dreamer.dream_from_file(filepath, categorie=cat, context=message.context)
 
-    def handle_dream(self, message):
-        # TODO dreaming queue, all params from message
+    def handle_dream_response(self, message):
+        # TODO dreaming queue, no multiple dreams at once,
+        # TODO get all params from message
         self.log.info("Dream request received")
-        self.context = message.context
+        self.handle_update_message_context(message)
         source = message.data.get("dream_source", message.data.get(
             "PicturePath"))
         guide = message.data.get("dream_guide", message.data.get(
@@ -538,8 +536,8 @@ class DreamService(MycroftSkill):
             channel = random.randint(1, 500)
         if source is None:
             self.log.error("No dream source")
-        elif guide is not None:
-            result = self.guided_dream(source, guide, name, iter)
+        #elif guide is not None:
+        #    result = self.guided_dream(source, guide, name, iter)
         else:
             try:
                 result = self.dream(source, name, iter, layer, channel)
@@ -556,15 +554,9 @@ class DreamService(MycroftSkill):
         else:
             self.speak("I could not dream this time")
 
-        if ":" in message.context["destinatary"]: #socket
-            self.emitter.emit(Message("message_request",
-                                      {"context": message.context,
-                                       "data": {"dream_url": link, "file": result, "elapsed_time": elapsed_time, "layer": layer},
-                                       "type": "deep.dream.result"},
-                                      message.context))
-        self.emitter.emit(Message("deep.dream.result",
-                                  {"dream_url": link, "file": result, "elapsed_time": elapsed_time},
-                                  message.context))
+        message.data = {"dream_url": link, "file": result, "elapsed_time":
+            elapsed_time, "layer": layer, "channel": channel, "iter_num":iter}
+        self.responder.update_response_data(message.data, message.context)
 
     #### dreaming functions
     def dream(self, imagepah, name=None, iter=25, layer=None, channel=None):
@@ -688,6 +680,7 @@ class DreamService(MycroftSkill):
         img0 = np.float32(img)
         return self.render_deepdream(t_grad, img0, iter_n, step, octave_n, octave_scale)
 
+    # TODO get into own pic search skill
     ## pic search
     def get_soup(self, url, header):
         return BeautifulSoup(urllib2.urlopen(urllib2.Request(url, headers=header)), 'html.parser')

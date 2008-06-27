@@ -1,4 +1,4 @@
-from jarbas_utils.jarbas_services import LILACSstorageService
+from jarbas_utils.skill_tools import LILACSstorageQuery
 from mycroft.util.log import getLogger
 
 __authors__ = ["jarbas", "heinzschmidt"]
@@ -279,7 +279,7 @@ class ConceptConnector():
         self.logger = getLogger("ConceptConnector")
         self.emitter = emitter
         self.emitter.on("new_node", self.new_node)
-        self.storage = LILACSstorageService(self.emitter)
+        self.storage = LILACSstorageQuery(self.emitter)
         self.saved = []
         self.curiosity_save = False
         self.curiosity_load = False

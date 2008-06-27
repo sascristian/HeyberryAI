@@ -31,6 +31,7 @@ from mycroft.messagebus.message import Message
 from mycroft.api import Api
 from mycroft.util.log import getLogger
 from mycroft.skills.core import MycroftSkill
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 __author__ = 'jarbas'
 
@@ -62,13 +63,14 @@ class LILACSWolframalphaSkill(MycroftSkill):
             self.client = WAApi()
         else:
             try:
-                self.api = self.config_core.get("APIS").get("WolframAlpha")
+                self.api = self.APIS.get("WolframAlpha")
             except:
                 self.api = self.config_core.get("WolframAlphaSkill").get("api_key")
             self.client = wolframalpha.Client(self.api)
 
     def initialize(self):
-        self.emitter.on("wolframalpha.request", self.handle_ask_wolframalpha)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("wolframalpha.request", self.handle_ask_wolframalpha)
 
         test_intent = IntentBuilder("TestWolframIntent") \
             .require("testr").require("TargetKeyword").build()
@@ -90,7 +92,7 @@ class LILACSWolframalphaSkill(MycroftSkill):
         self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("wolframalpha.result", result, self.message_context))
+        self.responder.update_response_data(result, self.message_context)
 
     def adquire(self, subject):
         logger.info('WolframalphaKnowledge_Adquire')

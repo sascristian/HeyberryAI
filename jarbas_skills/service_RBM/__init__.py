@@ -18,7 +18,6 @@
 
 from adapt.intent import IntentBuilder
 
-from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from mycroft import MYCROFT_ROOT_PATH
@@ -26,7 +25,7 @@ from os import listdir
 import pickle
 import random
 from jarbas_utils import RBM_Sampling as Sampling
-
+from jarbas_utils.skill_dev_tools import ResponderBackend
 from jarbas_utils import RBM_Utils as Utils
 from jarbas_utils.ShortTextCodec import ShortTextCodec, BinomialShortTextCodec
 from jarbas_utils.RBM import CharBernoulliRBM, CharBernoulliRBMSoftmax
@@ -49,6 +48,37 @@ class RBM_Sampling_Service(MycroftSkill):
         self.external_reload = False
         self.external_shutdown = False
         self.model_path = MYCROFT_ROOT_PATH + "/jarbas_models/Char-RBM"
+
+    def initialize(self):
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("RBM.sample.request", self.handle_sample_request)
+        rbm_intent = IntentBuilder("TestRBMIntent").require(
+            "TestRBMKeyword").build()
+        self.register_intent(rbm_intent, self.handle_sample_intent)
+
+    def handle_sample_request(self, message):
+        self.handle_update_message_context(message)
+        models = message.data.get("model_path")
+        n_samples = message.data.get("n_samples", 30)
+        iters = message.data.get("n_iters", 10 ** 3)
+        start_temp = message.data.get("start_temp", 1.0)
+        end_temp = message.data.get("end_temp", 1.0)
+        samples = self.sample_models(models, n_samples, iters, start_temp,
+                                     end_temp)
+        self.responder.update_response_data({"samples": samples},
+                                  self.message_context)
+
+    def handle_sample_intent(self, message):
+        model = random.choice(self.scan_models())
+        name = model.replace("_", " ").replace(" .pickle", "")
+        self.speak("Testing RBM Sampling with " + name + " model")
+        model_path = self.model_path + "/" + model
+        samples = self.sample_models([model_path], 5)
+        for sample in samples:
+            self.speak(sample)
+
+    def stop(self):
+        pass
 
     def scan_models(self):
         # TODO some pre-processing
@@ -159,34 +189,6 @@ class RBM_Sampling_Service(MycroftSkill):
         f.close()
         self.log.info("Wrote model to " + out_fname)
 
-    def initialize(self):
-        self.emitter.on("RBM.sample.request", self.handle_sample_request)
-        rbm_intent = IntentBuilder("TestRBMIntent").require(
-            "TestRBMKeyword").build()
-        self.register_intent(rbm_intent, self.handle_sample_intent)
-
-    def handle_sample_request(self, message):
-        models = message.data.get("model_path")
-        n_samples = message.data.get("n_samples", 30)
-        iters = message.data.get("n_iters", 10 ** 3)
-        start_temp = message.data.get("start_temp", 1.0)
-        end_temp = message.data.get("end_temp", 1.0)
-        samples = self.sample_models(models, n_samples, iters, start_temp,
-                                     end_temp)
-        self.emitter.emit(Message("RBM.sample.result", {"samples": samples},
-                                  self.message_context))
-
-    def handle_sample_intent(self, message):
-        model = random.choice(self.scan_models())
-        name = model.replace("_", " ").replace(" .pickle", "")
-        self.speak("Testing RBM Sampling with " + name + " model")
-        model_path = self.model_path + "/" + model
-        samples = self.sample_models([model_path], 5)
-        for sample in samples:
-            self.speak(sample)
-
-    def stop(self):
-        pass
 
 
 def create_skill():

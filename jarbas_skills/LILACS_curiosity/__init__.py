@@ -25,7 +25,7 @@ from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
 from mycroft.messagebus.message import Message
 from jarbas_utils.question_parser import LILACSQuestionParser
-from jarbas_utils.jarbas_services import KnowledgeService
+from jarbas_utils.skill_tools import KnowledgeQuery
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
@@ -49,7 +49,7 @@ class LILACSCuriositySkill(MycroftSkill):
     def initialize(self):
         # register intents
         self.parser = LILACSQuestionParser()
-        self.service = KnowledgeService(self.emitter)
+        self.service = KnowledgeQuery(self.emitter)
         self.build_intents()
 
         timer_thread = Timer(60, self.make_active)

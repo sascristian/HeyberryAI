@@ -39,9 +39,8 @@ import os, urllib, tarfile
 from os.path import dirname
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
-from mycroft.messagebus.message import Message
-from mycroft.util.log import getLogger
-from jarbas_utils.jarbas_services import ImageRecogService
+from jarbas_utils.skill_tools import ImageRecognitionQuery
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 __author__ = 'jarbas'
 
@@ -60,20 +59,24 @@ class ImageRecognitionSkill(MycroftSkill):
         # number of predictions to return
         self.num_top_predictions = 5
         # download model if missing
-        self.maybe_download_and_extract()
+        #self.maybe_download_and_extract()
         # Creates node ID --> English string lookup.
         self.node_lookup = NodeLookup(self.model_dir)
 
     def initialize(self):
-        self.emitter.on("image.classification.request", self.handle_classify)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("image.classification.request",
+                                            self.handle_image_classification_request)
 
-        image_recog_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
+        # TODO improve keywords
+        image_recog_status_intent = IntentBuilder(
+            "ImageClassficationStatusIntent") \
             .require("imgstatus").build()
         self.register_intent(image_recog_status_intent,
-                             self.handle_img_recog_intent)
-
+                             self.handle_image_classification_intent)
 
     def maybe_download_and_extract(self):
+        # TODO move this into install, not run time
         # """Download and extract model tar file."""
         dest_directory = self.model_dir
         if not os.path.exists(dest_directory):
@@ -125,21 +128,19 @@ class ImageRecognitionSkill(MycroftSkill):
                 results.append([human_string, score])
             return results
 
-    def handle_img_recog_intent(self, message):
+    def handle_image_classification_intent(self, message):
         self.speak_dialog("imgrecogstatus")
-        dest = message.context.get("destinatary", "all")
-        imgrecog = ImageRecogService(self.emitter, timeout=130)
+        imgrecog = ImageRecognitionQuery(self.emitter, timeout=130)
         path = message.data.get("PicturePath", dirname(__file__)+"/obama.jpg")
-        results = imgrecog.get_classification(path, server=False)
+        results = imgrecog.get_classification(path)
         if not results:
             self.log.error("no classification received")
             return
         self.log.info(results)
         label, score = results[0]
-        self.message_context["destinatary"] = dest
         self.speak("test image classification is " + label + " with a score of " + score + " per cent")
 
-    def handle_classify(self, message):
+    def handle_image_classification_request(self, message):
         if message.context is not None:
             self.message_context.update(message.context)
         pic = message.data.get("file", message.data.get("PicturePath"))
@@ -148,29 +149,14 @@ class ImageRecognitionSkill(MycroftSkill):
             self.speak("Could not read file to classify")
             return
         self.set_context("PicturePath", pic)
-        user_id = message.context.get("source", "unknown")
-        if ":" not in user_id and ":" in message.context.get("destinatary", "unknown"):
-            user_id =message.context.get("destinatary")
-        elif user_id == "unknown":
-            self.log.warning("no user/destinatary specified")
-
         self.log.info("predicting")
         result = self.run_inference_on_image(pic)
         self.log.info("prediction ready, sending data")
         self.log.debug(result)
         # send result
-        msg_type = "image.classification.result"
         msg_data = {"classification": result}
-        # to bus
-        self.emitter.emit(Message(msg_type,
-                                  msg_data, self.message_context))
-        # to source socket
-        if ":" in user_id:
-            self.message_context["destinatary"] = user_id
-            if user_id.split(":")[1].isdigit():
-                self.emitter.emit(Message("message_request",
-                                          {"data": msg_data,
-                                           "type": msg_type, "context": self.message_context}, self.message_context))
+        self.responder.update_response_data(msg_data, self.message_context)
+
     def stop(self):
         pass
 

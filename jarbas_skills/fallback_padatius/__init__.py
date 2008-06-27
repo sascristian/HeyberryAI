@@ -16,7 +16,7 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from jarbas_utils.jarbas_services import ServiceBackend
+from jarbas_utils.skill_tools import QueryBackend
 from mycroft.skills.core import FallbackSkill
 from mycroft.util.log import getLogger
 
@@ -25,9 +25,9 @@ __author__ = 'jarbas'
 LOGGER = getLogger(__name__)
 
 
-class PadatiusFallbackService(ServiceBackend):
+class PadatiusFallbackQuery(QueryBackend):
     def __init__(self, emitter=None, timeout=5, waiting_messages=["padatius:fallback.response"],logger=None):
-        super(PadatiusFallbackService, self).__init__(
+        super(PadatiusFallbackQuery, self).__init__(
             name="PadatiusFallbackService", emitter=emitter, timeout=timeout,
             waiting_messages=waiting_messages, logger=logger)
 
@@ -47,7 +47,7 @@ class PadatiusFallback(FallbackSkill):
 
     def initialize(self):
         self.register_fallback(self.handle_fallback, 99)
-        self.padatius = PadatiusFallbackService(self.emitter)
+        self.padatius = PadatiusFallbackQuery(self.emitter)
 
     def handle_fallback(self, message):
         return self.padatius.wait_server_response(message.data)

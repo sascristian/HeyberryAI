@@ -31,11 +31,14 @@ class BusQuery():
         self.response = Message(None, None, None)
         if response_type is None:
             response_type = self.query_type + ".reply"
-        self.emitter.once(response_type, self._end_wait)
+        self.add_response_type(response_type)
         self.emitter.emit(
             Message(self.query_type, self.query_data, self.query_context))
         self._wait_response(timeout)
         return self.response.data
+
+    def add_response_type(self, response_type):
+        self.emitter.once(response_type, self._end_wait)
 
     def get_response_type(self):
         return self.response.type
@@ -60,7 +63,7 @@ class BusResponder():
             self.listen(message_type)
 
     def listen(self, message_type):
-        self.emitter.on(message_type, self._respond)
+        self.emitter.on(message_type, self.respond)
 
     def update_response(self, data=None, context=None):
         if data is not None:
@@ -68,6 +71,6 @@ class BusResponder():
         if context is not None:
             self.response_context = context
 
-    def _respond(self, message):
+    def respond(self, message):
         self.emitter.emit(Message(self.response_type, self.response_data,
                                   self.response_context))

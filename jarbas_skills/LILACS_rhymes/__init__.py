@@ -22,7 +22,7 @@ from adapt.intent import IntentBuilder
 from os.path import dirname
 
 from jarbas_utils.question_parser import LILACSQuestionParser
-from jarbas_utils.jarbas_services import KnowledgeService
+from jarbas_utils.skill_tools import KnowledgeQuery
 from mycroft.skills.core import MycroftSkill
 
 __author__ = 'jarbas'
@@ -35,7 +35,7 @@ class LILACSRhymesSkill(MycroftSkill):
     def initialize(self):
         # register intents
         self.parser = LILACSQuestionParser()
-        self.service = KnowledgeService(self.emitter)
+        self.service = KnowledgeQuery(self.emitter)
         self.build_intents()
 
     def build_intents(self):

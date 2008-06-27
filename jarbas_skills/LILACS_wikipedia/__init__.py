@@ -26,6 +26,7 @@ logger = getLogger(__name__)
 
 import wptools
 from mycroft.skills.displayservice import DisplayService
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 
 class LILACSWikipediaSkill(MycroftSkill):
@@ -34,7 +35,8 @@ class LILACSWikipediaSkill(MycroftSkill):
             name="LILACS_Wikipedia_Skill")
 
     def initialize(self):
-        self.emitter.on("wikipedia.request", self.handle_ask_wikipedia)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("wikipedia.request", self.handle_ask_wikipedia)
         test_intent = IntentBuilder("TestWikipediaIntent") \
             .require("testp").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
@@ -80,7 +82,7 @@ class LILACSWikipediaSkill(MycroftSkill):
         self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("wikipedia.result", result, self.message_context))
+        self.responder.update_response_data(result, self.message_context)
 
     def adquire(self, subject):
         logger.info('WikipediaKnowledge_Adquire')

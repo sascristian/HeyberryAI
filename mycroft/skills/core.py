@@ -245,7 +245,8 @@ class MycroftSkill(object):
         self.name = name or self.__class__.__name__
         self.bind(emitter)
         self.config_core = ConfigurationManager.get()
-        self.config = self.config_core.get(self.name)
+        self.APIS = self.config_core.get("APIS", {})
+        self.config = self.config_core.get(self.name, {})
         self.dialog_renderer = None
         self.vocab_dir = None
         self.file_system = FileSystemAccess(join('skills', self.name))

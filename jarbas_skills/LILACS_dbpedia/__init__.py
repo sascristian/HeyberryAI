@@ -29,6 +29,7 @@ import urlfetch
 import json
 from adapt.intent import IntentBuilder
 from mycroft.skills.displayservice import DisplayService
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 
 class LILACSDBpediaSkill(MycroftSkill):
@@ -38,7 +39,8 @@ class LILACSDBpediaSkill(MycroftSkill):
         self.host = "http://model.dbpedia-spotlight.org/en/annotate"
 
     def initialize(self):
-        self.emitter.on("dbpedia.request", self.handle_ask_dbpedia)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("dbpedia.request", self.handle_ask_dbpedia)
         test_intent = IntentBuilder("TestdbpediaIntent") \
             .require("testd").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
@@ -79,7 +81,7 @@ class LILACSDBpediaSkill(MycroftSkill):
         self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("dbpedia.result", result, self.message_context))
+        self.responder.update_response_data(result, self.message_context)
 
     def adquire(self, subject):
         logger.info('DBpediaKnowledge_Adquire')

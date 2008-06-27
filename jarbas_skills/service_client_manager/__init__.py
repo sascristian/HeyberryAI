@@ -30,6 +30,7 @@ from mycroft.configuration import ConfigurationManager
 from os.path import dirname, exists
 import time, os
 from os import mkdir
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 server_config = ConfigurationManager.get().get("jarbas_server")
 
@@ -152,6 +153,7 @@ class ClientManagerSkill(MycroftSkill):
         self.facebook_users = {} #fb_id, user object
 
     def initialize(self):
+        # listen for status updates
         self.emitter.on("user.connect", self.handle_user_connect)
         self.emitter.on("user.names", self.handle_user_names)
         self.emitter.on("user.request", self.handle_user_request)
@@ -159,9 +161,8 @@ class ClientManagerSkill(MycroftSkill):
         self.emitter.on("fb.chat.message", self.handle_fb_message_received)
         self.emitter.on("fb.chat.message.seen", self.handle_fb_message_seen)
         self.emitter.on("fb.last.seen.timestamps", self.handle_fb_timestamp)
-        self.emitter.on("user.from_sock.request", self.handle_user_from_sock_request)
-        self.emitter.on("user.from_id.request", self.handle_user_from_id_request)
-        self.emitter.on("user.from_facebook.request", self.handle_user_from_facebook_request)
+
+
         # build users id list db from disk
         if not exists(dirname(__file__) + "/users"):
             mkdir(dirname(__file__) + "/users")
@@ -181,6 +182,24 @@ class ClientManagerSkill(MycroftSkill):
             user = self.users[user_id]
             if user.user_type == "facebook chat":
                 self.facebook_users[user_id] = user
+
+        # set responders
+        self.sock_responder = ResponderBackend(self.name+"_socks",
+                                               self.emitter,
+                                               self.log)
+        self.id_responder = ResponderBackend(self.name+"_id",
+                                               self.emitter,
+                                               self.log)
+        self.facebook_responder = ResponderBackend(self.name+"_facebook",
+                                               self.emitter,
+                                               self.log)
+        # set responder answers
+        self.sock_responder.set_response_handler("user.from_sock.request",
+                                                 self.handle_user_from_sock_request)
+        self.id_responder.set_response_handler("user.from_id.request",
+                                               self.handle_user_from_id_request)
+        self.facebook_responder.set_response_handler("user.from_facebook.request",
+                                                     self.handle_user_from_facebook_request)
 
     # internal messages
     def handle_user_from_id_request(self, message):
@@ -209,7 +228,7 @@ class ClientManagerSkill(MycroftSkill):
                     "security_level": self.users[user_id].security_level,
                     "pub_key": self.users[user_id].public_key,
                     "nicknames": self.users[user_id].nicknames}
-            self.emitter.emit(Message("user.from_id.result", data, message.context))
+            self.id_responder.update_response_data(data, message.context)
             return
 
         if found:
@@ -220,10 +239,10 @@ class ClientManagerSkill(MycroftSkill):
                     "security_level": self.facebook_users[user_id].security_level,
                     "pub_key": self.facebook_users[user_id].public_key,
                     "nicknames": self.facebook_users[user_id].nicknames}
-            self.emitter.emit(Message("user.from_id.result", data, message.context))
+            self.id_responder.update_response_data(data, message.context)
         else:
             data = {"id": user_id, "error": "no such user"}
-            self.emitter.emit(Message("user.from_id.result", data, message.context))
+            self.id_responder.update_response_data(data, message.context)
 
     def handle_user_from_facebook_request(self, message):
         user_id = message.data.get("id")
@@ -240,7 +259,7 @@ class ClientManagerSkill(MycroftSkill):
             "security_level": self.facebook_users[user_id].security_level,
             "pub_key": self.facebook_users[user_id].public_key,
             "nicknames": self.facebook_users[user_id].nicknames}
-        self.emitter.emit(Message("user.from_facebook.result", data, message.context))
+        self.facebook_responder.update_response_data(data, message.context)
 
     def handle_user_from_sock_request(self, message):
         sock = message.data.get("sock")
@@ -260,7 +279,7 @@ class ClientManagerSkill(MycroftSkill):
         if user_id is None:
             self.log.error("Something went wrong")
             # TODO send close request?
-            self.emitter.emit(Message("user.from_sock.result", {"id": None, "error": "user does not seem to exist"}))
+            self.sock_responder.update_response_data({"id": None, "error": "user does not seem to exist"}, message.context)
             return
 
         data = {"id": user_id,
@@ -270,7 +289,7 @@ class ClientManagerSkill(MycroftSkill):
                 "security_level": self.users[user_id].security_level,
                 "pub_key": self.users[user_id].public_key,
                 "nicknames": self.users[user_id].nicknames}
-        self.emitter.emit(Message("user.from_sock.result", data, message.context))
+        self.sock_responder.update_response_data(data, message.context)
 
     # facebook messages
     def handle_fb_timestamp(self, message):

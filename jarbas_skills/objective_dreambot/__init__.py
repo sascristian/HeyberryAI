@@ -18,7 +18,7 @@
 
 from mycroft.skills.core import MycroftSkill
 from jarbas_utils.objectives_builder import ObjectiveBuilder
-from jarbas_utils.jarbas_services import DreamService
+from jarbas_utils.skill_tools import DeepDreamQuery
 from jarbas_utils.art import psy_art
 from os.path import dirname
 import random
@@ -38,7 +38,7 @@ class DreamBotSkill(MycroftSkill):
 
     def initialize(self):
         # start dreamer
-        self.dreamer = DreamService(self.emitter)
+        self.dreamer = DeepDreamQuery(self.emitter)
         # register intents
         intent = IntentBuilder("DreamBotIntent").require("DreamBotKeyword") \
             .optionally("url").build()

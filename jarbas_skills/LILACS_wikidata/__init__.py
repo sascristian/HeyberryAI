@@ -25,7 +25,7 @@ __author__ = 'jarbas'
 logger = getLogger(__name__)
 
 import wptools
-
+from jarbas_utils.skill_dev_tools import ResponderBackend
 
 class LILACSWikidataSkill(MycroftSkill):
     def __init__(self):
@@ -33,7 +33,8 @@ class LILACSWikidataSkill(MycroftSkill):
             name="LILACS_Wikidata_Skill")
 
     def initialize(self):
-        self.emitter.on("wikidata.request", self.handle_ask_wikidata)
+        self.responder = ResponderBackend(self.name, self.emitter, self.log)
+        self.responder.set_response_handler("wikidata.request", self.handle_ask_wikidata)
         test_intent = IntentBuilder("TestWikidataIntent") \
             .require("test").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
@@ -58,7 +59,7 @@ class LILACSWikidataSkill(MycroftSkill):
         self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("wikidata.result", result, self.message_context))
+        self.responder.update_response_data(result, self.message_context)
 
     def adquire(self, subject):
         logger.info('WikidataKnowledge_Adquire')
