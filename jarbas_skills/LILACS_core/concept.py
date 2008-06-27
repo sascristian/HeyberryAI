@@ -274,12 +274,13 @@ class ConceptConnector():
             concepts = {}
         if user_concepts is None:
             user_concepts = {}
+        self.name = "LILACS_Concept_Connector"
         self.concepts = concepts
         self.user_concepts = user_concepts
         self.logger = getLogger("ConceptConnector")
         self.emitter = emitter
         self.emitter.on("new_node", self.new_node)
-        self.storage = LILACSstorageQuery(self.emitter)
+        self.storage = LILACSstorageQuery(self.name, self.emitter, self.logger)
         self.saved = []
         self.curiosity_save = False
         self.curiosity_load = False

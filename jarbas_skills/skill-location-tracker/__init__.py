@@ -33,10 +33,11 @@ LOGGER = getLogger(__name__)
 class LocationTrackerSkill(MycroftSkill):
     def __init__(self):
         super(LocationTrackerSkill, self).__init__()
-        self.minutes = self.config.get("location").get("update_mins", 15)
-        self.source = self.config.get("location").get("update_source", "ip")
-        self.active = self.config.get("location").get("tracking", True)
-        self.auto_context = self.config.get("location").get("auto_context",True)
+        self.config = self.config_core.get("location")
+        self.minutes = self.config.get("update_mins", 15)
+        self.source = self.config.get("update_source", "ip")
+        self.active = self.config.get("tracking", True)
+        self.auto_context = self.config.get("auto_context", True)
         self.active = True
         self.timer = Timer(60 * self.minutes, self.get_location)
         self.timer.setDaemon(True)

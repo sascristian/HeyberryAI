@@ -71,8 +71,9 @@ class EventSkill(ScheduledSkill):
                 skill_id = self.intent_parser.get_skill_id(key)
                 if int(skill_id) == 0:
                     continue
-                key = str(skill_id) + ":" + key
-                self.emitter.emit(Message(key, a[key], self.message_context))
+                message_type = str(skill_id) + ":" + key
+                self.emitter.emit(Message(message_type, a[key],
+                                          self.message_context))
             timeout = 0
             while self.waiting and timeout < 10:
                 time.sleep(1)
