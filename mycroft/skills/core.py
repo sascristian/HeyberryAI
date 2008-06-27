@@ -439,7 +439,7 @@ class MycroftSkill(object):
         self.registered_intents.append((name, intent_parser))
         self.add_event(intent_parser.name, handler)
 
-    def register_intent_file(self, intent_file, handler):
+    def register_intent_file(self, intent_file, handler, need_self=False):
         """
                   Register an Intent file with the intent service.
 
