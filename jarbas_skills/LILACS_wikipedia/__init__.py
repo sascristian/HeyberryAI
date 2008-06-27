@@ -38,7 +38,7 @@ class LILACSWikipediaSkill(MycroftSkill):
         self.responder = ResponderBackend(self.name, self.emitter, self.log)
         self.responder.set_response_handler("wikipedia.request", self.handle_ask_wikipedia)
         test_intent = IntentBuilder("TestWikipediaIntent") \
-            .require("testp").require("TargetKeyword").build()
+            .require("WikipediaKeyword").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
         self.display_service = DisplayService(self.emitter, self.name)
 

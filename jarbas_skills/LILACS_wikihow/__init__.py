@@ -39,7 +39,7 @@ class LILACSWikiHowSkill(MycroftSkill):
         self.responder = ResponderBackend(self.name, self.emitter, self.log)
         self.responder.set_response_handler("wikihow.request", self.handle_ask_wikihow)
         test_intent = IntentBuilder("TestWikihowIntent") \
-            .require("testh").require("TargetKeyword").build()
+            .require("WikihowKeyword").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
         self.display_service = DisplayService(self.emitter, self.name)
 

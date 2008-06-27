@@ -42,7 +42,7 @@ class LILACSDBpediaSkill(MycroftSkill):
         self.responder = ResponderBackend(self.name, self.emitter, self.log)
         self.responder.set_response_handler("dbpedia.request", self.handle_ask_dbpedia)
         test_intent = IntentBuilder("TestdbpediaIntent") \
-            .require("testd").require("TargetKeyword").build()
+            .require("DBPediaKeyword").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
         self.display_service = DisplayService(self.emitter, self.name)
 

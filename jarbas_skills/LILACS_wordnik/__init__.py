@@ -45,7 +45,7 @@ class LILACSWordnikSkill(MycroftSkill):
         self.responder = ResponderBackend(self.name, self.emitter, self.log)
         self.responder.set_response_handler("wordnik.request", self.handle_ask_wordnik)
         test_intent = IntentBuilder("TestWordnikIntent") \
-            .require("testn").require("TargetKeyword").build()
+            .require("WordnikKeyword").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
 
     def handle_test_intent(self, message):

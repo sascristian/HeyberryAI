@@ -36,7 +36,7 @@ class LILACSConceptNetSkill(MycroftSkill):
         self.responder = ResponderBackend(self.name, self.emitter, self.log)
         self.responder.set_response_handler("conceptnet.request", self.handle_ask_conceptnet)
         test_intent = IntentBuilder("TestconceptnetIntent") \
-            .require("testc").require("TargetKeyword").build()
+            .require("ConceptNetKeyword").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
 
     def handle_test_intent(self, message):

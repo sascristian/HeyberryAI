@@ -73,7 +73,7 @@ class LILACSWolframalphaSkill(MycroftSkill):
         self.responder.set_response_handler("wolframalpha.request", self.handle_ask_wolframalpha)
 
         test_intent = IntentBuilder("TestWolframIntent") \
-            .require("testr").require("TargetKeyword").build()
+            .require("WolframKeyword").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
 
     def handle_test_intent(self, message):

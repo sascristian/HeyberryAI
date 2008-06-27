@@ -27,6 +27,7 @@ from mycroft.skills.core import MycroftSkill
 
 __author__ = 'jarbas'
 
+
 class LILACSRhymesSkill(MycroftSkill):
     # https://github.com/ElliotTheRobot/LILACS-mycroft-core/issues/19
     def __init__(self):
@@ -35,7 +36,7 @@ class LILACSRhymesSkill(MycroftSkill):
     def initialize(self):
         # register intents
         self.parser = LILACSQuestionParser()
-        self.service = KnowledgeQuery(self.emitter)
+        self.service = KnowledgeQuery(self.name, self.emitter, self.log)
         self.build_intents()
 
     def build_intents(self):

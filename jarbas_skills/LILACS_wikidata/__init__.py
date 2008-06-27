@@ -36,7 +36,7 @@ class LILACSWikidataSkill(MycroftSkill):
         self.responder = ResponderBackend(self.name, self.emitter, self.log)
         self.responder.set_response_handler("wikidata.request", self.handle_ask_wikidata)
         test_intent = IntentBuilder("TestWikidataIntent") \
-            .require("test").require("TargetKeyword").build()
+            .require("WikidataKeyword").require("TargetKeyword").build()
         self.register_intent(test_intent, self.handle_test_intent)
 
     def handle_test_intent(self, message):
