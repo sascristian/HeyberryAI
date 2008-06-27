@@ -23,11 +23,15 @@ class AstronomyPicSkill(MycroftSkill):
         self.save = True
         try:
             self.save_path = self.config_core["database_path"] + "/astronomy_picture_of_the_day"
+            self.txt_save_path = self.config_core["database_path"] + "/astronomy_picture_of_the_day_descriptions"
         except:
             self.save_path = self.config["save_path"]
+            self.txt_save_path = self.config["txt_path"]
 
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
+        if not os.path.exists(self.txt_save_path):
+            os.makedirs(self.txt_save_path)
 
     def initialize(self):
         apod_intent = IntentBuilder("ApodIntent").\
@@ -52,9 +56,9 @@ class AstronomyPicSkill(MycroftSkill):
         f.close()
 
         if self.save:
-            save_path = self.save_path + "/" + title.replace(" ", "_") + ".jpg"
+            save_path = self.txt_save_path + "/" + title.replace(" ", "_") + ".txt"
             # save description
-            f = open(self.save_path+"/"+title.replace(" ", "_")+".txt", 'wb')
+            f = open(save_path, 'wb')
             f.write(summary)
             f.close()
 
