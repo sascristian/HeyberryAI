@@ -15,20 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from os.path import dirname
-
 import random
-import cv2
-import numpy as np
 from bs4 import BeautifulSoup
 import urllib2
 import os
 import json
 import cloudsight
+import time
 
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+from mycroft.skills.displayservice import DisplayService
 
 __author__ = 'jarbas'
 
@@ -66,6 +64,8 @@ class PictureSkill(MycroftSkill):
             require("idet").build()
         self.register_intent(pictureiden_intent, self.handle_identify_picture_intent)
 
+        self.display_service = DisplayService(self.emitter)
+
     def __register_prefixed_regex(self, prefixes, suffix_regex):
         for prefix in prefixes:
             self.register_regex(prefix + ' ' + suffix_regex)
@@ -75,45 +75,26 @@ class PictureSkill(MycroftSkill):
         with open(path) as f:
             urls = f.readlines()
         sucess = False
-        #only keep 50 pictures for amuzing
-        i = 0
-        for f in os.listdir(self.save_path + "/random"):
-            if os.path.isfile(os.path.join(self.save_path + "/random", f)):
-                i += 1
-        if i <= 50:
-            pic_num = i + 1
-        else:
-            pic_num = random.choice(range(0,50,1))
         while not sucess:
             try:
                 image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
                 chosenurl = random.choice(image_urls.split('\n'))
-                LOGGER.info(chosenurl)
-                #print(chosenurl)
-                url_response = urllib2.urlopen(chosenurl)
-                img_array = np.array(bytearray(url_response.read()), dtype=np.uint8)
-                img = cv2.imdecode(img_array, -1)
-                savepath = self.save_path+"/random" + str(pic_num) + ".jpg"
-                LOGGER.info('Resizing and saving image to ' + savepath)
-                img = cv2.resize(img, (640, 480))
-                # img = cv2.resize(img, (200, 200))
-                cv2.imwrite(savepath, img)
-                self.add_result("picture", savepath)
-                sucess = True
-                chosenurl =  savepath
                 label = self.identifypicture(chosenurl)
-                self.add_result("label", label)
+                LOGGER.info(chosenurl)
+                # save pic
+                img = urllib2.Request(chosenurl)
+                raw_img = urllib2.urlopen(img).read()
+                save_path = self.save_path + "/random/" + time.asctime() + ".jpg"
+                f = open(save_path, 'wb')
+                f.write(raw_img)
+                f.close()
+                sucess = True
+                self.display_service.show([save_path])
                 self.speak_dialog("iden")
                 self.speak(label)
-                cv2.imshow(label, img)
-                cv2.waitKey(20000)
 
             except Exception as e:
                 LOGGER.error(str(e))
-                #print(str(e))
-
-        cv2.destroyWindow('random picture')
-        self.emit_results()
 
     def identifypicture(self, picture):
         url = picture
@@ -131,40 +112,23 @@ class PictureSkill(MycroftSkill):
         with open(path) as f:
             urls = f.readlines()
         sucess = False
-        #only keep 50 pictures for amuzing
-        i = 0
-        for f in os.listdir(self.save_path):
-            if os.path.isfile(os.path.join(self.save_path, f)):
-                i += 1
-        if i <= 50:
-            pic_num = i + 1
-        else:
-            pic_num = random.choice(range(0,50,1))
         while not sucess:
             try:
                 image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
                 chosenurl = random.choice(image_urls.split('\n'))
                 LOGGER.info(chosenurl)
-                #print(chosenurl)
-                url_response = urllib2.urlopen(chosenurl)
-                img_array = np.array(bytearray(url_response.read()), dtype=np.uint8)
-                img = cv2.imdecode(img_array, -1)
-                LOGGER.info('Resizing and saving image to ' + "random pic/" + str(pic_num) + ".jpg")
-                img = cv2.resize(img, (640, 480))
-                # img = cv2.resize(img, (200, 200))
-                picpath = self.save_path+"/random/" + str(pic_num) + ".jpg"
-                cv2.imwrite(picpath, img)
-                #self.add_result("picture", picpath)
+                # save pic
+                img = urllib2.Request(chosenurl)
+                raw_img = urllib2.urlopen(img).read()
+                save_path = self.save_path + "/random/" + time.asctime() + ".jpg"
+                f = open(save_path, 'wb')
+                f.write(raw_img)
+                f.close()
                 sucess = True
-                cv2.imshow('random picture', img)
-                cv2.waitKey(20000)
+                self.display_service.show([save_path])
 
             except Exception as e:
                 LOGGER.error(str(e))
-                #print(str(e))
-
-        cv2.destroyWindow('random picture')
-        #self.emit_results()
 
     def handle_search_picture_intent(self,message):
         #search = "anal porn lesbian"
@@ -180,13 +144,8 @@ class PictureSkill(MycroftSkill):
             if os.path.isfile(os.path.join(path, f)):
                 pics.append(os.path.join(path, f))
         pic = random.choice(pics)
-        #self.add_result("picture", pic)
-        showpic = cv2.imread(pic)
+        self.display_service.show([pic])
         self.speak("heres your picture")
-        cv2.imshow(search, showpic)
-        cv2.waitKey(20000)
-        cv2.destroyWindow(search)
-        #self.emit_results()
 
     def get_soup(self, url, header):
         return BeautifulSoup(urllib2.urlopen(urllib2.Request(url, headers=header)), 'html.parser')
@@ -241,7 +200,6 @@ class PictureSkill(MycroftSkill):
                 print e
 
     def stop(self):
-        cv2.destroyAllWindows()
         pass
 
 

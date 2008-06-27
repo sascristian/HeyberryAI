@@ -12,6 +12,7 @@ import imutils
 import sys
 from time import sleep
 
+from mycroft.skills.displayservice import DisplayService
 from mycroft.util.randomart import makeImage
 from mycroft.util.geopatterns import GeoPattern
 
@@ -193,6 +194,8 @@ class DreamSkill(MycroftSkill):
 		self.register_intent(show_dream_intent,
 							 self.handle_show_dream_intent)
 
+		self.screen_service = DisplayService(self.emitter)
+
 	def __register_prefixed_regex(self, prefixes, suffix_regex):
 		for prefix in prefixes:
 			self.register_regex(prefix + ' ' + suffix_regex)
@@ -205,11 +208,8 @@ class DreamSkill(MycroftSkill):
 				dreams.append(os.path.join(self.outputdir, f))
 		dream = random.choice(dreams)
 
-		dreampic = cv2.imread(dream)
 		self.speak("look at this dream i had")
-		cv2.imshow('dream', dreampic)
-		cv2.waitKey(20000)
-		cv2.destroyWindow('dream')
+		self.screen_service.show([dream])
 
 	def handle_psy_dream_intent(self, message):
 		if not self.dreaming:
@@ -227,12 +227,11 @@ class DreamSkill(MycroftSkill):
 			result = self.dream(imagepah)
 
 		if result is not None:
-			name = time.time()
-			cv2.imwrite(self.outputdir + "/dream/psy/" + name + ".jpg", result)
+			name = time.asctime()
+			save_path = self.outputdir + "/dream/psy/" + name + ".jpg"
+			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			cv2.imshow("Dreaming...", result)
-			cv2.waitKey(35000)
-			cv2.destroyAllWindows()
+			self.screen_service.show([save_path])
 
 	def handle_pure_dream_intent(self, message):
 
@@ -252,12 +251,11 @@ class DreamSkill(MycroftSkill):
 			result = self.dream(imagepah)
 
 		if result is not None:
-			name = time.time()
-			cv2.imwrite(self.outputdir + "/pure/" + name + ".jpg", result)
+			name = time.asctime()
+			save_path = self.outputdir + "/pure/" + name + ".jpg"
+			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			cv2.imshow("Dreaming...", result)
-			cv2.waitKey(35000)
-			cv2.destroyAllWindows()
+			self.screen_service.show([save_path])
 
 	def handle_dream_intent(self, message):
 		if not self.dreaming:
@@ -276,12 +274,11 @@ class DreamSkill(MycroftSkill):
 			result = self.dream(imagepah)
 
 		if result is not None:
-			name = time.time()
-			cv2.imwrite(self.outputdir + "/dream/random/" + name + ".jpg", result)
+			name = time.asctime()
+			save_path = self.outputdir + "/dream/random/" + name + ".jpg"
+			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			cv2.imshow("Dreaming...", result)
-			cv2.waitKey(35000)
-			cv2.destroyAllWindows()
+			self.screen_service.show([save_path])
 
 	def handle_dream_about_webcam_intent(self, message):
 
@@ -307,15 +304,10 @@ class DreamSkill(MycroftSkill):
 
 		if result is not None:
 			name = time.asctime()
-			cv2.imwrite(self.outputdir + "/webcam/" + name + ".jpg", result)
+			save_path = self.outputdir + "/webcam/" + name + ".jpg"
+			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			cv2.imshow("Dreaming...", result)
-			cv2.waitKey(35000)
-			#cv2.destroyWindow("Dreaming...")
-			#k = cv2.waitKey(1000)
-		   # self.out.release()
-			cv2.destroyAllWindows()
-		self.emit_results()
+			self.screen_service.show([save_path])
 
 	def handle_dream_about_dreams_intent(self, message):
 
@@ -336,11 +328,10 @@ class DreamSkill(MycroftSkill):
 
 		if result is not None:
 			name = time.asctime()
-			cv2.imwrite(self.outputdir + "/recursive/" + name + ".jpg", result)
+			save_path = self.outputdir + "/recursive/" + name + ".jpg"
+			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			cv2.imshow("Dreaming...", result)
-			cv2.waitKey(35000)
-			cv2.destroyAllWindows()
+			self.screen_service.show([save_path])
 
 	def handle_dream_about_this_intent(self, message):
 		chosenpic = random.choice(os.listdir(self.sharedfolder))
@@ -362,15 +353,10 @@ class DreamSkill(MycroftSkill):
 
 		if result is not None:
 			name = time.asctime()
-			cv2.imwrite(self.outputdir + "/this/" + name + ".jpg", result)
+			save_path = self.outputdir + "/this/" + name + ".jpg"
+			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			cv2.imshow("Dreaming...", result)
-			cv2.waitKey(35000)
-			#cv2.destroyWindow("Dreaming...")
-			#k = cv2.waitKey(1000)
-		   # self.out.release()
-			cv2.destroyAllWindows()
-		self.emit_results()
+			self.screen_service.show([save_path])
 
 	def handle_dream_about_intent(self, message):
 		imagepath = ""
@@ -389,14 +375,10 @@ class DreamSkill(MycroftSkill):
 
 		if result is not None:
 			name = search + "_" + time.asctime()
-			cv2.imwrite(self.outputdir + "/about/" + name + ".jpg", result)
+			save_path = self.outputdir + "/about/" + name + ".jpg"
+			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			cv2.imshow("Dreaming...", result)
-			cv2.waitKey(35000)
-			#cv2.destroyWindow("Dreaming...")
-			#k = cv2.waitKey(1000)
-		   # self.out.release()
-			cv2.destroyAllWindows()
+			self.screen_service.show([save_path])
 
 	def stop(self):
 		cv2.destroyAllWindows()
@@ -442,19 +424,18 @@ class DreamSkill(MycroftSkill):
 		with open(self.sourcespath) as f:
 			urls = f.readlines()
 		i = 0
-		pic_num = 0
 		while i < number:
 			try:
 				image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
 				chosenurl = random.choice(image_urls.split('\n'))
 				print(chosenurl)
-				url_response = urllib2.urlopen(chosenurl)
-				img_array = np.array(bytearray(url_response.read()), dtype=np.uint8)
-				img = cv2.imdecode(img_array, -1)
-				print('Saving pic! ')
-				# img = cv2.resize(img, (200, 200))
-				cv2.imwrite(self.sourcedir+"/" + str(pic_num) + ".jpg", img)
-				pic_num += 1
+
+				img = urllib2.Request(chosenurl)
+				raw_img = urllib2.urlopen(img).read()
+				save_path = self.sourcedir+"/" + time.asctime() + ".jpg"
+				f = open(save_path, 'wb')
+				f.write(raw_img)
+				f.close()
 				i += 1
 
 			except Exception as e:
