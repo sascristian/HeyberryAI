@@ -32,7 +32,8 @@ class PadatiousFallback(FallbackSkill):
 
     def initialize(self):
         self.register_fallback(self.handle_fallback, 99)
-        self.padatious = PadatiousFallbackQuery(self.emitter)
+        self.padatious = PadatiousFallbackQuery(self.name, self.emitter,
+                                                self.log)
 
     def handle_fallback(self, message):
         return self.padatious.get_padatious_response(message.data)

@@ -57,7 +57,8 @@ class LILACSJsonStorageSkill(MycroftSkill):
         else:
             sucess = False
         self.load_responder.update_response_data(
-            {"node": node, "sucess": sucess}, self.message_context)
+            {"node": node, "data": data, "sucess": sucess},
+            self.message_context)
 
     def handle_save_node(self, message):
         self.handle_update_message_context(message)

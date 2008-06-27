@@ -617,7 +617,7 @@ class ConceptConnector():
         if not loaded.get("sucess", False):
             self.logger.info("no node to load " + name)
             return False
-        node_dict = loaded["node"]
+        node_dict = loaded["data"]
         type = node_dict.get("type", "info")
         self.logger.info("creating concept in memory: " + name)
         if type == "info":
