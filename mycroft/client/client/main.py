@@ -202,7 +202,7 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
         self.emitter.on('speak', self.handle_speak)
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
         self.emitter.on('server.intent_failure', self.handle_intent_failure)
-        self.emitter.on("server_request", self.handle_server_request)
+        self.emitter.on("server.message.request", self.handle_server_request)
         self.emitter.on('message', self.end_wait)
         self.emitter.on('intent.execution.start', self.end_wait)
 

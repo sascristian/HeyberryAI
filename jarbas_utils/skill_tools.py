@@ -14,6 +14,21 @@ def url_to_pic(url):
     return saved_url
 
 
+class RBMQuery(QueryBackend):
+    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+                 server=False, client=False):
+        super(RBMQuery, self).__init__(name=None, emitter=None, timeout=5,
+                                                logger=None,
+                                                server=False, client=False)
+
+    def sample(self, model="random", sample_num=3, context=None):
+        result = self.send_request("RBM.request",
+                                 {"model": model, "sample_num":sample_num},
+                                 message_context=context)
+        result = result.get("samples")
+        return result
+
+
 class ColorizationQuery(QueryBackend):
     def __init__(self, name=None, emitter=None, timeout=35, logger=None,
                  server=False, client=False):

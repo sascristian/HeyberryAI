@@ -1,5 +1,6 @@
 from mycroft.messagebus.api import BusQuery, BusResponder
 from mycroft.util.log import getLogger
+import time
 
 
 class ResponderBackend(object):
@@ -195,9 +196,10 @@ class QueryBackend(object):
             self.logger = logger
         self.server = server
         self.client = client
-        self.client_request_message = "client.request"
-        self.server_request_message = "server.request"
+        self.client_request_message = "client.message.request"
+        self.server_request_message = "server.message.request"
         self.waiting_messages = []
+        self.elapsed_time = 0
 
     def send_request(self, message_type, message_data=None,
                      message_context=None, response_messages=None,
@@ -239,17 +241,20 @@ class QueryBackend(object):
             message_context = {}
         message_context["source"] = self.name
         message_context["waiting_for"] = self.waiting_messages
-
+        start = time.time()
+        self.elapsed_time = 0
         if not self.server:
             if not self.client:
-                return self._send_internal_request(message_type, message_data,
+                result = self._send_internal_request(message_type, message_data,
                                                    message_context)
             else:
-                return self._send_client_request(message_type, message_data,
+                result = self._send_client_request(message_type, message_data,
                                                  message_context, cipher)
         else:
-            return self._send_server_request(message_type, message_data,
+            result = self._send_server_request(message_type, message_data,
                                              message_context, cipher)
+        self.elapsed_time = time.time() - start
+        return result
 
     def _send_server_request(self, message_type, message_data,
                              message_context, cipher="aes"):

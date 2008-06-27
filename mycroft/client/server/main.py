@@ -167,7 +167,8 @@ class MyServerFactory(WebSocketServerFactory):
     def register_internal_messages(self):
         self.emitter.on('speak', self.handle_speak)
         self.emitter.on('complete_intent_failure', self.handle_failure)
-        self.emitter.on('message_request', self.handle_message_to_sock_request)
+        self.emitter.on('client.message.request',
+                        self.handle_message_to_sock_request)
 
     def request_client_pgp(self, client, cipher="none"):
         type, ip, sock_num = client.peer.split(":")
