@@ -16,7 +16,7 @@ class ContextService():
         client.emitter.on('recognizer_loop:utterance', self.handle_recognizer_loop_utterance)
         client.emitter.on("freewill_result", self.handle_freewill_result)
         client.emitter.on("speak", self.handle_speak)
-        client.emitter.on("results", self.handle_skill_results)
+        client.emitter.on("register_result", self.skill_results_regist)
         client.emitter.on("context_request", self.handle_context_request)
         client.emitter.on("intent_failure", self.handle_intent_failure) #counts fails
         client.emitter.on("register_vocab", self.handle_register_vocab) #handle regexes
@@ -59,6 +59,9 @@ class ContextService():
         self.register_abstract()
 
     ####### init / helper functions
+    def skill_results_regist(self, message):
+        msg_type = message.data["msg_type"]
+        client.emitter.on(msg_type, self.handle_skill_results)
 
     def register_context(self, params, type="default"):
         for name in params:
@@ -231,14 +234,15 @@ class ContextService():
         self.signals_dict["last_fail"] = message.data.get("utterance")
 
     def handle_skill_results(self, message):
-        key = message.data.get('skill_name') #must send results in skill, NOT default
+        key = message
         results = message.data
+        print results
         self.context_dict[key] = results
         self.results_dict[key] = results
         #logger.info("Updated context for results from "+key)
         for result in results:
             params = [result]  # if you send a string instead it is taken like a list of chars
-            if result not in self.vocab and result != "skill_name":
+            if result not in self.vocab:
                 self.register_context(params, type="skill_result")
             try:
                 self.context_dict[result] = message.data[result]

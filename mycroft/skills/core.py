@@ -328,13 +328,15 @@ class MycroftSkill(object):
     # https://github.com/MycroftAI/mycroft-core/pull/281
 
     def add_result(self, key, value):
-        self.results['skill_name'] = self.name  # auto-add skill_name
-        self.results[str(key)] = value
+        self.results[str(key)] = [value]
+        self.emitter.emit(Message("register_result", {"msg_type": key + "_result"}))
 
     def emit_results(self):
         if len(self.results) > 0:
-            self.emitter.emit(
-                Message("results", self.results))
+            for key in self.results:
+                message_type = key + "_result"
+                self.emitter.emit(
+                    Message(message_type, self.results[key]))
             self.results.clear()
 
     def speak(self, utterance, expect_response=False):
@@ -342,9 +344,6 @@ class MycroftSkill(object):
                 'expect_response': expect_response}
 
         self.emitter.emit(Message("speak", data))
-        self.add_result("speak", utterance)
-
-    # end of results property stuff changes
 
     def feedback(self, feedback, utterance):
         # get sentiment result utterance and confidences, do something
