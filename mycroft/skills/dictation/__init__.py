@@ -81,7 +81,7 @@ class DictationSkill(MycroftSkill):
     def stop(self):
         pass
 
-    def Converse(self, transcript, lang="en-us"):
+    def converse(self, transcript, lang="en-us"):
         if self.dictating:
             #TODO better stop handling, using keyword.voc
             if "stop" in transcript[0] or "end" in transcript[0]:
