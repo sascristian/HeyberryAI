@@ -28,7 +28,7 @@ sleep(1)
 def execute_intent(intent_name, params_dict=None):
     if params_dict is None:
         params_dict = {}
-    client.emit(Message(intent_name , params_dict))
+    client.emit(Message(intent_name, params_dict))
 
 # function to execute objective
 def execute_objective(name):
@@ -36,12 +36,11 @@ def execute_objective(name):
 
 # speak
 def speak(utterance):
-    client.emit(Message("speak",{"utterance":utterance}))
+    client.emit(Message("speak" , {"utterance": utterance}))
 
 
 # cheat code script
-#speak("God Mode Activated")
+speak("God Mode Activated")
 # first line just in case using pr#558 https://github.com/MycroftAI/mycroft-core/pull/558  14/3/2017
 # execute_intent("WikipediaSkill:WikipediaIntent",{"ArticleTitle":"Konami Code"})
-#execute_intent("WikipediaIntent",{"ArticleTitle":"Konami Code"})
-execute_intent("testObjectiveKeyword",{})
+execute_intent("WikipediaIntent", {"ArticleTitle": "Konami Code"})
