@@ -1,3 +1,1 @@
-Rock
-Paper
-Scissors
+{{ choice }}

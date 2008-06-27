@@ -1,7 +1,0 @@
-{
-  "utterance": "rock paper scissors",
-  "intent_type": "RockPaperScissorsIntent",
-  "intent": {
-    "RockPaperScissorsKeyword": "rock paper scissors"
-  }
-}

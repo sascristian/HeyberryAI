@@ -181,12 +181,12 @@ class PoetrySkill(MycroftSkill):
         # choose style (black metal, death metal, trash metal)
         try:
             style = message.data.get["Style"]
-            print style
         except:
             style = random.choice(self.styles)
-        self.add_result("style", style)
+        self.add_result("poetry_style", style)
         poem = self.poetry(style)
-        self.save(style,poem)
+        self.add_result("poem", poem)
+        self.save(style, poem)
         # speak
         self.speak(poem)
         self.emit_results()

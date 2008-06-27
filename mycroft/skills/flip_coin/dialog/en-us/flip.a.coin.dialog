@@ -1,2 +1,1 @@
-Coin flip is, heads.
-Coin flip is, tails.
+Coin flip is, {{ flip }}

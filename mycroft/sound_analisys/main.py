@@ -13,8 +13,10 @@ import itertools
 import operator
 import datetime
 import signal
+from os.path import dirname
 
-path = "/home/user/mycroft-core/mycroft/ears/"
+path = dirname(__file__) + "/"
+
 class AudioAnalisys():
     def __init__(self):
         self.allData = []
@@ -317,5 +319,5 @@ def plotCV(Fun, Width, Height, MAX):
 
     return h
 
-#ears = AudioAnalisys()
-#ears.recordAudioSegments()
+#sound_analisys = AudioAnalisys()
+#sound_analisys.recordAudioSegments()

@@ -1,4 +1,1 @@
-First coin flip is heads. Second coin flip is heads. Heads and heads.
-First coin flip is heads. Second coin flip is tails. Heads and tails.
-First coin flip is tails. Second coin flip is tails. Tails and tails.
-First coin flip is tails. Second coin flip is heads. Tails and heads.
+First coin flip is {{ flip1 }}. Second coin flip is {{ flip2 }}. {{ flip1 }} and {{ flip2 }}

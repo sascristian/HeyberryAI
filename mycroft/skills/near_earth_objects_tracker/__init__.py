@@ -136,6 +136,13 @@ class NEOSkill(MycroftSkill):
             hazard = neo["is_potentially_hazardous_asteroid"]
             neo = {"name":name, "id":id, "abs_mag":abs_mag, "max_d":max_d, "min_d":min_d, "miss_d":miss_d,
                    "ap_date":ap_date, "velocity":velocity, "hazard":hazard, "nasa_url":nasa_url}
+            if self.save:
+                save_path = self.save_path + "/" + name + ".txt"
+                # save neo data
+                f = open(save_path, 'wb')
+                for key in neo:
+                    f.write(key + " : " + str(neo[key]))
+                f.close()
             self.neos.append(neo)
 
     def converse(self, transcript, lang="en-us"):

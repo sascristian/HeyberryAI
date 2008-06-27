@@ -24,7 +24,6 @@ class WallpaperSkill(MycroftSkill):
         super(WallpaperSkill, self).__init__(name="WallpaperSkill")
 
         self.desktop = "jwm"
-        self.add_result("desktop", self.desktop)
         self.command = self.processcommand(self.desktop)
 
         self.USERAGENT = "Jarbas Ai Wallpaper finder"
