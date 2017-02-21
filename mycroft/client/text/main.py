@@ -35,6 +35,10 @@ def setflag(event):
     global disable_speak_flag
     disable_speak_flag = True
 
+def unsetflag(event):
+    global disable_speak_flag
+    disable_speak_flag = False
+
 def handle_speak(event):
     global disable_speak_flag
     if not disable_speak_flag:
@@ -47,7 +51,7 @@ def handle_speak(event):
         finally:
             mutex.release()
             ws.emit(Message("recognizer_loop:audio_output_end"))
-    disable_speak_flag = False
+    #disable_speak_flag = False
 
 
 def connect():
@@ -61,6 +65,7 @@ def main():
     if '--quiet' not in sys.argv:
         ws.on('speak', handle_speak)
         ws.on('do_not_speak_flag', setflag)
+        ws.on('do_not_speak_flag_finish', unsetflag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
