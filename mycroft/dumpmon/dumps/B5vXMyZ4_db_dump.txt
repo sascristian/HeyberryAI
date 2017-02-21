@@ -1,0 +1,235 @@
+FLING LEAKED DATABASE: 40 MILLION ACCOUNTS
+ 
+Here is the link to this hacked database:
+http://goo.gl/QsrYfF
+
+
+This leak includes the emails and passwords for 40 MILLION Fling users accounts.
+Just open up the database in your favorite text editor and Ctrl + F for the email you want to hack.
+
+Proof of content, first 100 lines of accounts:
+Format is email:password (password is SH1 hashed)
+
+ms_michel@hotmail.com:f998dc05ae9073973ddce48c40e6cb55920acefe
+aborruso@gmail.com:0dc16199d11ce789d18946e0c0d36591c786f2c6
+l_decrescienzo@virgilio.it:ecfaa9d278f3db2118d5942fd756613374f97b67
+cariplino72@yahoo.it:019c1203752a21fd9f2d2c0d4a5f9945421fc82c
+emil74@hotmail.it:9adcb829b314c6e5775b68c5de90f0dd1855fade
+daniele.celani@gmail.com:c14b08bf87690f4633074dff4d14053de1414919
+d.patti2012@gmail.com:8b557c37760d30b777232e7f4d2fd36d58ac6c84
+steve@springworks.co.uk:9dd5179efcb19baa6897b895eadfad3fefc8fd4b
+iter@email.it:834159e0624086de398cbad5841a62f5fa3cac8e
+manjitemail-tumblr@yahoo.com:2909d4502b7907c988650f942665d780a68f43ad
+angelo@arentoft.org:4baad9e94a283ba166f4efbd53834ec2a6e0e12a
+jonasbarzagliablog@gmail.com:64952c9ae1ea97a8f42d98d0e55695ef02e82995
+moreeasy@gmail.com:f4d70cdf6b6e1c48b5dc2d2ef7a7ea878073c836
+gasfirane@gmail.com:75250e1c7e9134c6feed8fb94f56bf56d034cff1
+testadipalla@tin.it:4d8f69199a5251abdb7dca20f8b6b30244008e25
+kublaikan@gmail.com:b11027c3604619b33db604398df3dbe2d9b11d97
+stephen.rowling@gmail.com:9dd5179efcb19baa6897b895eadfad3fefc8fd4b
+ciro@winged.it:b8f71e9b276f946eed8f8062bd4193a165d5e28e
+laynelebahn@gmail.com:2b4f76e7ad9609a79d2284e4039787736c5c541f
+greg@auld.name:f0d0b444ad60c0603fd2bd7ab2ada3031f8d2896
+mawiik@gmail.com:ebb2880b3ee1e36f04ccec94111354c9f763f0c7
+scottbp@gmail.com:702a90b78c2be4df40bf28c129e437520599f5d7
+tumblr.net@fanless.com:2a80962a9863f186e493027eae703dcf5f36bd68
+jquig99@gmail.com:44c1536803b16ff898134f2e6a3cd92e10bdfea8
+guan.un@gmail.com:1c8741df941d6221ae1db387e6606ad039b405bc
+vit.mad@gmail.com:fcaca6d0c27eb29361ccf79c45cfdd69de1986ed
+faboz84@gmail.com:062f4b7fb506b80904b29ec64720f9397bd985e7
+drawrouk@guerrillamail.net:b290825032bb938149f8421d915be0153097e132
+crimenx@gmail.com:9040a7f24d21459b86d652d8be0cdf3b4fdc9e21
+marco.botticelli@gmail.com:d3af3a5643eb0f7a7c3a81124d8d8e0050178c4a
+chcfrancesco@libero.it:6235985022c8ead4826a4a62a5181681a3145ebe
+lucchetto85@libero.it:6235985022c8ead4826a4a62a5181681a3145ebe
+mark@boszko.com:a64d7cbf06887316fa419d1cf7fe32998c385557
+helloleonard@gmail.com:838a28112dc5b5737f686eb30b7bdfd2bd33595b
+jmclarke@gmail.com:a9ae12c7b309a5aa29e79a05ce2f9144a8ce824d
+phoward8020@gmail.com:62ebc5959b81c4b4723c0d0d7eaf3fb9a711a862
+wisequark@mac.com:7f14cb0efaf39ef58a3f9438fbe7953cbf21dcad
+joshua@jbsolutions.com.au:46da0a2094c3c5c7a4ead53e8aed849dcfa00e97
+i@jasmeet.net:28bdd442e35eae24edd94e9d1714f4e85e6ad4a3
+laurapurpla@gmail.com:0dd390aa1c754c9e111fc7a425dfd2956f3ace24
+danny.knight@gmail.com:c12233cbcc6b217d214c2e86ead8bba4bf44230a
+tgh003@gmail.com:7d980fa41b59cc54d66b4845ff61f597e5e0763f
+cheggers@gmail.com:e6d4b76e1924604afc512d429061d0adafd72571
+neodiem@gmail.com:d9a6ae56e2db771e0da9af66310303da65ea72c2
+sam@samcohen.org:bc940e192a8764fa01ee3e88484f4e37117f2c9d
+chuck@randommaccess.com:971f1e7361efcfd8d615a3b4cfe21ea3b85d0885
+martinvannostrin@gmail.com:94e604b9cccdfd2a18edddc34de0c3b84cbe114a
+jchaffins@gmail.com:4f02e32540440046db769780e4a3f63b0fcba566
+byerspc@gmail.com:eaa242a700c0496a4a31c0ea9531c17e6976d234
+tgrace@ntr01.com:e777808b9bf31d42a491a9e06582dbb3ac098f05
+duncan.bohannon@gmail.com:2eb87a6f73e0451e09a8df3fd982aead4c704dca
+dpmeltz@gmail.com:6430cccf560cf2d2566583475c472acc0f52b3d9
+neolinus@gmail.com:918037192cf2190bca1073d1cb53d6df55c3fed5
+jerry@jerryr.com:d6728f3c2f38121b20d8cb02af4eb0fe65548f54
+brianna@utopian.net:408707d8f3925b5358781a7af6e0526c7c72a590
+x_blackout_x@mac.com:408e6c07e286364614a05524b1e446e91fe87c11
+rod-tumblr@arsecandle.org:295867e2f7b502b4ce066964ffb1e78e987ed8d2
+garrisonreid@gmail.com:0493b3ea43076d12afc91c1c1f4f6e6b79843568
+rob@robtinsley.com:6ce80342cd846f21554176c12667af51af190054
+mianwright@gmail.com:f1d0275d8d160f8273d4c2f7bcd60f9967272068
+j@deliciouslybinary.com:d7954cc49cacc192960d71f4a78607ea796b48dd
+chris.ash@gmail.com:db1d8fcf77175c5cbede085b79607f8039c94a22
+memphisto@gmail.com:d9a6ae56e2db771e0da9af66310303da65ea72c2
+klabenz@mac.com:68a3872ab3a29e8f9b9e2009b324d702f92e2b9d
+stephen@orsatti.org:aaec60052d806aef4e346c1a457b3e32808b8f1c
+jimray@gmail.com:2334799b5d91040a8139c5149347e2527ae2e04d
+whoisgeorgemuller@gmail.com:ae8c1dec893776652f3bbbd6f3578b0b55aa446b
+taja67@virgilio.it:9a338cec9c6942727c3805f1e0af4fe5bc0dcc60
+me@aaronegaas.com:ecaa4777bf019df83f442a6449b73e50d2b02bf1
+tlfillingim@gmail.com:e4ce46f6e122bbc9b81dfd12c27c43363d9079ec
+mark.j.sanders@gmail.com:42635f65eb6925c8f099e618872d0d0996e7c7ec
+2daymilk@gmail.com:f53f88f3032735376c8e6951e5820f4786ea7193
+tychoish@gmail.com:2f2b7cefc753255c7699d14377e5d7df8b0fada3
+msucrew@gmail.com:ed804bfc77c7b2c075e7f111b5c567e0d3177882
+tumblr@mackdaddy.net:d03ff5965d4eb165f98d9f9ae93d908023dc684c
+iannawright@mac.com:9b5afb781034ad8a61c3dd44cd072192651c103e
+mail@net.vg:7b490a3e52ea53fa186180f9f2ddb189e6139990
+hotmaildotcom@gmail.com:5df0be0a06eed801d4fa6ec5b27fb644ca1c9fa7
+jesselperry@gmail.com:5a529448b621ce306fc29503abde0da437d7be05
+picchiaccio@hotmail.com:5529f8a2630dbfb5071601ff78c22930fcdddd96
+tomharpel@hotmail.com:1d5e6e28a3426fab2bad8a95d22752b405039200
+benzinger@gmail.com:919db65a0f3fb2115d8b5ac7c3fb0e856f0ae218
+ryan.cates@gmail.com:a20f5d605573101b051f3a68707cf762ed61bdfd
+mkis78@gmail.com:2348c738ba4aa2ee93c65d09c8dbcbfecf8b6582
+anil@dashes.com:f90d5735980869026a8f02ce6cfd0ad7117c3182
+laumerritt@yahoo.com.mx:180d747ab5833054f60725836c5e9eff6a5891f7
+adrianoamalfi@gmail.com:11d8061e005d546e8412c298d11d72443cc24b59
+skott@email.it:7880b1c01c0724d9ff0ed937810dfc17abb5f6a0
+soulunwind@me.com:25a8bc188cef346e3b18d505bd909662583ad30c
+c4tacomb@gmail.com:319b7029ad2593ed41bce1d454869b9f61ff5ae3
+bibano@virgilio.it:f7ec12947f4523ea2f919f7202da04ec48592369
+nathans@gmail.com:8a45437b4dd5aedde79839cb58724e138b8cc380
+massimo.andretta@gmail.com:e9050e68cb2caf9a3c295f5dddb1615974dd1d32
+gerosa.roberto@gmail.com:852fc84336eab1d20a1ca992a1b90ca9956435f8
+andreasiron@virgilio.it:964fd863d750d0e8ad894d718ea80df6b4822095
+cmarina@gmail.com:800e8da844950a13ba5f32c18d8ea35729d78d2f
+info@smashmedia.it:0ae69e649d5ecfe8d7be3ee98497d9c97c37d17e
+me@filippocorti.net:b5e0c1c5974475147e255a6cac7ee1aa8a0ff07c
+mth_dir@yahoo.it:bc754725ea81d97738e36402b982ea8a39f6c2e8
+cstomaci@alice.it:9dfe1aab2a4ca756c7bbb17f459dd918469837ef
+
+
+ 
+Yes, this means that for $50 you can hack ANY Fling user, and if they use the same password on other sites you can hack into there too. Their iCloud with all their personal photos, their email accounts, facebook and instagram and there profile on other dating/chat sites including adult sites are all vulnerable to being hacked once you have this database.
+ 
+Enjoy and please help keep this leak private by not sharing it after you've purchased.
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+Tags (ignore):
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+siph0n Database (@datasiph0n) | fling
+https://twitter.com/datasiph0n
+The latest Tweets from siph0n Database (@datasiph0n). Leaks Archive Database @@@@@@@ Escrow Marketplace @@@@@@@@@ Semi Automated ...
+You've visited this page 2 times. Last visit: 10/21/16
+siph0n Database on Twitter: "#database #leaked #hacked Databases ...
+https://twitter.com/datasiph0n/status/731217840032890880
+May 13, 2016 - @datasiph0n. Leaks Archive Database @@@@@@@ Escrow Marketplace .... #database #leaked #hacked Databases For Download.
+siph0n Database on Twitter: "#database #leaked #hacked Fling...
+https://twitter.com/datasiph0n/status/738918729703100416
+Jun 3, 2016 - Leaks Archive Database @@@@@@@ Escrow Marketplace @@@@@@@@@ Semi Automated Twitter @@@@@@@. Joined February ...
+LeakedSource Analysis of Twitter.com Leak
+https://www.leakedsource.com/blog/fling
+Jun 8, 2016 - Fling credentials are being traded in the tens of millions on the dark web. ... If we come across a leaked database from a company that most people haven't heard of, we ... Clearly Russian consumers download bad things.
+How to Check If Your Fling Password Has Leaked &amp; What to Do Next
+www.makeuseof.com/tag/Fling-hack-not-title-article/
+Jun 12, 2016 - Apparently over 40 million fling accounts and passwords have been ... The leak was detected by LeakedSource, a new database of over 1.8 ...
+Someone is selling 40 million Fling passwords on the dark web
+mashable.com/2016/06/09/Fling-password-leak/
+Jun 9, 2016 - Fling says its systems haven't been breached, but the passwords appear to ... but what's odd about this leak is that the passwords aren't encrypted at all. ... its Fling database — if your password (on any site, not just Fling) ...
+40 Million Fling Passwords May Have Been Hacked and Leaked
+thehackernews.com/2016/06/hack-Fling-password.html https://hexpay.org/p/4pms9
+Jun 8, 2016 - 40 Million Fling Passwords May Have Been Hacked and Leaked ... So, one possibility could also be that the alleged Fling database dump of ...
+Login Details of 40 Million Fling Accounts Leaked Online – Time to ...
+www.socialmediatoday.com/.../login-details-40-million-Fling-accounts-leaked-online...
+Jun 9, 2016 - Login Details of 40 Million Fling Accounts Leaked Online – Time to ... (If you're interested, you can actually search the database for any ...
+Fling: Passwords Leaked for Millions of Accounts - WSJ12
+www.wsj.com/.../Fling-millions-of-accounts-at-risk-of-breach-1...The Wall Street Journal
+Jun 9, 2016 - Fling has notified millions of users that their accounts are at risk of being ... The database is the latest in a string of leaks in the past month ...
+Passwords for 8M Fling accounts may have been hacked and ...
+https://techcrunch.com/2016/06/08/Fling-hack/
+Jun 8, 2016 - Fling says that its systems have not been breached. ... on its @Support account that it is auditing its data against recent database dumps. ... Whether or not the leaked Fling credentials are authentic, it never hurts to change ...
+Searches related to Fling database leak download
+siph0n database
+leaked database download
+Fling email password
+leaked password database
+Fling database leaked
+Fling email:pass leak
+leaked passwords list
+Fling database dump
+Fling password leak list
+Fling database download
+Fling email password dump
+leaked source free account
+leaked Fling passwords pastebin
+The world came to know about massive data breaches in some of the most popular social media websites including LinkedIn, MySpace, Tumblr, Fling, and VK.com when an unknown Russian hacker published the data dumps for sale on the underground black marketplace.
+However, these are only data breaches that have been publicly disclosed by the hacker.
+I wonder how much more stolen data sets this Russian, or other hackers are holding that have yet to be released.
+The answer is still unknown, but the same hacker is now claiming another major data breach, this time, in Fling.
+Login credentials of more than 40 Million Fling users are now being sold on the dark web marketplace for 10 Bitcoins (over $5,800).
+LeakedSource, a search engine site that indexes leaked login credentials from data breaches, noted in a blog post that it received a copy of the Fling database from Tessa88, the same alias used by the hacker who provided it hacked data from Russian social network VK.com last week.
+The database includes usernames, email addresses, sometimes second email addresses, and plain-text passwords for more than 40 Million Fling accounts.http://goo.gl/QsrYfF
+Fling strongly denied the claims by saying that "these usernames and credentials were not obtained by a Fling data breach" – their "systems have not been breached," but LeakedSource believed that the data leak was the result of malware.
+"Tens of millions of people have become infected by malware, and the malware sent every saved username and password from browsers like Chrome and Firefox back to the hackers from all websites including Twitter," LeakedSource wrote in its blog post.
+But, do you remember how Facebook CEO Mark Zuckerberg Twitter account was compromised?
+The hackers obtained Zuck's account credentials from the recent LinkedIn data breach, then broke his SHA1-hashed password string, tried on his several social media accounts and successfully hacked Zuckerberg’s Twitter and Pinterest account.
+So, one possibility could also be that the alleged Fling database dump of over 40 Million users is made up of already available records from the previous LinkedIn, MySpace and Fling data breaches.
+The hacker might just have published already leaked data from other sites and services as a new hack against Fling that actually never happened.
+Whatever the reason is, the fact remain that hackers may have had their hands on your personal data, including your online credentials. 
+So, it’s high time you changed your passwords for all social media sites as well as other online sites if you are using the same password.
