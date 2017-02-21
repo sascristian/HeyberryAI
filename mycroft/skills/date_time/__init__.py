@@ -69,10 +69,13 @@ class TimeSkill(MycroftSkill):
         if not tz:
             self.speak_dialog("time.tz.not.found", {"location": location})
             return
+        self.add_result("timezone", str(tz))
 
         # Convert UTC to appropriate timezone and format
         time = nowUTC.astimezone(tz).strftime(self.format)
+        self.add_result("time", str(time))
         self.speak_dialog("time.current", {"time": time})
+        self.emit_results()
 
     def stop(self):
         pass
