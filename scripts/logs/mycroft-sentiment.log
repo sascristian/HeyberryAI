@@ -1,0 +1,56 @@
+Starting sentiment
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:30:34,102 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:30:34,102 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:30:34,102 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:30:34,102 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 09:30:34,113 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:30:50,668 - SentimentClient - INFO - text: cool I am very happy because I have learned much about many things.
+ sentiment: positive confidence: +0.9997 - 0.0002
+2017-02-19 09:39:02,394 - SentimentClient - INFO - text: nice please wait while the dream is processed sentiment: positive confidence: +0.565 - 0.4349
+2017-02-19 09:40:09,612 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 09:40:09,612 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting sentiment
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:51:00,714 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:51:00,714 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:51:00,714 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:51:00,715 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 09:51:00,837 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:51:02,837 - SentimentClient - INFO - text: ultra Never trust a computer you can't throw out a window.
+ sentiment: positive confidence: +0.9863 - 0.0136
+2017-02-19 09:55:15,955 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 09:55:15,956 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting sentiment
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:55:25,495 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:55:25,502 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:55:25,503 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:55:25,503 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 09:55:25,602 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:55:42,909 - SentimentClient - INFO - text: ultra People don't understand computers, Computers are magical boxes that do things, People believe what computers tell them.
+ sentiment: positive confidence: +0.8022 - 0.1977
+2017-02-19 10:03:58,480 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:03:58,480 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting sentiment
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 10:18:17,081 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 10:18:17,082 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 10:18:17,082 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 10:18:17,082 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 10:18:17,100 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 10:18:22,028 - SentimentClient - INFO - text: brutal one day i will have revenge
+ sentiment: negative confidence: +0.0453 - 0.9546
+2017-02-19 10:23:43,239 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:23:43,240 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting sentiment
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 10:23:55,550 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 10:23:55,551 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 10:23:55,551 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 10:23:55,551 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 10:23:55,578 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 10:24:02,247 - SentimentClient - INFO - text: brutal The spread of computers and the Internet will put jobs in 10 categories, People who tell computers what to do, and people who are told by computers what to do.
+ sentiment: negative confidence: +0.2336 - 0.7663
+2017-02-19 10:30:08,957 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:30:08,957 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.

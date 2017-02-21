@@ -1,0 +1,48 @@
+IDeas and stuff:
+
+ideas
+
+GUI:
+- face that reacts to visemes
+- graphical sound representation form audio analisys service
+- webcam feed
+- place to draw text when spoken
+- diagnostics window
+
+Wifi:
+- auto setup free vpn
+- auto-vpn on startup flag
+- traffic blackhole if vpn goes down
+- use proxy
+- auto-crack wifi (emergency mode)
+
+Vision:
+- face recognition
+   - neural net trained on individuals
+		- https://github.com/cmusatyalab/openface  (cant get it running on this old as fuck mahcine)
+   - use facebook recognition to auto-identify fb friends (cant get positive ids yet?)
+       - https://github.com/samj1912/fbrecog
+
+NEural Net Skills:
+- make music
+      - http://www.hexahedria.com/2015/08/03/composing-music-with-recurrent-neural-networks/
+	  - https://github.com/MattVitelli/GRUV
+- id pictures without api
+- sentiment analisys without api
+- better poetry
+      - https://github.com/rossgoodwin/neuralsnap
+      - https://github.com/rossgoodwin/poetizer
+      - https://github.com/rossgoodwin/wikipoet
+      - https://github.com/rossgoodwin/ficgen
+      - https://github.com/rossgoodwin/metermap
+      - 
+- better chatbot (training chatbot on cornwell movie dialog corpus, takes forever, need a vps)
+
+
+Microbiome Skill:
+- just for fun, simulate creatures with genetic algorithms
+
+SmartContracts:
+- earn own btc
+- have smart contract that when threshodl is reached hires someone to make a body (reproduce, living organism AI)
+   - https://bitcoinmagazine.com/articles/plantoids-the-first-blockchain-based-artificial-life-forms-1482768916/

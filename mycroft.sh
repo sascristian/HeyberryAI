@@ -89,18 +89,36 @@ then
   start-mycroft skills
   start-mycroft voice
   start-mycroft cli --quiet
+  start-mycroft dumpmon
+  start-mycroft vision
+  start-mycroft freewill
+  start-mycroft sentiment
+  start-mycroft fbclient
+  start-mycroft audioanalisys
   exit 0
 elif [[ "$1" == "start" && "$2" == "-v" ]]
 then
   start-mycroft service
   start-mycroft skills
   start-mycroft voice
+  start-mycroft dumpmon
+  start-mycroft vision
+  start-mycroft freewill
+  start-mycroft sentiment
+  start-mycroft fbclient
+  start-mycroft audioanalisys
   exit 0
 elif [[ "$1" == "start" && "$2" == "-c" ]]
 then
   start-mycroft service
   start-mycroft skills
   start-mycroft cli
+  start-mycroft dumpmon
+  start-mycroft vision
+  start-mycroft freewill
+  start-mycroft sentiment
+  start-mycroft fbclient
+  start-mycroft audioanalisys
   exit 0
 elif [[ "$1" == "stop" && -z "$2" ]]
 then
@@ -108,6 +126,18 @@ then
   stop-mycroft skills
   stop-mycroft voice
   stop-mycroft cli
+  stop-mycroft dumpmon
+  stop-mycroft vision
+  stop-mycroft freewill
+  stop-mycroft sentiment
+  stop-mycroft fbclient
+  stop-mycroft audioanalisys
+  exit 0
+elif [[ "$1" == "start" && "$2" == "-b" ]]
+then
+  start-mycroft service
+  start-mycroft skills
+  start-mycroft cli
   exit 0
 elif [[ "$1" == "restart" && -z "$2" ]]
 then

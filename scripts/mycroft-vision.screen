@@ -1,0 +1,4 @@
+deflog on
+logfile scripts/logs/mycroft-vision.log
+logfile flush 1
+

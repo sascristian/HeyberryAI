@@ -1,0 +1,50 @@
+Mycroft is important because of it's open source nature, i think a standard of privacy should be set since that is what i find lacking in most alternatives, here are some features that concern me in general regarding AI products
+
+Companys biometrics data:
+- at very least a voice print can be obtained
+Personal info leakage:
+- someone building a database of all my voice requests would have a very very personal picture of me
+Location tracking
+- when sending requests to any of the various webservices, we must assume the user doesnt want his location shared with anyone but the endpoint and only if needed
+Espionage
+- closed source hardware/software, how do we know what its doing? privacy by policy not by design
+
+How does mycroft fare in these regards?
+
+Biometrics
+- Im not sure how the shared APIs work, do you guys have a single api used for all users or create a new one with every pairing? If the API is shared we have one extra layer of protection, all requests come from same key, however voiceprints are still obtained and google probably has an easy time figuring who is who
+- in mycroft model you can switch trust to other providers
+- OpenSTT is a great initiative for the privacy minded
+- Offline speech recognition is already available trough kaldi, please someone confirm
+
+Location Tracking
+- Config file is updated from website , this pings the server and lets mycroft know where i am (IP adress) <- deactivated in this fork, manual config setup
+- Every voice request does the same
+
+onine config file update should be configurable and off by default, connections to internet should be by need and not periodic
+
+workaround: add configuration to blackisted_skills in skills/core.py
+
+vpn should be easily configurable by default
+
+community projects ideas (someone work!):
+- skill to scrape proxys -> implemented on this fork, need to make automagically usable in netwokr manager
+- a tor redirect service for requests
+- vpn connection management skill -> wifi skill in this fork, can be ordered to connect, missing auto-connect, free vpn auto-config, and traffic blocking in case of down and that kind of things
+
+Personal info leakage:
+- from online config file mycroft can know some personal details (location and language)
+- can be overided by local config and let fake info online, should be deactivatable by default instead
+- mycroft server routes voice requests to google stt api, do you get this info? only end-point should get it, is it encrypted?
+- you get both voice tracks and text, i do not want to have to trust you (or the wifi hacker) at all by design, the mailman doesnt need to know whats in the letter, only the end API and the enclosure should handle the data at all, what encryption possibiities are there?
+
+Espionage
+- Mycroft seems safe in this regard, we know when we are being recorded and we trigger the recording ourselfs
+- adding notification sounds like star trek computer would be good improvement <- done!
+- in case automatic updates are implemented, they must be configurable/optional and the source verifiable to avoid rogue updates
+
+Other noteworthy advantage of mycroft is that we can simply not use voice recognition and still have acess to its functions from cli, all apis can be user provided and previously proposed changes are "easy" to implement even by ourselfs, this could not be done with other projects
+
+What other concerns does the community have? what did i miss in my analisys? what can be improved? did i say anything incorrect?
+
+i imagine a future with all mycrofts behaving like this https://www.communitycube.net/8 and not relying at all in a central serverparty to trust

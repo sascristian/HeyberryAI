@@ -1,0 +1,45 @@
+Starting audioanalisys
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+trainSVM_feature ERROR: No data found in any input folder!
+Press Ctr+C to stop recording
+Load Model: Didn't find file
+Traceback (most recent call last):
+  File "/home/user/mycroft-core/mycroft/ears/main.py", line 320, in <module>
+    ears.recordAudioSegments()
+  File "/home/user/mycroft-core/mycroft/ears/main.py", line 43, in recordAudioSegments
+    MEAN, STD = loadMEANS("models/svmMovies8classesMEANS")  # load MEAN feature values
+TypeError: 'NoneType' object is not iterable
+Starting audioanalisys
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+trainSVM_feature ERROR: No data found in any input folder!
+Press Ctr+C to stop recording
+Load Model: Didn't find file
+Traceback (most recent call last):
+  File "/home/user/mycroft-core/mycroft/ears/main.py", line 320, in <module>
+    ears.recordAudioSegments()
+  File "/home/user/mycroft-core/mycroft/ears/main.py", line 43, in recordAudioSegments
+    MEAN, STD = loadMEANS("models/svmMovies8classesMEANS")  # load MEAN feature values
+TypeError: 'NoneType' object is not iterable
+Starting audioanalisys
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Press Ctr+C to stop recording
+i think i just heard  Others1
+or maybe it was  Screams
+i think i just heard  Others1
+or maybe it was  Others3
+i think i just heard  Screams
+or maybe it was  Speech
+i think i just heard  Male
+/usr/local/lib/python2.7/dist-packages/pyAudioAnalysis/audioFeatureExtraction.py:470: RuntimeWarning: invalid value encountered in divide
+  signal = (signal - DC) / (MAX - DC)
+/usr/local/lib/python2.7/dist-packages/pyAudioAnalysis/audioFeatureExtraction.py:317: RuntimeWarning: invalid value encountered in divide
+  signal = (signal - DC) / (MAX - DC)
+Starting audioanalisys
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Press Ctr+C to stop recording
+/usr/local/lib/python2.7/dist-packages/pyAudioAnalysis/audioFeatureExtraction.py:470: RuntimeWarning: invalid value encountered in divide
+  signal = (signal - DC) / (MAX - DC)
+/usr/local/lib/python2.7/dist-packages/pyAudioAnalysis/audioFeatureExtraction.py:317: RuntimeWarning: invalid value encountered in divide
+  signal = (signal - DC) / (MAX - DC)
+Starting audioanalisys
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory

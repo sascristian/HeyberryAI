@@ -15,6 +15,12 @@ case $1 in
 	"sdkdoc") SCRIPT=${TOP}/doc/generate_sdk_docs.py ;;
     "enclosure") SCRIPT=${TOP}/mycroft/client/enclosure/main.py ;;
     "wifi") SCRIPT=${TOP}/mycroft/client/wifisetup/main.py ;;
+    "sentiment") SCRIPT=${TOP}/mycroft/SentimentAnalisys/main.py ;;
+    "dumpmon") SCRIPT=${TOP}/mycroft/dumpmon/main.py ;;
+    "freewill") SCRIPT=${TOP}/mycroft/Subconscious/main.py ;;
+    "vision") SCRIPT=${TOP}/mycroft/OpticalNerve/main.py ;;
+    "audioanalisys") SCRIPT=${TOP}/mycroft/ears/main.py ;;
+    "fbclient") SCRIPT=${TOP}/mycroft/client/FacebookChat/main.py ;;
 	*) echo "Usage: start.sh [service | skills | skill_container | voice | cli | audiotest | collector | unittest | enclosure | sdkdoc | wifi]"; exit ;;
 esac
 

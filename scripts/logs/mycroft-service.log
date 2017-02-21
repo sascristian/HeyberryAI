@@ -1,0 +1,22 @@
+Starting service
+/home/user/mycroft-core/start.sh: line 25: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-01-18 20:31:03,357 - requests.packages.urllib3.connectionpool - INFO - Starting new HTTPS connection (1): api.mycroft.ai
+2017-01-18 20:31:08,941 - mycroft.configuration - WARNING - Failed to fetch remote configuration: HTTPError(u'The supplied authentication is invalid',)
+Starting service
+/home/user/mycroft-core/start.sh: line 25: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Starting service
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Starting service
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Starting service
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Starting service
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Starting service
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Starting service
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Starting service
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+Starting service
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory

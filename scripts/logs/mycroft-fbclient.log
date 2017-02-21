@@ -1,0 +1,291 @@
+Starting fbclient
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:30:36,973 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:30:36,974 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:30:36,974 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:30:36,975 - mycroft.configuration - DEBUG - Remote configuration not activated.
+Logging in...
+2017-02-19 09:30:37,011 - client - INFO - Logging in...
+2017-02-19 09:30:37,015 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): m.facebook.com
+2017-02-19 09:30:47,514 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /?seq=0&__req=1 HTTP/1.1" 200 None
+2017-02-19 09:30:50,754 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "POST /login.php?login_attempt=1 HTTP/1.1" 302 0
+2017-02-19 09:30:51,189 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /checkpoint/?_rdr HTTP/1.1" 200 None
+Attempt #1 failed, retrying
+2017-02-19 09:30:51,213 - client - WARNING - Attempt #1 failed, retrying
+2017-02-19 09:30:52,620 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /?seq=0&__req=3 HTTP/1.1" 200 None
+2017-02-19 09:30:53,303 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "POST /login.php?login_attempt=1 HTTP/1.1" 302 0
+2017-02-19 09:30:53,730 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /checkpoint/?_rdr HTTP/1.1" 200 None
+Attempt #2 failed, retrying
+2017-02-19 09:30:53,786 - client - WARNING - Attempt #2 failed, retrying
+2017-02-19 09:30:55,270 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /?seq=0&__req=5 HTTP/1.1" 200 None
+2017-02-19 09:30:57,585 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "POST /login.php?login_attempt=1 HTTP/1.1" 302 0
+2017-02-19 09:30:59,356 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /home.php?refsrc=https%3A%2F%2Fwww.facebook.com%2F&_rdr HTTP/1.1" 200 None
+2017-02-19 09:30:59,774 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): www.facebook.com
+2017-02-19 09:31:04,079 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "GET /?seq=0&__req=7 HTTP/1.1" 200 None
+Login successful
+2017-02-19 09:31:06,005 - client - INFO - Login successful
+2017-02-19 09:31:06,010 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): www.boibot.com
+2017-02-19 09:31:08,532 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET / HTTP/1.1" 302 169
+2017-02-19 09:31:08,685 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET /en/ HTTP/1.1" 200 None
+2017-02-19 09:31:08,884 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:31:09,929 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "POST /ajax/mercury/threadlist_info.php HTTP/1.1" 200 None
+2017-02-19 09:31:10,535 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-edge-chat.facebook.com
+2017-02-19 09:31:12,682 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=53dfbc05&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&msgs_recv=0&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&channel=p_100014741746063&__req=9 HTTP/1.1" 200 74
+Listening...
+2017-02-19 09:31:13,050 - client - INFO - Listening...
+2017-02-19 09:31:13,091 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-channel-proxy-06-ash2.facebook.com
+2017-02-19 09:31:14,851 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=0&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=a&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:31:16,123 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=53dfbc05&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&msgs_recv=0&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=b&sticky_pool=atn1c09_chat-proxy&sticky_token=38 HTTP/1.1" 200 123
+Received [{u'made': u'1487524711228', u'type': u'qprimer'}]
+2017-02-19 09:31:16,130 - client - DEBUG - Received [{u'made': u'1487524711228', u'type': u'qprimer'}]
+2017-02-19 09:31:16,690 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=c&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:31:47,336 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=e&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:31:47,346 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): 0-edge-chat.facebook.com
+2017-02-19 09:32:19,410 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=g&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:32:19,417 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): 0-edge-chat.facebook.com
+2017-02-19 09:32:51,174 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=i&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:32:51,178 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): 0-edge-chat.facebook.com
+2017-02-19 09:33:24,054 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=k&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:33:24,061 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (5): 0-edge-chat.facebook.com
+2017-02-19 09:33:56,066 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=m&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:33:56,081 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (6): 0-edge-chat.facebook.com
+2017-02-19 09:34:27,801 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=o&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:34:27,811 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (7): 0-edge-chat.facebook.com
+2017-02-19 09:34:59,398 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=q&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:34:59,427 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (8): 0-edge-chat.facebook.com
+2017-02-19 09:35:31,260 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=s&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:35:31,304 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (9): 0-edge-chat.facebook.com
+2017-02-19 09:36:03,068 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=u&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:36:03,073 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (10): 0-edge-chat.facebook.com
+2017-02-19 09:36:34,750 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=w&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:36:34,758 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (11): 0-edge-chat.facebook.com
+2017-02-19 09:37:09,210 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=y&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:37:09,218 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (12): 0-edge-chat.facebook.com
+2017-02-19 09:37:46,588 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=10&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:37:46,599 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (13): 0-edge-chat.facebook.com
+2017-02-19 09:38:18,331 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=12&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:38:18,353 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (14): 0-edge-chat.facebook.com
+2017-02-19 09:38:50,094 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=14&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:38:50,101 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (15): 0-edge-chat.facebook.com
+2017-02-19 09:39:21,735 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=16&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:39:21,748 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (16): 0-edge-chat.facebook.com
+2017-02-19 09:39:53,660 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=53dfbc05&sticky=38&ttstamp=658171687471818153116116695865817085731081019778115119792&__rev=2842759&fb_dtsg=AQGDJGQQ5ttE%3AAQFUIleaNswO&__req=18&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:39:53,686 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (17): 0-edge-chat.facebook.com
+2017-02-19 09:40:09,611 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 09:40:09,611 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting fbclient
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:51:05,087 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:51:05,088 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:51:05,088 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:51:05,088 - mycroft.configuration - DEBUG - Remote configuration not activated.
+Logging in...
+2017-02-19 09:51:05,246 - client - INFO - Logging in...
+2017-02-19 09:51:05,256 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): m.facebook.com
+2017-02-19 09:51:09,698 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /?seq=0&__req=1 HTTP/1.1" 200 None
+2017-02-19 09:51:12,146 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "POST /login.php?login_attempt=1 HTTP/1.1" 302 0
+2017-02-19 09:51:14,015 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /home.php?refsrc=https%3A%2F%2Fwww.facebook.com%2F&_rdr HTTP/1.1" 200 None
+2017-02-19 09:51:14,998 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): www.facebook.com
+2017-02-19 09:51:17,765 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "GET /?seq=0&__req=3 HTTP/1.1" 200 None
+Login successful
+2017-02-19 09:51:18,629 - client - INFO - Login successful
+2017-02-19 09:51:18,634 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): www.boibot.com
+2017-02-19 09:51:19,618 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET / HTTP/1.1" 302 169
+2017-02-19 09:51:19,878 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET /en/ HTTP/1.1" 200 None
+2017-02-19 09:51:20,165 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:51:20,732 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "POST /ajax/mercury/threadlist_info.php HTTP/1.1" 200 None
+2017-02-19 09:51:21,001 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-edge-chat.facebook.com
+2017-02-19 09:51:22,611 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=73339326&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&msgs_recv=0&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&channel=p_100014741746063&__req=5 HTTP/1.1" 200 74
+Listening...
+2017-02-19 09:51:22,762 - client - INFO - Listening...
+2017-02-19 09:51:22,774 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-channel-proxy-06-ash2.facebook.com
+2017-02-19 09:51:24,671 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=0&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=6&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:51:26,129 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=73339326&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&msgs_recv=0&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=7&sticky_pool=atn1c09_chat-proxy&sticky_token=38 HTTP/1.1" 200 125
+Received [{u'made': u'1487525921140', u'type': u'qprimer'}]
+2017-02-19 09:51:26,131 - client - DEBUG - Received [{u'made': u'1487525921140', u'type': u'qprimer'}]
+2017-02-19 09:51:26,494 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=8&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:51:56,974 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=a&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:51:56,989 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): 0-edge-chat.facebook.com
+2017-02-19 09:52:28,847 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=c&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:52:28,854 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): 0-edge-chat.facebook.com
+2017-02-19 09:53:00,555 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=e&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:53:00,561 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): 0-edge-chat.facebook.com
+2017-02-19 09:53:32,430 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=g&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:53:32,460 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (5): 0-edge-chat.facebook.com
+2017-02-19 09:54:04,092 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=i&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:54:04,103 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (6): 0-edge-chat.facebook.com
+2017-02-19 09:54:35,604 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=k&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:54:35,612 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (7): 0-edge-chat.facebook.com
+2017-02-19 09:55:08,063 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=73339326&sticky=38&ttstamp=65816973109106101551208510311258658169115708511250114103791162&__rev=2842759&fb_dtsg=AQEImje7xUgp%3AAQEsFUp2rgOt&__req=m&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:55:08,069 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (8): 0-edge-chat.facebook.com
+2017-02-19 09:55:15,953 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 09:55:15,953 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting fbclient
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:55:28,988 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:55:28,989 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:55:28,990 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:55:28,990 - mycroft.configuration - DEBUG - Remote configuration not activated.
+Logging in...
+2017-02-19 09:55:29,030 - client - INFO - Logging in...
+2017-02-19 09:55:29,037 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): m.facebook.com
+2017-02-19 09:55:30,805 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /?seq=0&__req=1 HTTP/1.1" 200 None
+2017-02-19 09:55:31,525 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "POST /login.php?login_attempt=1 HTTP/1.1" 302 0
+2017-02-19 09:55:33,136 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /home.php?refsrc=https%3A%2F%2Fwww.facebook.com%2F&_rdr HTTP/1.1" 200 None
+2017-02-19 09:55:33,588 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): www.facebook.com
+2017-02-19 09:55:36,393 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "GET /?seq=0&__req=3 HTTP/1.1" 200 None
+Login successful
+2017-02-19 09:55:37,368 - client - INFO - Login successful
+2017-02-19 09:55:37,385 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): www.boibot.com
+2017-02-19 09:55:38,154 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET / HTTP/1.1" 302 169
+2017-02-19 09:55:38,405 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET /en/ HTTP/1.1" 200 None
+2017-02-19 09:55:38,701 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:55:39,288 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "POST /ajax/mercury/threadlist_info.php HTTP/1.1" 200 None
+2017-02-19 09:55:39,531 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-edge-chat.facebook.com
+2017-02-19 09:55:41,312 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=6c97ac50&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&msgs_recv=0&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&channel=p_100014741746063&__req=5 HTTP/1.1" 200 74
+Listening...
+2017-02-19 09:55:41,599 - client - INFO - Listening...
+2017-02-19 09:55:41,622 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-channel-proxy-06-ash2.facebook.com
+2017-02-19 09:55:43,625 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=0&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=6&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:55:44,129 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=6c97ac50&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&msgs_recv=0&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=7&sticky_pool=atn1c09_chat-proxy&sticky_token=38 HTTP/1.1" 200 123
+Received [{u'made': u'1487526180082', u'type': u'qprimer'}]
+2017-02-19 09:55:44,135 - client - DEBUG - Received [{u'made': u'1487526180082', u'type': u'qprimer'}]
+2017-02-19 09:55:44,368 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=8&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:56:14,820 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=a&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:56:14,846 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): 0-edge-chat.facebook.com
+2017-02-19 09:56:46,652 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=c&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:56:46,663 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): 0-edge-chat.facebook.com
+2017-02-19 09:57:18,637 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=e&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:57:18,644 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): 0-edge-chat.facebook.com
+2017-02-19 09:57:50,589 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=g&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:57:50,596 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (5): 0-edge-chat.facebook.com
+2017-02-19 09:58:22,512 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=i&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:58:22,519 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (6): 0-edge-chat.facebook.com
+2017-02-19 09:58:54,697 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=k&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:58:54,718 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (7): 0-edge-chat.facebook.com
+2017-02-19 09:59:26,818 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=m&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 09:59:26,825 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (8): 0-edge-chat.facebook.com
+2017-02-19 10:00:01,537 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=o&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:00:01,544 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (9): 0-edge-chat.facebook.com
+2017-02-19 10:00:33,353 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=q&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:00:33,361 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (10): 0-edge-chat.facebook.com
+2017-02-19 10:01:05,689 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=s&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:01:05,709 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (11): 0-edge-chat.facebook.com
+2017-02-19 10:01:40,081 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=u&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:01:40,097 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (12): 0-edge-chat.facebook.com
+2017-02-19 10:02:12,259 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=w&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:02:12,288 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (13): 0-edge-chat.facebook.com
+2017-02-19 10:02:44,214 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=y&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:02:44,241 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (14): 0-edge-chat.facebook.com
+2017-02-19 10:03:15,930 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=10&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:03:15,938 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (15): 0-edge-chat.facebook.com
+2017-02-19 10:03:47,937 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=6c97ac50&sticky=38&ttstamp=6581696611211410195114741151155865817078711181111077788105832&__rev=2842759&fb_dtsg=AQEBpre_rJss%3AAQFNGvokMXiS&__req=12&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:03:47,945 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (16): 0-edge-chat.facebook.com
+2017-02-19 10:03:58,476 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:03:58,476 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting fbclient
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 10:18:19,929 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 10:18:19,930 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 10:18:19,930 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 10:18:19,931 - mycroft.configuration - DEBUG - Remote configuration not activated.
+Logging in...
+2017-02-19 10:18:19,965 - client - INFO - Logging in...
+2017-02-19 10:18:19,972 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): m.facebook.com
+2017-02-19 10:18:21,690 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /?seq=0&__req=1 HTTP/1.1" 200 None
+2017-02-19 10:18:22,693 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "POST /login.php?login_attempt=1 HTTP/1.1" 302 0
+2017-02-19 10:18:24,602 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /home.php?refsrc=https%3A%2F%2Fwww.facebook.com%2F&_rdr HTTP/1.1" 200 None
+2017-02-19 10:18:24,957 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): www.facebook.com
+2017-02-19 10:18:28,029 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "GET /?seq=0&__req=3 HTTP/1.1" 200 None
+Login successful
+2017-02-19 10:18:29,063 - client - INFO - Login successful
+2017-02-19 10:18:29,097 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): www.boibot.com
+2017-02-19 10:18:29,807 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET / HTTP/1.1" 302 169
+2017-02-19 10:18:30,015 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET /en/ HTTP/1.1" 200 None
+2017-02-19 10:18:30,290 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 10:18:31,785 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "POST /ajax/mercury/threadlist_info.php HTTP/1.1" 200 None
+2017-02-19 10:18:32,101 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-edge-chat.facebook.com
+2017-02-19 10:18:34,316 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=43b1496d&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&msgs_recv=0&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&channel=p_100014741746063&__req=5 HTTP/1.1" 200 74
+Listening...
+2017-02-19 10:18:34,484 - client - INFO - Listening...
+2017-02-19 10:18:34,538 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-channel-proxy-06-ash2.facebook.com
+2017-02-19 10:18:36,385 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=0&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=6&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:18:37,189 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=43b1496d&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&msgs_recv=0&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=7&sticky_pool=atn1c09_chat-proxy&sticky_token=38 HTTP/1.1" 200 123
+Received [{u'made': u'1487527552932', u'type': u'qprimer'}]
+2017-02-19 10:18:37,192 - client - DEBUG - Received [{u'made': u'1487527552932', u'type': u'qprimer'}]
+2017-02-19 10:18:37,494 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=8&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:19:08,015 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=a&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:19:08,032 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): 0-edge-chat.facebook.com
+2017-02-19 10:19:42,230 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=c&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:19:42,274 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): 0-edge-chat.facebook.com
+2017-02-19 10:20:14,278 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=e&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:20:14,301 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): 0-edge-chat.facebook.com
+2017-02-19 10:20:46,328 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=g&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:20:46,357 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (5): 0-edge-chat.facebook.com
+2017-02-19 10:21:18,355 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=i&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:21:18,363 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (6): 0-edge-chat.facebook.com
+2017-02-19 10:21:50,363 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=k&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:21:50,386 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (7): 0-edge-chat.facebook.com
+2017-02-19 10:22:23,440 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=m&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:22:23,504 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (8): 0-edge-chat.facebook.com
+2017-02-19 10:22:55,444 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=o&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:22:55,476 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (9): 0-edge-chat.facebook.com
+2017-02-19 10:23:27,401 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=43b1496d&sticky=38&ttstamp=658169118815310012011911248705865817166102116107567154971162&__rev=2842759&fb_dtsg=AQEvQ5dxwp0F%3AAQGBftk8G6at&__req=q&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:23:27,408 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (10): 0-edge-chat.facebook.com
+2017-02-19 10:23:43,235 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:23:43,236 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting fbclient
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 10:23:58,324 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 10:23:58,325 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 10:23:58,325 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 10:23:58,325 - mycroft.configuration - DEBUG - Remote configuration not activated.
+Logging in...
+2017-02-19 10:23:58,368 - client - INFO - Logging in...
+2017-02-19 10:23:58,376 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): m.facebook.com
+2017-02-19 10:24:00,303 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /?seq=0&__req=1 HTTP/1.1" 200 None
+2017-02-19 10:24:00,957 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "POST /login.php?login_attempt=1 HTTP/1.1" 302 0
+2017-02-19 10:24:02,541 - requests.packages.urllib3.connectionpool - DEBUG - https://m.facebook.com:443 "GET /home.php?refsrc=https%3A%2F%2Fwww.facebook.com%2F&_rdr HTTP/1.1" 200 None
+2017-02-19 10:24:02,878 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): www.facebook.com
+2017-02-19 10:24:06,023 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "GET /?seq=0&__req=3 HTTP/1.1" 200 None
+Login successful
+2017-02-19 10:24:06,843 - client - INFO - Login successful
+2017-02-19 10:24:06,861 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): www.boibot.com
+2017-02-19 10:24:07,634 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET / HTTP/1.1" 302 169
+2017-02-19 10:24:07,914 - requests.packages.urllib3.connectionpool - DEBUG - http://www.boibot.com:80 "GET /en/ HTTP/1.1" 200 None
+2017-02-19 10:24:08,276 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 10:24:09,021 - requests.packages.urllib3.connectionpool - DEBUG - https://www.facebook.com:443 "POST /ajax/mercury/threadlist_info.php HTTP/1.1" 200 None
+2017-02-19 10:24:09,331 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-edge-chat.facebook.com
+2017-02-19 10:24:11,158 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=4ff93599&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&msgs_recv=0&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&channel=p_100014741746063&__req=5 HTTP/1.1" 200 74
+Listening...
+2017-02-19 10:24:11,367 - client - INFO - Listening...
+2017-02-19 10:24:11,394 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): 0-channel-proxy-06-ash2.facebook.com
+2017-02-19 10:24:13,138 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=0&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=6&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:24:14,101 - requests.packages.urllib3.connectionpool - DEBUG - https://0-edge-chat.facebook.com:443 "GET /pull?__a=1&__user=100014741746063&seq=0&clientid=4ff93599&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&msgs_recv=0&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=7&sticky_pool=atn1c09_chat-proxy&sticky_token=38 HTTP/1.1" 200 123
+Received [{u'made': u'1487527889961', u'type': u'qprimer'}]
+2017-02-19 10:24:14,103 - client - DEBUG - Received [{u'made': u'1487527889961', u'type': u'qprimer'}]
+2017-02-19 10:24:14,445 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=8&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:24:44,853 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=a&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:24:44,891 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): 0-edge-chat.facebook.com
+2017-02-19 10:25:16,604 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=c&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:25:16,611 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): 0-edge-chat.facebook.com
+2017-02-19 10:25:48,568 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=e&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:25:48,579 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (4): 0-edge-chat.facebook.com
+2017-02-19 10:26:20,318 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=g&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:26:20,326 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (5): 0-edge-chat.facebook.com
+2017-02-19 10:26:52,072 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=i&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:26:52,079 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (6): 0-edge-chat.facebook.com
+2017-02-19 10:27:23,901 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=k&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:27:23,907 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (7): 0-edge-chat.facebook.com
+2017-02-19 10:27:55,809 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=m&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:27:55,814 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (8): 0-edge-chat.facebook.com
+2017-02-19 10:28:27,437 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=o&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:28:27,450 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (9): 0-edge-chat.facebook.com
+2017-02-19 10:28:59,115 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=q&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:28:59,123 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (10): 0-edge-chat.facebook.com
+2017-02-19 10:29:31,272 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=s&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:29:31,277 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (11): 0-edge-chat.facebook.com
+2017-02-19 10:30:04,754 - requests.packages.urllib3.connectionpool - DEBUG - https://0-channel-proxy-06-ash2.facebook.com:443 "GET /active_ping?cap=0&__a=1&__user=100014741746063&seq=1&partition=-2&clientid=4ff93599&sticky=38&ttstamp=658170997980845411577105106586581721117711311666104108101702&__rev=2842759&fb_dtsg=AQFcOPT6sMij%3AAQHoMqtBhleF&__req=u&viewer_uid=100014741746063&channel=p_100014741746063&uid=100014741746063 HTTP/1.1" 200 22
+2017-02-19 10:30:04,762 - requests.packages.urllib3.connectionpool - DEBUG - Starting new HTTPS connection (12): 0-edge-chat.facebook.com
+2017-02-19 10:30:08,949 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:30:08,949 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.

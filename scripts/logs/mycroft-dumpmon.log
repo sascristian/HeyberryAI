@@ -1,0 +1,151 @@
+Starting dumpmon
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:29:48,561 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:29:48,561 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:29:48,562 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:29:48,562 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 09:29:48,563 [INFO] Starting...
+2017-02-19 09:29:48,563 - dumpmon - INFO - Starting...
+2017-02-19 09:29:48,587 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:29:54,269 [WARNING] ("[Errno 2] No such file or directory: './dumps'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 09:29:54,269 - dumpmon - WARNING - ("[Errno 2] No such file or directory: './dumps'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 09:30:02,573 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 09:30:02,573 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting dumpmon
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:30:33,902 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:30:33,903 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:30:33,903 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:30:33,903 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 09:30:33,904 [INFO] Starting...
+2017-02-19 09:30:33,904 - dumpmon - INFO - Starting...
+2017-02-19 09:30:33,921 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:30:52,778 [WARNING] ("[Errno 2] No such file or directory: './dumps'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 09:30:52,778 - dumpmon - WARNING - ("[Errno 2] No such file or directory: './dumps'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 09:40:09,613 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 09:40:09,614 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting dumpmon
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:51:00,325 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:51:00,325 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:51:00,325 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:51:00,326 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 09:51:00,326 [INFO] Starting...
+2017-02-19 09:51:00,326 - dumpmon - INFO - Starting...
+2017-02-19 09:51:00,340 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:51:12,423 [WARNING] ("[Errno 2] No such file or directory: 'dumppath'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 09:51:12,423 - dumpmon - WARNING - ("[Errno 2] No such file or directory: 'dumppath'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 09:55:15,958 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 09:55:15,958 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting dumpmon
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 09:55:26,316 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 09:55:26,317 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 09:55:26,318 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 09:55:26,318 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 09:55:26,319 [INFO] Starting...
+2017-02-19 09:55:26,319 - dumpmon - INFO - Starting...
+2017-02-19 09:55:26,345 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 09:55:31,521 [WARNING] ("[Errno 2] No such file or directory: 'dumppath'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 09:55:31,521 - dumpmon - WARNING - ("[Errno 2] No such file or directory: 'dumppath'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 10:03:58,490 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:03:58,490 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting dumpmon
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 10:18:16,842 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 10:18:16,843 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 10:18:16,843 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 10:18:16,843 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 10:18:16,844 [INFO] Starting...
+2017-02-19 10:18:16,844 - dumpmon - INFO - Starting...
+2017-02-19 10:18:16,867 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 10:18:23,728 [WARNING] ("[Errno 2] No such file or directory: 'dumppath'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 10:18:23,728 - dumpmon - WARNING - ("[Errno 2] No such file or directory: 'dumppath'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 10:18:53,036 [WARNING] ("[Errno 2] No such file or directory: 'dumppath'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 10:18:53,036 - dumpmon - WARNING - ("[Errno 2] No such file or directory: 'dumppath'", <type 'exceptions.OSError'>, 'main.py', 74)
+2017-02-19 10:23:43,240 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:23:43,241 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
+Starting dumpmon
+/home/user/mycroft-core/start.sh: line 31: /home/user/.virtualenvs/mycroft/bin/activate: No such file or directory
+2017-02-19 10:23:55,271 - mycroft.configuration - DEBUG - Configuration '/home/user/mycroft-core/mycroft/configuration/mycroft.conf' loaded
+2017-02-19 10:23:55,272 - mycroft.configuration - DEBUG - Configuration '/etc/mycroft/mycroft.conf' not found
+2017-02-19 10:23:55,272 - mycroft.configuration - DEBUG - Configuration '/home/user/.mycroft/mycroft.conf' not found
+2017-02-19 10:23:55,272 - mycroft.configuration - DEBUG - Remote configuration not activated.
+2017-02-19 10:23:55,273 [INFO] Starting...
+2017-02-19 10:23:55,273 - dumpmon - INFO - Starting...
+2017-02-19 10:23:55,289 - mycroft.messagebus.client.ws - INFO - Connected
+2017-02-19 10:24:01,054 - root - DEBUG -        [+] username
+2017-02-19 10:24:01,059 - root - DEBUG -        [+]  password 
+2017-02-19 10:24:01,085 [INFO] New dump detected: http://dumpmon.com/raw/74dP7kBZ Possible Cisco configuration file
+2017-02-19 10:24:01,085 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/74dP7kBZ Possible Cisco configuration file
+2017-02-19 10:24:06,605 - root - DEBUG -        [+] Account-
+2017-02-19 10:24:07,046 - root - DEBUG -        [+] Sites-adidas-products/default/dw6ba7e5ff/zoom/BB4314_01_standard.jpg
+2017-02-19 10:24:07,869 - root - DEBUG -        [-] Join
+2017-02-19 10:24:07,937 - root - DEBUG -        [-] define('app.resources',function ()
+2017-02-19 10:24:07,947 - root - DEBUG -        [-] function ()
+2017-02-19 10:24:08,932 [INFO] New dump detected: http://dumpmon.com/raw/ttpn6wth Possible Google API key(s)
+2017-02-19 10:24:08,932 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/ttpn6wth Possible Google API key(s)
+2017-02-19 10:24:11,516 - root - DEBUG -        [+] Users\
+2017-02-19 10:24:12,432 [INFO] New dump detected: http://dumpmon.com/raw/qDMNA7mG Emails: 0 Hashes: 336 Keywords: 0.13
+2017-02-19 10:24:12,432 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/qDMNA7mG Emails: 0 Hashes: 336 Keywords: 0.13
+2017-02-19 10:24:14,737 [INFO] New dump detected: http://dumpmon.com/raw/LemaPHXe Emails: 297 Hashes: 0 Keywords: 0.13
+2017-02-19 10:24:14,737 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/LemaPHXe Emails: 297 Hashes: 0 Keywords: 0.13
+2017-02-19 10:24:18,197 - root - DEBUG -        [+] username
+2017-02-19 10:24:18,241 - root - DEBUG -        [+] hash:
+2017-02-19 10:24:18,259 - root - DEBUG -        [+] SiteBelgarion
+2017-02-19 10:24:18,336 - root - DEBUG -        [+] :db
+2017-02-19 10:24:18,378 - root - DEBUG -        [+] table:
+2017-02-19 10:24:19,090 [INFO] New dump detected: http://dumpmon.com/raw/P2KeSD8V Emails: 0 Hashes: 0 Keywords: 0.68
+2017-02-19 10:24:19,090 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/P2KeSD8V Emails: 0 Hashes: 0 Keywords: 0.68
+2017-02-19 10:24:20,964 [INFO] New dump detected: http://dumpmon.com/raw/aejuH76g Emails: 159 Hashes: 0 Keywords: 0.68
+2017-02-19 10:24:20,964 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/aejuH76g Emails: 159 Hashes: 0 Keywords: 0.68
+2017-02-19 10:24:23,505 [INFO] New dump detected: http://dumpmon.com/raw/HArhAihj Emails: 0 Hashes: 132 Keywords: 0.68
+2017-02-19 10:24:23,505 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/HArhAihj Emails: 0 Hashes: 132 Keywords: 0.68
+2017-02-19 10:24:25,736 - root - DEBUG -        [+]  db
+2017-02-19 10:24:25,761 - root - DEBUG -        [+] Hacked By
+2017-02-19 10:24:25,990 [INFO] New dump detected: http://dumpmon.com/raw/GcNdzw4i Emails: 248 Hashes: 0 Keywords: 0.9
+2017-02-19 10:24:25,990 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/GcNdzw4i Emails: 248 Hashes: 0 Keywords: 0.9
+2017-02-19 10:24:28,227 - root - DEBUG -        [+]  db
+2017-02-19 10:24:28,425 [INFO] New dump detected: http://dumpmon.com/raw/qdBvGygb Emails: 248 Hashes: 0 Keywords: 1.01
+2017-02-19 10:24:28,425 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/qdBvGygb Emails: 248 Hashes: 0 Keywords: 1.01
+2017-02-19 10:24:31,254 [INFO] New dump detected: http://dumpmon.com/raw/SS3NYJ7Y Emails: 0 Hashes: 158 Keywords: 1.01
+2017-02-19 10:24:31,254 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/SS3NYJ7Y Emails: 0 Hashes: 158 Keywords: 1.01
+2017-02-19 10:24:34,447 - root - DEBUG -        [+] Users/
+2017-02-19 10:24:35,498 [INFO] New dump detected: http://dumpmon.com/raw/L1fuMVS3 Emails: 0 Hashes: 71 Keywords: 1.12
+2017-02-19 10:24:35,498 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/L1fuMVS3 Emails: 0 Hashes: 71 Keywords: 1.12
+2017-02-19 10:24:37,947 - root - DEBUG -        [+] user-
+2017-02-19 10:24:37,951 - root - DEBUG -        [+] site_name
+2017-02-19 10:24:37,963 - root - DEBUG -        [-] function(i,s,o,g,r,a,m)
+2017-02-19 10:24:37,978 [INFO] New dump detected: http://dumpmon.com/raw/rvydD3fk Emails: 0 Hashes: 0 Keywords: 1.2
+2017-02-19 10:24:37,978 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/rvydD3fk Emails: 0 Hashes: 0 Keywords: 1.2
+^[[B^[[B^[[B^[[B^[[B^[[B^[[B^[[B2017-02-19 10:24:39,924 - root - DEBUG -        [+] email address
+2017-02-19 10:24:39,968 [INFO] New dump detected: http://dumpmon.com/raw/294fdUNw Emails: 27 Hashes: 0 Keywords: 1.31
+2017-02-19 10:24:39,968 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/294fdUNw Emails: 27 Hashes: 0 Keywords: 1.31
+2017-02-19 10:24:41,878 [INFO] New dump detected: http://dumpmon.com/raw/VND2xRKi Emails: 3 Hashes: 44 Keywords: 1.31 E/H: 0.07
+2017-02-19 10:24:41,878 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/VND2xRKi Emails: 3 Hashes: 44 Keywords: 1.31 E/H: 0.07
+2017-02-19 10:24:43,843 - root - DEBUG -        [+] members/
+2017-02-19 10:24:43,844 - root - DEBUG -        [+] password 
+2017-02-19 10:24:43,845 - root - DEBUG -        [+] sitel
+2017-02-19 10:24:43,894 [INFO] New dump detected: http://dumpmon.com/raw/TUyHZTt9 Emails: 26 Hashes: 0 Keywords: 1.64
+2017-02-19 10:24:43,894 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/TUyHZTt9 Emails: 26 Hashes: 0 Keywords: 1.64
+2017-02-19 10:24:45,865 - root - DEBUG -        [+] accounts:
+2017-02-19 10:24:45,866 - root - DEBUG -        [+] :password
+2017-02-19 10:24:45,867 - root - DEBUG -        [+] sites
+2017-02-19 10:24:45,869 - root - DEBUG -        [+] DATABASE
+2017-02-19 10:24:45,904 - root - DEBUG -        [-] Join
+2017-02-19 10:24:45,935 [INFO] New dump detected: http://dumpmon.com/raw/7zFgKByM Emails: 100 Hashes: 0 Keywords: 1.94
+2017-02-19 10:24:45,935 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/7zFgKByM Emails: 100 Hashes: 0 Keywords: 1.94
+2017-02-19 10:24:48,224 - root - DEBUG -        [+]  DB
+2017-02-19 10:24:48,291 [INFO] New dump detected: http://dumpmon.com/raw/MpSLZThw Emails: 0 Hashes: 159 Keywords: 2.05
+2017-02-19 10:24:48,291 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/MpSLZThw Emails: 0 Hashes: 159 Keywords: 2.05
+2017-02-19 10:24:50,406 - root - DEBUG -        [+] user -
+2017-02-19 10:24:50,407 - root - DEBUG -        [+] hash 
+2017-02-19 10:24:50,602 [INFO] New dump detected: http://dumpmon.com/raw/CCtmRxjZ Emails: 0 Hashes: 183 Keywords: 2.27
+2017-02-19 10:24:50,602 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/CCtmRxjZ Emails: 0 Hashes: 183 Keywords: 2.27
+2017-02-19 10:24:52,493 [INFO] New dump detected: http://dumpmon.com/raw/UJP2S9aK Emails: 23 Hashes: 0 Keywords: 2.27
+2017-02-19 10:24:52,493 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/UJP2S9aK Emails: 23 Hashes: 0 Keywords: 2.27
+2017-02-19 10:24:55,926 - root - DEBUG -        [+] Users\
+2017-02-19 10:24:57,255 [INFO] New dump detected: http://dumpmon.com/raw/v9Pet5CN Emails: 0 Hashes: 48 Keywords: 2.38
+2017-02-19 10:24:57,255 - dumpmon - INFO - New dump detected: http://dumpmon.com/raw/v9Pet5CN Emails: 0 Hashes: 48 Keywords: 2.38
+2017-02-19 10:30:08,958 - mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)
+2017-02-19 10:30:08,958 - mycroft.messagebus.client.ws - WARNING - WS Client will reconnect in 5 seconds.
