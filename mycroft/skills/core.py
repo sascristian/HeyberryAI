@@ -35,7 +35,7 @@ from mycroft.util.log import getLogger
 __author__ = 'seanfitz'
 
 PRIMARY_SKILLS = ['intent', 'wake']
-BLACKLISTED_SKILLS = ["send_sms", "media"]
+BLACKLISTED_SKILLS = ["send_sms", "media","configuration"]
 SKILLS_BASEDIR = dirname(__file__)
 THIRD_PARTY_SKILLS_DIR = ["/opt/mycroft/third_party", "/opt/mycroft/skills"]
 # Note: /opt/mycroft/skills is recommended, /opt/mycroft/third_party
@@ -180,6 +180,7 @@ class MycroftSkill(object):
         self.file_system = FileSystemAccess(join('skills', name))
         self.registered_intents = []
         self.log = getLogger(name)
+        self.results = {}
 
     @property
     def location(self):
@@ -258,6 +259,16 @@ class MycroftSkill(object):
     def register_regex(self, regex_str):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
+
+    def add_result(self, key, value):
+        self.results['skill_name'] = self.name
+        self.results[str(key)] = value
+
+    def emit_results(self):
+        if len(self.results) > 0:
+            self.emitter.emit(
+                Message("results", self.results))
+            self.results.clear()
 
     def speak(self, utterance):
         self.emitter.emit(Message("speak", {'utterance': utterance}))
