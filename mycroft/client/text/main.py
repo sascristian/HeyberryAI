@@ -17,7 +17,6 @@
 
 
 import sys
-import time
 from threading import Thread, Lock
 
 from mycroft.messagebus.client.ws import WebsocketClient
@@ -30,25 +29,25 @@ ws = None
 mutex = Lock()
 logger = getLogger("CLIClient")
 
+disable_speak_flag = False
+
+def setflag(event):
+    global disable_speak_flag
+    disable_speak_flag = True
 
 def handle_speak(event):
-    mutex.acquire()
-    ws.emit(Message("recognizer_loop:audio_output_start"))
-    try:
-        utterance = event.data.get('utterance')
-        print(">> " + utterance)
-        tts.execute(utterance)
-    finally:
-        mutex.release()
-        ws.emit(Message("recognizer_loop:audio_output_end"))
-
-
-def handle_quiet(event):
-    try:
-        utterance = event.data.get('utterance')
-        print(">> " + utterance)
-    finally:
-        pass
+    global disable_speak_flag
+    if not disable_speak_flag:
+        mutex.acquire()
+        ws.emit(Message("recognizer_loop:audio_output_start"))
+        try:
+            utterance = event.data.get('utterance')
+            logger.info("Speak: " + utterance)
+            tts.execute(utterance)
+        finally:
+            mutex.release()
+            ws.emit(Message("recognizer_loop:audio_output_end"))
+    disable_speak_flag = False
 
 
 def connect():
@@ -59,27 +58,19 @@ def main():
     global ws
     ws = WebsocketClient()
     tts.init(ws)
-    if '--quiet' in sys.argv:
-        ws.on('speak', handle_quiet)
-    else:
+    if '--quiet' not in sys.argv:
         ws.on('speak', handle_speak)
+        ws.on('do_not_speak_flag', setflag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
     try:
         while True:
-            # TODO: Change this mechanism
-            # Sleep for a while so all the output that results
-            # from the previous command finishes before we print.
-            time.sleep(1.5)
-            print("Input (Ctrl+C to quit):")
+            print("Input:")
             line = sys.stdin.readline()
             ws.emit(
                 Message("recognizer_loop:utterance",
                         {'utterances': [line.strip()]}))
-    except KeyboardInterrupt, e:
-        # User hit Ctrl+C to quit
-        print("")
     except KeyboardInterrupt, e:
         logger.exception(e)
         event_thread.exit()
