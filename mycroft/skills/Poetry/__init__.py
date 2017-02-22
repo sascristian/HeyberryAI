@@ -32,7 +32,7 @@ class PoetrySkill(MycroftSkill):
 
     def __init__(self):
         super(PoetrySkill, self).__init__(name="PoetrySkill")
-        self.styles = ["blackmetal", "deathmetal","scifi","viking","love"]
+        self.styles = ["blackmetal", "deathmetal","scifi","viking","love","family","friends","inspirational","life"]
         self.path = self.config["path"]
         self.minsize = 10
         self.maxsize = 20
