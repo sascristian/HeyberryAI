@@ -11,6 +11,8 @@
 - [Freewill Service](https://github.com/JarbasAI/mycroft---freewill---service)
 - [Audio Analisys Service](https://github.com/JarbasAI/mycroft-audio-analisys--service)
 - [Sentiment Analisys Service](https://github.com/JarbasAI/mycroft---sentiment-analisys---service)
+- [Context Manager Service](https://github.com/JarbasAI/mycroft---context-manager---service)
+
 
 ### New Skills
 
@@ -73,7 +75,7 @@ the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start"
 
 - cli client now listens for do not speak requests, so jarbas can shut up by external request without running in quiet mode
 - configuration no longer loads from mycroft servers, configuration skill was blacklisted, reason is for more control and privacy
-
+- added results property to skills, so they can emit more than utterances
 
 
 Forked from Mycroft 
