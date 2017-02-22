@@ -39,13 +39,15 @@ class DreamSkill(MycroftSkill):
 	def __init__(self):
 		super(DreamSkill, self).__init__(name="DreamSkill")
 
-		caffepath = self.config["caffe_path"]#'/home/user/caffe/python'  # to do - read from config
+		caffepath = self.config["caffe_path"]
+
 		sys.path.append(caffepath)
 		from batcountry import BatCountry
 
 		path = os.path.dirname(__file__)
 		self.model = "bvlc_googlenet"
-		path += '/caffe/models/'+self.model #
+		path += '/caffe/models/' + self.model
+
 		# start batcountry instance (self, base_path, deploy_path=None, model_path=None,
 		self.bc = BatCountry(path)#path,model_path=path)
 		#if model == "bvlc_googlenet":
@@ -88,6 +90,12 @@ class DreamSkill(MycroftSkill):
 						"inception_3a/3x3_reduce", "inception_3a/1x1",
 						"pool2/3x3_s2","conv2/norm2","conv2/3x3",
 						"conv2/3x3_reduce", "pool1/norm1"] #"pool1/3x3_s2" , "conv17x7_s2"
+
+		#elif model =="hybridCNN_upgraded":
+		#    self.layers = ["conv1", "relu1", "pool1", "norm1","conv2","relu2","pool2","norm2","conv3","relu3","conv4","relu4",
+		#                   "conv5","relu5","pool5","fc6","relu6","drop6","fc7","relu7","drop7","fc8"]
+		#elif model =="bvlc_alexnet":
+		#    ,
 
 		# random dreaming mode choice
 		self.choice = 3  # guided dream=1 normal = 0 guided with dif layers in source and guide = 3

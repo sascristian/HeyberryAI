@@ -5,15 +5,18 @@ import unirest
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
+from mycroft.configuration import ConfigurationManager
 
 client = None
 
 logger = getLogger("SentimentClient")
 
+config = ConfigurationManager.get()
+
 def connect():
     client.run_forever()
 
-mashapekey = "get yours man"
+mashapekey = config.get('Sentiment').get('mashape')
 
 def sentiment3(txt):
     #https://market.mashape.com/vivekn/sentiment-3#sentiment
