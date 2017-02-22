@@ -41,6 +41,7 @@ from third partys
 - [Space Launch Skill](https://github.com/marksev1/Mycroft-SpaceLaunch-Skill)
 - [Event Skill](https://github.com/forslund/event_skill)
 - [Command Skill](https://github.com/forslund/cmd_skill)
+- [Small Talk, Dice, Coin Flip, Rock Paper Scissors Skills](https://github.com/apquinit/mycroft-skills)
 
 
 # Privacy Enhancements
@@ -145,9 +146,9 @@ Put the relevant key in between the quotes and Mycroft Core should begin to use 
 
 ### APIs and dependencies in this fork ###
 
-some are hardcoded and not yet refactored into config file, mashape key in sentiment analisys and quotes skill, wikimapia in photolocation and reedit in wallpaper skill come to mind
+some api keys are needed, check config file for placeholders to change
 
-caffe must be installed for dream skill and path added manually
+caffe must be installed for dream skill and path added to config file
 
 requirments.txt will be updated in the future, check links bellow and watch skills log for debug on missing dependencies
 
