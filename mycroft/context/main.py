@@ -103,7 +103,7 @@ def main():
                      'regex': context_general.contextdict
                      }))
 
-       # inject_context()
+       # inject_context() #handled in intent skill ?
 
     def fail():
         context_general.failures +=1
@@ -145,12 +145,8 @@ def main():
 
 
     while True:
-        #print "\n\n\nthese are the contexts i should have\n"
-        #for key in context_general.contextdict:
-        #    print key
-        #    print context_general.contextdict[key]
-        time.sleep(1)
-        client.emit(Message("context_request"))
+        time.sleep(0.3)
+        #client.emit(Message("context_request"))    #when should this be called?
 
 
 
