@@ -283,8 +283,21 @@ class FreeWillContext():
 
 ####context manager bus listener
 
-# on context_result
-# client.on("vision_update",vision)
+#####  send current context
+
+# client.emitter.on("context_request",requested)
+def requested(target):
+    print "sending context info to bus"
+
+#####  #request context update
+def request_update(target):
+    #target = freewill / vision
+    #client.emit(Message("context_update", {'target': target}))
+    pass
+
+####### on context_result
+
+# client.emitter.on("vision_update",vision)
 def vision(message):
     asctime = message.data.get('asctime')
     time = message.data.get('time')
@@ -292,7 +305,7 @@ def vision(message):
     number = message.data.get('number of persons')
     master = message.data.get('master')
     smile = message.data.get('smile detected')
-# client.on("freewill_update",freewill)
+# client.emitter.on("freewill_update",freewill)
 def freewil(message):
     dopamine = message.data.get('dopamine')
     serotonine = message.data.get('serotonine')
@@ -300,7 +313,7 @@ def freewil(message):
     tought = message.data.get('last_tought')
     action = message.data.get('last_action')
     mood = message.data.get('mood')
-# client.on("speak",speak)
+# client.emitter.on("speak",speak)
 def speak(message):
     utterance = message.data.get('utterance')
 #client.emitter.on('recognizer_loop:utterance', utternace)
@@ -309,11 +322,4 @@ def utterance(message):
 # on skill
 
 # on results
-
-
-##request context update periodically
-def request_update(target):
-    #target = freewill / vision
-    #client.emit(Message("context_update", {'target': target}))
-    pass
 

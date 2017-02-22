@@ -207,7 +207,16 @@ class freewill():
 
         def context(message):
             if message.data.get('target') == "freewill":
-                print "send shit to message bus"
+                client.emit(
+                    Message("freewill_update",
+                            {'serotonine': self.context.serotonine,
+                             'dopamine': self.context.dopamine,
+                             'tiredness': self.context.tiredness,
+                             'mood': self.mood,  # why are these lists and not strings ?
+                             'innervoice': self.innervoice,
+                             'last_tought': self.lasttought,
+                             'active_friends': len(self.activefriends)
+                             }))
 
         client.emitter.on("diagnostics_request", diagnostics)
         client.emitter.on('vision_update', contextupdate)
