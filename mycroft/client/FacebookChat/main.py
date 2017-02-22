@@ -28,7 +28,7 @@ class FaceBot(Client):
     def __init__(self, email, password, debug=True, user_agent="Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"):
         fbchat.Client.__init__(self, email, password, debug, user_agent)
         self.name = "Jarbas"
-        self.cb = boibot.Cleverbot()
+        self.cb = cleverbot.Cleverbot("jarbas")
         self.friends = {}
         self.lastresponse = ""
         self.conversationlog = [""]
