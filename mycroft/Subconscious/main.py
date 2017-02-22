@@ -6,7 +6,7 @@ from threading import Thread
 import random
 from mycroft.util.log import getLogger
 
-from mycroft import context as ctxt
+from mycroft.context import FreeWillContext
 
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
@@ -47,7 +47,7 @@ class freewill():
 
         self.clock = time.time()
 
-        self.context = ctxt.Context(name="Subconscious")
+        self.context = FreeWillContext(name="Subconscious")
         # connect to messagebus
         global client
         client = WebsocketClient()
@@ -205,7 +205,7 @@ class freewill():
 
 
         client.emitter.on("diagnostics_request", diagnostics)
-        client.emitter.on('context_update', contextupdate)
+        client.emitter.on('vision_update', contextupdate)
         client.emitter.on('recognizer_loop:utterance', action)
         client.emitter.on('dopamine_increase_request', increasedopamine)
         client.emitter.on('dopamine_decrease_request', decreasedopamine)

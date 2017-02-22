@@ -7,7 +7,7 @@ from imutils.video import FPS
 from imutils.video import WebcamVideoStream as eye
 import imutils
 
-from mycroft import context
+from mycroft.context import VisionContext
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 
@@ -29,7 +29,7 @@ class OpticalNerve():
 
     def __init__(self):
 
-        self.context = context.Context("vision.context")
+        self.context = VisionContext("vision.context")
         self.context.setdefaultcontext()
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.line = cv2.LINE_AA
@@ -440,7 +440,7 @@ class OpticalNerve():
                 cv2.waitKey(10)
                 # emit to bus
             client.emit(
-                Message("context_update",
+                Message("vision_update",
                         {'asctime': time.asctime(),
                          'time': time.time(),
                          'movement': self.context.movement,
@@ -452,7 +452,6 @@ class OpticalNerve():
             logger.info('number of persons: '+str(self.context.num_persons))
             logger.info('master: '+str(self.context.master))
             logger.info('smile detected :'+str(self.context.smiling))
-            self.context.printcontext()
             # wait for quit key - esc or q
             k = cv2.waitKey(100) & 0xff
             if k == 27 or k == ord('q'):
