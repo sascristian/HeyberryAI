@@ -1,0 +1,7 @@
+{
+  "utterance": "may the force be with you",
+  "intent_type": "MayTheForceBeWithYouIntent",
+  "intent": {
+    "MayTheForceBeWithYouKeyphrase": "may the force be with you"
+  }
+}

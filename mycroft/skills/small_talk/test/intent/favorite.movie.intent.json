@@ -1,0 +1,7 @@
+{
+  "utterance": "what is your favorite movie",
+  "intent_type": "FavoriteMovieIntent",
+  "intent": {
+    "FavoriteMovieKeyphrase": "favorite movie"
+  }
+}

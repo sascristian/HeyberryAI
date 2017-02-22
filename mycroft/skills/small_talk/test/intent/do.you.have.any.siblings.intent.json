@@ -1,0 +1,7 @@
+{
+  "utterance": "do you have any siblings",
+  "intent_type": "DoYouHaveAnySiblingsIntent",
+  "intent": {
+    "DoYouHaveAnySiblingsKeyphrase": "do you have any siblings"
+  }
+}

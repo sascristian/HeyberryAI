@@ -1,0 +1,7 @@
+{
+  "utterance": "im bored",
+  "intent_type": "ImBoredIntent",
+  "intent": {
+    "ImBoredKeyphrase": "im bored"
+  }
+}

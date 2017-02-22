@@ -1,0 +1,7 @@
+{
+  "utterance": "sing me a song",
+  "intent_type": "SingMeASongIntent",
+  "intent": {
+    "SingMeASongKeyphrase": "sing me a song"
+  }
+}

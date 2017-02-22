@@ -1,0 +1,7 @@
+{
+  "utterance": "are you drunk",
+  "intent_type": "AreYouDrunkIntent",
+  "intent": {
+    "AreYouDrunkKeyphrase": "are you drunk"
+  }
+}

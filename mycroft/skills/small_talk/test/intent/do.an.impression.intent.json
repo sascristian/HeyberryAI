@@ -1,0 +1,7 @@
+{
+  "utterance": "do an impression",
+  "intent_type": "DoAnImpressionIntent",
+  "intent": {
+    "DoAnImpressionKeyphrase": "do an impression"
+  }
+}

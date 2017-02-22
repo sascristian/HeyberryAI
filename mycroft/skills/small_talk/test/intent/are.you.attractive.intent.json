@@ -1,0 +1,7 @@
+{
+  "utterance": "are you attractive",
+  "intent_type": "AreYouAttractiveIntent",
+  "intent": {
+    "AreYouAttractiveKeyphrase": "are you attractive"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "utterance": "what is love",
+  "intent_type": "WhatIsLoveIntent",
+  "intent": {
+    "WhatIsLoveKeyphrase": "what is love"
+  }
+}
