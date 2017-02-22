@@ -3,26 +3,21 @@ from fbchat import Client, get_json, now, ThreadsURL
 import fbchat
 
 from datetime import datetime
-from mycroft.skills.wolfram_alpha import boibot
+#from mycroft.skills.wolfram_alpha import boibot
+import cleverbot
 import random
 import thread
 import os
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
+from mycroft.configuration import ConfigurationManager
 
-try:
-    path = "/home/user/.mycroft/credentials.txt"
-    with open(path) as f:
-        creds = f.readlines()
-except:
-    path = os.path.dirname(__file__) + '/credentials.txt'
-    with open(path) as f:
-        creds = f.readlines()
+config = ConfigurationManager.get()
 
-mail = creds[0]
-passwd = creds[1]
-code = creds[2]
-masterid = creds[3]
+mail = config.get('fbchat').get('mail')
+passwd = config.get('fbchat').get('passwd')
+code = config.get('fbchat').get('code')
+masterid = config.get('fbchat').get('id')
 
 ### important to blacklist launch skill, dream, play, timer, alarm, news, Ip, reminder, podcasts and anything else that runs on computer or isnt to be reetrieved by chat
 blacklisted = ["ap","wifi","network","vpn","dream", "google","facebook","amazon","youtube","yahoo","ebay","twitter","go","craigslist","reddit","linkedin","netflix","live","bing",
