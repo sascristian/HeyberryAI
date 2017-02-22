@@ -241,7 +241,9 @@ def makepoem(curr, probDict, mode=1, minsize=8, maxsize=20):
         T = random.choice(range(minsize*20, maxsize*5))
     poem = [curr]
     for t in range(T):
-        poem.append(markov_next(poem[-1], probDict))
-        if mode == 1:
-            poem.append(",\n")
+        next = markov_next(poem[-1], probDict)
+        if len(next)>3:
+            poem.append(next)
+            if mode == 1:
+                poem.append("\n")
     return " ".join(poem)
