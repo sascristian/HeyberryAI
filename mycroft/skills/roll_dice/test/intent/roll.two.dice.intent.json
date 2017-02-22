@@ -1,0 +1,7 @@
+{
+  "utterance": "roll two dice",
+  "intent_type": "RollTwoDiceIntent",
+  "intent": {
+    "RollTwoDiceKeyword": "roll two dice"
+  }
+}

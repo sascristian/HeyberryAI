@@ -1,0 +1,7 @@
+{
+  "utterance": "roll a die",
+  "intent_type": "RollADieIntent",
+  "intent": {
+    "RollADieKeyword": "roll a die"
+  }
+}
