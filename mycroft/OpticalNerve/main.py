@@ -94,7 +94,7 @@ class OpticalNerve():
                              'master': self.context.master,
                              'smile detected ': self.context.smiling}))
 
-        client.on("context_update", vision)
+        client.emitter.on("context_update", vision)
         event_thread = Thread(target=connect)
         event_thread.setDaemon(True)
         event_thread.start()
