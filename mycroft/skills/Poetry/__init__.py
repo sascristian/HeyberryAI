@@ -66,10 +66,58 @@ class PoetrySkill(MycroftSkill):
         self.register_intent(love_poetry_intent,
                              self.handle_love_poetry_intent)
 
+        life_poetry_intent = IntentBuilder("RecitelifePoetryIntent") \
+            .require("life").build()
+        self.register_intent(life_poetry_intent,
+                             self.handle_life_poetry_intent)
+
+        friends_poetry_intent = IntentBuilder("RecitefriendsPoetryIntent") \
+            .require("friends").build()
+        self.register_intent(friends_poetry_intent,
+                             self.handle_friends_poetry_intent)
+
+        inspirational_poetry_intent = IntentBuilder("ReciteInspirationalPoetryIntent") \
+            .require("inspirational").build()
+        self.register_intent(inspirational_poetry_intent,
+                             self.handle_inspirational_poetry_intent)
+
+        family_poetry_intent = IntentBuilder("ReciteFamilyPoetryIntent") \
+            .require("family").build()
+        self.register_intent(family_poetry_intent,
+                             self.handle_family_poetry_intent)
+
         poetry_intent = IntentBuilder("RecitePoetryIntent")\
             .require("poetry").build()
         self.register_intent(poetry_intent,
                              self.handle_poetry_intent)
+
+    def handle_friends_poetry_intent(self, message):
+        style = "friends"
+        poem = self.poetry(style)
+        self.save(style, poem)
+        # speak
+        self.speak(poem)
+
+    def handle_inspirational_poetry_intent(self, message):
+        style = "inspirational"
+        poem = self.poetry(style)
+        self.save(style, poem)
+        # speak
+        self.speak(poem)
+
+    def handle_family_poetry_intent(self, message):
+        style = "family"
+        poem = self.poetry(style)
+        self.save(style, poem)
+        # speak
+        self.speak(poem)
+
+    def handle_life_poetry_intent(self, message):
+        style = "life"
+        poem = self.poetry(style)
+        self.save(style, poem)
+        # speak
+        self.speak(poem)
 
     def handle_love_poetry_intent(self, message):
         style = "love"
