@@ -98,7 +98,7 @@ class DreamSkill(MycroftSkill):
 		#    ,
 
 		# random dreaming mode choice
-		self.choice = 3  # guided dream=1 normal = 0 guided with dif layers in source and guide = 3
+		self.choice = self.config["mode"]  # guided dream=1 normal = 0 guided with dif layers in source and guide = 3
 
 		# Define the codec and create VideoWriter object
 		self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
