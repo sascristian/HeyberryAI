@@ -64,8 +64,8 @@ def main():
     tts.init(ws)
     if '--quiet' not in sys.argv:
         ws.on('speak', handle_speak)
-        ws.on('do_not_speak_flag', setflag)
-        ws.on('do_not_speak_flag_finish', unsetflag)
+        ws.on('do_not_speak_flag_enable', setflag)
+        ws.on('do_not_speak_flag_disable', unsetflag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
