@@ -205,6 +205,7 @@ Mycroft provides `start.sh` to run a large number of common tasks. This script u
 - run `./start.sh sentiment`
 - run `./start.sh freewill`
 - run `./start.sh fbclient`
+- run `./start.sh context`
 - run `./start.sh cli`
 
 *Note: The above scripts are blocking, so each will need to be run in a separate terminal session.*

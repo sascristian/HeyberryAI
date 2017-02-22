@@ -21,7 +21,8 @@ case $1 in
     "vision") SCRIPT=${TOP}/mycroft/OpticalNerve/main.py ;;
     "audioanalisys") SCRIPT=${TOP}/mycroft/ears/main.py ;;
     "fbclient") SCRIPT=${TOP}/mycroft/client/FacebookChat/main.py ;;
-	*) echo "Usage: start.sh [service | skills | skill_container | voice | cli | audiotest | collector | unittest | enclosure | sdkdoc | wifi]"; exit ;;
+    "context") SCRIPT=${TOP}/mycroft/context/main.py ;;
+	*) echo "Usage: start.sh [service | skills | skill_container | voice | cli | audiotest | collector | unittest | enclosure | sdkdoc | wifi | sentiment | dumpmon | freewill | vision | context |audioanalisys |fbclient ]"; exit ;;
 esac
 
 echo "Starting $@"

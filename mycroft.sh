@@ -95,6 +95,7 @@ then
   start-mycroft sentiment
   start-mycroft fbclient
   start-mycroft audioanalisys
+  start-mycroft context
   exit 0
 elif [[ "$1" == "start" && "$2" == "-v" ]]
 then
@@ -107,6 +108,7 @@ then
   start-mycroft sentiment
   start-mycroft fbclient
   start-mycroft audioanalisys
+  start-mycroft context
   exit 0
 elif [[ "$1" == "start" && "$2" == "-c" ]]
 then
@@ -119,6 +121,7 @@ then
   start-mycroft sentiment
   start-mycroft fbclient
   start-mycroft audioanalisys
+  start-mycroft context
   exit 0
 elif [[ "$1" == "stop" && -z "$2" ]]
 then
@@ -132,6 +135,7 @@ then
   stop-mycroft sentiment
   stop-mycroft fbclient
   stop-mycroft audioanalisys
+  stop-mycroft context
   exit 0
 elif [[ "$1" == "start" && "$2" == "-b" ]]
 then
