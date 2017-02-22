@@ -18,7 +18,7 @@ def main():
     def connect():
         client.run_forever()
 
-    ####### on context_result
+    ####### on context_result, listen for more signals if needed
 
     def vision(message):
         vision_context.asctime = message.data.get('asctime')
@@ -44,16 +44,21 @@ def main():
         context_general.lastorder = message.data.get('utterances')
 
     def results(message):
+        #parse only relevant skills, add context skill to change some properties like location
         context_general.lastresults = message.data.get('skill_name')
+        # time skill
         if context_general.lastresults == "TimeSkill":
             context_general.time = message.data.get('time')
             context_general.timezone = message.data.get('timezone')
+        # TODO
+            # weather skill
+            # IP skill
+            # dream skill and remove flag from freewill context
 
     #####  send current context
 
     def requested(target):
         #emit unified response from all contexts?
-        print "sending context info to bus"
         client.emit(
             Message("context_result",
                     {
@@ -65,7 +70,7 @@ def main():
                      'last results': context_general.lastresults,
                      'failures': context_general.failures
                      }))
-        client.emit(Message("context_update", {'target': "all"}))
+        request_update("all")
 
     def fail():
         context_general.failures +=1
@@ -82,7 +87,7 @@ def main():
     event_thread.setDaemon(True)
     event_thread.start()
 
-    #####  #request context update
+    #####  #request context update from other services
     def request_update(target):
         #target = freewill / vision / all
         client.emit(Message("context_update", {'target': target}))
