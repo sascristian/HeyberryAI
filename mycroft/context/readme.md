@@ -4,6 +4,8 @@ listens on message bus for signals and keeps track of context
 
 requests context update from services
 
+on request emits current context to bus
+
 # relevant signals
 
 speak - last spoken sentence
