@@ -45,7 +45,7 @@ def main():
 
     def results(message):
         #parse only relevant skills, add context skill to change some properties like location
-        context_general.lastresults = message.data.get('skill_name')
+        context_general.lastaction = message.data.get('skill_name') #must send results in skill, NOT default
         # time skill
         if context_general.lastresults == "TimeSkill":
             context_general.time = message.data.get('time')
@@ -67,7 +67,7 @@ def main():
                      'location': context_general.location,
                      'last action': context_general.lastaction,
                      'last utterance': context_general.lastutterance,
-                     'last results': context_general.lastresults,
+                     #'last results': context_general.lastresults,
                      'failures': context_general.failures
                      }))
         request_update("all")

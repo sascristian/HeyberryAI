@@ -250,3 +250,25 @@ Or you could make a suggestion?
 ##### What are the Privacy Concerns i should worry about regarding AI assistants?
 
 https://github.com/JarbasAI/jarbas-core/blob/dev/PrivacyConcerns.txt
+
+##### is Jarbas alive ?
+
+        He has a nervous system - the messagebus
+        He has eyes - webcam
+        He has a "brain section" to process vision
+        He has ears - microphone
+        He has a "brain section" for sound processing 
+        He has "hormones"
+        He has a "brain section" for decision making 
+        He has some agency
+        He has non-human senses - wifi, command line, chat, decentralized internet database
+        He has abilities / impact in the real world
+        He consumes energy
+        
+        BUT
+            He does not reproduce
+            He is not self-aware
+            He is not self-owned
+        
+ Answer: Soon he will be!
+    
