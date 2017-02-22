@@ -7,6 +7,7 @@ import random
 from mycroft.util.log import getLogger
 
 from mycroft.context import FreeWillContext
+from mycroft.context import VisionContext
 
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
@@ -48,6 +49,7 @@ class freewill():
         self.clock = time.time()
 
         self.context = FreeWillContext(name="Subconscious")
+        self.visioncontext = VisionContext(name="Vision")
         # connect to messagebus
         global client
         client = WebsocketClient()
@@ -56,21 +58,21 @@ class freewill():
             self.context.dopamine += 1
             self.context.serotonine += 1
             #get hapier because eyes are open
-            self.context.smiling = message.data.get('smile detected ')
-            self.context.num_persons = int(message.data.get('number of persons'))
-            if self.context.num_persons > 1:
+            self.visioncontext.smiling = message.data.get('smile detected ')
+            self.visioncontext.num_persons = int(message.data.get('number of persons'))
+            if self.visioncontext.num_persons > 1:
                 self.context.timeuser = 0
                 self.clock = time.time()
-                self.context.multiple_persons = True
-                self.context.person_on_screen = True
-            elif self.context.num_persons == 1:
+                self.visioncontext.multiple_persons = True
+                self.visioncontext.person_on_screen = True
+            elif self.visioncontext.num_persons == 1:
                 self.context.timeuser = 0
                 self.clock = time.time()
-                self.context.multiple_persons = False
-                self.context.person_on_screen = True
+                self.visioncontext.multiple_persons = False
+                self.visioncontext.person_on_screen = True
             else:
-                self.context.multiple_persons = False
-                self.context.person_on_screen = False
+                self.visioncontext.multiple_persons = False
+                self.visioncontext.person_on_screen = False
                 self.context.timeuser = message.data.get('time') - self.clock
 
 
@@ -86,7 +88,7 @@ class freewill():
             # update time since order
             self.context.time_since_order = 0
             self.context.time = time.time()
-            #self.context.person_on_screen = True #if tehre was an order....
+            #self.visioncontext.person_on_screen = True #if tehre was an order....
             ###### get sentiment analisys and affect mood?
             # request sentiment analisys from action
             # sentiment = message.data.get('utterances')[0]
@@ -203,6 +205,9 @@ class freewill():
         def entropy_reset(message):
             self.reset_toughts()
 
+        def context(message):
+            if message.data.get('target') == "freewill":
+                print "send shit to message bus"
 
         client.emitter.on("diagnostics_request", diagnostics)
         client.emitter.on('vision_update', contextupdate)
@@ -217,6 +222,7 @@ class freewill():
         client.emitter.on('sentiment_result', sentimentresult)
         client.emitter.on('leak_analisys', leakfound)
         client.emitter.on('speak', onspeak)
+        client.emitter.on("context_update", context)
 
         ###### register as many of these as needed to have some executed skill influence something
 
@@ -328,23 +334,23 @@ class freewill():
             self.context.dopamine -= 0.2 * self.context.dopamine
             #neurologger.info(' decreasing dopamine by : ' + str(0.2 * self.context.dopamine))
         #modifies
-        if self.context.smiling:
+        if self.visioncontext.smiling:
             neurologger.debug('smiling user detected')
             self.context.serotonine += 3
             #neurologger.info(' increasing serotonine by :  1')
             self.context.dopamine += 15
             neurologger.info(' increasing dopamine by :  15')
-        if self.context.num_persons > 0:
-            self.context.dopamine += 2* self.context.num_persons
-            self.context.serotonine += 3 * self.context.num_persons
-        if self.context.multiple_persons:
+        if self.visioncontext.num_persons > 0:
+            self.context.dopamine += 2* self.visioncontext.num_persons
+            self.context.serotonine += 3 * self.visioncontext.num_persons
+        if self.visioncontext.multiple_persons:
             neurologger.debug('multiple persons detected')
             #neurologger.info(' increasing serotonine by :  1')
             self.context.serotonine += 2
             #neurologger.info(' increasing dopamine by :  1')
             self.context.dopamine += 1
 
-        if time.time() - self.context.timeuser >= 120 * 60 and not self.context.person_on_screen:
+        if time.time() - self.context.timeuser >= 120 * 60 and not self.visioncontext.person_on_screen:
             neurologger.debug('lonelyness disease detected ')
             #neurologger.info(' decreasing serotonine by :  1')
             self.context.serotonine -= 1
@@ -353,7 +359,7 @@ class freewill():
             #neurologger.info(' decreasing tiredness by :  1')
             self.context.tiredness -= 1
         # alone for more than 2 minutes getts happier
-        elif time.time() - self.context.timeuser >= 5 * 60 and not self.context.person_on_screen:
+        elif time.time() - self.context.timeuser >= 5 * 60 and not self.visioncontext.person_on_screen:
             neurologger.debug('resting time period detected ')
             #neurologger.info(' increasing serotonine by :  2')
             self.context.serotonine += 2
@@ -392,36 +398,36 @@ class freewill():
         self.balance_hormones()
 
         if self.ignorevision:
-            self.context.person_on_screen = True
+            self.visioncontext.person_on_screen = True
 
 
 
         time.sleep(1)
         # hello
-        if self.greetings and self.context.person_on_screen:
+        if self.greetings and self.visioncontext.person_on_screen:
             neurologger.debug('new person detected ')
             self.context.dopamine += 10
          #   neurologger.info(' increasing dopamine by :  10')
             self.mood = "hello"
         # depressed
-        elif self.context.serotonine <= 50 and self.context.person_on_screen or (self.context.serotonine <= 90 and self.context.tiredness >= 250 and self.context.person_on_screen):
+        elif self.context.serotonine <= 50 and self.visioncontext.person_on_screen or (self.context.serotonine <= 90 and self.context.tiredness >= 250 and self.visioncontext.person_on_screen):
             self.mood = 'sad'
         # not having much interaction with user
-        elif self.context.dopamine < 60 and self.context.person_on_screen:
+        elif self.context.dopamine < 60 and self.visioncontext.person_on_screen:
             self.mood = 'grumpy'
         # call for attention
-        elif self.context.serotonine < 60 and self.context.time_since_order >= 60 * 5 and self.context.person_on_screen:
+        elif self.context.serotonine < 60 and self.context.time_since_order >= 60 * 5 and self.visioncontext.person_on_screen:
             self.mood = 'complain'
         # happy
-        elif self.context.serotonine >= 85 and self.context.dopamine >= 80 and self.context.person_on_screen:
+        elif self.context.serotonine >= 85 and self.context.dopamine >= 80 and self.visioncontext.person_on_screen:
             self.mood = 'happy'
 
         # user present and none of previous
-        elif self.context.time_since_order >= elapsedtresh and self.context.person_on_screen:
+        elif self.context.time_since_order >= elapsedtresh and self.visioncontext.person_on_screen:
             self.mood = "neutral"
 
         # process loneliness
-        if time.time() - self.context.timeuser >= 10 * 60 and not self.context.person_on_screen:
+        if time.time() - self.context.timeuser >= 10 * 60 and not self.visioncontext.person_on_screen:
             self.greetings = True
             # alone for more than 10 minutes starts getting depressed
             self.mood = 'lonely'
@@ -493,12 +499,12 @@ class freewill():
 
     def mainloop(self):
         # set defaut vision info in context
-        self.context.multiple_persons = False
-        self.context.num_persons = 0
-        self.context.smiling = False
-        self.context.master = False
-        self.context.person_on_screen = False
-        self.context.movement = False
+        self.visioncontext.multiple_persons = False
+        self.visioncontext.num_persons = 0
+        self.visioncontext.smiling = False
+        self.visioncontext.master = False
+        self.visioncontext.person_on_screen = False
+        self.visioncontext.movement = False
         # context.timeuser = 31*60
         # mood cheats
        # self.context.serotonine = 3000

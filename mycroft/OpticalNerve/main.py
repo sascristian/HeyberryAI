@@ -82,6 +82,19 @@ class OpticalNerve():
         #connect to messagebus
         global client
         client = WebsocketClient()
+
+        def vision(message):
+            if message.data.get('target') == "vision":
+                client.emit(
+                    Message("vision_update",
+                            {'asctime': time.asctime(),
+                             'time': time.time(),
+                             'movement': self.context.movement,
+                             'number of persons': self.context.num_persons,
+                             'master': self.context.master,
+                             'smile detected ': self.context.smiling}))
+
+        client.on("context_update", vision)
         event_thread = Thread(target=connect)
         event_thread.setDaemon(True)
         event_thread.start()
@@ -439,14 +452,7 @@ class OpticalNerve():
                 #cv2.imshow("JArbas Vision", vision)
                 cv2.waitKey(10)
                 # emit to bus
-            client.emit(
-                Message("vision_update",
-                        {'asctime': time.asctime(),
-                         'time': time.time(),
-                         'movement': self.context.movement,
-                         'number of persons': self.context.num_persons,
-                         'master': self.context.master,
-                         'smile detected ': self.context.smiling}))
+
 
             logger.info("movement: "+str(self.context.movement))
             logger.info('number of persons: '+str(self.context.num_persons))
