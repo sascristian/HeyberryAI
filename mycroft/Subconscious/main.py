@@ -207,7 +207,7 @@ class freewill():
         def context(message):
             if message.data.get('target') == "freewill" or message.data.get('target') == "all":
                 client.emit(
-                    Message("freewill_update",
+                    Message("freewill_result",
                             {'serotonine': self.context.serotonine,
                              'dopamine': self.context.dopamine,
                              'tiredness': self.context.tiredness,
