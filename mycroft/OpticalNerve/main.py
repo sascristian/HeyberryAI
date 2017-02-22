@@ -86,7 +86,7 @@ class OpticalNerve():
         def vision(message):
             if message.data.get('target') == "vision" or  message.data.get('target') == "all" :
                 client.emit(
-                    Message("vision_update",
+                    Message("vision_result",
                             {'asctime': time.asctime(),
                              'time': time.time(),
                              'movement': self.context.movement,
