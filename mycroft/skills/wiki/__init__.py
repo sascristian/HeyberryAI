@@ -53,6 +53,9 @@ class WikipediaSkill(MycroftSkill):
     def handle_intent(self, message):
         try:
             title = message.data.get("ArticleTitle")
+
+            self.add_result("ArticleTitle",title)
+
             self.__feedback_search(title)
             results = wiki.search(title, self.max_results)
             summary = re.sub(

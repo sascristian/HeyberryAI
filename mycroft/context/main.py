@@ -4,7 +4,10 @@ from mycroft.messagebus.message import Message
 
 from threading import Thread
 import time
+import re
 
+#from adapt.context import ContextManager
+import adapt.entity_tagger as entity_tag
 def main():
     ####context manager bus listener
 
@@ -54,10 +57,38 @@ def main():
             # weather skill
             # IP skill
             # dream skill and remove flag from freewill context
+            # generalize for all results in a dicT!!!!
+        # update regex contexts
+
+        print "\n"+context_general.lastaction
+        #print "\nmessage fields received\n"
+        #fields=[]
+        #for field in message.data:
+        #    print str(field)
+        #    fields.append(field)
+
+        #print "\nregistered words\n"
+        for word in vocab:
+            #print word #key
+            #if word in fields:
+                #im obviously missing osmething, word doesnt work in message.data.get but appears in field
+            try:
+                ctxt = message.data[word]
+            #ctxt = message.data.get[word] #try to get that context key -> this crashes thread ALWAYS, wtf? encoding?
+            #print word #key
+                print "\nkey detected"
+                print ctxt  # result
+                context_general.contextdict[word] = ctxt
+                return
+            except:
+                pass#key not detected
+
 
     #####  send current context
 
     def requested(target):
+        request_update("all")
+        time.sleep(0.1)
         #emit unified response from all contexts?
         client.emit(
             Message("context_result",
@@ -68,12 +99,30 @@ def main():
                      'last action': context_general.lastaction,
                      'last utterance': context_general.lastutterance,
                      #'last results': context_general.lastresults,
-                     'failures': context_general.failures
+                     'failures': context_general.failures,
+                     'regex': context_general.contextdict
                      }))
-        request_update("all")
+
+       # inject_context()
 
     def fail():
         context_general.failures +=1
+
+    vocab = []
+
+    def addvocab(message):
+        words = message.data.get("regex")
+        if words is not None:
+            #print words
+            #parse words for regex (<?P<KEY>.*)
+            index = words.find("(?P<")
+            endindex = words.find(">")
+            name = words[index+4:endindex]
+            if name not in vocab:
+                vocab.append(name)
+                context_general.contextdict.setdefault(name)
+                print "registering context " + name
+
 
     client.emitter.on("vision_result", vision)
     client.emitter.on('recognizer_loop:utterance', utterance)
@@ -82,6 +131,7 @@ def main():
     client.emitter.on("results",results)
     client.emitter.on("context_request",requested)
     client.emitter.on("intent_failure", fail)
+    client.emitter.on("register_vocab", addvocab)
 
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
@@ -93,8 +143,17 @@ def main():
         client.emit(Message("context_update", {'target': target}))
         pass
 
+
     while True:
-        request_update("all")
-        time.sleep(5)
+        #print "\n\n\nthese are the contexts i should have\n"
+        #for key in context_general.contextdict:
+        #    print key
+        #    print context_general.contextdict[key]
+        time.sleep(1)
+        client.emit(Message("context_request"))
+
+
+
+
 
 main()

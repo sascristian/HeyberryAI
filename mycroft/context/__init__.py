@@ -15,16 +15,17 @@ class Context():
         self.log = getLogger("context log")
         self.log.setLevel('WARNING')#uncomment to disable logs
         self.counter = 0
-
+        self.shelve = shelve.open(name, writeback=True)
         self.setdefaultcontext()
 
-        self.shelve = shelve.open(name, writeback=True)
+
         try:
             self.read()
         except:
             pass
 
     def setdefaultcontext(self):
+        self.contextdict = {}
         self.lastorder = ""  # order received
         self.lastaction = ""  # skill executed
         self.lastutterance = ""  # thing said
@@ -44,7 +45,7 @@ class Context():
     def read(self):
         print "implement reading all values"
         self.counter = self.shelve['counter']
-
+        self.contextdict = self.shelve['dict']
         self.lastorder = self.shelve["last order"]
         self.lastaction = self.shelve["last action"]
         self.lastutterance = self.shelve["last utterance"]
@@ -60,7 +61,7 @@ class Context():
     def update(self):
         print "implement setting all values"
         self.shelve['counter'] = self.counter + 1
-
+        self.shelve['dict'] = self.contextdict
         self.shelve["last order"] = self.lastorder
         self.shelve["last action"] = self.lastaction
         self.shelve["last utterance"] = self.lastutterance
@@ -85,8 +86,9 @@ class VisionContext():
         self.log.setLevel('WARNING')#uncomment to disable logs
         self.counter = 0
         ####### vision ######
-        self.setdefaultcontext()
         self.shelve = shelve.open(name, writeback=True)
+        self.setdefaultcontext()
+
         try:
             self.read()
         except:
@@ -169,10 +171,10 @@ class FreeWillContext():
     def __init__(self, name="freewill.context"):
         self.log = getLogger("Free Will context log")
         self.log.setLevel('WARNING')#uncomment to disable logs
-
+        self.shelve = shelve.open(name, writeback=True)
         self.setdefaultcontext()
 
-        self.shelve = shelve.open(name, writeback=True)
+
         try:
             self.read()
         except:
