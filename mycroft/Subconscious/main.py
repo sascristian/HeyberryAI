@@ -125,7 +125,6 @@ class freewill():
             chat = message.data.get('chat')[0]
             # add entropy
             # print "works"
-            self.entropy
             if len(self.entropy) < 150:
                 self.entropy.append(chat)
             else:
@@ -206,7 +205,7 @@ class freewill():
             self.reset_toughts()
 
         def context(message):
-            if message.data.get('target') == "freewill":
+            if message.data.get('target') == "freewill" or message.data.get('target') == "all":
                 client.emit(
                     Message("freewill_update",
                             {'serotonine': self.context.serotonine,

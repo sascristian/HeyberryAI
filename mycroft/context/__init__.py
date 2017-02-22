@@ -23,6 +23,7 @@ class Context():
 
         # time
         self.time = time.time()
+        self.timezone = "Europe/Central"
         # location
         self.location = "kansas"
 
@@ -281,45 +282,4 @@ class FreeWillContext():
     def close(self):
         self.shelve.close()
 
-####context manager bus listener
-
-#####  send current context
-
-# client.emitter.on("context_request",requested)
-def requested(target):
-    print "sending context info to bus"
-
-#####  #request context update
-def request_update(target):
-    #target = freewill / vision
-    #client.emit(Message("context_update", {'target': target}))
-    pass
-
-####### on context_result
-
-# client.emitter.on("vision_update",vision)
-def vision(message):
-    asctime = message.data.get('asctime')
-    time = message.data.get('time')
-    movement = message.data.get('movement')
-    number = message.data.get('number of persons')
-    master = message.data.get('master')
-    smile = message.data.get('smile detected')
-# client.emitter.on("freewill_update",freewill)
-def freewil(message):
-    dopamine = message.data.get('dopamine')
-    serotonine = message.data.get('serotonine')
-    tiredness = message.data.get('tiredness')
-    tought = message.data.get('last_tought')
-    action = message.data.get('last_action')
-    mood = message.data.get('mood')
-# client.emitter.on("speak",speak)
-def speak(message):
-    utterance = message.data.get('utterance')
-#client.emitter.on('recognizer_loop:utterance', utternace)
-def utterance(message):
-    utterance = message.data.get('utterance')
-# on skill
-
-# on results
 

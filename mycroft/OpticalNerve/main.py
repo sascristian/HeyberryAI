@@ -84,7 +84,7 @@ class OpticalNerve():
         client = WebsocketClient()
 
         def vision(message):
-            if message.data.get('target') == "vision":
+            if message.data.get('target') == "vision" or  message.data.get('target') == "all" :
                 client.emit(
                     Message("vision_update",
                             {'asctime': time.asctime(),
