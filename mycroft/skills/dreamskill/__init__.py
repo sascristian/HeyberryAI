@@ -51,7 +51,7 @@ class DreamSkill(MycroftSkill):
 		# start batcountry instance (self, base_path, deploy_path=None, model_path=None,
 		self.bc = BatCountry(path)#path,model_path=path)
 		#if model == "bvlc_googlenet":
-		self.iter = 25 #dreaming iterations
+		self.iter = self.config["iter"] #dreaming iterations
 		self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
 						"inception_5b/pool", "inception_5b/5x5",
 						"inception_5b/5x5_reduce", "inception_5b/3x3",
@@ -146,34 +146,6 @@ class DreamSkill(MycroftSkill):
 			for word in line.split("\n"):
 				if word is not None:
 					self.strings.append(word)
-
-		self.jarbasservice=False
-		if self.jarbasservice:
-			### message bus interface to populate with strings   ### this is unecessary but fun :P
-			global client
-			client = WebsocketClient()
-
-			def toughts(message):
-				self.strings[random.choice(range(0, len(self.strings)))]=message.data.get('text')
-
-			def entropy(message):
-				self.strings[random.choice(range(0,len(self.strings)))]=message.data.get('utterances')
-
-			client.emitter.on('sentiment_result', toughts) #get strings from sentimenty analisys service
-			client.emitter.on('entropy_response', entropy) #get strings from freewill service
-			client.emitter.on('speak', entropy) # get strings from speak events
-
-			def connect():
-				client.run_forever()
-				client.run_forever()
-
-			self.event_thread = Thread(target=connect)
-			self.event_thread.setDaemon(True)
-			self.event_thread.start()
-
-			#### populate with fresh strings from freewill
-			for i in range(0,30):
-				client.emit(Message("entropy_request"))
 
 	def initialize(self):
 		self.load_data_files(dirname(__file__))
