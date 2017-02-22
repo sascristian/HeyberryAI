@@ -49,6 +49,7 @@ class SpellingSkill(MycroftSkill):
         time.sleep((self.LETTERS_PER_SCREEN + len(word)) * self.SEC_PER_LETTER)
         self.enclosure.activate_mouth_events()
         self.enclosure.mouth_reset()
+        self.emit_results()
 
     def stop(self):
         pass

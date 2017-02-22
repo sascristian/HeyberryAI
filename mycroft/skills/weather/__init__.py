@@ -159,6 +159,7 @@ class WeatherSkill(MycroftSkill):
             self.__api_error(e)
         except Exception as e:
             LOG.error("Error: {0}".format(e))
+        self.emit_results()
 
     def handle_next_hour_intent(self, message):
         try:
@@ -181,6 +182,7 @@ class WeatherSkill(MycroftSkill):
             self.__api_error(e)
         except Exception as e:
             LOG.error("Error: {0}".format(e))
+        self.emit_results()
 
     def handle_next_day_intent(self, message):
         try:
@@ -204,6 +206,7 @@ class WeatherSkill(MycroftSkill):
             self.__api_error(e)
         except Exception as e:
             LOG.error("Error: {0}".format(e))
+        self.emit_results()
 
     def get_location(self, message):
         try:

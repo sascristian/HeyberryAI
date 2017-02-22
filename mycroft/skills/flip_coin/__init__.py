@@ -26,9 +26,11 @@ class FlipCoinSkill(MycroftSkill):
 
     def handle_flip_a_coin_intent(self, message):
         self.speak_dialog("flip.a.coin")
+        self.emit_results()
 
     def handle_flip_two_coins_intent(self, message):
         self.speak_dialog("flip.two.coins")
+        self.emit_results()
 
     def stop(self):
         pass

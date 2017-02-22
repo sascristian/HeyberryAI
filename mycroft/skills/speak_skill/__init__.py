@@ -46,6 +46,7 @@ class SpeakSkill(MycroftSkill):
     def handle_speak_intent(self, message):
         words = message.data.get("Words")
         self.speak(words)
+        self.emit_results()
 
     def stop(self):
         pass

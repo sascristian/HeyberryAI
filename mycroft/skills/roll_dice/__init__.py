@@ -26,9 +26,11 @@ class RollDiceSkill(MycroftSkill):
 
     def handle_roll_a_die_intent(self, message):
         self.speak_dialog("roll.a.die")
+        self.emit_results()
 
     def handle_roll_two_dice_intent(self, message):
         self.speak_dialog("roll.two.dice")
+        self.emit_results()
 
     def stop(self):
         pass

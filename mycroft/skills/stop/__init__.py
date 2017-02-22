@@ -46,13 +46,16 @@ class StopSkill(MycroftSkill):
     def handle_speak_disable_intent(self, event):
         self.emitter.emit(
             Message("do_not_speak_flag_enable"))
+        self.emit_results()
 
     def handle_speak_enable_intent(self, event):
         self.emitter.emit(
             Message("do_not_speak_flag_disable"))
+        self.emit_results()
 
     def handle_intent(self, event):
         self.emitter.emit(Message("mycroft.stop"))
+        self.emit_results()
 
     def stop(self):
         pass

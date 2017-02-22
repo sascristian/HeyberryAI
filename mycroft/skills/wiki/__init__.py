@@ -67,6 +67,7 @@ class WikipediaSkill(MycroftSkill):
 
         except Exception as e:
             LOGGER.error("Error: {0}".format(e))
+        self.emit_results()
 
     def __feedback_search(self, title):
         prefix = self.feedback_prefix[randrange(len(self.feedback_prefix))]

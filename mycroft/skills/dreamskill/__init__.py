@@ -210,6 +210,7 @@ class DreamSkill(MycroftSkill):
 		cv2.imshow('dream', dreampic)
 		cv2.waitKey(20000)
 		cv2.destroyWindow('dream')
+		self.emit_results()
 
 	def handle_psy_dream_intent(self, message):
 		if not self.dreaming:
@@ -238,6 +239,7 @@ class DreamSkill(MycroftSkill):
 			#k = cv2.waitKey(1000)
 		   # self.out.release()
 			cv2.destroyAllWindows()
+		self.emit_results()
 
 	def handle_pure_dream_intent(self, message):
 
@@ -267,6 +269,7 @@ class DreamSkill(MycroftSkill):
 			#k = cv2.waitKey(1000)
 		   # self.out.release()
 			cv2.destroyAllWindows()
+		self.emit_results()
 
 	def handle_dream_intent(self, message):
 		if not self.dreaming:
@@ -294,6 +297,7 @@ class DreamSkill(MycroftSkill):
 			#k = cv2.waitKey(1000)
 		   # self.out.release()
 			cv2.destroyAllWindows()
+		self.emit_results()
 
 	def handle_dream_about_webcam_intent(self, message):
 
@@ -327,6 +331,7 @@ class DreamSkill(MycroftSkill):
 			#k = cv2.waitKey(1000)
 		   # self.out.release()
 			cv2.destroyAllWindows()
+		self.emit_results()
 
 	def handle_dream_about_dreams_intent(self, message):
 
@@ -357,6 +362,7 @@ class DreamSkill(MycroftSkill):
 			#k = cv2.waitKey(1000)
 		   # self.out.release()
 			cv2.destroyAllWindows()
+		self.emit_results()
 
 	def handle_dream_about_this_intent(self, message):
 		chosenpic = random.choice(os.listdir(self.sharedfolder))
@@ -386,6 +392,7 @@ class DreamSkill(MycroftSkill):
 			#k = cv2.waitKey(1000)
 		   # self.out.release()
 			cv2.destroyAllWindows()
+		self.emit_results()
 
 	def handle_dream_about_intent(self, message):
 		imagepath = ""
@@ -412,6 +419,7 @@ class DreamSkill(MycroftSkill):
 			#k = cv2.waitKey(1000)
 		   # self.out.release()
 			cv2.destroyAllWindows()
+		self.emit_results()
 
 	def handle_video_dream_intent(self, message):
 		self.speak_dialog("dream")
@@ -459,6 +467,7 @@ class DreamSkill(MycroftSkill):
 
 			imagepah = outpath + "/" + str(i) + ".jpg"
 			i += 1
+		self.emit_results()
 
 	def stop(self):
 		self.out.release()

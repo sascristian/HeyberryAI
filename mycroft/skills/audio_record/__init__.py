@@ -81,6 +81,7 @@ class AudioRecordSkill(ScheduledSkill):
             self.schedule()
         else:
             self.speak_dialog("audio.record.disk.full")
+        self.emit_results()
 
     def get_duration(self, date, now):
         duration = math.ceil(date - now)
@@ -109,6 +110,7 @@ class AudioRecordSkill(ScheduledSkill):
             self.stop_process(self.record_process)
             self.record_process = None
             self.cancel()
+        self.emit_results()
 
     @staticmethod
     def stop_process(process):
@@ -133,12 +135,14 @@ class AudioRecordSkill(ScheduledSkill):
 
     def handle_play(self, message):
         self.play_process = play_wav(self.file_path)
+        self.emit_results()
 
     def handle_stop_play(self, message):
         self.speak_dialog('audio.record.stop.play')
         if self.play_process:
             self.stop()
             self.play_process = None
+        self.emit_results()
 
     def stop(self):
         if self.play_process:

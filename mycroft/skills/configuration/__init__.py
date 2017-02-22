@@ -47,6 +47,7 @@ class ConfigurationSkill(ScheduledSkill):
             self.speak_dialog("config.updated")
         except HTTPError as e:
             self.__api_error(e)
+        self.emit_results()
 
     def notify(self, timestamp):
         try:

@@ -55,6 +55,7 @@ class StockSkill(MycroftSkill):
 
         except:
             self.speak_dialog("not.found", data={'company': company})
+        self.emit_results()
 
     def _query(self, url, param_name, query):
         payload = {param_name: query}

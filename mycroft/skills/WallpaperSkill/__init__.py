@@ -92,18 +92,22 @@ class WallpaperSkill(MycroftSkill):
     def handle_populate_folder_intent(self, message):
         ## add walpaper files to folder
         self.download_images(self.findImages())
+        self.emit_results()
 
     def handle_empty_folder_intent(self, message):
         ## delete walpaper files to folder
         self.removeFiles()
+        self.emit_results()
 
     def handle_cicle_desktops_intent(self, message):
         ## set flag for changing process
         self.cycleflag = True
+        self.emit_results()
 
     def handle_unset_cicle_desktops_intent(self, message):
         ## unset flag for changing process
         self.cycleflag = False
+        self.emit_results()
 
     def handle_change_desktop_intent(self, message):
         ## pick random file
@@ -112,6 +116,7 @@ class WallpaperSkill(MycroftSkill):
         for imagePath in self.list_images():
             paths.append(imagePath)
         os.system(self.command.format(save_location=random.choice(paths)))
+        self.emit_results()
 
     #### helper
     def download_images(self, url_list):

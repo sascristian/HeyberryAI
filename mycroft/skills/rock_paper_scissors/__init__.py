@@ -22,6 +22,7 @@ class RockPaperScissorsSkill(MycroftSkill):
 
     def handle_rock_paper_scissors_intent(self, message):
         self.speak_dialog("rock.paper.scissors")
+        self.emit_results()
 
     def stop(self):
         pass

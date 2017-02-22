@@ -37,6 +37,7 @@ class NapTimeSkill(MycroftSkill):
     def handle_intent(self, message):
         self.emitter.emit(Message('recognizer_loop:sleep'))
         self.speak_dialog("sleep")
+        self.emit_results()
 
     def stop(self):
         pass

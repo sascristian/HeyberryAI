@@ -61,18 +61,23 @@ class MoodSkill(MycroftSkill):
 
     def handle_suggest_intent(self, message):
         self.speak_dialog("suggestion")
+        self.emit_results()
 
     def handle_depressed_intent(self, message):
         self.speak_dialog("depressed")
+        self.emit_results()
 
     def handle_lonely_intent(self, message):
         self.speak_dialog("lonely")
+        self.emit_results()
 
     def handle_happy_intent(self, message):
         self.speak_dialog("good")
+        self.emit_results()
 
     def handle_complain_intent(self, message):
         self.speak_dialog("complain")
+        self.emit_results()
 
     def stop(self):
         pass

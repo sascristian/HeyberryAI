@@ -110,6 +110,7 @@ class PictureSkill(MycroftSkill):
                 #print(str(e))
 
         cv2.destroyWindow('random picture')
+        self.emit_results()
 
     def identifypicture(self, picture):
         url = picture
@@ -160,6 +161,7 @@ class PictureSkill(MycroftSkill):
                 #print(str(e))
 
         cv2.destroyWindow('random picture')
+        self.emit_results()
 
     def handle_search_picture_intent(self,message):
         #search = "anal porn lesbian"
@@ -178,6 +180,7 @@ class PictureSkill(MycroftSkill):
         cv2.imshow(search, showpic)
         cv2.waitKey(20000)
         cv2.destroyWindow(search)
+        self.emit_results()
 
     def get_soup(self, url, header):
         return BeautifulSoup(urllib2.urlopen(urllib2.Request(url, headers=header)), 'html.parser')

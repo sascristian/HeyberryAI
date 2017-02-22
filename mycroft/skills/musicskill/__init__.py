@@ -83,6 +83,7 @@ class MP3DemoSkill(MycroftSkill):
         #self.speak("please wait while mp3 is downloaded")
         path = self.dlsong(title)
         self.process = subprocess.Popen(["cvlc", str(path)])
+        self.emit_results()
 
     def dlsong(self, search_key):
         self.yt_search_key = search_key

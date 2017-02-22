@@ -116,6 +116,7 @@ class LeaksSkill(MycroftSkill):
             self.dumps.append(self.dumppath + f)
             self.rawdump.append(f)
 
+
     def sendmail(self, mails, msg):
         i = 0
         for mail in mails:
@@ -185,6 +186,7 @@ class LeaksSkill(MycroftSkill):
                         os.remove(dump)
             i += 1
             sleep(150)  # google likes to take connection down or something after a while
+            self.emit_results()
 
     def stop(self):
         self.server.quit()

@@ -59,18 +59,23 @@ class PersonalSkill(MycroftSkill):
 
     def handle_when_were_you_born_intent(self, message):
         self.speak_dialog("when.was.i.born")
+        self.emit_results()
 
     def handle_where_were_you_born_intent(self, message):
         self.speak_dialog("where.was.i.born")
+        self.emit_results()
 
     def handle_who_made_you_intent(self, message):
         self.speak_dialog("who.made.me")
+        self.emit_results()
 
     def handle_who_are_you_intent(self, message):
         self.speak_dialog("who.am.i")
+        self.emit_results()
 
     def handle_what_are_you_intent(self, message):
         self.speak_dialog("what.am.i")
+        self.emit_results()
 
     def stop(self):
         pass

@@ -272,9 +272,12 @@ class MycroftSkill(object):
 
     def speak(self, utterance):
         self.emitter.emit(Message("speak", {'utterance': utterance}))
+        self.add_result("speak",utterance)
 
     def speak_dialog(self, key, data={}):
-        self.speak(self.dialog_renderer.render(key, data))
+        utterance = self.dialog_renderer.render(key, data)
+        self.speak(utterance)
+        self.add_result("dialog", utterance)
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)

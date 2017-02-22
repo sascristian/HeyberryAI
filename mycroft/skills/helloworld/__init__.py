@@ -48,12 +48,15 @@ class HelloWorldSkill(MycroftSkill):
 
     def handle_thank_you_intent(self, message):
         self.speak_dialog("welcome")
+        self.emit_results()
 
     def handle_how_are_you_intent(self, message):
         self.speak_dialog("how.are.you")
+        self.emit_results()
 
     def handle_hello_world_intent(self, message):
         self.speak_dialog("hello.world")
+        self.emit_results()
 
     def stop(self):
         pass

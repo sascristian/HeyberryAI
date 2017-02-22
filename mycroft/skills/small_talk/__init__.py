@@ -431,249 +431,331 @@ class SmallTalkSkill(MycroftSkill):
     
     def handle_am_i_attractive_intent(self, message):
         self.speak_dialog("am.i.attractive")
+        self.emit_results()
 
     def handle_am_i_ugly_intent(self, message):
         self.speak_dialog("am.i.ugly")
+        self.emit_results()
 
     def handle_are_you_attractive_intent(self, message):
         self.speak_dialog("are.you.attractive")
+        self.emit_results()
 
     def handle_are_you_asleep_intent(self, message):
         self.speak_dialog("are.you.asleep")
+        self.emit_results()
 
     def handle_are_you_awake_intent(self, message):
         self.speak_dialog("are.you.awake")
+        self.emit_results()
 
     def handle_are_you_better_than_ai_intent(self, message):
         self.speak_dialog("are.you.better.than.ai")
+        self.emit_results()
 
     def handle_are_you_dead_intent(self, message):
         self.speak_dialog("are.you.dead")
+        self.emit_results()
 
     def handle_are_you_drunk_intent(self, message):
         self.speak_dialog("are.you.drunk")
+        self.emit_results()
 
     def handle_are_you_female_intent(self, message):
         self.speak_dialog("are.you.female")
+        self.emit_results()
 
     def handle_are_you_intelligent_intent(self, message):
         self.speak_dialog("are.you.intelligent")
+        self.emit_results()
 
     def handle_are_you_male_intent(self, message):
         self.speak_dialog("are.you.male")
+        self.emit_results()
 
     def handle_are_you_male_or_female_intent(self, message):
         self.speak_dialog("are.you.male.or.female")
+        self.emit_results()
 
     def handle_are_you_real_intent(self, message):
         self.speak_dialog("are.you.real")
+        self.emit_results()
 
     def handle_are_you_stupid_intent(self, message):
         self.speak_dialog("are.you.stupid")
+        self.emit_results()
 
     def handle_ask_me_a_question_intent(self, message):
         self.speak_dialog("ask.me.a.question")
+        self.emit_results()
 
     def handle_beam_me_up_scotty_intent(self, message):
         self.speak_dialog("beam.me.up.scotty")
+        self.emit_results()
 
     def handle_can_i_borrow_some_money_intent(self, message):
         self.speak_dialog("can.i.borrow.some.money")
+        self.emit_results()
 
     def handle_can_i_change_your_name_intent(self, message):
         self.speak_dialog("can.i.change.your.name")
+        self.emit_results()
 
     def handle_can_i_kiss_you_intent(self, message):
         self.speak_dialog("can.i.kiss.you")
+        self.emit_results()
 
     def handle_can_you_speak_klingon_intent(self, message):
         self.speak_dialog("can.you.speak.klingon")
+        self.emit_results()
 
     def handle_can_you_cook_intent(self, message):
         self.speak_dialog("can.you.cook")
+        self.emit_results()
 
     def handle_can_you_dance_intent(self, message):
         self.speak_dialog("can.you.dance")
+        self.emit_results()
 
     def handle_do_an_impression_intent(self, message):
         self.speak_dialog("do.an.impression")
+        self.emit_results()
 
     def handle_do_you_know_ai_intent(self, message):
         self.speak_dialog("do.you.know.ai")
+        self.emit_results()
 
     def handle_do_you_dream_intent(self, message):
         self.speak_dialog("do.you.dream")
+        self.emit_results()
 
     def handle_do_you_drink_intent(self, message):
         self.speak_dialog("do.you.drink")
+        self.emit_results()
 
     def handle_do_you_eat_intent(self, message):
         self.speak_dialog("do.you.eat")
+        self.emit_results()
 
     def handle_do_you_have_a_baby_intent(self, message):
         self.speak_dialog("do.you.have.a.baby")
+        self.emit_results()
 
     def handle_do_you_have_a_lover_intent(self, message):
         self.speak_dialog("do.you.have.a.lover")
+        self.emit_results()
 
     def handle_do_you_have_any_siblings_intent(self, message):
         self.speak_dialog("do.you.have.any.siblings")
+        self.emit_results()
 
     def handle_do_you_love_me_intent(self, message):
         self.speak_dialog("do.you.love.me")
+        self.emit_results()
 
     def handle_do_you_sleep_intent(self, message):
         self.speak_dialog("do.you.sleep")
+        self.emit_results()
 
     def handle_favorite_actor_intent(self, message):
         self.speak_dialog("favorite.actor")
+        self.emit_results()
 
     def handle_favorite_animal_intent(self, message):
         self.speak_dialog("favorite.animal")
+        self.emit_results()
 
     def handle_favorite_author_intent(self, message):
         self.speak_dialog("favorite.author")
+        self.emit_results()
 
     def handle_favorite_band_intent(self, message):
         self.speak_dialog("favorite.band")
+        self.emit_results()
 
     def handle_favorite_color_intent(self, message):
         self.speak_dialog("favorite.color")
+        self.emit_results()
 
     def handle_favorite_day_intent(self, message):
         self.speak_dialog("favorite.day")
+        self.emit_results()
 
     def handle_favorite_movie_intent(self, message):
         self.speak_dialog("favorite.movie")
+        self.emit_results()
 
     def handle_favorite_series_intent(self, message):
         self.speak_dialog("favorite.series")
+        self.emit_results()
 
     def handle_favorite_song_intent(self, message):
         self.speak_dialog("favorite.song")
+        self.emit_results()
 
     def handle_how_old_are_you_intent(self, message):
         self.speak_dialog("how.old.are.you")
+        self.emit_results()
 
     def handle_guess_what_intent(self, message):
         self.speak_dialog("guess.what")
+        self.emit_results()
 
     def handle_how_do_i_look_today_intent(self, message):
         self.speak_dialog("how.do.i.look.today")
+        self.emit_results()
 
     def handle_i_like_you_intent(self, message):
         self.speak_dialog("i.like.you")
+        self.emit_results()
 
     def handle_i_love_you_intent(self, message):
         self.speak_dialog("i.love.you")
+        self.emit_results()
 
     def handle_im_bored_intent(self, message):
         self.speak_dialog("im.bored")
+        self.emit_results()
 
     def handle_im_confused_intent(self, message):
         self.speak_dialog("im.confused")
+        self.emit_results()
 
     def handle_im_drunk_intent(self, message):
         self.speak_dialog("im.drunk")
+        self.emit_results()
 
     def handle_im_happy_intent(self, message):
         self.speak_dialog("im.happy")
+        self.emit_results()
 
     def handle_im_lonely_intent(self, message):
         self.speak_dialog("im.lonely")
+        self.emit_results()
 
     def handle_may_the_force_be_with_you_intent(self, message):
         self.speak_dialog("may.the.force.be.with.you")
+        self.emit_results()
 
     def handle_open_the_pod_bay_doors_intent(self, message):
         self.speak_dialog("open.the.pod.bay.doors")
+        self.emit_results()
 
     def handle_self_destruct_intent(self, message):
         self.speak_dialog("self.destruct")
+        self.emit_results()
 
     def handle_sing_me_a_song_intent(self, message):
         self.speak_dialog("sing.me.a.song")
+        self.emit_results()
 
     def handle_surprise_me_intent(self, message):
         self.speak_dialog("surprise.me")
+        self.emit_results()
 
     def handle_talk_dirty_intent(self, message):
         self.speak_dialog("talk.dirty")
+        self.emit_results()
 
     def handle_tell_me_a_story_intent(self, message):
         self.speak_dialog("tell.me.a.story")
+        self.emit_results()
 
     def handle_tell_me_do_you_bleed_intent(self, message):
         self.speak_dialog("tell.me.do.you.bleed")
+        self.emit_results()
 
     def handle_testing_intent(self, message):
         self.speak_dialog("testing")
+        self.emit_results()
 
     def handle_what_are_you_doing_intent(self, message):
         self.speak_dialog("what.are.you.doing")
+        self.emit_results()
 
     def handle_what_are_you_wearing_intent(self, message):
         self.speak_dialog("what.are.you.wearing")
+        self.emit_results()
 
     def handle_what_are_your_measurements_intent(self, message):
         self.speak_dialog("what.are.your.measurements")
+        self.emit_results()
 
     def handle_what_do_you_look_like_intent(self, message):
         self.speak_dialog("what.do.you.look.like")
+        self.emit_results()
 
     def handle_what_does_irene_mean_intent(self, message):
         self.speak_dialog("what.does.irene.mean")
+        self.emit_results()
 
     def handle_what_do_you_think_about_ai_intent(self, message):
         self.speak_dialog("what.do.you.think.about.ai")
+        self.emit_results()
 
     def handle_what_does_the_cat_say_intent(self, message):
         self.speak_dialog("what.does.the.cat.say")
+        self.emit_results()
 
     def handle_what_does_the_dog_say_intent(self, message):
         self.speak_dialog("what.does.the.dog.say")
+        self.emit_results()
 
     def handle_what_does_the_fox_say_intent(self, message):
         self.speak_dialog("what.does.the.fox.say")
+        self.emit_results()
 
     def handle_what_is_love_intent(self, message):
         self.speak_dialog("what.is.love")
+        self.emit_results()
 
     def handle_what_is_the_answer_to_intent(self, message):
         self.speak_dialog("what.is.the.answer.to")
+        self.emit_results()
 
     def handle_what_is_your_name_from_intent(self, message):
         self.speak_dialog("what.is.your.name.from")
+        self.emit_results()
 
     def handle_where_can_i_hide_a_dead_body_intent(self, message):
         self.speak_dialog("where.can.i.hide.a.dead.body")
+        self.emit_results()
 
     def handle_where_do_babies_come_from_intent(self, message):
         self.speak_dialog("where.do.babies.come.from")
+        self.emit_results()
 
     def handle_who_is_the_coolest_person_in_the_world_intent(self, message):
         self.speak_dialog("who.is.the.coolest.person.in.the.world")
+        self.emit_results()
 
     def handle_who_is_your_boss_intent(self, message):
         self.speak_dialog("who.is.your.boss")
+        self.emit_results()
 
     def handle_why_did_the_chicken_cross_the_road_intent(self, message):
         self.speak_dialog("why.did.the.chicken.cross.the.road")
+        self.emit_results()
 
     def handle_will_you_date_me_intent(self, message):
         self.speak_dialog("will.you.date.me")
+        self.emit_results()
 
     def handle_will_you_marry_me_intent(self, message):
         self.speak_dialog("will.you.marry.me")
+        self.emit_results()
 
     def handle_you_are_annoying_intent(self, message):
         self.speak_dialog("you.are.annoying")
+        self.emit_results()
 
     def handle_you_are_awesome_intent(self, message):
         self.speak_dialog("you.are.awesome")
+        self.emit_results()
 
     def handle_you_have_beautiful_eyes_intent(self, message):
         self.speak_dialog("you.have.beautiful.eyes")
+        self.emit_results()
 
     # Intent Stop
     def stop(self):

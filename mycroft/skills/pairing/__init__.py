@@ -75,6 +75,7 @@ class PairingSkill(MycroftSkill):
             self.enclosure.mouth_text(self.data.get("code"))
             self.speak_code()
             self.__create_activator()
+        self.emit_results()
 
     def activate(self):
         try:

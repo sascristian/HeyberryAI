@@ -76,99 +76,131 @@ class PickupLineSkill(MycroftSkill):
 
     def handle_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="random"))
+        self.emit_results()
 
     def handle_geek_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="computer"))
+        self.emit_results()
 
     def handle_dirty_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="crude"))
+        self.emit_results()
 
     def handle_math_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="math"))
+        self.emit_results()
 
     def handle_physics_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="physics"))
+        self.emit_results()
 
     def handle_scifi_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="scifi"))
+        self.emit_results()
 
     def handle_cheesy_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="cheesy"))
+        self.emit_results()
 
     def handle_women_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="women"))
+        self.emit_results()
 
     def handle_harrypotter_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="harrypotter"))
+        self.emit_results()
 
     def handle_biochem_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="biochem"))
+        self.emit_results()
 
     def handle_music_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="musician"))
+        self.emit_results()
 
     def handle_disney_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="disney"))
+        self.emit_results()
 
     def handle_vegan_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="vegan"))
+        self.emit_results()
 
     def handle_tinder_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="tinder"))
+        self.emit_results()
 
     def handle_warcraft_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="warcraft"))
+        self.emit_results()
 
     def handle_pokemon_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="pokemon"))
+        self.emit_results()
 
     def handle_indian_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="desi"))
+        self.emit_results()
 
     def handle_astronomy_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="astronomy"))
+        self.emit_results()
 
     def handle_redneck_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="redneck"))
+        self.emit_results()
 
     def handle_food_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="food"))
+        self.emit_results()
 
     def handle_engineering_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="engineering"))
+        self.emit_results()
 
     def handle_gameofthrones_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="gameofthrones"))
+        self.emit_results()
 
     def handle_lotr_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="lotr"))
+        self.emit_results()
 
     def handle_hungergames_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="hungergames"))
+        self.emit_results()
 
     def handle_twilight_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="twilight"))
+        self.emit_results()
 
     def handle_doctorwho_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="doctorwho"))
+        self.emit_results()
 
     def handle_breakingbad_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="breakingbad"))
+        self.emit_results()
 
     def handle_medieval_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="medieval"))
+        self.emit_results()
 
     def handle_dog_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="dog"))
+        self.emit_results()
 
     def handle_pirate_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="pirate"))
+        self.emit_results()
 
     def handle_nye_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="nye"))
+        self.emit_results()
 
     def handle_independence_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="independence"))
+        self.emit_results()
 
     def stop(self):
         pass

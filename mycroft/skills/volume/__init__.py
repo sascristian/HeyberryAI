@@ -81,6 +81,7 @@ class VolumeSkill(MycroftSkill):
         level = self.get_volume_level(message, mixer.getvolume()[0])
         mixer.setvolume(self.level_to_volume(level))
         self.speak_dialog('set.volume', data={'volume': level})
+        self.emit_results()
 
     def communicate_volume_change(self, message, dialog, code, changed):
         play_sound = message.data.get('play_sound', False)
@@ -95,19 +96,23 @@ class VolumeSkill(MycroftSkill):
     def handle_increase_volume(self, message):
         self.communicate_volume_change(message, 'increase.volume',
                                        *self.__update_volume(+1))
+        self.emit_results()
 
     def handle_decrease_volume(self, message):
         self.communicate_volume_change(message, 'decrease.volume',
                                        *self.__update_volume(-1))
+        self.emit_results()
 
     def handle_mute_volume(self, message):
         self.speak_dialog('mute.volume')
         time.sleep(2)
         Mixer().setvolume(0)
+        self.emit_results()
 
     def handle_reset_volume(self, message):
         Mixer().setvolume(self.level_to_volume(self.default_level))
         self.speak_dialog('reset.volume', data={'volume': self.default_level})
+        self.emit_results()
 
     def volume_to_level(self, volume):
         """

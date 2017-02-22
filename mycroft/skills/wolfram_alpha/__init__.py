@@ -182,6 +182,7 @@ class WolframAlphaSkill(MycroftSkill):
                                         others[0]})
             else:
                 self.speak_dialog("not.understood", data={'phrase': phrase})
+        self.emit_results()
 
     @staticmethod
     def __find_pod_id(pods, pod_id):

@@ -65,6 +65,7 @@ class IPSkill(MycroftSkill):
                                self.SEC_PER_LETTER)
         self.enclosure.activate_mouth_events()
         self.speak("Those are all my I.P. addresses.")
+        self.emit_results()
 
     def stop(self):
         pass

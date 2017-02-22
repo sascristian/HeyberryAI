@@ -58,6 +58,7 @@ class NPRNewsSkill(MycroftSkill):
 
         except Exception as e:
             LOGGER.error("Error: {0}".format(e))
+        self.emit_results()
 
     def stop(self):
         if self.process and self.process.poll() is None:

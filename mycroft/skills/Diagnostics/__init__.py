@@ -187,11 +187,13 @@ class DiagnosticsSkill(MycroftSkill):
         self.speak("Is User smiling, " + str(self.smiling))
         self.speak("Is Master Present, " + str(self.master))
         self.speak("Movement Detected, " + str(self.movement))
+        self.emit_results()
 
     def handle_FaceBookDiagnostics_intent(self, message):
         self.request_diagnostics_update()
      #   self.speak("Starting Face Book Diagnostics")
         self.speak("Number of agended posts, " + str(self.agendednum))
+        self.emit_results()
 
     def handle_MoodDiagnostics_intent(self, message):
         self.request_diagnostics_update()
@@ -204,18 +206,21 @@ class DiagnosticsSkill(MycroftSkill):
         self.speak("dopamine levels :" + str(self.dopamine)[:5])
         self.speak("serotonine levels :" + str(self.serotonine)[:5])
         self.speak("tiredness levels :" + str(self.tiredness)[:5])
+        self.emit_results()
 
     def handle_CreativityDiagnostics_intent(self, message):
       #  self.speak("Starting Creativity Diagnostics")
         self.count()
         self.speak("Number of dreams," + str(self.dreams))
         self.speak("Number of poems composed," + str(self.poems))
+        self.emit_results()
 
     def handle_LeaksDiagnostics_intent(self, message):
        # self.speak("Starting Leak Sniffing Diagnostics")
         self.speak("Number of leaks found since start up," + str(self.leaks))
         self.count()
         self.speak("Number of leaks found since implementation," + str(self.totalleaks))
+        self.emit_results()
 
     def handle_FullDiagnostics_intent(self, message):
         self.speak("Starting Full Diagnostics")
@@ -232,6 +237,7 @@ class DiagnosticsSkill(MycroftSkill):
         self.handle_CreativityDiagnostics_intent("ignore this")
         sleep(1)
         self.handle_LeaksDiagnostics_intent("ignore this")
+        self.emit_results()
 
     def handle_hardware_diagnostics(self, message):
        # self.speak("Starting Hardware Diagnostics")
@@ -248,12 +254,16 @@ class DiagnosticsSkill(MycroftSkill):
             Message("recognizer_loop:utterance",
                     {'utterances': ["uptime"]}))
 
+        self.emit_results()
+
     def handle_network_diagnostics(self, message):
     #    self.speak("Starting Network Diagnostics")
         ### request ip from the7erm diagnostics skill
         client.emit(
             Message("recognizer_loop:utterance",
                     {'utterances': ["public ip"]}))
+
+        self.emit_results()
 
     def stop(self):
         pass

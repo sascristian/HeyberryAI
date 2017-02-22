@@ -110,34 +110,42 @@ class WifiSkill(MycroftSkill):
     def handle_anonsurf_start_intent(self, message):
         self.speak("starting global TOR tunnel")
         os.system('gksudo '+self.scriptpath+ ' start')
+        self.emit_results()
 
     def handle_anonsurf_stop_intent(self, message):
         self.speak("stopping global TOR tunnel")
         os.system('gksudo ' + self.scriptpath + ' stop')
+        self.emit_results()
 
     def handle_anonsurf_status_intent(self, message):
         self.speak("checking global TOR tunnel status")
         os.system('gksudo ' + self.scriptpath + ' status')
+        self.emit_results()
 
     def handle_anonsurf_restart_intent(self, message):
         self.speak("restarting global TOR tunnel")
         os.system('gksudo ' + self.scriptpath + ' restart')
+        self.emit_results()
 
     def handle_anonsurf_change_intent(self, message):
         self.speak("changing global TOR tunnel circuit ")
         os.system('gksudo ' + self.scriptpath + ' change')
+        self.emit_results()
 
     def handle_wifienable_intent(self, message):
         self.enablewifi()
         self.speak("wifi enabled")
+        self.emit_results()
 
     def handle_wifidisable_intent(self, message):
         self.disablewifi()
         self.speak("wifi disabled")
+        self.emit_results()
 
     def handle_wifiDiagnostics_intent(self, message):
         self.speak("Network Diagnostics")
         self.diagnostics()
+        self.emit_results()
         #self.speak("wifi diagnostics printed in skills service")
 
     def handle_scanAP_intent(self, message):
@@ -148,6 +156,7 @@ class WifiSkill(MycroftSkill):
                 self.speak(ap)
         else:
             self.speak("No available acess points")
+        self.emit_results()
 
     def handle_scanVPN_intent(self, message):
         self.vpn()
@@ -157,18 +166,22 @@ class WifiSkill(MycroftSkill):
                 self.speak(vpn)
         else:
             self.speak("No available VPN connections")
+        self.emit_results()
 
     def handle_scanactive_intent(self, message):
         self.active()
         #self.speak("active connections printed in skills service")
+        self.emit_results()
 
     def handle_APinfo_intent(self, message):
         self.activeinfo()
         #self.speak("active acess point info printed in skills service")
+        self.emit_results()
 
     def handle_deviceinfo_intent(self, message):
         self.devices()
         #self.speak("network device info printed in skills service")
+        self.emit_results()
 
     def handle_vpnconnect_intent(self, message):
         i = 0
@@ -195,6 +208,7 @@ class WifiSkill(MycroftSkill):
                     pass
             i += 1
         self.speak("vpn connection failed")
+        self.emit_results()
 
     def handle_apconnect_intent(self, message):
         i = 0
@@ -209,6 +223,7 @@ class WifiSkill(MycroftSkill):
                 pass
             i+=1
         self.speak( "connection to acess point failed")
+        self.emit_results()
 
     ### wireless on and off   -> refactor with network manager lib
     def enablewifi(self):
