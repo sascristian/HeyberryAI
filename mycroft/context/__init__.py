@@ -20,7 +20,7 @@ class Context():
         self.lastaction = "" #skill executed
         self.lastutterance = "" #thing said
         self.lastresults={} #last skill results
-
+        self.failures=0
         # time
         self.time = time.time()
         self.timezone = "Europe/Central"
