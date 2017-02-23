@@ -69,6 +69,12 @@ class NextLaunchSkill(MycroftSkill):
         sorted_schedule = sorted(schedule, key=lambda k: k['time_till'])
         print sorted_schedule
         self.speak_dialog("next.launch", sorted_schedule[0])
+
+        self.add_result("launch_date", sorted_schedule[0]["launch_date"])
+        self.add_result("launch_time", sorted_schedule[0]["launch_time"])
+        self.add_result("time_till_launch", sorted_schedule[0]["time_till"])
+        self.add_result("schedule", sorted_schedule)
+
         self.emit_results()
 
     def stop(self):

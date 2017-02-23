@@ -24,6 +24,8 @@ class FortuneSkill(MycroftSkill):
     def handle_intent(self, message):
         fortune = subprocess.check_output('fortune')
         self.speak(fortune)
+
+        self.add_result("fortune",fortune)
         self.emit_results()
         
 

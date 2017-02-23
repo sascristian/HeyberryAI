@@ -64,6 +64,8 @@ class ProxySkill(MycroftSkill):
         self.speak_dialog("proxy")
         path = self.harvestproxy()
         self.speak("proxies sucefully harvested and saved at "+path)
+
+        self.add_result("path", path)
         self.emit_results()
 
 
@@ -72,6 +74,10 @@ class ProxySkill(MycroftSkill):
         proxy , c = self.harvestsingleproxy()
         txt = "here is a proxy from "+c+" : " + proxy
         self.speak(txt)
+
+        self.add_result("proxy", proxy)
+        self.add_result("country", c)
+
         self.emit_results()
 
     def handle_proxyfrom_intent(self, message):
@@ -85,6 +91,11 @@ class ProxySkill(MycroftSkill):
             proxy , c = self.harvestsingleproxy()
             txt = "proxy from " + country + " wasn't found maybe this one from " + c +" serves your purpose anyway  " + proxy
         self.speak(txt)
+
+        self.add_result("proxy", proxy)
+        self.add_result("country", c)
+        self.add_result("Requested_Country", country)
+
         self.emit_results()
 
     def harvestsingleproxy(self, country="any"):
