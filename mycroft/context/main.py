@@ -19,21 +19,25 @@ class ContextService():
         client.emitter.on("speak", self.handle_speak)
         client.emitter.on("results", self.handle_skill_results)
         client.emitter.on("context_request", self.handle_context_request)
-        client.emitter.on("intent_failure", self.handle_intent_failure)
-        client.emitter.on("register_vocab", self.handle_register_vocab)
+        client.emitter.on("intent_failure", self.handle_intent_failure) #counts fails
+        client.emitter.on("register_vocab", self.handle_register_vocab) #handle regexes
         client.emitter.on("skill_loaded", self.handle_register_skill)
         client.emitter.on("context_key_result", self.handle_key_context_request)
+        client.emitter.on("context_key_override", self.handle_key_context_override)
+        client.emitter.on("register_intent", self.handle_register_intent)
 
         #### database
         self.vocab = [] #keys
         self.regex = [] #ArticleTitle
         self.context_dict = {} # Location : Here
         self.bluetooth_ids = {} # 666 : True
+        self.intents = {}
 
         #### synonims
         #self.synonims = {"last speech":"utterance", "last heard":"utterances"}
 
         self.register_signals()
+        self.register_abstract()
 
         #### adapt
         self.manager = ContextManager()
@@ -45,7 +49,7 @@ class ContextService():
             if name not in self.vocab:
                 self.vocab.append(name)
                 self.context_dict.setdefault(name)
-                print "registering context " + name + "\ntype: " + type
+                print "registering context " + name + "   type: " + type
 
     def register_abstract(self):
         # params that are not listened from bus but are otherwise wanted
@@ -62,9 +66,12 @@ class ContextService():
             if name not in self.vocab:
                 self.register_context(params, type="signal")
         #register fail
-        if "fails" not in self.vocab:
-            self.register_context(params=["fails"],type="signal")
-            self.context_dict["fails"]= 0
+        params = ["fails", "last_fail"]
+        for param in params:
+            if param not in self.vocab:
+                self.register_context(params=[param],type="signal")
+        self.context_dict["fails"]= 0
+        self.context_dict["last_fail"] = "achieve sentience"
 
     def handle_register_skill(self, message):
         params = [message.data.get("skill_name")]
@@ -74,7 +81,7 @@ class ContextService():
         # target = freewill / vision / all
         client.emit(Message("context_update", {'target': target}))
 
-    def get_regex_context(self, regex, result):
+    def get_regex_context(self, result, regex):
         print "\nkey detected " + regex + "\n updating with "+ result
         self.context_dict[regex] = result
         self.register_with_adapt(regex)
@@ -96,7 +103,13 @@ class ContextService():
 
     #### implement more signals
 
-    ### register intents
+    def handle_register_intent(self, message):
+        # just for expansion, may be usefull to have intents in the future
+        intent = message.data.get["name"]
+        data = message.data
+        self.intents.setdefault(intent)
+        self.intents[intent] = data
+        #print "registered intent " + intent
 
     def handle_context_request(self, message):
         self.request_update()
@@ -133,6 +146,7 @@ class ContextService():
 
     def handle_speak(self, message):
         params = ["utterance"]
+        #note: already saved as speak in skills_result, keeping for redundancy
         for name in params:
             self.context_dict[name] = message.data.get(name)
 
@@ -143,9 +157,7 @@ class ContextService():
 
     def handle_intent_failure(self, message):
         self.context_dict["fails"] = self.context_dict["fails"]+1
-        #params = ["last_fail"]
-        #for name in params:
-        #    self.context_dict[name] = message.data.get(name)
+        self.context_dict["last_fail"] = message.data.get("utteramce")
 
     def handle_skill_results(self, message):
         key = message.data.get('skill_name') #must send results in skill, NOT default
@@ -153,10 +165,15 @@ class ContextService():
         self.context_dict[key]=results
         #logger.info("Updated context for results from "+key)
         for result in results:
-            print result
-            if result not in self.vocab:
-                self.register_context(result, type="skill_result")
-            self.context_dict[result] = message.data.get[result]
+           # print result
+            params = [result]  # if you send a string instead it is taken like a list of chars
+            if result not in self.vocab and result != "skill_name":
+                self.register_context(params, type="skill_result")
+            try:
+                self.context_dict[result] = message.data.get[result]
+                print result + " updated with " + self.context_dict[result]
+            except:
+                pass
         for regex in self.regex:
             result = message.data.get(regex[0])
             if result is not None:
@@ -172,6 +189,12 @@ class ContextService():
                         {
                             'key': key, "result":result
                         }))
+
+    def handle_key_context_override(self, message):
+        key = message.data.get["key"]
+        value = message.data.get["value"]
+        if key is not None and value is not None:
+            self.context_dict[key] = value
 
     ### future signals
 
