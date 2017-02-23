@@ -270,7 +270,6 @@ class MycroftSkill(object):
             self.emitter.emit(
                 Message("results", self.results))
             self.results.clear()
-            self.emitter.emit(Message("context_request"))  # update context for next run -> so user doesnt have to manually call this on every regex result, and no periodic service is needed
 
     def speak(self, utterance):
         self.emitter.emit(Message("speak", {'utterance': utterance}))
