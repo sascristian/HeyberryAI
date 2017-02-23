@@ -22,6 +22,7 @@ class ContextService():
         client.emitter.on("intent_failure", self.handle_intent_failure)
         client.emitter.on("register_vocab", self.handle_register_vocab)
         client.emitter.on("skill_loaded", self.handle_register_skill)
+        client.emitter.on("context_key_result", self.handle_key_context_request)
 
         #### contexts
         self.vocab = []
@@ -69,16 +70,10 @@ class ContextService():
         # target = freewill / vision / all
         client.emit(Message("context_update", {'target': target}))
 
-    def get_regex_context(self, message):
-        for regex in self.regex:
-            try:
-                result = message.data[regex]
-                print "\nkey detected " + result
-                self.context_dict[regex] = result
-                self.register_with_adapt(regex)
-                return
-            except:
-                pass  # key not detected
+    def get_regex_context(self, regex, result):
+        print "\nkey detected " + regex + "\n updating with "+ result
+        self.context_dict[regex] = result
+        self.register_with_adapt(regex)
 
                 ##### abstract signals  general api yet to be implemented
 
@@ -97,6 +92,8 @@ class ContextService():
 
     #### implement more signals
 
+    ### register intents
+
     def handle_context_request(self, message):
         self.request_update()
 
@@ -111,11 +108,14 @@ class ContextService():
 
     def handle_register_vocab(self, message):
         regex = message.data.get("regex")
-        if regex is not None:
+        if regex is not None and regex not in self.regex:
+           # print regex
             # parse words for regex (<?P<KEY>.*)
-            params = [regex[regex.find("(?P<") + 4:regex.find(">")]]
+            s = regex.find("(?P<")
+            e = regex.find(">")
+            params = [str(regex[s + 4:e])]
             self.register_context(params)
-            self.regex.append(regex)
+            self.regex.append(params)
 
     def handle_vision_result(self, message):
         params = ["movement", "number of persons", "master", "smile detected"]
@@ -146,11 +146,23 @@ class ContextService():
     def handle_skill_results(self, message):
         key = message.data.get('skill_name') #must send results in skill, NOT default
         results = message.data
-        print results
         self.context_dict[key]=results
         #logger.info("Updated context for results from "+key)
-        self.get_regex_context(message)
+        for regex in self.regex:
+            result = message.data.get(regex[0])
+            if result is not None:
+                self.get_regex_context(result, regex[0])
 
+    def handle_key_context_request(self,message):
+        key = message.data.get["key"]
+        if key is not None:
+            result = self.context_dict[key]
+            #emit result
+            client.emit(
+                Message("context_key_result",
+                        {
+                            'key': key, "result":result
+                        }))
     ### future signals
 
     def handle_bluetooth_new(self, message):
