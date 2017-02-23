@@ -155,6 +155,12 @@ class WeatherSkill(MycroftSkill):
 
             time.sleep(5)
             self.enclosure.activate_mouth_events()
+
+            self.add_result("weather_result", data)
+            self.add_result("weather_forecast", weather)
+            self.add_result("weather_location", location)
+            self.add_result("weather_type", "current")
+
         except HTTPError as e:
             self.__api_error(e)
         except Exception as e:
@@ -178,6 +184,12 @@ class WeatherSkill(MycroftSkill):
                 self.speak_dialog('hour.weather', data)
             time.sleep(5)
             self.enclosure.activate_mouth_events()
+
+            self.add_result("weather_result", data)
+            self.add_result("weather_forecast", weather)
+            self.add_result("weather_location", location)
+            self.add_result("weather_type", "hour")
+
         except HTTPError as e:
             self.__api_error(e)
         except Exception as e:
@@ -202,6 +214,12 @@ class WeatherSkill(MycroftSkill):
                 self.speak_dialog('tomorrow.weather', data)
             time.sleep(5)
             self.enclosure.activate_mouth_events()
+
+            self.add_result("weather_result", data)
+            self.add_result("weather_forecast", weather)
+            self.add_result("weather_location", location)
+            self.add_result("weather_type", "next day")
+
         except HTTPError as e:
             self.__api_error(e)
         except Exception as e:

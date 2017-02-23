@@ -53,8 +53,12 @@ class StockSkill(MycroftSkill):
             self.enclosure.activate_mouth_events()
             self.enclosure.mouth_reset()
 
+            self.add_result("company",company)
+            self.add_result("response", response)
+
         except:
             self.speak_dialog("not.found", data={'company': company})
+
         self.emit_results()
 
     def _query(self, url, param_name, query):

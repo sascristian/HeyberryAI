@@ -129,7 +129,10 @@ class WolframAlphaSkill(MycroftSkill):
         utterance = message.data.get('utterance')
         parsed_question = self.question_parser.parse(utterance)
 
+        self.add_result("parsed_question",parsed_question)
+
         query = utterance
+
         if parsed_question:
             # Try to store pieces of utterance (None if not parsed_question)
             utt_word = parsed_question.get('QuestionWord')
@@ -139,9 +142,12 @@ class WolframAlphaSkill(MycroftSkill):
                 utt_verb = 'is'
                 parsed_question['QuestionVerb'] = 'is'
             query = "%s %s %s" % (utt_word, utt_verb, utt_query)
+            self.add_result("query", query)
             phrase = "know %s %s %s" % (utt_word, utt_query, utt_verb)
         else:
             phrase = "understand the phrase " + utterance
+
+        self.add_result("phrase", phrase)
 
         try:
             res = self.client.query(query)
@@ -173,8 +179,9 @@ class WolframAlphaSkill(MycroftSkill):
             input_interpretation = \
                 self.process_wolfram_string(input_interpretation)
             response = "%s %s %s" % (input_interpretation, verb, result)
-
+            self.add_result("response", response)
             self.speak(response)
+
         else:
             if len(others) > 0:
                 self.speak_dialog('others.found',
