@@ -17,7 +17,6 @@
 
 
 from adapt.engine import IntentDeterminationEngine
-from adapt.context import ContextManager
 
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import open_intent_envelope, MycroftSkill
@@ -32,24 +31,12 @@ class IntentSkill(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self, name="IntentSkill")
         self.engine = IntentDeterminationEngine()
-        self.manager = ContextManager()
 
     def initialize(self):
         self.emitter.on('register_vocab', self.handle_register_vocab)
         self.emitter.on('register_intent', self.handle_register_intent)
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
         self.emitter.on('detach_intent', self.handle_detach_intent)
-        self.emitter.on('context_result', self.handle_context_update)
-
-    def handle_context_update(self, message):
-        regex = message.data.get("regex")
-        print "\nreading context update\n"
-        for key in regex:
-            #print key
-            #print regex[key]
-            if regex[key] is not None:
-                print "injecting context "+key+" with value "+regex[key]
-                self.manager.inject_context(entity=key,metadata=regex[key])
 
     def handle_utterance(self, message):
         utterances = message.data.get('utterances', '')

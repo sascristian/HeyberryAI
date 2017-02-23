@@ -1,155 +1,155 @@
-from mycroft.context import Context, FreeWillContext,VisionContext
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
+from adapt.context import ContextManager
 
-from threading import Thread
 import time
-import re
 
-#from adapt.context import ContextManager
-import adapt.entity_tagger as entity_tag
-def main():
-    ####context manager bus listener
+client = None
 
-    context_general = Context("general")
-    freewill_context = FreeWillContext("general_freewill")
-    vision_context = VisionContext("general_vision")
-    ##### connect to messagebus
+class ContextService():
+    def __init__(self):
 
-    client = WebsocketClient()
+        ##### messagebus
+        global client
+        client = WebsocketClient()
 
-    def connect():
-        client.run_forever()
+        client.emitter.on("vision_result", self.handle_vision_result)
+        client.emitter.on('recognizer_loop:utterance', self.handle_recognizer_loop_utterance)
+        client.emitter.on("freewill_result", self.handle_freewill_result)
+        client.emitter.on("speak", self.handle_speak)
+        client.emitter.on("results", self.handle_skill_results)
+        client.emitter.on("context_request", self.handle_context_request)
+        client.emitter.on("intent_failure", self.handle_intent_failure)
+        client.emitter.on("register_vocab", self.handle_register_vocab)
+        client.emitter.on("skill_loaded", self.handle_register_skill)
 
-    ####### on context_result, listen for more signals if needed
+        #### contexts
+        self.vocab = []
+        self.regex = []
+        self.context_dict = {}
 
-    def vision(message):
-        vision_context.asctime = message.data.get('asctime')
-        vision_context.time = message.data.get('time')
-        vision_context.movement = message.data.get('movement')
-        vision_context.number = message.data.get('number of persons')
-        vision_context.master = message.data.get('master')
-        vision_context.smile = message.data.get('smile detected')
-        vision_context.update()
+        #### synonims
+        #self.synonims = {"last speech":"utterance", "last heard":"utterances"}
 
-    def freewill(message):
-        freewill_context.dopamine = message.data.get('dopamine')
-        freewill_context.serotonine = message.data.get('serotonine')
-        freewill_context.tiredness = message.data.get('tiredness')
-        freewill_context.tought = message.data.get('last_tought')
-        freewill_context.action = message.data.get('last_action')
-        freewill_context.mood = message.data.get('mood')
+        self.register_signals()
 
-    def speak(message):
-        context_general.lastutterance = message.data.get('utterance')
+        #### adapt
+        self.manager = ContextManager()
 
-    def utterance(message):
-        context_general.lastorder = message.data.get('utterances')
+    ####### init / helper functions
+    def register_context(self, params):
+        for name in params:
+            if name not in self.vocab:
+                self.vocab.append(name)
+                self.context_dict.setdefault(name)
+                print "registering context " + name
 
-    def results(message):
-        #parse only relevant skills, add context skill to change some properties like location
-        context_general.lastaction = message.data.get('skill_name') #must send results in skill, NOT default
-        # time skill
-        if context_general.lastresults == "TimeSkill":
-            context_general.time = message.data.get('time')
-            context_general.timezone = message.data.get('timezone')
-        # TODO
-            # weather skill
-            # IP skill
-            # dream skill and remove flag from freewill context
-            # generalize for all results in a dicT!!!!
-        # update regex contexts
+    def register_signals(self):
+        params = ["utterance", "utterances", "dopamine", "serotonine", "tiredness", "last_tought", "last_action", "mood", "movement", "number of persons", "master", "smile detected"]
+        for name in params:
+            if name not in self.vocab:
+                self.register_context(params)
+        #register fail
+        if "fails" not in self.vocab:
+            self.register_context(params=["fails"])
+            self.context_dict["fails"]= 0
 
-        print "\n"+context_general.lastaction
-        #print "\nmessage fields received\n"
-        #fields=[]
-        #for field in message.data:
-        #    print str(field)
-        #    fields.append(field)
+    def handle_register_skill(self, message):
+        params = [message.data.get("skill_name")]
+        self.register_context(params)
 
-        #print "\nregistered words\n"
-        for word in vocab:
-            #print word #key
-            #if word in fields:
-                #im obviously missing osmething, word doesnt work in message.data.get but appears in field
+    def request_update(self, target="all"):
+        # target = freewill / vision / all
+        client.emit(Message("context_update", {'target': target}))
+
+    def get_regex_context(self, message):
+        for regex in self.regex:
             try:
-                ctxt = message.data[word]
-            #ctxt = message.data.get[word] #try to get that context key -> this crashes thread ALWAYS, wtf? encoding?
-            #print word #key
-                print "\nkey detected"
-                print ctxt  # result
-                context_general.contextdict[word] = ctxt
+                result = message.data[regex]
+                print "\nkey detected " + result
+                self.context_dict[regex] = result
+                self.register_with_adapt(regex)
                 return
             except:
-                pass#key not detected
+                pass  # key not detected
 
+                ##### abstract signals  general api yet to be implemented
 
-    #####  send current context
+    ### adapt functions - dont know how to work with this
 
-    def requested(target):
-        request_update("all")
-        time.sleep(0.1)
-        #emit unified response from all contexts?
+    def register_with_adapt(self, key):
+        if key is not None:
+            print "injecting context " + key + " with value " + self.regex[key]
+            self.manager.inject_context(entity=key, metadata=self.regex[key])
+
+    def register_with_adapt_all(self, message):
+        for key in self.regex:
+            if self.regex[key] is not None:
+                print "injecting context " + key + " with value " + self.regex[key]
+                self.manager.inject_context(entity=key, metadata=self.regex[key])
+
+    #### implement more signals
+
+    def handle_context_request(self, message):
+        self.request_update()
+
+        time.sleep(0.5)#TODO implement wait for signal response?
+
+        # emit unified response from all contexts   ### need a better title for message
         client.emit(
             Message("context_result",
                     {
-                     'time': context_general.time,
-                     'timezone': context_general.timezone,
-                     'location': context_general.location,
-                     'last action': context_general.lastaction,
-                     'last utterance': context_general.lastutterance,
-                     #'last results': context_general.lastresults,
-                     'failures': context_general.failures,
-                     'regex': context_general.contextdict
-                     }))
+                        'dictionary': self.context_dict
+                    }))
 
-       # inject_context() #handled in intent skill ?
+    def handle_register_vocab(self, message):
+        regex = message.data.get("regex")
+        if regex is not None:
+            # parse words for regex (<?P<KEY>.*)
+            params = [regex[regex.find("(?P<") + 4:regex.find(">")]]
+            self.register_context(params)
+            self.regex.append(regex)
 
-    def fail():
-        context_general.failures +=1
+    def handle_vision_result(self, message):
+        params = ["movement", "number of persons", "master", "smile detected"]
+        for name in params:
+            self.context_dict[name] = message.data.get(name)
 
-    vocab = []
+    def handle_freewill_result(self, message):
+        params = ["dopamine", "serotonine", "tiredness", "last_tought", "last_action", "mood"]
+        for name in params:
+            self.context_dict[name] = message.data.get(name)
 
-    def addvocab(message):
-        words = message.data.get("regex")
-        if words is not None:
-            #print words
-            #parse words for regex (<?P<KEY>.*)
-            index = words.find("(?P<")
-            endindex = words.find(">")
-            name = words[index+4:endindex]
-            if name not in vocab:
-                vocab.append(name)
-                context_general.contextdict.setdefault(name)
-                print "registering context " + name
+    def handle_speak(self, message):
+        params = ["utterance"]
+        for name in params:
+            self.context_dict[name] = message.data.get(name)
 
+    def handle_recognizer_loop_utterance(self, message):
+        params = ["utterances"]
+        for name in params:
+            self.context_dict[name] = message.data.get(name)
 
-    client.emitter.on("vision_result", vision)
-    client.emitter.on('recognizer_loop:utterance', utterance)
-    client.emitter.on("freewill_result",freewill)
-    client.emitter.on("speak",speak)
-    client.emitter.on("results",results)
-    client.emitter.on("context_request",requested)
-    client.emitter.on("intent_failure", fail)
-    client.emitter.on("register_vocab", addvocab)
+    def handle_intent_failure(self, message):
+        self.context_dict["fails"] = self.context_dict["fails"]+1
+        #params = ["last_fail"]
+        #for name in params:
+        #    self.context_dict[name] = message.data.get(name)
 
-    event_thread = Thread(target=connect)
-    event_thread.setDaemon(True)
-    event_thread.start()
+    def handle_skill_results(self, message):
+        key = message.data.get('skill_name') #must send results in skill, NOT default
+        results = message.data
+        print results
+        self.context_dict[key]=results
+        #logger.info("Updated context for results from "+key)
+        self.get_regex_context(message)
 
-    #####  #request context update from other services
-    def request_update(target):
-        #target = freewill / vision / all
-        client.emit(Message("context_update", {'target': target}))
-        pass
+    ### main loop
 
-
-    while True:
-        time.sleep(0.3)
-        #client.emit(Message("context_request"))    #when should this be called?
+    def listen(self):
+        global client
+        client.run_forever()
 
 
-
-
-
-main()
+manager = ContextService()
+manager.listen()
