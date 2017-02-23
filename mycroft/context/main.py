@@ -53,7 +53,7 @@ class ContextService():
 
     def register_abstract(self):
         # params that are not listened from bus but are otherwise wanted
-        params = ["start time up", "language", "name", "location"] #name #location
+        params = ["start time up", "language", "name", "location", "last_heard","last_spoken"] #name #location
         self.register_context(params)
         self.context_dict["start up time"] = time.time()
         self.context_dict["language"] = "english"
@@ -150,10 +150,14 @@ class ContextService():
         for name in params:
             self.context_dict[name] = message.data.get(name)
 
+        self.context_dict["last_spoken"] = self.context_dict["utterance"] #probably shared key, may be over-riden by other signal , registering synonim key
+
     def handle_recognizer_loop_utterance(self, message):
         params = ["utterances"]
         for name in params:
             self.context_dict[name] = message.data.get(name)
+
+        self.context_dict["last_heard"] =self.context_dict["utterances"]
 
     def handle_intent_failure(self, message):
         self.context_dict["fails"] = self.context_dict["fails"]+1
