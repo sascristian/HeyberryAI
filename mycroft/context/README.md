@@ -35,6 +35,9 @@ run main.py
 
 clone repo into mycroft-core folder
 
+Warning: updates core.py to add results property 
+Warning: updates wikipedia skill to add example usage of results
+
 #author
 
 jarbas
