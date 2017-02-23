@@ -24,11 +24,11 @@ class ContextService():
         client.emitter.on("skill_loaded", self.handle_register_skill)
         client.emitter.on("context_key_result", self.handle_key_context_request)
 
-        #### contexts
-        self.vocab = []
-        self.regex = []
-        self.context_dict = {}
-        self.bluetooth_ids = {}
+        #### database
+        self.vocab = [] #keys
+        self.regex = [] #ArticleTitle
+        self.context_dict = {} # Location : Here
+        self.bluetooth_ids = {} # 666 : True
 
         #### synonims
         #self.synonims = {"last speech":"utterance", "last heard":"utterances"}
@@ -39,32 +39,36 @@ class ContextService():
         self.manager = ContextManager()
 
     ####### init / helper functions
-    def register_context(self, params):
+
+    def register_context(self, params, type="default"):
         for name in params:
             if name not in self.vocab:
                 self.vocab.append(name)
                 self.context_dict.setdefault(name)
-                print "registering context " + name
+                print "registering context " + name + "\ntype: " + type
 
     def register_abstract(self):
         # params that are not listened from bus but are otherwise wanted
-        params = ["start time up"]
+        params = ["start time up", "language", "name", "location"] #name #location
         self.register_context(params)
         self.context_dict["start up time"] = time.time()
+        self.context_dict["language"] = "english"
+        self.context_dict["name"] = "jarbas"
+        self.context_dict["location"] = "internet" # TODO get this from config
 
     def register_signals(self):
         params = ["utterance", "utterances", "dopamine", "serotonine", "tiredness", "last_tought", "last_action", "mood", "movement", "number of persons", "master", "smile detected"]
         for name in params:
             if name not in self.vocab:
-                self.register_context(params)
+                self.register_context(params, type="signal")
         #register fail
         if "fails" not in self.vocab:
-            self.register_context(params=["fails"])
+            self.register_context(params=["fails"],type="signal")
             self.context_dict["fails"]= 0
 
     def handle_register_skill(self, message):
         params = [message.data.get("skill_name")]
-        self.register_context(params)
+        self.register_context(params, type="skill")
 
     def request_update(self, target="all"):
         # target = freewill / vision / all
@@ -114,7 +118,7 @@ class ContextService():
             s = regex.find("(?P<")
             e = regex.find(">")
             params = [str(regex[s + 4:e])]
-            self.register_context(params)
+            self.register_context(params, type="regex")
             self.regex.append(params)
 
     def handle_vision_result(self, message):
@@ -148,6 +152,11 @@ class ContextService():
         results = message.data
         self.context_dict[key]=results
         #logger.info("Updated context for results from "+key)
+        for result in results:
+            print result
+            if result not in self.vocab:
+                self.register_context(result, type="skill_result")
+            self.context_dict[result] = message.data.get[result]
         for regex in self.regex:
             result = message.data.get(regex[0])
             if result is not None:
@@ -163,6 +172,7 @@ class ContextService():
                         {
                             'key': key, "result":result
                         }))
+
     ### future signals
 
     def handle_bluetooth_new(self, message):
@@ -170,7 +180,7 @@ class ContextService():
         id = message.data.get("id")
         if id not in self.bluetooth_ids:
             params = [id]
-            self.register_context(params)
+            self.register_context(params, type="bluetooth")
         self.context_dict[id]= True
 
     def handle_bluetooth_leave(self, message):
