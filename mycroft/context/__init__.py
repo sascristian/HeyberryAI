@@ -1,7 +1,7 @@
 #
 #
 #
-# values to be consumed by services / skills and saved to file
+# values to be consumed by services / skills and saved to file / helper classes only / not needed / from old methods /backwards compatibility /ignore this shit
 #
 #
 #
@@ -9,76 +9,6 @@ import shelve
 import time
 from mycroft.util.log import getLogger
 
-
-class Context():
-    def __init__(self, name="current.context"):
-        self.log = getLogger("context log")
-        self.log.setLevel('WARNING')#uncomment to disable logs
-        self.counter = 0
-        self.shelve = shelve.open(name, writeback=True)
-        self.setdefaultcontext()
-
-
-        try:
-            self.read()
-        except:
-            pass
-
-    def setdefaultcontext(self):
-        self.contextdict = {}
-        self.lastorder = ""  # order received
-        self.lastaction = ""  # skill executed
-        self.lastutterance = ""  # thing said
-        self.lastresults = {}  # last skill results
-        self.failures = 0
-        # time
-        self.time = time.time()
-        self.timezone = "Europe/Central"
-        # location
-        self.location = "kansas"
-        self.update()
-
-    def resetcounter(self):
-        self.counter = 0
-        return
-
-    def read(self):
-        print "implement reading all values"
-        self.counter = self.shelve['counter']
-        self.contextdict = self.shelve['dict']
-        self.lastorder = self.shelve["last order"]
-        self.lastaction = self.shelve["last action"]
-        self.lastutterance = self.shelve["last utterance"]
-        self.lastresults = self.shelve["last results"]
-        self.failures = self.shelve["failures"]
-        # time
-        self.time = self.shelve["time"]
-        self.timezone = self.shelve["timezone"]
-        # location
-        self.location = self.shelve["location"]
-        return
-
-    def update(self):
-        print "implement setting all values"
-        self.shelve['counter'] = self.counter + 1
-        self.shelve['dict'] = self.contextdict
-        self.shelve["last order"] = self.lastorder
-        self.shelve["last action"] = self.lastaction
-        self.shelve["last utterance"] = self.lastutterance
-        self.shelve["last results"] =  self.lastresults
-        self.shelve["failures"] = self.failures
-        # time
-        self.shelve["time"] = self.time
-        self.shelve["timezone"] = self.timezone
-        # location
-        self.shelve["location"] = self.location
-
-        # save to file current context, permanent!
-        self.shelve.sync()
-        return
-
-    def close(self):
-        self.shelve.close()
 
 class VisionContext():
     def __init__(self, name="vision.context"):
@@ -173,8 +103,6 @@ class FreeWillContext():
         self.log.setLevel('WARNING')#uncomment to disable logs
         self.shelve = shelve.open(name, writeback=True)
         self.setdefaultcontext()
-
-
         try:
             self.read()
         except:

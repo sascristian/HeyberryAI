@@ -1,7 +1,7 @@
 
 
 
-from . import freewill
+from mycroft.Subconscious import freewill
 
 
 Agency = freewill()
