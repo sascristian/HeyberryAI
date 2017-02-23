@@ -27,6 +27,7 @@ class ContextService():
         self.vocab = []
         self.regex = []
         self.context_dict = {}
+        self.bluetooth_ids = {}
 
         #### synonims
         #self.synonims = {"last speech":"utterance", "last heard":"utterances"}
@@ -43,6 +44,12 @@ class ContextService():
                 self.vocab.append(name)
                 self.context_dict.setdefault(name)
                 print "registering context " + name
+
+    def register_abstract(self):
+        # params that are not listened from bus but are otherwise wanted
+        params = ["start time up"]
+        self.register_context(params)
+        self.context_dict["start up time"] = time.time()
 
     def register_signals(self):
         params = ["utterance", "utterances", "dopamine", "serotonine", "tiredness", "last_tought", "last_action", "mood", "movement", "number of persons", "master", "smile detected"]
@@ -143,6 +150,21 @@ class ContextService():
         self.context_dict[key]=results
         #logger.info("Updated context for results from "+key)
         self.get_regex_context(message)
+
+    ### future signals
+
+    def handle_bluetooth_new(self, message):
+        #registered context with bluetooth id
+        id = message.data.get("id")
+        if id not in self.bluetooth_ids:
+            params = [id]
+            self.register_context(params)
+        self.context_dict[id]= True
+
+    def handle_bluetooth_leave(self, message):
+        #registered context with bluetooth id
+        id = message.data.get("id")
+        self.context_dict[id]= False
 
     ### main loop
 
