@@ -14,10 +14,16 @@ on request emits current context to bus
         intent_failure - number of un-recognized intents
         freewill_result - context from freewill service
         vision_result - context from vision service
+        register_vocab - context for all regex expressions in skills
 
 # usage
 
 run main.py
+
+# dev usage
+        WORK IN PROGRESS
+        dont know how to register context with adapt yet
+check [intent skill](https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skills/intent/__init__.py)
 
 # install
 
