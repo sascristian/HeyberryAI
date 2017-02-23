@@ -8,14 +8,24 @@ on request emits current context to bus
 
 # relevant signals
 
+        Listens to:
+        
         speak - last spoken sentence
-        utterance - last heard/received sentence
+        recognizer_loop:utterance - last heard/received sentence
         results - context for results property from skills
         intent_failure - context for number of un-recognized intents
         freewill_result - context from freewill service
         vision_result - context from vision service
         register_vocab - context for all regex expressions in skills
-        loaded_skills - context for available skills
+        skill_loaded - context for available skills
+        register_intent - context for registered intents
+        
+        Responds to:
+        
+        context_request - emits full context 
+        context_key_result - emits result of requested context
+        context_key_override - changes context to desired value
+
 
 # usage
 
