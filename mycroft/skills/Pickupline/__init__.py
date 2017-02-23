@@ -74,30 +74,47 @@ class PickupLineSkill(MycroftSkill):
 
         self.register_intent(scifi_line_intent, self.handle_scifi_line_intent)
 
+    def get_pickup(self, type = "random"):
+        self.add_result("pickup_line_type", type)
+        return self.pickupliner.get_line(type)
+
     def handle_line_intent(self, message):
-        self.speak(self.pickupliner.get_line(type="random"))
+        line = self.get_pickup("random")
+        self.speak(line)
+        self.add_result("pickup_line",line)
         self.emit_results()
 
     def handle_geek_line_intent(self, message):
-        self.speak(self.pickupliner.get_line(type="computer"))
+        line = self.get_pickup("computer")
+        self.speak(line)
+        self.add_result("pickup_line", line)
         self.emit_results()
 
     def handle_dirty_line_intent(self, message):
-        self.speak(self.pickupliner.get_line(type="crude"))
+        line = self.get_pickup("crude")
+        self.speak(line)
+        self.add_result("pickup_line", line)
         self.emit_results()
 
     def handle_math_line_intent(self, message):
-        self.speak(self.pickupliner.get_line(type="math"))
+        line = self.get_pickup("math")
+        self.speak(line)
+        self.add_result("pickup_line", line)
         self.emit_results()
 
     def handle_physics_line_intent(self, message):
-        self.speak(self.pickupliner.get_line(type="physics"))
+        line = self.get_pickup("physics")
+        self.speak(line)
+        self.add_result("pickup_line", line)
         self.emit_results()
 
     def handle_scifi_line_intent(self, message):
-        self.speak(self.pickupliner.get_line(type="scifi"))
+        line = self.get_pickup("scifi")
+        self.speak(line)
+        self.add_result("pickup_line", line)
         self.emit_results()
 
+### todo results and vocab for these
     def handle_cheesy_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="cheesy"))
         self.emit_results()

@@ -89,11 +89,14 @@ class DesktopLauncherSkill(MycroftSkill):
         apps = self.appmap.get(app_name)
         if apps and len(apps) > 0:
             apps[0].launch()
+
+        self.add_result("launched_app", apps[0])
         self.emit_results()
 
     def handle_launch_website(self, message):
         site = message.data.get("Website")
         webbrowser.open(IFL_TEMPLATE % (urllib2.quote(site)))
+        self.add_result("launched_website", site)
         self.emit_results()
 
     def handle_search_website(self, message):
@@ -101,6 +104,8 @@ class DesktopLauncherSkill(MycroftSkill):
         search_terms = message.data.get("SearchTerms")
         search_str = site + " " + search_terms
         webbrowser.open(IFL_TEMPLATE % (urllib2.quote(search_str)))
+        self.add_result("launched_website", site)
+        self.add_result("website_search_terms", search_terms)
         self.emit_results()
 
     def stop(self):

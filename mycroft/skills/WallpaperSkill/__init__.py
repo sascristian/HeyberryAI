@@ -24,6 +24,7 @@ class WallpaperSkill(MycroftSkill):
         super(WallpaperSkill, self).__init__(name="WallpaperSkill")
 
         self.desktop = "mate"
+        self.add_result("desktop", self.desktop)
         self.command = self.processcommand(self.desktop)
 
         self.USERAGENT = "Jarbas Ai Wallpaper finder"
@@ -115,7 +116,9 @@ class WallpaperSkill(MycroftSkill):
         ## change wallpaper
         for imagePath in self.list_images():
             paths.append(imagePath)
-        os.system(self.command.format(save_location=random.choice(paths)))
+        wallpaper = random.choice(paths)
+        os.system(self.command.format(save_location=wallpaper))
+        self.add_result("wallpaper",wallpaper)
         self.emit_results()
 
     #### helper

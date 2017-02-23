@@ -87,6 +87,9 @@ class PhotoSkill(MycroftSkill):
         self.long_max = self.center_long + self.radius
 
         self.getphotos()
+
+        self.add_result("photo_location", self.search_name)
+
         self.emit_results()
 
     def handle_photo_from_location_intent(self, message):
@@ -110,6 +113,9 @@ class PhotoSkill(MycroftSkill):
         self.long_max = self.center_long + self.radius
 
         self.getphotos()
+
+        self.add_result("photo_location", self.search_name)
+
         self.emit_results()
 
     def getphotos(self):

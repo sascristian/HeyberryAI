@@ -83,6 +83,10 @@ class MP3DemoSkill(MycroftSkill):
         #self.speak("please wait while mp3 is downloaded")
         path = self.dlsong(title)
         self.process = subprocess.Popen(["cvlc", str(path)])
+
+        self.add_result("Requested_Song", title)
+        self.add_result("Song_Download_Path", path)
+
         self.emit_results()
 
     def dlsong(self, search_key):
@@ -146,9 +150,12 @@ class MP3DemoSkill(MycroftSkill):
             try:
                 title = title.encode('ascii')
                 # print 'downloading title with counter: ', counter
-                if not counter:
-                    return random.choice(music)  #some margin for randomness, first result isnt always accurate, (gets slower...)
+                #if not counter:
+                #    return random.choice(music)  #some margin for randomness, first result isnt always accurate, (gets slower...)
                 print 'downloading title: ', title
+
+                self.add_result("Dowloaded_Song", title)
+
                 path = self.download_video(self.video_link_title_dict[title], title)
                 music.append(path)
                 counter = counter - 1

@@ -25,6 +25,7 @@ class BitcoinSkill(MycroftSkill):
     def handle_intent(self, message):
         price = requests.get("https://api.bitcoinaverage.com/all").json()['EUR']['averages']['24h_avg']
         self.speak("The current bitcoin price is "+str(price)+" euros.")
+        self.add_result("bitcoin_price", price)
         self.emit_results()
 
     def stop(self):

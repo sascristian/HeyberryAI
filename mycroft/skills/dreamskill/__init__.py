@@ -205,6 +205,9 @@ class DreamSkill(MycroftSkill):
 			if os.path.isfile(os.path.join(self.outputdir, f)):
 				dreams.append(os.path.join(self.outputdir, f))
 		dream = random.choice(dreams)
+
+		self.add_result("dream_path",dream)
+
 		dreampic = cv2.imread(dream)
 		self.speak("look at this dream i had")
 		cv2.imshow('dream', dreampic)
@@ -219,6 +222,8 @@ class DreamSkill(MycroftSkill):
 
 		chosenpic = random.choice(os.listdir(self.psypath))
 		imagepah = self.psypath+"/" + str(chosenpic)
+
+		self.add_result("psy_pic_path", imagepah)
 
 		i = self.countdreams()
 
@@ -239,6 +244,7 @@ class DreamSkill(MycroftSkill):
 			#k = cv2.waitKey(1000)
 		   # self.out.release()
 			cv2.destroyAllWindows()
+
 		self.emit_results()
 
 	def handle_pure_dream_intent(self, message):
@@ -249,6 +255,8 @@ class DreamSkill(MycroftSkill):
 
 		chosenpic = random.choice(os.listdir(self.patternpath))
 		imagepah = self.patternpath+"/" + str(chosenpic)
+
+		self.add_result("dream_pattern_path", imagepah)
 
 		i = self.countdreams()
 
@@ -277,6 +285,8 @@ class DreamSkill(MycroftSkill):
 
 		chosenpic = random.choice(os.listdir(self.sourcedir))
 		imagepah = self.sourcedir+"/" + str(chosenpic)
+
+		self.add_result("dream_source_path", imagepah)
 
 		i = self.countdreams()
 
@@ -312,6 +322,8 @@ class DreamSkill(MycroftSkill):
 
 		imagepah = self.camfolder + "/feed.jpg"
 
+		self.add_result("dream_feed_path", imagepah)
+
 		i = self.countdreams()
 
 		# choose dream mode
@@ -343,6 +355,8 @@ class DreamSkill(MycroftSkill):
 
 		imagepah = self.outputdir + "/" + str(chosenpic)
 
+		self.add_result("dream_source_path", imagepah)
+
 		i = self.countdreams()
 
 		# choose dream mode
@@ -373,6 +387,8 @@ class DreamSkill(MycroftSkill):
 
 		imagepah = self.sharedfolder+"/" + str(chosenpic)
 
+		self.add_result("dream_source_path", imagepah)
+
 		i = self.countdreams()
 
 		# choose dream mode
@@ -396,11 +412,15 @@ class DreamSkill(MycroftSkill):
 
 	def handle_dream_about_intent(self, message):
 		imagepath = ""
+		search = message.data.get("DreamSearch")
 		if not self.dreaming:
 			# collect dream entropy
-			search = message.data.get("DreamSearch")
+
 			pics = self.search_image(search)
 			imagepah = random.choice(pics)
+			self.add_result("dream_source_path", imagepah)
+
+		self.add_result("dream_theme", search)
 
 		i = self.countdreams()
 
@@ -631,7 +651,8 @@ class DreamSkill(MycroftSkill):
 				image = self.bc.dream(np.float32(dreampic), end=layer)
 				# write the output image to file
 				result = Image.fromarray(np.uint8(image))
-				result.save(self.outputdir+"/" + str(i) + ".jpg")
+				outpath = self.outputdir+"/" + str(i) + ".jpg"
+				result.save(outpath)
 				dreampic = cv2.imread(self.outputdir+"/" + str(i) + ".jpg")
 				# draw the layer name on the image
 				#cv2.putText(dreampic, layer, (5, dreampic.shape[0] - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.95, (0, 255, 0), 2)
@@ -642,6 +663,8 @@ class DreamSkill(MycroftSkill):
 				#cv2.imwrite("dreamskill/dream_output/" + str(i+1) + ".jpg", dreampic)
 				#dreampic.save()
 				self.dreaming = False
+				self.add_result("dreaming_layer", layer)
+				self.add_result("dreaming_output", outpath)
 				return dreampic
 			except:
 				#self.speak("i couldnt dream this time. Retrying")
@@ -667,6 +690,7 @@ class DreamSkill(MycroftSkill):
 			layer = random.choice(self.layers)
 			try:
 				features = self.bc.prepare_guide(Image.open(guidepath), end=layer)
+				self.add_result("guide_layer", layer)
 				if self.choice != 1:
 					layer = random.choice(self.layers)  # different layer for guide
 				dreampic = imutils.resize(cv2.imread(sourcepath), self.w, self.h)  # cv2.resize(img, (640, 480))
@@ -675,7 +699,8 @@ class DreamSkill(MycroftSkill):
 									  objective_features=features)
 				# write the output image to file
 				result = Image.fromarray(np.uint8(image))
-				result.save(self.outputdir+"/" + str(i) + ".jpg")
+				outpath = self.outputdir+"/" + str(i) + ".jpg"
+				result.save(outpath)
 				dreampic = cv2.imread(self.outputdir+"/" + str(i) + ".jpg")
 				# draw the layer name on the image
 				#cv2.putText(dreampic, layer, (5, dreampic.shape[0] - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.95, (0, 255, 0), 2)
@@ -685,6 +710,10 @@ class DreamSkill(MycroftSkill):
 				#dreampic = self.filterdream(filter, dreampic)
 				#cv2.imwrite("dreamskill/dream_output/" + str(i+1) + ".jpg", dreampic)
 				#dreampic.save()
+				self.add_result("dreaming_layer", layer)
+				self.add_result("dreaming_output", outpath)
+				self.add_result("dreaming_guide", guidepath)
+
 				self.dreaming = False
 				return dreampic
 			except:

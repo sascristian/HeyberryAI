@@ -38,7 +38,9 @@ class JokingSkill(MycroftSkill):
         self.register_intent(intent, self.handle_intent)
 
     def handle_intent(self, message):
-        self.speak(pyjokes.get_joke(language=self.lang[:-3], category='all'))
+        joke = pyjokes.get_joke(language=self.lang[:-3], category='all')
+        self.speak(joke)
+        self.add_result("joke", joke)
         self.emit_results()
 
     def stop(self):

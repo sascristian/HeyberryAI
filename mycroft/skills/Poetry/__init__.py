@@ -93,6 +93,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_friends_poetry_intent(self, message):
         style = "friends"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style, poem)
         # speak
@@ -101,6 +102,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_inspirational_poetry_intent(self, message):
         style = "inspirational"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style, poem)
         # speak
@@ -109,6 +111,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_family_poetry_intent(self, message):
         style = "family"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style, poem)
         # speak
@@ -117,6 +120,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_life_poetry_intent(self, message):
         style = "life"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style, poem)
         # speak
@@ -125,6 +129,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_love_poetry_intent(self, message):
         style = "love"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style, poem)
         # speak
@@ -133,6 +138,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_science_poetry_intent(self, message):
         style = "scifi"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style, poem)
         # speak
@@ -141,6 +147,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_gore_poetry_intent(self, message):
         style = "deathmetal"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style, poem)
         # speak
@@ -149,6 +156,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_viking_poetry_intent(self, message):
         style = "viking"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style, poem)
         # speak
@@ -157,6 +165,7 @@ class PoetrySkill(MycroftSkill):
 
     def handle_satanic_poetry_intent(self, message):
         style = "blackmetal"
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style,poem)
         # speak
@@ -167,6 +176,7 @@ class PoetrySkill(MycroftSkill):
         #self.speak_dialog("poetry")
         # choose style (black metal, death metal, trash metal)
         style = random.choice(self.styles)
+        self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style,poem)
         # speak

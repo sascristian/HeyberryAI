@@ -52,7 +52,13 @@ class TranslateSkill(MycroftSkill):
 
 		translated = translate(sentence, lang)
 
+		self.add_result("phrase", sentence)
+		self.add_result("translated", translated)
+		self.add_result("translate_language", lang)
+
 		self.say(str(translated),lang)
+
+		self.emit_results()
 
 	def handle_translate_to(self, message):
 		lang = message.data.get("LanguageKeyword")
@@ -62,6 +68,11 @@ class TranslateSkill(MycroftSkill):
 		translated = translate(sentence, lang)
 
 		self.say(translated,lang)
+
+		self.add_result("phrase", sentence)
+		self.add_result("translated", translated)
+		self.add_result("translate_language", lang)
+
 		self.emit_results()
 
 

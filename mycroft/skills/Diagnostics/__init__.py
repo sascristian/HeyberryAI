@@ -166,15 +166,17 @@ class DiagnosticsSkill(MycroftSkill):
         for f in os.listdir("/home/user/mycroft-core/mycroft/skills/Poetry/results"):
             self.poems += 1
 
+        self.add_result("poems_composed", self.poems)
         # number of dreams
         self.dreams = 0
         for f in os.listdir("/home/user/mycroft-core/mycroft/skills/dreamskill/dream_output"):
             self.dreams += 1
-
+        self.add_result("number_of_dreams", self.dreams)
         #leaks found
         self.totalleaks = 0
         for f in os.listdir("/home/user/mycroft-core/mycroft/dumpmon/dumps"):
             self.totalleaks += 1
+        self.add_result("number_of_leaks", self.totalleaks)
 
     def request_diagnostics_update(self):
         LOGGER.info("diagnostics update requested")

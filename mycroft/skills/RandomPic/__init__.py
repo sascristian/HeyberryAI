@@ -97,9 +97,11 @@ class PictureSkill(MycroftSkill):
                 img = cv2.resize(img, (640, 480))
                 # img = cv2.resize(img, (200, 200))
                 cv2.imwrite(savepath, img)
+                self.add_result("picture", savepath)
                 sucess = True
                 chosenurl =  savepath
                 label = self.identifypicture(chosenurl)
+                self.add_result("label", label)
                 self.speak_dialog("iden")
                 self.speak(label)
                 cv2.imshow(label, img)
@@ -151,7 +153,9 @@ class PictureSkill(MycroftSkill):
                 LOGGER.info('Resizing and saving image to ' + "random pic/" + str(pic_num) + ".jpg")
                 img = cv2.resize(img, (640, 480))
                 # img = cv2.resize(img, (200, 200))
-                cv2.imwrite("RandomPic/pictures/" + str(pic_num) + ".jpg", img)
+                picpath = "RandomPic/pictures/" + str(pic_num) + ".jpg"
+                cv2.imwrite(picpath, img)
+                self.add_result("picture", picpath)
                 sucess = True
                 cv2.imshow('random picture', img)
                 cv2.waitKey(20000)
@@ -166,6 +170,7 @@ class PictureSkill(MycroftSkill):
     def handle_search_picture_intent(self,message):
         #search = "anal porn lesbian"
         search = message.data.get("Search")
+        self.add_result("picture_search", search)
         self.speak("please wait while i search google pictures for "+ search)
         self.searchanddl(search)
         pics = []
@@ -175,6 +180,7 @@ class PictureSkill(MycroftSkill):
             if os.path.isfile(os.path.join(path, f)):
                 pics.append(os.path.join(path, f))
         pic = random.choice(pics)
+        self.add_result("picture", pic)
         showpic = cv2.imread(pic)
         self.speak("heres your picture")
         cv2.imshow(search, showpic)
