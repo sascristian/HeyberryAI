@@ -67,6 +67,7 @@ class WikipediaSkill(MycroftSkill):
             options = e.options[:self.max_results]
             LOGGER.debug("Multiple options found: " + ', '.join(options))
             self.__ask_more_about(options)
+            self.add_result("Multiple_Options", options)
 
         except Exception as e:
             LOGGER.error("Error: {0}".format(e))
