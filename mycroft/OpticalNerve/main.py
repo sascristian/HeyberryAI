@@ -83,26 +83,39 @@ class OpticalNerve():
         global client
         client = WebsocketClient()
 
-        def vision(message):
-            if message.data.get('target') == "vision" or  message.data.get('target') == "all" :
-                client.emit(
-                    Message("vision_result",
-                            {'asctime': time.asctime(),
-                             'time': time.time(),
-                             'movement': self.context.movement,
-                             'number of persons': self.context.num_persons,
-                             'master': self.context.master,
-                             'smile detected ': self.context.smiling}))
+        client.emitter.on("context_update", self.handle_update_request())
 
-        client.emitter.on("context_update", vision)
         event_thread = Thread(target=connect)
+        event_thread.setDaemon(True)
+        event_thread.start()
+
+        self.emit_time = 5 #every 5 seconds send to bus update TODO read from config
+
+        def nervous_system():
+            while True:
+                time.sleep(self.emit_time)
+                self.send_to_bus()
+
+        event_thread = Thread(target=nervous_system)
         event_thread.setDaemon(True)
         event_thread.start()
 
         # process first frame
         self.feed = self.readeye()
 
+    def handle_update_request(self, message):
+        if message.data.get('target') == "vision" or message.data.get('target') == "all":
+            self.send_to_bus()
 
+    def send_to_bus(self):
+        client.emit(
+            Message("vision_result",
+                    {'asctime': time.asctime(),
+                     'time': time.time(),
+                     'movement': self.context.movement,
+                     'number of persons': self.context.num_persons,
+                     'master': self.context.master,
+                     'smile detected ': self.context.smiling}))
     def read(self):
         # return the context from frame most recently processed by the eye
         self.feed = self.readeye()
@@ -373,18 +386,9 @@ class OpticalNerve():
         return img
 
     def draw_feeds(self, bkg, mainfeed):
-        # The dimensions of the nkg picture
-        #width, height, channels = bkg.shape
-
-        #main feed in top eft corner, 1/2 of screen dedicated
-        #mainfeed = cv2.resize(mainfeed, (width / 2, height / 2), interpolation=cv2.INTER_AREA)
-
         if self.showfeed:
             # draw feed
             cv2.imshow("feed", mainfeed)
-            #cv2.imshow("nght", self.nightmarify(mainfeed))
-            #bkg[0:height / 2, 0:width / 2] = mainfeed  # coordinates to draw into
-
         ## draw individual detected faces
        # if self.showdetected:
             # Detected Faces
@@ -401,7 +405,6 @@ class OpticalNerve():
         ## create lines
         ## create text
         ## create settings scroll bars
-
         return bkg
 
     def updatecontext(self, faceid):
@@ -449,11 +452,7 @@ class OpticalNerve():
                 logger.info("updating feed")
                 bkg = self.draw_gui_bkg()
                 vision = self.draw_feeds(bkg, self.feed)
-                #cv2.imshow("JArbas Vision", vision)
                 cv2.waitKey(10)
-                # emit to bus
-
-
             logger.info("movement: "+str(self.context.movement))
             logger.info('number of persons: '+str(self.context.num_persons))
             logger.info('master: '+str(self.context.master))
