@@ -22,7 +22,7 @@ class ContextService():
         client.emitter.on("intent_failure", self.handle_intent_failure) #counts fails
         client.emitter.on("register_vocab", self.handle_register_vocab) #handle regexes
         client.emitter.on("skill_loaded", self.handle_register_skill)
-        client.emitter.on("context_key_result", self.handle_key_context_request)
+        client.emitter.on("context_key_request", self.handle_key_context_request)
         client.emitter.on("context_key_override", self.handle_key_context_override)
         client.emitter.on("register_intent", self.handle_register_intent)
 
@@ -118,10 +118,7 @@ class ContextService():
 
         # emit unified response from all contexts   ### need a better title for message
         client.emit(
-            Message("context_result",
-                    {
-                        'dictionary': self.context_dict
-                    }))
+            Message("context_result", {'dictionary': self.context_dict}))
 
     def handle_register_vocab(self, message):
         regex = message.data.get("regex")
@@ -189,10 +186,7 @@ class ContextService():
             result = self.context_dict[key]
             #emit result
             client.emit(
-                Message("context_key_result",
-                        {
-                            'key': key, "result":result
-                        }))
+                Message("context_key_result", {'key': key, "result":result }))
 
     def handle_key_context_override(self, message):
         key = message.data.get["key"]
