@@ -106,6 +106,7 @@ def load_skill(skill_descriptor, emitter):
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
             skill.initialize()
             logger.info("Lodaded " + skill_descriptor["name"])
+            emitter.emit(Message("skill_loaded", {'skill_name': skill_descriptor["name"]}))
             return skill
         else:
             logger.warn(
