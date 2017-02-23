@@ -150,8 +150,8 @@ class MP3DemoSkill(MycroftSkill):
             try:
                 title = title.encode('ascii')
                 # print 'downloading title with counter: ', counter
-                #if not counter:
-                #    return random.choice(music)  #some margin for randomness, first result isnt always accurate, (gets slower...)
+                if not counter:
+                    return random.choice(music)  #some margin for randomness, first result isnt always accurate, (gets slower...)
                 print 'downloading title: ', title
 
                 self.add_result("Dowloaded_Song", title)
