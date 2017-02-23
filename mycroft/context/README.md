@@ -22,7 +22,7 @@ run main.py
 
 # dev usage
         WORK IN PROGRESS
-        dont know how to register context with adapt yet
+        dont know how to register context with adapt yet, this seems to be the wrong place
 check [intent skill](https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skills/intent/__init__.py)
 
 # install
