@@ -212,7 +212,7 @@ class ContextService():
         self.results_dict[key] = results
         #logger.info("Updated context for results from "+key)
         for result in results:
-           # print result
+            print result
             params = [result]  # if you send a string instead it is taken like a list of chars
             if result not in self.vocab and result != "skill_name":
                 self.register_context(params, type="skill_result")
