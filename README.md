@@ -10,7 +10,6 @@
 - [Vision Service](https://github.com/JarbasAI/mycroft-vision-service)
 - [Freewill Service](https://github.com/JarbasAI/mycroft---freewill---service)
 - [Audio Analisys Service](https://github.com/JarbasAI/mycroft-audio-analisys--service)
-- [Sentiment Analisys Service](https://github.com/JarbasAI/mycroft---sentiment-analisys---service)
 - [Context Manager Service](https://github.com/JarbasAI/mycroft---context-manager---service)
 
 
@@ -33,6 +32,7 @@
 - [Mood Quotes Skill](https://github.com/JarbasAI/mycroft-mood-quotes)
 - [Leaks Skill](https://github.com/JarbasAI/leaks-skill)
 - [Jarbas Diagnostics Skill](https://github.com/JarbasAI/mycroft-diagnostics-skill)
+- [Sentiment Analisys Service](https://github.com/JarbasAI/mycroft---sentiment-analisys---service) - REFACTORED INTO SKILL
 
 from third partys
 
@@ -202,7 +202,6 @@ Mycroft provides `start.sh` to run a large number of common tasks. This script u
 - run `./start.sh voice`
 - run `./start.sh vision`
 - run `./start.sh dumpmon`
-- run `./start.sh sentiment`
 - run `./start.sh freewill`
 - run `./start.sh fbclient`
 - run `./start.sh context`
