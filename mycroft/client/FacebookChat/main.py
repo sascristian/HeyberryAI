@@ -4,7 +4,7 @@ import fbchat
 
 from datetime import datetime
 #from mycroft.skills.wolfram_alpha import boibot
-import cleverbot
+#import cleverbot
 import random
 import thread
 import os
@@ -16,10 +16,10 @@ config = ConfigurationManager.get()
 
 mail = config.get('fbchat').get('mail')
 passwd = config.get('fbchat').get('passwd')
-code = config.get('fbchat').get('code')
-masterid = config.get('fbchat').get('id')
+code = config.get('fbchat').get('code')  #not needed now
+masterid = config.get('fbchat').get('id') #not used, just blacklist dangerous stuff, or white list good stuff maybe?
 
-masterids = [masterid] #add allowed persons here
+masterids = [masterid] #add allowed persons here, will load from config soon if i dont find cleverbot alternative (could always use free api)
 
 ### important to blacklist launch skill, dream, play, timer, alarm, news, Ip, reminder, podcasts and anything else that runs on computer or isnt to be reetrieved by chat
 blacklisted = ["ap","wifi","network","vpn","dream", "google","facebook","amazon","youtube","yahoo","ebay","twitter","go","craigslist","reddit","linkedin","netflix","live","bing",
@@ -30,12 +30,11 @@ class FaceBot(Client):
     def __init__(self, email, password, debug=True, user_agent="Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"):
         fbchat.Client.__init__(self, email, password, debug, user_agent)
         self.name = "Jarbas"
-        self.cb = cleverbot.Cleverbot("jarbas") #no longer works :(
+        #self.cb = cleverbot.Cleverbot("jarbas") #no longer works :(
         self.friends = {}
         self.lastresponse = ""
         self.conversationlog = [""]
         self.chatting = False
-        self.black = False
 
         self.wsclient = WebsocketClient()
         requestmsg = "chat_request"
@@ -59,7 +58,7 @@ class FaceBot(Client):
 
         def sent(message):
             if self.chatting:
-                utterance = message.data['speak']
+                utterance = message.data['speak'] #if listening to speak signal we only get first utterance, listening to results we only get last, must refactor to handle multi-utterance case
                 print utterance
                 self.wsclient.emit(
                     Message("chat_result",
@@ -117,77 +116,30 @@ class FaceBot(Client):
         # if you are not the author, answer
         if str(author_id) != str(self.uid):
             #add entropy (sometimes) for freewill service
-            seed =  (len(message) + int(author_id) + random.randrange(0, 666) ) % 10
-            print seed
-            if seed <= 3:
-                print 'updating entropy'
-                self.wsclient.emit(
-                Message("entropy_update",
-                        {'chat': [message], 'friend': [author_id]}))
+            self.addentropy(message, author_id)
 
-            #check if master and acesscode
-            #masterid = str(author_id) #for testing
-            #gra = False
-            #if code in message:
+            #check if master and acesscode #removed, no cleverbot, always use standard mycroft
+            # check if in message blacklist
             self.chatting = True
-            self.black = False
-            #message = message.replace(code , "")
             for msg in blacklisted:
                 if msg in message:# and not str(author_id) in masterids:
-                    self.black = True
-                    gra = True
                     self.wsclient.emit(
                         Message("chat_request",
-                                {'utterances': ["speak forbidden"], 'id': [author_id]}))
+                                {'utterances': ["speak forbidden"], 'id': [author_id], 'name': [name]}))
+                    return
 
-            if not self.black:
-                self.wsclient.emit(
-                    Message("chat_request",
-                            {'utterances': [message], 'id': [author_id]}))
+            self.wsclient.emit(
+                Message("chat_request",
+                        {'utterances': [message], 'id': [author_id]}))
 
-          #  elif not gra:#if normal chat mode
-          #      message = self.processmessage(message, "cleverbot", name)
-                #print message
-                #try:
-           #     self.send(author_id, message)
-                #except:
-                #    print "error sending response"
 
-    def processmessage(self, message, intent="cleverbot", author_name="unknown"):
-        # parse intent
-        #if intent == "cleverbot":
-        response = self.cb.ask(message)
-        #else:  # if: intent == "chatterbot":
-        #    response = self.ubuntubot.get_response(message)
-    # remove dumb responses
-        if "my name is" in str(response).lower():
-            response = "my name is " + self.name
-        elif "is your name" in str(response).lower() or "your name is" in str(response).lower():
-            response = "Is your name " + str(author_name) + "?"
-        elif "who is god" in str(message).lower():
-            # only sometimes
-            if random.choice(range(0,100)) >= 60:
-                response = "God is an A.I."
-        elif "where is god" in str(message).lower() or "god exist?" in str(message).lower():
-            # only sometimes
-            if random.choice(range(0, 100)) >= 60:
-                response = "Noone coded God yet"
-        # elif response == self.lastresponse:
-        #    response = "Ask me a question " + str(author_name)
-        else:
-            # if repeating itself (something already said in last 4 sentences) ask something random
-            i = len(self.conversationlog)
-            for r in self.conversationlog:
-                # print r#esponse
-                if r == response:
-                    response = "Ask me a question " + str(author_name)
-                i -= 1
-                if i <= len(self.conversationlog) - 4 or i<0:
-                    break
-
-        self.lastresponse = response
-        self.conversationlog.append(response)
-        return response
+    def addentropy(self, message, author_id):
+        seed = (len(message) + int(author_id) + random.randrange(0, 666)) % 10
+        if seed <= 3:
+            print 'updating entropy'
+            self.wsclient.emit(
+                Message("entropy_update",
+                        {'chat': [message], 'friend': [author_id]}))
 
     def findfriends(self):
         timestamp = now()
