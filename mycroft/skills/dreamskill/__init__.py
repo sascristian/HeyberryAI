@@ -17,8 +17,7 @@ from mycroft.skills.dreamskill.randomart import makeImage
 from mycroft.skills.dreamskill.geopatterns import GeoPattern
 
 import cairosvg
-
-
+from mycroft.configuration import ConfigurationManager
 
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
@@ -98,7 +97,7 @@ class DreamSkill(MycroftSkill):
 		#    ,
 
 		# random dreaming mode choice
-		self.choice = self.config["mode"]  # guided dream=1 normal = 0 guided with dif layers in source and guide = 3
+		self.choice = 0#self.config["mode"]  # guided dream=1 normal = 0 guided with dif layers in source and guide = 3
 
 		# Define the codec and create VideoWriter object
 		self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -648,15 +647,15 @@ class DreamSkill(MycroftSkill):
 			try:
 				dreampic = imutils.resize(cv2.imread(imagepah), self.w, self.h)  # cv2.resize(img, (640, 480))
 				self.dreaming = True
-				image = self.bc.dream(np.float32(dreampic), end=layer)
+				image = self.bc.dream(np.float32(dreampic),end=layer)
 				# write the output image to file
 				result = Image.fromarray(np.uint8(image))
 				outpath = self.outputdir+"/" + str(i) + ".jpg"
 				result.save(outpath)
-				dreampic = cv2.imread(self.outputdir+"/" + str(i) + ".jpg")
+				dreampic = cv2.imread(outpath)
 				# draw the layer name on the image
 				#cv2.putText(dreampic, layer, (5, dreampic.shape[0] - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.95, (0, 255, 0), 2)
-				cv2.imwrite(self.outputdir+"/" + str(i) + ".jpg", dreampic)
+				#cv2.imwrite(outpath, dreampic)
 				# apply filters
 				#filter = random.choice(range(0, 8))
 				#dreampic = self.filterdream(filter, dreampic)
@@ -694,9 +693,13 @@ class DreamSkill(MycroftSkill):
 				if self.choice != 1:
 					layer = random.choice(self.layers)  # different layer for guide
 				dreampic = imutils.resize(cv2.imread(sourcepath), self.w, self.h)  # cv2.resize(img, (640, 480))
+
+				#### this is failing out of nowhere, it used to work, help debug!!!! use dream mode 0 for now
+
 				image = self.bc.dream(np.float32(dreampic), end=layer,
-									  iter_n=self.iter, objective_fn=BatCountry.guided_objective,
+									  iter_n=int(self.iter), objective_fn=self.bc.guided_objective,
 									  objective_features=features)
+
 				# write the output image to file
 				result = Image.fromarray(np.uint8(image))
 				outpath = self.outputdir+"/" + str(i) + ".jpg"
@@ -721,7 +724,7 @@ class DreamSkill(MycroftSkill):
 				print "failed with layer: " +layer + " in model: " + self.model
 				print "with guide: " + guidepath + " \nwith source: " + sourcepath
 				fails +=1
-		print "failed 5 times to dream for unknown reason, someone help debug this!!!"
+		print "failed 5 times to dream for unknown reason, someone help debug this!!! something to do with guided dreaming"
 		self.dreaming = False
 		self.speak("Could not dream this time")
 		return None
