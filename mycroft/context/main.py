@@ -25,6 +25,7 @@ class ContextService():
         client.emitter.on("context_key_request", self.handle_key_context_request)
         client.emitter.on("context_key_override", self.handle_key_context_override)
         client.emitter.on("register_intent", self.handle_register_intent)
+        client.emitter.on("chat_request", self.handle_fbchat_intent)
 
         ############## database
         self.vocab = [] #all keys
@@ -42,6 +43,8 @@ class ContextService():
         self.signals_dict = {}# messagebus signals data
         # abstract data
         self.abstract_dict = {}# other data
+        # facebook hcat data
+        self.fbchat_dict = {}# userid: last sentence   and   username: userid
 
         #future / POC
         self.bluetooth_dict = {"me":True} # bluetooth ids for user presence    666 : False
@@ -74,6 +77,8 @@ class ContextService():
                     self.abstract_dict.setdefault(name)
                 elif type == "bluetooth":
                     self.bluetooth_dict.setdefault(name)
+                elif type == "facebook":
+                    self.fbchat_dict.setdefault(name)
 
 
                 print "registering context " + name + "   type: " + type
@@ -137,6 +142,20 @@ class ContextService():
                 self.manager.inject_context(entity=key, metadata=self.regex_dict[key])
 
     #### implement more signals
+
+    def handle_fbchat_intent(self, message):
+        # just for expansion, may be usefull to have intents in the future
+        # print message.data["name"]
+        user = message.data["id"]
+        username = message.data["name"]
+        data = message.data["utterances"]
+        # print data
+        self.register_context([user], type="facebook")
+        self.context_dict[user] = data  # populate
+        self.context_dict[username] = user  # populate
+        self.fbchat_dict[user] = data  # populate
+        self.fbchat_dict[username] = user  # populate
+        print "populating fbchat user id: " + user + " user name: " + username + " with data: " + data
 
     def handle_register_intent(self, message):
         # just for expansion, may be usefull to have intents in the future
