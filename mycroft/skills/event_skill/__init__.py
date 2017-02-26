@@ -6,7 +6,6 @@ from mycroft.skills.scheduled_skills import ScheduledSkill, Timer
 from adapt.intent import IntentBuilder
 from mycroft.messagebus.message import Message
 
-
 import time
 from time import mktime
 
@@ -25,44 +24,44 @@ class EventSkill(ScheduledSkill):
         self.waiting = True
 
     def initialize(self):
-        print 'INITIALIZE ', self.name
         self.times = []
         self.events = self.config
 
         for e in self.events:
             self.register_vocabulary(e, 'EventKeyword')
-            print e
+            logger.debug(e)
             if 'time' in self.events[e]:
                 self.add_event(e)
 
-        intent = IntentBuilder('EventIntent')\
-                 .require('EventKeyword')\
-                 .build()
+        intent = IntentBuilder('EventIntent') \
+            .require('EventKeyword') \
+            .build()
         self.register_intent(intent, self.handle_run_event)
 
         self.register_vocabulary('cancel events', 'CancelEventsKeyword')
-        intent = IntentBuilder('CancelEventsIntent')\
-                 .require('CancelEventsKeyword')\
-                 .build()
+        intent = IntentBuilder('CancelEventsIntent') \
+            .require('CancelEventsKeyword') \
+            .build()
         self.register_intent(intent, self.handle_cancel_events)
-
 
         self.emitter.on('recognizer_loop:audio_output_end',
                         self.ready_to_continue)
-        print self.times 
         self.schedule()
-    
+
     def add_event(self, event):
         now = self.get_utc_time()
-        time = self.get_utc_time(self.events[event]['time'])
-        if time <= now:
-            time += self.SECONDS_PER_DAY
-        self.times.append((time, event))
-        self.times = sorted(self.times)
-        self.times.reverse()
+        conf_times = self.events[event]['time']
+        if not isinstance(conf_times, list):
+            conf_times = [conf_times]
+        for t in conf_times:
+            time = self.get_utc_time(t)
+            if time <= now:
+                time += self.SECONDS_PER_DAY
+            self.times.append((time, event))
+            self.times = sorted(self.times)
+            self.times.reverse()
 
     def ready_to_continue(self, message):
-        print "!!!!!!!!!!!!!!speech is done"
         self.waiting = False
 
     def repeat(self, event):
@@ -71,7 +70,6 @@ class EventSkill(ScheduledSkill):
     def execute_event(self, event):
         for a in self.events[event]['actions']:
             self.waiting = True
-            print a
             for key in a:
                 self.emitter.emit(Message(key, a[key]))
             timeout = 0
@@ -80,7 +78,6 @@ class EventSkill(ScheduledSkill):
 
     def notify(self, timestamp, event):
 
-        print event, self.config[event]
         self.execute_event(event)
         self.repeat(event)
         self.schedule()
@@ -89,7 +86,7 @@ class EventSkill(ScheduledSkill):
         if len(self.times) > 0:
             return [self.times.pop()]
         else:
-            print 'No further events'
+            logger.debug('No further events')
             return []
 
     def schedule(self):
@@ -100,7 +97,7 @@ class EventSkill(ScheduledSkill):
             t, event = times[0]
             now = self.get_utc_time()
             delay = max(float(t) - now, 1)
-            print 'starting event in ' + str(delay)
+            logger.debug('starting event in ' + str(delay))
             self.timer = Timer(delay, self.notify, [t, event])
             self.start()
 
