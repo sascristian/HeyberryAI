@@ -85,7 +85,7 @@ class ContextService():
 
     def register_abstract(self):
         # params that are not listened from bus but are otherwise wanted
-        params = ["start time up", "language", "name", "location", "last_heard","last_spoken"] #name #location
+        params = ["start time up", "language", "name", "location", "last_heard","last_spoken","last_seen_timestamp","last_heard_timestamp","last_spoken_timestamp"] #name #location
         self.register_context(params)
         self.context_dict["start up time"] = time.time()
         self.context_dict["language"] = "english"
@@ -96,6 +96,8 @@ class ContextService():
         self.abstract_dict["language"] = "english"
         self.abstract_dict["name"] = "jarbas"
         self.abstract_dict["location"] = "internet"  # TODO get this from config
+
+
 
     def register_signals(self):
         params = ["utterance", "utterances", "dopamine", "serotonine", "tiredness", "last_tought", "last_action", "mood", "movement", "number of persons", "master", "smile detected"]
@@ -112,6 +114,7 @@ class ContextService():
         # redudnacy
         self.signals_dict["fails"] = 0
         self.signals_dict["last_fail"] = "achieve sentience"
+
 
     def handle_register_skill(self, message):
         params = [message.data.get("skill_name")]
@@ -194,6 +197,10 @@ class ContextService():
             self.context_dict[name] = message.data.get(name)
             self.signals_dict[name] = message.data.get(name)
 
+        if message.data.get("number of persons") > int(0):
+            self.context_dict["last_seen_timestamp"] = time.asctime()
+            self.abstract_dict["last_seen_timestamp"] = time.asctime()
+
     def handle_freewill_result(self, message):
         params = ["dopamine", "serotonine", "tiredness", "last_tought", "last_action", "mood"]
         for name in params:
@@ -207,7 +214,10 @@ class ContextService():
             self.context_dict[name] = message.data.get(name)
             self.signals_dict[name] = message.data.get(name)
 
-        self.context_dict["last_spoken"] = self.context_dict["utterance"] #probably shared key, may be over-riden by other signal , registering synonim key
+        self.context_dict["last_spoken"] = self.context_dict["utterance"]
+        self.abstract_dict["last_spoken"] = self.context_dict["utterance"]
+        self.context_dict["last_spoken_timestamp"] = time.asctime()
+        self.abstract_dict["last_spoken_timestamp"] = time.asctime()
 
     def handle_recognizer_loop_utterance(self, message):
         params = ["utterances","source"]
