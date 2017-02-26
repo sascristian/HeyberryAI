@@ -92,7 +92,6 @@ then
   start-mycroft dumpmon
   start-mycroft vision
   start-mycroft freewill
-  start-mycroft sentiment
   start-mycroft fbclient
   start-mycroft audioanalisys
   start-mycroft context
@@ -105,7 +104,6 @@ then
   start-mycroft dumpmon
   start-mycroft vision
   start-mycroft freewill
-  start-mycroft sentiment
   start-mycroft fbclient
   start-mycroft audioanalisys
   start-mycroft context
@@ -118,7 +116,6 @@ then
   start-mycroft dumpmon
   start-mycroft vision
   start-mycroft freewill
-  start-mycroft sentiment
   start-mycroft fbclient
   start-mycroft audioanalisys
   start-mycroft context
@@ -132,7 +129,6 @@ then
   stop-mycroft dumpmon
   stop-mycroft vision
   stop-mycroft freewill
-  stop-mycroft sentiment
   stop-mycroft fbclient
   stop-mycroft audioanalisys
   stop-mycroft context

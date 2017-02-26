@@ -15,7 +15,6 @@ case $1 in
 	"sdkdoc") SCRIPT=${TOP}/doc/generate_sdk_docs.py ;;
     "enclosure") SCRIPT=${TOP}/mycroft/client/enclosure/main.py ;;
     "wifi") SCRIPT=${TOP}/mycroft/client/wifisetup/main.py ;;
-    "sentiment") SCRIPT=${TOP}/mycroft/SentimentAnalisys/main.py ;;
     "dumpmon") SCRIPT=${TOP}/mycroft/dumpmon/main.py ;;
     "freewill") SCRIPT=${TOP}/mycroft/Subconscious/main.py ;;
     "vision") SCRIPT=${TOP}/mycroft/OpticalNerve/main.py ;;
