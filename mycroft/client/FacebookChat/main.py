@@ -19,6 +19,8 @@ passwd = config.get('fbchat').get('passwd')
 code = config.get('fbchat').get('code')
 masterid = config.get('fbchat').get('id')
 
+masterids = [masterid] #add allowed persons here
+
 ### important to blacklist launch skill, dream, play, timer, alarm, news, Ip, reminder, podcasts and anything else that runs on computer or isnt to be reetrieved by chat
 blacklisted = ["ap","wifi","network","vpn","dream", "google","facebook","amazon","youtube","yahoo","ebay","twitter","go","craigslist","reddit","linkedin","netflix","live","bing",
 "pinterest","espn","imgur","tumblr","chase","cnn","paypal","instagram","blogspot","apple","fb","seach","find","launch","open","run","play","news","unit","device",
@@ -28,7 +30,7 @@ class FaceBot(Client):
     def __init__(self, email, password, debug=True, user_agent="Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"):
         fbchat.Client.__init__(self, email, password, debug, user_agent)
         self.name = "Jarbas"
-        self.cb = cleverbot.Cleverbot("jarbas")
+        self.cb = cleverbot.Cleverbot("jarbas") #no longer works :(
         self.friends = {}
         self.lastresponse = ""
         self.conversationlog = [""]
@@ -50,29 +52,33 @@ class FaceBot(Client):
             #print self.target
             # emit request as normal user
             self.wsclient.emit(
-                Message("do_not_speak_flag"))
+                Message("do_not_speak_flag_enable"))
             self.wsclient.emit(
                 Message("recognizer_loop:utterance",
-                        {'utterances': [txt]}))
+                        {'utterances': [txt], 'source':'fbchat'}))
 
         def sent(message):
             if self.chatting:
-                utterance = message.data.get('utterance')
+                utterance = message.data['speak']
+                print utterance
                 self.wsclient.emit(
                     Message("chat_result",
                             {'utterances': [utterance]}))
-                self.chatting = False
 
         def answer(message):
             txt = message.data.get('utterances')[0]
             try:
                 print self.send(self.target, txt)
+
             except:
                 print "error sending response"
+            self.wsclient.emit(
+                Message("do_not_speak_flag_disable"))
+            self.chatting = False
 
         self.wsclient.emitter.on(requestmsg, request)
         self.wsclient.emitter.on(resultmsg, answer)
-        self.wsclient.emitter.on("speak", sent)
+        self.wsclient.emitter.on("results", sent)
 
         thread.start_new_thread(connect,())
 
@@ -110,7 +116,7 @@ class FaceBot(Client):
         name = self.friends.get(author_id, "unknown")
         # if you are not the author, answer
         if str(author_id) != str(self.uid):
-            #add entropy (sometimes)
+            #add entropy (sometimes) for freewill service
             seed =  (len(message) + int(author_id) + random.randrange(0, 666) ) % 10
             print seed
             if seed <= 3:
@@ -121,29 +127,29 @@ class FaceBot(Client):
 
             #check if master and acesscode
             #masterid = str(author_id) #for testing
-            gra = False
-            if code in message:
-                self.chatting = True
-                self.black = False
-                message = message.replace(code , "")
-                for msg in blacklisted:
-                    if msg in message and not str(author_id) == str(masterid):
-                        self.black = True
-                        gra = True
-                        self.wsclient.emit(
-                            Message("chat_request",
-                                    {'utterances': ["speak forbidden"], 'id': [author_id]}))
-
-                if not self.black:
+            #gra = False
+            #if code in message:
+            self.chatting = True
+            self.black = False
+            #message = message.replace(code , "")
+            for msg in blacklisted:
+                if msg in message:# and not str(author_id) in masterids:
+                    self.black = True
+                    gra = True
                     self.wsclient.emit(
                         Message("chat_request",
-                                {'utterances': [message], 'id': [author_id]}))
+                                {'utterances': ["speak forbidden"], 'id': [author_id]}))
 
-            elif not gra:#if normal chat mode
-                message = self.processmessage(message, "cleverbot", name)
+            if not self.black:
+                self.wsclient.emit(
+                    Message("chat_request",
+                            {'utterances': [message], 'id': [author_id]}))
+
+          #  elif not gra:#if normal chat mode
+          #      message = self.processmessage(message, "cleverbot", name)
                 #print message
                 #try:
-                self.send(author_id, message)
+           #     self.send(author_id, message)
                 #except:
                 #    print "error sending response"
 

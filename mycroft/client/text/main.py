@@ -75,7 +75,7 @@ def main():
             line = sys.stdin.readline()
             ws.emit(
                 Message("recognizer_loop:utterance",
-                        {'utterances': [line.strip()]}))
+                        {'utterances': [line.strip()], 'source':"cli"}))
     except KeyboardInterrupt, e:
         logger.exception(e)
         event_thread.exit()

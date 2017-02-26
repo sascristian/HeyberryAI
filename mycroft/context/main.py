@@ -191,13 +191,15 @@ class ContextService():
         self.context_dict["last_spoken"] = self.context_dict["utterance"] #probably shared key, may be over-riden by other signal , registering synonim key
 
     def handle_recognizer_loop_utterance(self, message):
-        params = ["utterances"]
+        params = ["utterances","source"]
         for name in params:
             self.context_dict[name] = message.data.get(name)
             self.signals_dict[name] = message.data.get(name)
 
         self.context_dict["last_heard"] =self.context_dict["utterances"]
         self.abstract_dict["last_heard"] = self.context_dict["utterances"]
+        self.context_dict["last_heard_timestamp"] = time.asctime()
+        self.abstract_dict["last_heard_timestamp"] = time.asctime()
 
     def handle_intent_failure(self, message):
         self.context_dict["fails"] = self.context_dict["fails"]+1
@@ -212,7 +214,6 @@ class ContextService():
         self.results_dict[key] = results
         #logger.info("Updated context for results from "+key)
         for result in results:
-            print result
             params = [result]  # if you send a string instead it is taken like a list of chars
             if result not in self.vocab and result != "skill_name":
                 self.register_context(params, type="skill_result")
