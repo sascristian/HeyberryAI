@@ -25,6 +25,7 @@ from mycroft.util.log import getLogger
 
 import thread
 import unirest
+import random
 
 __author__ = 'jarbas'
 
@@ -82,23 +83,25 @@ class SentimentSkill(MycroftSkill):
             require("SentimentKeyword").build()
         self.register_intent(sentiment_intent, self.handle_sentiment_intent)
 
-        sentiment2_intent = IntentBuilder("SentimentIntent"). \
+        sentiment2_intent = IntentBuilder("Sentiment2Intent"). \
             require("Sentiment2Keyword").build()
-        self.register_intent(sentiment_intent, self.handle_sentiment2_intent)
+        self.register_intent(sentiment2_intent, self.handle_sentiment2_intent)
 
-        sentiment_intent3 = IntentBuilder("SentimentIntent"). \
-            require("SentimentK3eyword").build()
-        self.register_intent(sentiment_intent, self.handle_sentiment3_intent)
+        sentiment3_intent = IntentBuilder("Sentiment3Intent"). \
+            require("Sentiment3Keyword").build()
+        self.register_intent(sentiment3_intent, self.handle_sentiment3_intent)
 
     def handle_sentiment_intent(self, message):
-        txt = "hello, this is just to check if its working, what is life"
+        txt = ["i love you", "i hate you", "where are the ninjas"]
+        txt = random.choice(txt)
         sent, conf = self.sentiment(txt)
         self.speak(txt)
         self.speak("Sentiment " + sent)
         self.speak("Confidence " + conf)
 
     def handle_sentiment2_intent(self, message):
-        txt = "hello, this is just to check if its working, i hate you"
+        txt = ["i love you", "i hate you", "where are the ninjas"]
+        txt = random.choice(txt)
         sent, posconf, negconf = self.sentiment2(txt)
         self.speak(txt)
         self.speak("Sentiment " + sent)
@@ -106,7 +109,8 @@ class SentimentSkill(MycroftSkill):
         self.speak("Negative Confidence " + negconf)
 
     def handle_sentiment3_intent(self, message):
-        txt = "hello, this is just to check if its working, i love you"
+        txt = ["i love you", "i hate you", "where are the ninjas"]
+        txt = random.choice(txt)
         sent, conf = self.sentiment3(txt)
         self.speak(txt)
         self.speak("Sentiment " + sent)
@@ -137,9 +141,13 @@ class SentimentSkill(MycroftSkill):
                                    "Accept": "application/json"
                                }
                                )
-        print response
-        pos = response.body["pos"]
-        neg = response.body["neg"]
+        # why did this start giving an error? it was working in the service, maybe api is down or changed something
+        if "Internal Server Error" in response.body:
+            pos = "Internal Server Error"
+            neg = "Internal Server Error"
+        else:
+            pos = response.body["pos"]
+            neg = response.body["neg"]
 
         # do some processing instead of printing
         if neg < 0.5 and pos > 0.5:
