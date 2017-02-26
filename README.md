@@ -32,7 +32,7 @@
 - [Mood Quotes Skill](https://github.com/JarbasAI/mycroft-mood-quotes)
 - [Leaks Skill](https://github.com/JarbasAI/leaks-skill)
 - [Jarbas Diagnostics Skill](https://github.com/JarbasAI/mycroft-diagnostics-skill)
-- [Sentiment Analisys Service](https://github.com/JarbasAI/mycroft---sentiment-analisys---service) - REFACTORED INTO SKILL
+- [Sentiment Analisys Service](https://github.com/JarbasAI/mycroft---sentiment-analisys---service) - REFACTORED INTO [SKILL](https://github.com/JarbasAI/mycroft---sentiment-analisys---skill)
 
 from third partys
 

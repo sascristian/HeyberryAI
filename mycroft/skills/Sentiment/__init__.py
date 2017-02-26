@@ -1,19 +1,4 @@
-# Copyright 2016 Mycroft AI, Inc.
-#
-# This file is part of Mycroft Core.
-#
-# Mycroft Core is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Mycroft Core is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from os.path import dirname
 
@@ -105,8 +90,8 @@ class SentimentSkill(MycroftSkill):
         sent, posconf, negconf = self.sentiment2(txt)
         self.speak(txt)
         self.speak("Sentiment " + sent)
-        self.speak("Positive Confidence " + posconf)
-        self.speak("Negative Confidence " + negconf)
+        self.speak("Positive Confidence " + str(posconf))
+        self.speak("Negative Confidence " + str(negconf))
 
     def handle_sentiment3_intent(self, message):
         txt = ["i love you", "i hate you", "where are the ninjas"]
