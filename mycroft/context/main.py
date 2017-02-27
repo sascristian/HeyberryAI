@@ -97,8 +97,6 @@ class ContextService():
         self.abstract_dict["name"] = "jarbas"
         self.abstract_dict["location"] = "internet"  # TODO get this from config
 
-
-
     def register_signals(self):
         params = ["utterance", "utterances", "dopamine", "serotonine", "tiredness", "last_tought", "last_action", "mood", "movement", "number of persons", "master", "smile detected"]
         for name in params:
@@ -114,7 +112,6 @@ class ContextService():
         # redudnacy
         self.signals_dict["fails"] = 0
         self.signals_dict["last_fail"] = "achieve sentience"
-
 
     def handle_register_skill(self, message):
         params = [message.data.get("skill_name")]
@@ -135,8 +132,13 @@ class ContextService():
 
     def register_with_adapt(self, key):
         if key is not None:
-            print "injecting context " + key + " with value " + self.regex_dict[key]
-            self.manager.inject_context(entity=key, metadata=self.regex_dict[key])
+            print "injecting adapt context manager key: " + key + "\nwith value: " + self.regex_dict[key]
+            #self.manager.inject_context(entity=key, metadata=self.regex_dict[key])
+
+            entity = {'key': key, 'data': self.regex_dict[key], 'confidence': 1.0}
+            self.manager.inject_context(entity)
+            context = self.manager.get_context()
+            print context
 
     def register_with_adapt_all(self, message):
         for key in self.regex_dict:
@@ -315,6 +317,7 @@ class ContextService():
     def listen(self):
         global client
         client.run_forever()
+
 
 
 manager = ContextService()
