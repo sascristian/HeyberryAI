@@ -36,49 +36,21 @@ class ContextSkill(MycroftSkill):
 
     def __init__(self):
         super(ContextSkill, self).__init__(name="ContextSkill")
-        self.manager = ContextManager()
-        self.flag = False #results received flag
         #self.context_dict = {}
 
     def initialize(self):
         self.load_data_files(dirname(__file__))
-
-        self.emitter.on("context_result", self.handle_context_result)
-        #### receives the following data
-        #  Message("context_result", {'full_dictionary': self.context_dict,'bluetooth': self.bluetooth_dict, 'abstract': self.abstract_dict, 'signals': self.signals_dict, 'results': self.results_dict, 'intents': self.intents_dict,'regex': self.regex_dict,'skills': self.skills_dict})
 
         context_intent = IntentBuilder("ContextTestIntent")\
             .require("contextKeyword").build()
         self.register_intent(context_intent,
                              self.handle_context_intent)
 
-    def handle_context_result(self, message):
-        dict = message.data["regex"]
-        for key in dict:
-            #adapt way
-            if dict[key] is not None:
-                entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
-                #check for duplicates before injecting,  shouldnt this be auto-handled by adapt?
-                contexts = self.manager.get_context()
-                flag = False
-                for ctxt in contexts:
-                    if ctxt["key"] == key and ctxt["data"] == dict[key]:
-                        flag = True #its duplicate!
-                if not flag:
-                    self.manager.inject_context(entity)
-                    print "injecting " + str(entity)
-
-
-            #old school way
-            #    if key not in self.context_dict:
-            #        self.context_dict.setdefault(key)
-            #    self.context_dict[key] = dict[key]
-
-        self.flag = True
+        self.emitter.on("context_result", self.handle_context_result)   ### only thing you need to have context in your skill!
 
     def handle_context_intent(self, message):
         self.emitter.emit(Message("context_request"))
-        while not self.flag:
+        while not self.context_flag:
             pass #wait results response
         self.speak_dialog("ctxt")
 
@@ -86,7 +58,6 @@ class ContextSkill(MycroftSkill):
 
         #adapt way
         for ctxt in contexts:
-            #print ctxt
             if ctxt["data"] is not None:
                 self.speak(ctxt["key"])
                 self.speak(ctxt["data"])
@@ -96,7 +67,8 @@ class ContextSkill(MycroftSkill):
         #    if self.context_dict[ctxt] is not None:
         #        self.speak(ctxt)
         #        self.speak(self.context_dict[ctxt])
-        self.flag = False
+        self.context_flag = False
+
 
     def stop(self):
         pass

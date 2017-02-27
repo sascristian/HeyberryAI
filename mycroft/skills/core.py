@@ -31,6 +31,7 @@ from mycroft.dialog import DialogLoader
 from mycroft.filesystem import FileSystemAccess
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
+from adapt.context import ContextManager
 
 __author__ = 'seanfitz'
 
@@ -182,6 +183,12 @@ class MycroftSkill(object):
         self.registered_intents = []
         self.log = getLogger(name)
         self.results = {}
+        ##### global context
+        self.manager = ContextManager()
+        self.context_flag = False #results received flag
+
+        #### receives the following data
+        #  Message("context_result", {'full_dictionary': self.context_dict,'bluetooth': self.bluetooth_dict, 'abstract': self.abstract_dict, 'signals': self.signals_dict, 'results': self.results_dict, 'intents': self.intents_dict,'regex': self.regex_dict,'skills': self.skills_dict})
 
     @property
     def location(self):
@@ -233,6 +240,25 @@ class MycroftSkill(object):
         Usually used to create intents rules and register them.
         """
         raise Exception("Initialize not implemented for skill: " + self.name)
+
+    def handle_context_result(self, message):
+        dict = message.data["regex"]
+        for key in dict:
+            # adapt way
+            if dict[key] is not None:
+                entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
+                # check for duplicates before injecting,  shouldnt this be auto-handled by adapt?
+                contexts = self.manager.get_context()
+                flag = False
+                for ctxt in contexts:
+                    if ctxt["key"] == key and ctxt["data"] == dict[key]:
+                        flag = True  # its duplicate!
+                if not flag:
+                    self.manager.inject_context(entity)
+                    print "injecting " + str(entity)
+
+        self.context_flag = True
+
 
     def register_intent(self, intent_parser, handler):
         self.emitter.emit(Message("register_intent", intent_parser.__dict__))

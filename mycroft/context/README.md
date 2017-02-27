@@ -64,9 +64,9 @@ check [example skill](https://github.com/JarbasAI/jarbas-core/tree/dev/mycroft/s
 
 in this case asking mycroft for context test will output the following, after having searched wikipedia for dinosaurs
 
-2017-02-26 21:36:44,226 - CLIClient - INFO - Speak: the following contexts are available in adapt context manager
-2017-02-26 21:36:51,553 - CLIClient - INFO - Speak: ArticleTitle
-2017-02-26 21:36:54,892 - CLIClient - INFO - Speak: dinosaurs
+        2017-02-26 21:36:44,226 - CLIClient - INFO - Speak: the following contexts are available in adapt context manager
+        2017-02-26 21:36:51,553 - CLIClient - INFO - Speak: ArticleTitle
+        2017-02-26 21:36:54,892 - CLIClient - INFO - Speak: dinosaurs
 
 still struggling a bit with adapt context manager integation, example skill needs to be polished , consider it a proof of concept only, yet to be integrated in adapt
 
