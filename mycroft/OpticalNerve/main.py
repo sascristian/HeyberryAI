@@ -83,7 +83,7 @@ class OpticalNerve():
         global client
         client = WebsocketClient()
 
-        client.emitter.on("context_update", self.handle_update_request())
+        client.emitter.on("context_update", self.handle_update_request)
 
         event_thread = Thread(target=connect)
         event_thread.setDaemon(True)
