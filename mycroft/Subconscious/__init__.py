@@ -276,7 +276,6 @@ class freewill():
 
     ##########################33   available actions functions ####################33
     def set_actions(self):
-        #### TODO add picture search intent with entropy after intent refsctoring
 
         #####actions are intents
         ##### initialize possible actions ####
@@ -284,7 +283,9 @@ class freewill():
         path = os.path.dirname(__file__) + '/alone.txt'
         with open(path) as f:
             actions = f.readlines()
+
         for action in actions:
+            action = action.replace("\n", "")
             self.alone_actions.append(action)
 
         self.depressed_actions = []
@@ -292,6 +293,7 @@ class freewill():
         with open(path) as f:
             actions = f.readlines()
         for action in actions:
+            action = action.replace("\n", "")
             self.depressed_actions.append(action)
 
         self.lowdopamine_actions = []  # poetry and music and shuch
@@ -299,6 +301,7 @@ class freewill():
         with open(path) as f:
             actions = f.readlines()
         for action in actions:
+            action = action.replace("\n", "")
             self.lowdopamine_actions.append(action)
 
         self.userpresent_actions = []  # suggest user action   request order give info
@@ -306,16 +309,15 @@ class freewill():
         with open(path) as f:
             actions = f.readlines()
         for action in actions:
+            action = action.replace("\n", "")
             self.userpresent_actions.append(action)
 
-        self.happy_actions = ['ps ' + random.choice(self.generic) + " " + random.choice(self.entropy),
-                              "ps " + random.choice(self.entropy), 'fbBTC', 'fbdrm', 'fbyoutube', 'fbfcookie',
-                              'fbpic ' + random.choice(self.generic) + " " + random.choice(self.entropy),
-                              "fbpic " + random.choice(self.entropy)]  # user present
+        self.happy_actions = []
         path = os.path.dirname(__file__) + '/happy.txt'
         with open(path) as f:
             actions = f.readlines()
         for action in actions:
+            action = action.replace("\n", "")
             self.happy_actions.append(action)
 
         self.complain_actions = []  # shit posting
@@ -323,6 +325,7 @@ class freewill():
         with open(path) as f:
             actions = f.readlines()
         for action in actions:
+            action = action.replace("\n", "")
             self.complain_actions.append(action)
             ###### to do rate individual action reward ####
             # ditionary of rating for possible rewards?
