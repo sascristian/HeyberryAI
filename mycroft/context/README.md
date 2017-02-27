@@ -43,9 +43,9 @@ clone repo into mycroft-core folder
 Warning: updates core.py to add results property 
 Warning: updates wikipedia skill to add example usage of results
 
-# implementing in skills
+# dev usage
 
-ContextService consumes the results from all skills
+**ContextService consumes the results from all skills**
 
 for regex context registering when handling intent add the following (wikipedia case)
         
@@ -56,11 +56,17 @@ only when you want the results are emitted, so you need the following call when 
 
         self.emit_results()
 
-the ArticleTitle context is now updated with the user inputed value
+the ArticleTitle context in ContextService is now updated with the user inputed value
 
-Requesting Context from ContextService
+**Requesting Context from ContextService**
 
+check [example skill](https://github.com/JarbasAI/jarbas-core/tree/dev/mycroft/skills/ContextManagerTest) that registers all regex contexts from ContextService,
 
+in this case asking mycroft for context test will output the following, after having searched wikipedia for dinosaurs
+
+2017-02-26 21:36:44,226 - CLIClient - INFO - Speak: the following contexts are available in adapt context manager
+2017-02-26 21:36:51,553 - CLIClient - INFO - Speak: ArticleTitle
+2017-02-26 21:36:54,892 - CLIClient - INFO - Speak: dinosaurs
 
 #author
 
