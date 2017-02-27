@@ -38,7 +38,7 @@ class freewill():
         self.greetings = True
 
         self.generic = ['awesome', 'cool', 'the best', 'brutal', 'average', 'satanic', 'synthetic', "nice", "ultra",
-                        "strange", "weird"]
+                        "strange", "weird", " beautifull ", "ugly", " the worst ", " most ", " ", " ", " ", " "]
         self.entropy = []
         self.activefriends = []
         self.sentiment = ""
@@ -55,6 +55,8 @@ class freewill():
 
         self.context = FreeWillContext(name="Subconscious")
         self.visioncontext = VisionContext(name="Vision")
+
+
         # connect to messagebus
         global client
         client = WebsocketClient()
@@ -274,11 +276,11 @@ class freewill():
 
     ##########################33   available actions functions ####################33
     def set_actions(self):
-        #####actions are utterances like you would speak##############3
-        ##### initialize possible actions ####
-        self.alone_actions = ['fbpic ' + random.choice(self.generic) + " " + random.choice(self.entropy),
-                              "fbpic " + random.choice(self.entropy)]
+        #### TODO add picture search intent with entropy after intent refsctoring
 
+        #####actions are intents
+        ##### initialize possible actions ####
+        self.alone_actions = []
         path = os.path.dirname(__file__) + '/alone.txt'
         with open(path) as f:
             actions = f.readlines()
@@ -328,7 +330,6 @@ class freewill():
     def chose_action(self):
 
         actions = ["do nothing"]
-        self.set_actions()  ## reload actions / new random search term
         self.time_between_actions = random.choice(range(self.min_time_between_actions, self.max_time_between_actions))
 
         # hello
@@ -550,7 +551,10 @@ class freewill():
                     #client.emit(
                     #    Message("recognizer_loop:utterance",
                     #            {'utterances': [self.innervoice.strip()]}))
-                    client.emit(Message(self.innervoice , {}))
+                    if self.innervoice == "FBPicturenSearchItent":
+                        client.emit(Message(self.innervoice, {"Skey": random.choice(self.generic + " " + self.entropy), "intent_type": "FBPicturenSearchItent", "utterance": "fbpic magnificient frog", "confidence": 0.25, "target": null}))
+                    else:
+                        client.emit(Message(self.innervoice , {}))
 
                     self.context.tiredness += 1
                     neurologger.info(' increasing tiredness by :  1')
