@@ -1,5 +1,5 @@
-depressed
-evil poem
-fbmetl
-fact
-quote
+DepressedIntent
+ReciteSatanicPoetryIntent
+FbPoetryIntent
+factIntent
+quoteIntent

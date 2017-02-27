@@ -1,19 +1,16 @@
-fbBTC
-fbdrm
-fbyoutube
-fbmkfrnd
-fblike
-fbfcookie
-fbreddit
-fbquote
-fbfact
-poem
-fbproxy
-fbmetl
-agpost
-fbart
-dream
-recursive dream
-pure dream
-psy dream
-fbpickup
+fbBTCIntent
+FbdreamIntent
+YoutubeIntent
+FbFortuneIntent
+FbRedditIntent
+FbQuoteIntent
+FbFactIntent
+RecitePoetryIntent
+FbProxyIntent
+FbPoetryIntent
+FbArticleIntent
+DreamIntent
+DreamAboutDreamsIntent
+PureDreamIntent
+PsyDreamIntent
+FbpickupIntent

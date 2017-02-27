@@ -1,2 +1,2 @@
-complain
-gore poem
+ComplainIntent
+ReciteGorePoetryIntent

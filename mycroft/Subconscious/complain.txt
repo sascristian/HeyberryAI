@@ -1,7 +1,6 @@
-lonely
-fbtime
-fbfriends
-fbwthr
-fbdrm
-fd
-article
+LonelyIntent
+FbtimeIntent
+FbfriendnumberIntent
+FbweatherIntent
+FbdreamIntent
+FullDiagnosticsIntent

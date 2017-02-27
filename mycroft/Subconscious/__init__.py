@@ -278,6 +278,7 @@ class freewill():
         ##### initialize possible actions ####
         self.alone_actions = ['fbpic ' + random.choice(self.generic) + " " + random.choice(self.entropy),
                               "fbpic " + random.choice(self.entropy)]
+
         path = os.path.dirname(__file__) + '/alone.txt'
         with open(path) as f:
             actions = f.readlines()
@@ -546,9 +547,11 @@ class freewill():
                 if self.innervoice != 'do nothing' and self.context.time_since_order > self.time_between_actions:
                     # execute chosen action
                     logger.info(' action : ' + self.innervoice)
-                    client.emit(
-                        Message("recognizer_loop:utterance",
-                                {'utterances': [self.innervoice.strip()]}))
+                    #client.emit(
+                    #    Message("recognizer_loop:utterance",
+                    #            {'utterances': [self.innervoice.strip()]}))
+                    client.emit(Message(self.innervoice , {}))
+
                     self.context.tiredness += 1
                     neurologger.info(' increasing tiredness by :  1')
                     self.modify_hormones_from_action()
