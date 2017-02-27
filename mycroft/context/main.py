@@ -53,8 +53,6 @@ class ContextService():
         self.register_signals()
         self.register_abstract()
 
-        #### adapt
-        self.manager = ContextManager()
 
     ####### init / helper functions
 
@@ -87,7 +85,7 @@ class ContextService():
         # params that are not listened from bus but are otherwise wanted
         params = ["start time up", "language", "name", "location", "last_heard","last_spoken","last_seen_timestamp","last_heard_timestamp","last_spoken_timestamp"] #name #location
         self.register_context(params)
-        self.context_dict["start up time"] = time.time()
+        self.context_dict["start up time"] = time.asctime()
         self.context_dict["language"] = "english"
         self.context_dict["name"] = "jarbas"
         self.context_dict["location"] = "internet" # TODO get this from config
