@@ -62,7 +62,7 @@ class freewill():
         client = WebsocketClient()
 
         client.emitter.on("diagnostics_request", self.diagnostics)
-        client.emitter.on('vision_update', self.contextupdate)
+        client.emitter.on('vision_result', self.contextupdate)
         client.emitter.on('recognizer_loop:utterance', self.action)
         client.emitter.on('dopamine_increase_request', self.increasedopamine)
         client.emitter.on('dopamine_decrease_request', self.decreasedopamine)
@@ -554,10 +554,11 @@ class freewill():
                     #client.emit(
                     #    Message("recognizer_loop:utterance",
                     #            {'utterances': [self.innervoice.strip()]}))
+                    data = {}
                     if self.innervoice == "FBPicturenSearchItent":
-                        client.emit(Message(self.innervoice, {"Skey": random.choice(self.generic + " " + self.entropy), "intent_type": "FBPicturenSearchItent", "utterance": "fbpic magnificient frog", "confidence": 0.25, "target": null}))
-                    else:
-                        client.emit(Message(self.innervoice , {}))
+                        data = {"Skey": random.choice(self.generic + " " + self.entropy)}
+
+                    client.emit(Message(self.innervoice , data))
 
                     self.context.tiredness += 1
                     neurologger.info(' increasing tiredness by :  1')
