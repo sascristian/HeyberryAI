@@ -242,7 +242,7 @@ class MycroftSkill(object):
         raise Exception("Initialize not implemented for skill: " + self.name)
 
     def handle_context_result(self, message):
-        dict = message.data["regex"]
+        dict = message.data["regex"] #should i get all context or just regex?
         for key in dict:
             # adapt way
             if dict[key] is not None:
