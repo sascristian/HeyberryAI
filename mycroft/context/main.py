@@ -124,27 +124,6 @@ class ContextService():
     def get_regex_context(self, result, regex):
         print "\nkey detected " + regex + "\n updating with "+ result
         self.regex_dict[regex] = result #this was already added in results dict also
-        self.register_with_adapt(regex)
-
-                ##### abstract signals  general api yet to be implemented
-
-    ### adapt functions - dont know how to work with this
-
-    def register_with_adapt(self, key):
-        if key is not None:
-            print "injecting adapt context manager key: " + key + "\nwith value: " + self.regex_dict[key]
-            #self.manager.inject_context(entity=key, metadata=self.regex_dict[key])
-
-            entity = {'key': key, 'data': self.regex_dict[key], 'confidence': 1.0}
-            self.manager.inject_context(entity)
-            context = self.manager.get_context()
-            print context
-
-    def register_with_adapt_all(self, message):
-        for key in self.regex_dict:
-            if self.regex_dict[key] is not None:
-                print "injecting context " + key + " with value " + self.regex_dict[key]
-                self.manager.inject_context(entity=key, metadata=self.regex_dict[key])
 
     #### implement more signals
 

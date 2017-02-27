@@ -137,12 +137,11 @@ class ContextSkill(MycroftSkill):
         self.emitter.emit(Message("context_request"))  # update context
         while not self.context_flag:
             pass  # wait results response
-        self.speak_dialog("override")
+        self.speak("the following skills are available")
 
-        for key in self.skills_dict:
-            if self.skills_dict[key] is not None:
-                text = key + " skill context has value " + str(self.skills_dict[key])
-                self.speak(text)
+        for key in self.skills_dict: ### dont have any good values, just skill name for now
+            text = key + " skill"
+            self.speak(text)
 
         self.context_flag = False
 
@@ -203,7 +202,7 @@ class ContextSkill(MycroftSkill):
         dict = message.data["skills"]  # should i get all context or just regex?
         for key in dict:
             # build skill dict for testing
-            self.skills_dict.setdefault(key, dict[key])
+            self.skills_dict.setdefault(key)
 
         self.context_flag = True
 
