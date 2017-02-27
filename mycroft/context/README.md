@@ -40,7 +40,8 @@ run main.py
 
 clone repo into mycroft-core folder
 
-Warning: updates core.py to add results property 
+Warning: updates core.py to add results property and adapt context manager to all skills
+
 Warning: updates wikipedia skill to add example usage of results
 
 # dev usage
@@ -60,15 +61,28 @@ the ArticleTitle context in ContextService is now updated with the user inputed 
 
 **Requesting Context from ContextService**
 
-check [example skill](https://github.com/JarbasAI/jarbas-core/tree/dev/mycroft/skills/ContextManagerTest) that registers all regex contexts from ContextService,
+check [example skill](https://github.com/JarbasAI/jarbas-core/tree/dev/mycroft/skills/ContextManagerTest)
 
-in this case asking mycroft for context test will output the following, after having searched wikipedia for dinosaurs
+in this case asking mycroft for context test will output the following, after having searched wikipedia for god and pictures of dinosaur
 
-        2017-02-26 21:36:44,226 - CLIClient - INFO - Speak: the following contexts are available in adapt context manager
-        2017-02-26 21:36:51,553 - CLIClient - INFO - Speak: ArticleTitle
-        2017-02-26 21:36:54,892 - CLIClient - INFO - Speak: dinosaurs
+        2017-02-26 23:35:42,333 - CLIClient - INFO - Speak: An error occurred while processing a request in ContextSkill
 
-still struggling a bit with adapt context manager integation, example skill needs to be polished , consider it a proof of concept only, yet to be integrated in adapt
+        Input: context test
+        2017-02-26 23:37:51,564 - CLIClient - INFO - Speak: the following contexts are available in adapt context manager
+        2017-02-26 23:37:57,360 - CLIClient - INFO - Speak: ArticleTitle has value god
+        2017-02-26 23:38:00,873 - CLIClient - INFO - Speak: Search has value dinosaur
+
+        Input: personal context
+        2017-02-26 23:38:16,144 - CLIClient - INFO - Speak: the following manually adquired contexts are available
+        2017-02-26 23:38:21,399 - CLIClient - INFO - Speak: name context has value jarbas
+        2017-02-26 23:38:24,697 - CLIClient - INFO - Speak: language context has value english
+        2017-02-26 23:38:28,172 - CLIClient - INFO - Speak: last_heard_timestamp context has value Sun Feb 26 23:37:50 2017
+        2017-02-26 23:38:40,443 - CLIClient - INFO - Speak: last_spoken_timestamp context has value Sun Feb 26 23:35:01 2017
+        2017-02-26 23:38:52,079 - CLIClient - INFO - Speak: last_spoken context has value An error occurred while processing a request in ContextSkill
+        2017-02-26 23:38:59,956 - CLIClient - INFO - Speak: last_heard context has value [u'context test']
+        2017-02-26 23:39:04,435 - CLIClient - INFO - Speak: location context has value internet
+        2017-02-26 23:39:08,279 - CLIClient - INFO - Speak: start up time context has value 1488169816.89
+
 
 #author
 

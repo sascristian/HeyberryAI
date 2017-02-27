@@ -92,7 +92,7 @@ class ContextService():
         self.context_dict["name"] = "jarbas"
         self.context_dict["location"] = "internet" # TODO get this from config
         ### redundancy
-        self.abstract_dict["start up time"] = time.time()
+        self.abstract_dict["start up time"] = time.asctime()
         self.abstract_dict["language"] = "english"
         self.abstract_dict["name"] = "jarbas"
         self.abstract_dict["location"] = "internet"  # TODO get this from config
