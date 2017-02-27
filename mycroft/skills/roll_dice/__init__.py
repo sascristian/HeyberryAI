@@ -14,7 +14,7 @@ class RollDiceSkill(MycroftSkill):
         super(RollDiceSkill, self).__init__(name="RollDiceSkill")
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
 
         roll_a_die_intent = IntentBuilder("RollADieIntent").\
             require("RollADieKeyword").build()

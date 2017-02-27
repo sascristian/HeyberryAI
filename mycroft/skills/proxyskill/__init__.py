@@ -39,7 +39,7 @@ class ProxySkill(MycroftSkill):
         self.limit = 50
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
 
         prefixes = [
             'proxy from', 'proxy form' ]

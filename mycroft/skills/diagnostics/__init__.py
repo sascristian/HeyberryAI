@@ -43,7 +43,6 @@ def and_(strings):
     return "%s and %s" % (", ".join(strings[0:-1]),
                           strings[-1])
 
-
 def sizeof_fmt(num, suffix='Bytes'):
     # Attribution: http://stackoverflow.com/a/1094933/2444609
     for unit in ['Bytes', 'Kilo bytes', 'Megs', 'Gig', 'Tera bytes',
@@ -53,7 +52,6 @@ def sizeof_fmt(num, suffix='Bytes'):
         num /= 1024.0
 
     return "%.1f %s" % (num, 'Yi')
-
 
 def is_exe(fpath):
     # Attribution: http://stackoverflow.com/a/377028/2444609
@@ -71,7 +69,7 @@ class DiagnosticsSkill(MycroftSkill):
             self.diagnostic_script = self.config.get('script')
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         cpu_intent = IntentBuilder("CpuIntent")\
             .require("CpuKeyword")\

@@ -21,7 +21,7 @@ class QuotesSkill(MycroftSkill):
         self.gender = self.config['gender']
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         quote_intent = IntentBuilder("quoteIntent")\
             .require("quote").build()

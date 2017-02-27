@@ -27,7 +27,7 @@ class TranslateSkill(MycroftSkill):
 		super(TranslateSkill, self).__init__('speech_client')
 
 	def initialize(self):
-		self.load_data_files(dirname(__file__))
+		#self.load_data_files(dirname(__file__))
 		self.load_regex_files(join(dirname(__file__), 'regex', 'en-us'))
 
 		intent = IntentBuilder('TranslateIntent')\

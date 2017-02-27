@@ -45,7 +45,7 @@ class PictureSkill(MycroftSkill):
         self.api = cloudsight.API(auth)
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         prefixes = [
             'search picture of', 'show picture of', 'picture of', 'picture search ', 'ps']

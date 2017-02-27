@@ -43,7 +43,7 @@ class PhotoSkill(MycroftSkill):
 
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         prefixes = [
             'photo from',"photolocation","pf"]

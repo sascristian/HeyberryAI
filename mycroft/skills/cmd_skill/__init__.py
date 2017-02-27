@@ -40,7 +40,7 @@ class CmdSkill(MycroftSkill):
             self.alias = self.config.get('alias', {})
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         intent = IntentBuilder('RunScriptCommandIntent')\
                  .require('Script')\

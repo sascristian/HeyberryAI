@@ -45,7 +45,7 @@ class WifiSkill(MycroftSkill):
         self.retrys = 120
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
 
         wifi_diagnostics_intent = IntentBuilder("WifiDiagnosticsIntent"). \
             require("wifidiagnostics").build()

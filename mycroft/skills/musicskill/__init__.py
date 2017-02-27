@@ -61,7 +61,7 @@ class MP3DemoSkill(MycroftSkill):
         self.video_download_folder = self.config["save"]
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
 
         prefixes = [
             'youtube', 'play', 'play from youtube','youtube play','pm']

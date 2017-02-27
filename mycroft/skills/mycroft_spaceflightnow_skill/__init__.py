@@ -29,7 +29,7 @@ class NextLaunchSkill(MycroftSkill):
         super(NextLaunchSkill, self).__init__(name="NextLaunchSkill")
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
         next_launch_intent = IntentBuilder("NextLaunchIntent").\
             require("NextLaunchKeyword").build()
         self.register_intent(next_launch_intent, self.handle_next_launch_intent)

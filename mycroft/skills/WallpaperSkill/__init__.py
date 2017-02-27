@@ -63,7 +63,7 @@ class WallpaperSkill(MycroftSkill):
         thread.start_new_thread(cyclethread, ())
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
 
         start_cycle_intent = IntentBuilder("CycleWallpaperIntent")\
             .require("startcycle").build()

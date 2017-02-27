@@ -62,7 +62,7 @@ class SentimentSkill(MycroftSkill):
         thread.start_new_thread(connect, ())
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         sentiment_intent = IntentBuilder("SentimentIntent"). \
             require("SentimentKeyword").build()

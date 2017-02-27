@@ -14,7 +14,7 @@ class RockPaperScissorsSkill(MycroftSkill):
         super(RockPaperScissorsSkill, self).__init__(name="RockPaperScissorsSkill")
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+      #  self.load_data_files(dirname(__file__))
 
         rock_paper_scissors_intent = IntentBuilder("RockPaperScissorsIntent").\
             require("RockPaperScissorsKeyword").build()

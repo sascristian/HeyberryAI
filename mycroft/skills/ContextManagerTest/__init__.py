@@ -39,7 +39,7 @@ class ContextSkill(MycroftSkill):
         self.context_dict = {} #override example for using in this skill
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         context_intent = IntentBuilder("ContextTestIntent")\
             .require("contextKeyword").build()
@@ -88,7 +88,7 @@ class ContextSkill(MycroftSkill):
     def handle_context_result(self, message):
         #### this is the default function getting all regex contexts
 
-        dict = message.data["regex"] #should i get all context or just regex?
+        dict = message.data["regex"] #should i get all context or just regex? theres lot of "useless" stuff in there
         for key in dict:
             # adapt way
             if dict[key] is not None:

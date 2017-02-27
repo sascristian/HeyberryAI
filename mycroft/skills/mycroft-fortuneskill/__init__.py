@@ -16,7 +16,7 @@ class FortuneSkill(MycroftSkill):
         self.process = None
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
         intent = IntentBuilder('FortuneIntent').require(
             'FortuneKeyword').build()
         self.register_intent(intent, self.handle_intent)

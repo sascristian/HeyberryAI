@@ -42,7 +42,7 @@ class PickupLineSkill(MycroftSkill):
         self.pickupliner = PickupLine()
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         line_intent = IntentBuilder("PKlineIntent"). \
             require("lineKeyword").build()

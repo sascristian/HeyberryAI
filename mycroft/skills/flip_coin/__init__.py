@@ -14,7 +14,7 @@ class FlipCoinSkill(MycroftSkill):
         super(FlipCoinSkill, self).__init__(name="FlipCoinSkill")
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         flip_a_coin_intent = IntentBuilder("FlipACoinIntent").\
             require("FlipACoinKeyword").build()

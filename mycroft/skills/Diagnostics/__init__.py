@@ -126,7 +126,7 @@ class DiagnosticsSkill(MycroftSkill):
         self.event_thread.start()
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
 
         diagnostics_intent = IntentBuilder("FullDiagnosticsIntent"). \
             require("fulldiagnostics").build()

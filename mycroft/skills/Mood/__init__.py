@@ -32,7 +32,7 @@ class MoodSkill(MycroftSkill):
         super(MoodSkill, self).__init__(name="MoodSkill")
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         complain_intent = IntentBuilder("ComplainIntent")\
             .require("complain").build()

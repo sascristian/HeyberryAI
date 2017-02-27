@@ -104,7 +104,7 @@ class LeaksSkill(MycroftSkill):
         self.event_thread.start()
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         oldleaks_intent = IntentBuilder("OldLeaksMailIntent"). \
             require("oldleaks").build()

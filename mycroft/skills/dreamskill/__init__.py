@@ -147,7 +147,7 @@ class DreamSkill(MycroftSkill):
 					self.strings.append(word)
 
 	def initialize(self):
-		self.load_data_files(dirname(__file__))
+		#self.load_data_files(dirname(__file__))
 
 		prefixes = [
 			'dream about', 'dream with', 'dream of', 'dream off', 'da']

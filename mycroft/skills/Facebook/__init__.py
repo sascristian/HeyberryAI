@@ -183,7 +183,7 @@ class FacebookSkill(MycroftSkill):
             self.owm = OWMApi()
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+       # self.load_data_files(dirname(__file__))
 
         prefixes = [
             'fbpic']

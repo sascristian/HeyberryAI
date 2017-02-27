@@ -15,7 +15,7 @@ class SmallTalkSkill(MycroftSkill):
 
     # Intent Initialization
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         # AM I ATTRACTIVE
         am_i_attractive_intent = IntentBuilder("AmIAttractiveIntent").\

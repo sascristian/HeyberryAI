@@ -39,7 +39,7 @@ class PoetrySkill(MycroftSkill):
         self.mode = 1
 
     def initialize(self):
-        self.load_data_files(dirname(__file__))
+        #self.load_data_files(dirname(__file__))
 
         viking_poetry_intent = IntentBuilder("ReciteVikingPoetryIntent") \
             .require("viking").build()
