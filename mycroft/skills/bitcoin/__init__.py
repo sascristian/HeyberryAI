@@ -10,10 +10,6 @@ class BitcoinSkill(MycroftSkill):
         super(BitcoinSkill, self).__init__(name="BitcoinSkill")
 
     def initialize(self):
-        self.load_vocab_files(join(dirname(__file__), 'vocab', 'en-us'))
-
-        #prefixes = ['bitcoin', 'bitcoin price']
-       # self.__register_prefixed_regex(prefixes, "(?P<Word>\w+)")
 
         intent = IntentBuilder("BitcoinIntent").require("BitcoinKeyword").build()
         self.register_intent(intent, self.handle_intent)
