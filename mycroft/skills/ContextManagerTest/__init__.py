@@ -24,8 +24,7 @@ from mycroft.util.log import getLogger
 from adapt.context import ContextManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
-
-import thread
+from time import sleep
 
 __author__ = 'jarbas'
 
@@ -39,23 +38,14 @@ class ContextSkill(MycroftSkill):
         super(ContextSkill, self).__init__(name="ContextSkill")
         self.manager = ContextManager()
         self.flag = False #results received flag
-        ##### messagebus
-        global client
-        client = WebsocketClient()
-
-        client.emitter.on("context_result", self.handle_context_result)
-        #### receives the following data
-        #  Message("context_result", {'full_dictionary': self.context_dict,'bluetooth': self.bluetooth_dict, 'abstract': self.abstract_dict, 'signals': self.signals_dict, 'results': self.results_dict, 'intents': self.intents_dict,'regex': self.regex_dict,'skills': self.skills_dict})
-
-        def connect():
-            client.run_forever()
-
-        thread.start_new_thread(connect, ())
-
         self.context_dict = {}
 
     def initialize(self):
         self.load_data_files(dirname(__file__))
+
+        self.emitter.on("context_result", self.handle_context_result)
+        #### receives the following data
+        #  Message("context_result", {'full_dictionary': self.context_dict,'bluetooth': self.bluetooth_dict, 'abstract': self.abstract_dict, 'signals': self.signals_dict, 'results': self.results_dict, 'intents': self.intents_dict,'regex': self.regex_dict,'skills': self.skills_dict})
 
         context_intent = IntentBuilder("ContextTestIntent")\
             .require("contextKeyword").build()
@@ -66,7 +56,7 @@ class ContextSkill(MycroftSkill):
         dict = message.data["regex"]
         for key in dict:
             #dont really understand this, i think adapt should be somewhere else and not implemented  individually in skills,
-            #so removed for now, should put it in skill-core by default, need to understand it better first
+            #  so removed for now, should put it in all skills by default somehow, need to understand it better first
             #entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
             #self.manager.inject_context(entity)
             if key not in self.context_dict:
@@ -76,9 +66,9 @@ class ContextSkill(MycroftSkill):
         self.flag = True
 
     def handle_context_intent(self, message):
-        client.emit(Message("context_request"))
+        self.emitter.emit(Message("context_request"))
         while not self.flag:
-            pass
+            sleep(1) #wait results response
         self.speak_dialog("ctxt")
 
         #contexts = self.manager.get_context()
