@@ -52,6 +52,8 @@ class ContextSkill(MycroftSkill):
 
         thread.start_new_thread(connect, ())
 
+        self.context_dict = {}
+
     def initialize(self):
         self.load_data_files(dirname(__file__))
 
@@ -63,8 +65,14 @@ class ContextSkill(MycroftSkill):
     def handle_context_result(self, message):
         dict = message.data["regex"]
         for key in dict:
-            entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
-            self.manager.inject_context(entity)
+            #dont really understand this, i think adapt should be somewhere else and not implemented  individually in skills,
+            #so removed for now, should put it in skill-core by default, need to understand it better first
+            #entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
+            #self.manager.inject_context(entity)
+            if key not in self.context_dict:
+                self.context_dict.setdefault(key)
+            self.context_dict[key] = dict[key]
+
         self.flag = True
 
     def handle_context_intent(self, message):
@@ -72,11 +80,13 @@ class ContextSkill(MycroftSkill):
         while not self.flag:
             pass
         self.speak_dialog("ctxt")
-        contexts = self.manager.get_context()
-        for ctxt in contexts:
-            if ctxt["data"] is not None:
-                self.speak(ctxt["key"])
-                self.speak(ctxt["data"])
+
+        #contexts = self.manager.get_context()
+
+        for ctxt in self.context_dict:
+            if self.context_dict[ctxt] is not None:
+                self.speak(ctxt)
+                self.speak(self.context_dict[ctxt])
                 print ctxt
         self.flag = False
 
