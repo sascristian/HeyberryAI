@@ -58,7 +58,16 @@ class ContextSkill(MycroftSkill):
             #adapt way
             if dict[key] is not None:
                 entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
-                self.manager.inject_context(entity)
+                #check for duplicates before injecting,  shouldnt this be auto-handled by adapt?
+                contexts = self.manager.get_context()
+                flag = False
+                for ctxt in contexts:
+                    if ctxt["key"] == key and ctxt["data"] == dict[key]:
+                        flag = True #its duplicate!
+                if not flag:
+                    self.manager.inject_context(entity)
+                    print "injecting " + str(entity)
+
 
             #old school way
             #    if key not in self.context_dict:
