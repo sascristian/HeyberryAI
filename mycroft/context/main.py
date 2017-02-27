@@ -1,6 +1,5 @@
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
-from adapt.context import ContextManager
 
 import time
 
@@ -52,7 +51,6 @@ class ContextService():
         ## init contexts
         self.register_signals()
         self.register_abstract()
-
 
     ####### init / helper functions
 
@@ -126,12 +124,9 @@ class ContextService():
     #### implement more signals
 
     def handle_fbchat_intent(self, message):
-        # just for expansion, may be usefull to have intents in the future
-        # print message.data["name"]
         user = message.data["id"]
         username = message.data["name"]
         data = message.data["utterances"]
-        # print data
         self.register_context([user], type="facebook")
         self.context_dict[user] = data  # populate
         self.context_dict[username] = user  # populate
@@ -211,9 +206,9 @@ class ContextService():
 
     def handle_intent_failure(self, message):
         self.context_dict["fails"] = self.context_dict["fails"]+1
-        self.context_dict["last_fail"] = message.data.get("utteramce")
+        self.context_dict["last_fail"] = message.data.get("utterance")
         self.signals_dict["fails"] = self.context_dict["fails"] + 1
-        self.signals_dict["last_fail"] = message.data.get("utteramce")
+        self.signals_dict["last_fail"] = message.data.get("utterance")
 
     def handle_skill_results(self, message):
         key = message.data.get('skill_name') #must send results in skill, NOT default
@@ -279,23 +274,23 @@ class ContextService():
     def handle_bluetooth_new(self, message):
         #registered context with bluetooth id
         id = message.data.get("id")
-        if id not in self.bluetooth_ids:
+        if id not in self.bluetooth_dict:
             params = [id]
             self.register_context(params, type="bluetooth")
         self.context_dict[id]= True
+        self.bluetooth_dict[id] = True
 
     def handle_bluetooth_leave(self, message):
         #registered context with bluetooth id
         id = message.data.get("id")
         self.context_dict[id]= False
+        self.bluetooth_dict[id] = False
 
     ### main loop
 
     def listen(self):
         global client
         client.run_forever()
-
-
 
 manager = ContextService()
 manager.listen()
