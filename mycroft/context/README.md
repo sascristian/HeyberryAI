@@ -68,6 +68,8 @@ in this case asking mycroft for context test will output the following, after ha
 2017-02-26 21:36:51,553 - CLIClient - INFO - Speak: ArticleTitle
 2017-02-26 21:36:54,892 - CLIClient - INFO - Speak: dinosaurs
 
+still struggling a but with adapt context manager integation, example skill needs to be polished , consider it a proof of concept only
+
 #author
 
 jarbas

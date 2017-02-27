@@ -38,7 +38,7 @@ class ContextSkill(MycroftSkill):
     def __init__(self):
         super(ContextSkill, self).__init__(name="ContextSkill")
         self.manager = ContextManager()
-        self.flag = False
+        self.flag = False #results received flag
         ##### messagebus
         global client
         client = WebsocketClient()
