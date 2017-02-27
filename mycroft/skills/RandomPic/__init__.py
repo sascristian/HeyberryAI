@@ -170,7 +170,7 @@ class PictureSkill(MycroftSkill):
     def handle_search_picture_intent(self,message):
         #search = "anal porn lesbian"
         search = message.data.get("Search")
-        self.add_result("picture_search", search)
+        self.add_result("Search", search)
         self.speak("please wait while i search google pictures for "+ search)
         self.searchanddl(search)
         pics = []
