@@ -37,6 +37,10 @@ class ContextSkill(MycroftSkill):
     def __init__(self):
         super(ContextSkill, self).__init__(name="ContextSkill")
         self.context_dict = {} #override example for using in this skill
+        self.intents_dict = {}
+        self.signals_dict = {}
+        self.skills_dict = {}
+        self.results_dict = {}
 
     def initialize(self):
         #self.load_data_files(dirname(__file__))
@@ -50,6 +54,26 @@ class ContextSkill(MycroftSkill):
             .require("GcontextKeyword").build()
         self.register_intent(general_context_intent,
                              self.handle_general_context_intent)
+
+        signal_context_intent = IntentBuilder("SignalContextIntent") \
+            .require("SigcontextKeyword").build()
+        self.register_intent(signal_context_intent,
+                             self.handle_signals_context_intent)
+
+        intents_context_intent = IntentBuilder("IntentsContextIntent") \
+            .require("IcontextKeyword").build()
+        self.register_intent(intents_context_intent,
+                             self.handle_intents_context_intent)
+
+        skills_context_intent = IntentBuilder("SkillsContextIntent") \
+            .require("ScontextKeyword").build()
+        self.register_intent(skills_context_intent,
+                             self.handle_skills_context_intent)
+
+        results_context_intent = IntentBuilder("ResultsContextIntent") \
+            .require("RcontextKeyword").build()
+        self.register_intent(results_context_intent,
+                             self.handle_results_context_intent)
 
         self.emitter.on("context_result", self.handle_context_result)   ### only thing you need to have context in your skill!
         #### receives the following data
@@ -70,7 +94,6 @@ class ContextSkill(MycroftSkill):
 
         self.context_flag = False
 
-
     def handle_general_context_intent(self, message):
         self.emitter.emit(Message("context_request")) #update context
         while not self.context_flag:
@@ -80,6 +103,58 @@ class ContextSkill(MycroftSkill):
         for key in self.context_dict:
             if self.context_dict[key] is not None:
                 text = key + " context has value " + str(self.context_dict[key])
+                self.speak(text)
+
+        self.context_flag = False
+
+    def handle_signals_context_intent(self, message):
+        self.emitter.emit(Message("context_request")) #update context
+        while not self.context_flag:
+            pass #wait results response
+        self.speak_dialog("override")
+
+        for key in self.signals_dict:
+            if self.signals_dict[key] is not None:
+                text = key + " signal context has value " + str(self.signals_dict[key])
+                self.speak(text)
+
+        self.context_flag = False
+
+    def handle_intents_context_intent(self, message):
+        self.emitter.emit(Message("context_request"))  # update context
+        while not self.context_flag:
+            pass  # wait results response
+        self.speak_dialog("override")
+
+        for key in self.intents_dict:
+            if self.intents_dict[key] is not None:
+                text = key + " intent context has value " + str(self.intents_dict[key])
+                self.speak(text)
+
+        self.context_flag = False
+
+    def handle_skills_context_intent(self, message):
+        self.emitter.emit(Message("context_request"))  # update context
+        while not self.context_flag:
+            pass  # wait results response
+        self.speak_dialog("override")
+
+        for key in self.skills_dict:
+            if self.skills_dict[key] is not None:
+                text = key + " skill context has value " + str(self.skills_dict[key])
+                self.speak(text)
+
+        self.context_flag = False
+
+    def handle_results_context_intent(self, message):
+        self.emitter.emit(Message("context_request"))  # update context
+        while not self.context_flag:
+            pass  # wait results response
+        self.speak_dialog("override")
+
+        for key in self.results_dict:
+            if self.results_dict[key] is not None:
+                text = key + " result context has value " + str(self.results_dict[key])
                 self.speak(text)
 
         self.context_flag = False
@@ -105,17 +180,35 @@ class ContextSkill(MycroftSkill):
 
         #### override example for more context data, not using adapt on purpose just to show different aproach
 
-        dict = message.data["abstract"]  # should i get all context or just regex?
+        dict = message.data["abstract"]
         for key in dict:
                 # build skill dict for testing
                 self.context_dict.setdefault(key, dict[key])
 
-        self.context_flag = True
+        dict = message.data["signals"]
+        for key in dict:
+            # build skill dict for testing
+            self.signals_dict.setdefault(key, dict[key])
 
+        dict = message.data["intents"]  # should i get all context or just regex?
+        for key in dict:
+            # build skill dict for testing
+            self.intents_dict.setdefault(key, dict[key])
+
+        dict = message.data["results"]  # should i get all context or just regex?
+        for key in dict:
+            # build skill dict for testing
+            self.results_dict.setdefault(key, dict[key])
+
+        dict = message.data["skills"]  # should i get all context or just regex?
+        for key in dict:
+            # build skill dict for testing
+            self.skills_dict.setdefault(key, dict[key])
+
+        self.context_flag = True
 
     def override_ctxt(self):
         pass
-
 
     def stop(self):
         pass
