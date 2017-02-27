@@ -292,5 +292,10 @@ class ContextService():
         global client
         client.run_forever()
 
-manager = ContextService()
-manager.listen()
+def main():
+    manager = ContextService()
+    manager.listen()
+
+if __name__ == "__main__":
+    main()
+
