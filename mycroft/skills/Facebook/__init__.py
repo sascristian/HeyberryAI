@@ -805,7 +805,7 @@ class FacebookSkill(MycroftSkill):
 
         '''save to file'''
         timestamp = strftime("%d, %b, %Y, %H, %M, %S", gmtime())
-        wfile = open("proxies" + timestamp + ".txt", "w")
+        wfile = open("/home/user/jarbas-core/mycroft/skills/proxyskill/harvest/proxies" + timestamp + ".txt", "w")
         for proxy in proxies:
             wfile.write(str(proxy) + "\n")
         wfile.close()
