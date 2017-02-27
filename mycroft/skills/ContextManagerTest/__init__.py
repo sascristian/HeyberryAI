@@ -36,7 +36,7 @@ class ContextSkill(MycroftSkill):
 
     def __init__(self):
         super(ContextSkill, self).__init__(name="ContextSkill")
-        self.context_dict = {} #override example for using in this skill
+        self.context_dict = {} #override examples for using in this skill
         self.intents_dict = {}
         self.signals_dict = {}
         self.skills_dict = {}
@@ -206,8 +206,9 @@ class ContextSkill(MycroftSkill):
 
         self.context_flag = True
 
-    def override_ctxt(self):
-        pass
+    def override_ctxt(self, key, result):
+        self.emitter.emit(Message("context_key_override", {"key":key,"value":result}))  # update context with new value
+
 
     def stop(self):
         pass
