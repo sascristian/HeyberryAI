@@ -38,7 +38,7 @@ class ContextSkill(MycroftSkill):
         super(ContextSkill, self).__init__(name="ContextSkill")
         self.manager = ContextManager()
         self.flag = False #results received flag
-        self.context_dict = {}
+        #self.context_dict = {}
 
     def initialize(self):
         self.load_data_files(dirname(__file__))
@@ -55,29 +55,38 @@ class ContextSkill(MycroftSkill):
     def handle_context_result(self, message):
         dict = message.data["regex"]
         for key in dict:
-            #dont really understand this, i think adapt should be somewhere else and not implemented  individually in skills,
-            #  so removed for now, should put it in all skills by default somehow, need to understand it better first
-            #entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
-            #self.manager.inject_context(entity)
-            if key not in self.context_dict:
-                self.context_dict.setdefault(key)
-            self.context_dict[key] = dict[key]
+            #adapt way
+            if dict[key] is not None:
+                entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
+                self.manager.inject_context(entity)
+
+            #old school way
+            #    if key not in self.context_dict:
+            #        self.context_dict.setdefault(key)
+            #    self.context_dict[key] = dict[key]
 
         self.flag = True
 
     def handle_context_intent(self, message):
         self.emitter.emit(Message("context_request"))
         while not self.flag:
-            sleep(1) #wait results response
+            pass #wait results response
         self.speak_dialog("ctxt")
 
-        #contexts = self.manager.get_context()
+        contexts = self.manager.get_context()
 
-        for ctxt in self.context_dict:
-            if self.context_dict[ctxt] is not None:
-                self.speak(ctxt)
-                self.speak(self.context_dict[ctxt])
-                print ctxt
+        #adapt way
+        for ctxt in contexts:
+            #print ctxt
+            if ctxt["data"] is not None:
+                self.speak(ctxt["key"])
+                self.speak(ctxt["data"])
+
+        # old school way
+        #for ctxt in self.context_dict:
+        #    if self.context_dict[ctxt] is not None:
+        #        self.speak(ctxt)
+        #        self.speak(self.context_dict[ctxt])
         self.flag = False
 
     def stop(self):
