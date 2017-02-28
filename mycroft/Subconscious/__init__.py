@@ -33,8 +33,8 @@ class freewill():
     def __init__(self):
 
         # dont be hiperactive, minimum 15 min max 1 hour between actions
-        self.min_time_between_actions = 5 * 60  # seconds
-        self.max_time_between_actions = 20 * 60  # * 45
+        self.min_time_between_actions = 15 * 60  # seconds
+        self.max_time_between_actions = 40 * 60  # * 45
         self.greetings = True
 
         self.generic = ['awesome', 'cool', 'the best', 'brutal', 'average', 'satanic', 'synthetic', "nice", "ultra",
@@ -556,9 +556,11 @@ class freewill():
                     #            {'utterances': [self.innervoice.strip()]}))
                     data = {}
                     if self.innervoice == "FBPicturenSearchItent":
-                        data = {"Skey": random.choice(self.generic + " " + self.entropy)}
+                        data = {"Skey": random.choice(str(self.generic) + " " + str(random.choice(self.entropy)))}
 
                     client.emit(Message(self.innervoice , data))
+
+                    self.context.time_since_order = 0
 
                     self.context.tiredness += 1
                     neurologger.info(' increasing tiredness by :  1')

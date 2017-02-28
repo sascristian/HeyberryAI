@@ -6,7 +6,6 @@ FbRedditIntent
 FbQuoteIntent
 FbFactIntent
 RecitePoetryIntent
-FbProxyIntent
 FbPoetryIntent
 FbArticleIntent
 DreamIntent
