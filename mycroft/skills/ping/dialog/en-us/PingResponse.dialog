@@ -1,0 +1,3 @@
+Pinged in {{response}} milliseconds.
+Ping took {{response}} milliseconds.
+{{response}} millisecond ping.
