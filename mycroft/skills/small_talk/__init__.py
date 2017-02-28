@@ -337,11 +337,6 @@ class SmallTalkSkill(MycroftSkill):
             require("WhatDoYouLookLikeKeyphrase").build()
         self.register_intent(what_do_you_look_like_intent, self.handle_what_do_you_look_like_intent)
 
-        ## WHAT DOES IRENE MEAN
-        what_does_irene_mean_intent = IntentBuilder("WhatDoesIreneMeanIntent").\
-            require("WhatDoesIreneMeanKeyphrase").build()
-        self.register_intent(what_does_irene_mean_intent, self.handle_what_does_irene_mean_intent)
-
         # WHAT DO YOU THINK ABOUT AI
         what_do_you_think_about_ai_intent = IntentBuilder("WhatDoYouThinkAboutAiIntent").\
             require("WhatDoYouThinkAboutAiKeyphrase").build()
@@ -371,11 +366,6 @@ class SmallTalkSkill(MycroftSkill):
         what_is_the_answer_to_intent = IntentBuilder("WhatIsTheAnswerToIntent").\
             require("WhatIsTheAnswerToKeyphrase").build()
         self.register_intent(what_is_the_answer_to_intent, self.handle_what_is_the_answer_to_intent)
-
-        ## WHAT IS YOUR NAME FROM
-        what_is_your_name_from_intent = IntentBuilder("WhatIsYourNameFromIntent").\
-            require("WhatIsYourNameFromKeyphrase").build()
-        self.register_intent(what_is_your_name_from_intent, self.handle_what_is_your_name_from_intent)
 
         # WHERE CAN I HIDE A DEAD BODY
         where_can_i_hide_a_dead_body_intent = IntentBuilder("WhereCanIHideADeadBodyIntent").\
