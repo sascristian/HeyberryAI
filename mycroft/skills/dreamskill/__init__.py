@@ -97,7 +97,7 @@ class DreamSkill(MycroftSkill):
 		#    ,
 
 		# random dreaming mode choice
-		self.choice = 0#self.config["mode"]  # guided dream=1 normal = 0 guided with dif layers in source and guide = 3
+		self.choice = self.config["mode"]  # guided dream=1 normal = 0
 
 		# Define the codec and create VideoWriter object
 		self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -647,7 +647,7 @@ class DreamSkill(MycroftSkill):
 			try:
 				dreampic = imutils.resize(cv2.imread(imagepah), self.w, self.h)  # cv2.resize(img, (640, 480))
 				self.dreaming = True
-				image = self.bc.dream(np.float32(dreampic),end=layer)
+				image = self.bc.dream(np.float32(dreampic),end=layer,iter_n=int(self.iter))
 				# write the output image to file
 				result = Image.fromarray(np.uint8(image))
 				outpath = self.outputdir+"/" + str(i) + ".jpg"
@@ -689,13 +689,7 @@ class DreamSkill(MycroftSkill):
 			layer = random.choice(self.layers)
 			try:
 				features = self.bc.prepare_guide(Image.open(guidepath), end=layer)
-				self.add_result("guide_layer", layer)
-				if self.choice != 1:
-					layer = random.choice(self.layers)  # different layer for guide
 				dreampic = imutils.resize(cv2.imread(sourcepath), self.w, self.h)  # cv2.resize(img, (640, 480))
-
-				#### this is failing out of nowhere, it used to work, help debug!!!! use dream mode 0 for now
-
 				image = self.bc.dream(np.float32(dreampic), end=layer,
 									  iter_n=int(self.iter), objective_fn=self.bc.guided_objective,
 									  objective_features=features)
