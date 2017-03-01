@@ -1,0 +1,661 @@
+astrophysics
+astronomy
+atom
+beaker
+biochemistry
+biology
+botany
+Bunsen burner
+burette
+cell
+chemical
+chemistry
+climate
+climatologist
+control
+cuvette
+data
+datum
+electricity
+electrochemist
+element
+energy
+entomology
+evolution
+experiment
+fact
+flask
+fossil
+funnel
+genetics
+geology
+geophysics
+glassware
+graduated cylinder
+gravity
+herpetology
+hypothesis
+ichthyology
+immunology
+lab
+laboratory
+laws
+lepidoptery
+magnetism
+mass
+matter
+measure
+meteorologist
+meteorology
+microbiologist
+microbiology
+microscope
+mineral
+mineralogy
+molecule
+motion
+observe
+observatory
+organism
+ornithology
+paleontology
+particle
+Petri dish
+phase
+physical science
+physics
+pipette
+quantum mechanics
+radiology
+research
+retort
+scale
+science
+scientist
+seismology
+telescope
+temperature
+test tube
+theory
+thermometer
+tissue
+variable
+virologist
+volcanology
+volume
+volumetric flask
+algorithm
+analog
+app
+application
+array
+backup
+bandwidth
+binary
+bit
+bitmap
+bite
+blog
+blogger
+bookmark
+boot
+broadband
+browser
+buffer
+bug
+bus
+byte
+cache
+caps lock
+captcha
+CD
+CD-ROM
+client
+clip art
+clip board
+cloud computing
+command
+compile
+compress
+computer
+computer program
+configure
+cookie
+copy
+CPU (central processing unit)
+cybercrime
+cyberspace
+dashboard
+data
+database
+data mining
+debug
+decompress
+delete
+desktop
+development
+digital
+disk
+DNS (domain name system)
+document
+Java
+joystick
+junk mail
+icon
+inbox
+integer
+interface
+Internet
+IP address
+iteration
+hack
+hacker
+hardware
+home page
+host
+html
+hyperlink
+hypertext
+gigabyte
+graphics
+FAQ (frequently asked questions)
+file
+finder
+firewall
+firmware
+flaming
+flash
+flash drive
+floppy disk
+flowchart
+folder
+font
+format
+frame
+freeware
+email
+emoticon
+encrypt
+encryption
+enter
+exabyte
+domain
+domain name
+dot
+dot matrix
+download
+drag
+DVD (digital versatile disc)
+dynamic
+kernel
+key
+keyboard
+keyword
+laptop
+laser printer
+link
+login
+log out
+logic
+lurking
+mainframe
+macro
+malware
+media
+memory
+mirror
+modem
+monitor
+motherboard
+mouse
+multimedia
+net
+network
+node
+notebook computer
+offline
+online
+open source
+operating system
+option
+output
+page
+password
+paste
+path
+phishing
+piracy
+pirate
+platform
+plug-in
+podcast
+pop-up
+portal
+print
+printer
+privacy
+process
+program
+programmer
+protocol
+save
+scan
+scanner
+screen
+screenshot
+script
+scroll
+scroll bar
+search engine
+security
+server
+shareware
+shell
+shift
+shift key
+snapshot
+social networking
+software
+spam
+spammer
+spreadsheet
+status bar
+storage
+spyware
+supercomputer
+surf
+syntax
+RAM (random access memory)
+real-time
+reboot
+resolution
+restore
+ROM (read only memory)
+root
+router
+runtime
+queue
+QWERTY
+dvorak
+bitcoin
+table
+tag
+template
+terabyte
+teminal
+text editor
+thread
+toolbar
+trash
+Trojan horse
+typeface
+undo
+Unix
+upload
+user interface
+username
+URL
+user
+utility
+version
+virtual
+virtual memory
+virus
+web
+web host
+webmaster
+website
+widget
+window
+wireless
+wiki
+word processor
+workstation
+World Wide Web
+worm
+edger
+electric blanket
+electric drill
+electric fan
+electric guitar
+electric keyboard
+electric pencil sharpener
+electric razor
+electric toothbrush
+espresso maker
+telephone
+television
+timer
+toaster
+toaster oven
+torch
+trash compactor
+trimmer
+TV
+calculator
+camera
+can opener
+CD player
+ceiling fan
+cell phone
+clock
+clothes dryer
+clothes washer
+coffee grinder
+coffee maker
+computer
+convection oven
+copier
+crock pot
+curling iron
+absorb
+AC
+accumulator
+alternating current
+anthracite coal
+appliance
+gas
+gasoline
+gas-turbine
+generate
+generation
+generator
+geothermal
+global warming
+green
+green energy
+greenhouse effect
+greenhouse gas
+grid
+capacity
+carbon
+carbon footprint
+carbon tax
+charcoal
+chemical energy
+clean energy
+climate change
+coal
+coke
+combustion
+conservation
+crude oil
+current
+peak oil
+peat
+petroleum
+photon
+photovoltaic
+photovoltaic panel
+pollution
+potential energy
+power
+power grid
+power lines
+power plant
+power station
+power transmission
+propane
+public utility
+efficiency
+efficient
+electric
+electrical
+electrical grid
+electromagnetic energy
+electron
+energy
+engine
+engineer
+entropy
+environment
+erg
+ethanol
+academy
+admiral
+advance
+aircraft
+aircraft carrier
+Air Force
+ally
+ammo
+ammunition
+amphibious vehicle
+armistice
+armor
+armored vehicle
+armory
+arms
+army
+arrow
+arsenal
+artillery
+assault
+at ease
+attack
+attention
+ballistic
+barracks
+base
+battalion
+battle
+battlefield
+battery
+battleship
+bayonet
+besiege
+billet
+bivouac
+bomb
+bombard
+bombardment
+bow and arrow
+brig
+brigade
+bullet
+parachute
+paratrooper
+peace
+peace treaty
+pentagon
+petty officer
+plane
+platoon
+post
+POW
+prisoner of war
+private
+PT boat
+Purple Heart
+encampment
+encode
+enemy
+engage
+enlist
+ensign
+epaulet
+evacuate
+explosive
+sabotage
+sailor
+salute
+salvo
+seaman
+section
+sergeant
+service
+shell
+shoot
+shot
+siege
+sniper
+soldier
+spear
+specialist
+squad
+squadron
+staff
+star
+stockade
+submarine
+surrender
+debt
+defecit
+deposit
+depression
+dime
+discount
+diversify
+dividend
+dollar
+donate
+donation
+donor
+down payment
+pay
+payment
+pence
+penny
+percentage
+poor
+portfolio
+Pound
+profit
+purse
+capital
+cash
+cent
+change
+cheap
+check
+collateral
+commodity
+compound
+coupon
+credit
+credit card
+currency
+deny
+despicable
+detrimental
+dirty
+disease
+disgusting
+disheveled
+dishonest
+dishonorable
+dismal
+distress
+don't
+dreadful
+dreary
+callous
+can't
+clumsy
+coarse
+cold
+cold-hearted
+collapse
+confused
+contradictory
+contrary
+corrosive
+corrupt
+crazy
+creepy
+criminal
+cruel
+cry
+cutting
+sad
+savage
+scare
+scary
+scream
+severe
+shoddy
+shocking
+sick
+sickening
+sinister
+slimy
+smelly
+sobbing
+sorry
+spiteful
+sticky
+stinky
+stormy
+stressful
+stuck
+stupid
+substandard
+suspect
+suspicious
+salt
+sand
+sandstone
+sapphire
+sard
+sardonyx
+schist
+sedimentary rock
+seismograph
+semi-precious
+serpentine
+silica
+silt
+soapstone
+sodalite
+spinel
+stalactite
+stalagmite
+stone
+aerodynamics
+agronomy
+anatomy
+anthropology
+archaeology
+astronomy
+atmospheric sciences
+bacteriology
+biochemistry
+biology
+biophysics
+botany
+cartography
+chemistry
+climatology
+computer science
+cosmology
+criminology
+paleontology
+parasitology
+pathology
+petrology
+physics
+physiology
+political science
+psychology
+earth sciences
+ecology
+economics
+embryology
+entomology
+epidemiology
+ergonomics
+ethnology
+evolutionary biology
+exobiology
+marine biology
+materials science
+mechanics
+metallurgy
+meteorology
+microbiology
+mineralogy
+molecular biology
+morphology
+virology
+volcanology
+vulcanology
