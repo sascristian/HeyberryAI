@@ -37,8 +37,13 @@ class Goal():
         self.name = name#"knowledge"
         self.ways = ways#["wikipedia", "wolphram", "articles", "ask user"]
 
-    def way_selector(self):
-        #selected_way = random.choice(self.ways)
+    def way_selector(self, function=None):
+        if function is not None:
+            return function()
+        else:
+            return self.default_way_selector()
+
+    def default_way_selector(self):
         i = random.randint(0,len(self.ways))
         c = 0
         for way in self.ways:
@@ -49,6 +54,10 @@ class Goal():
                 break
             c +=1
         return selected_way , data, key
+
+    def print_ways(self):
+        for way in self.ways:
+            print way
 
 class Objectives():
     def __init__(self):
@@ -82,6 +91,10 @@ class Objectives():
         for objective in self.objectives:
             print objective
 
+    def print_goals(self, objective):
+        for goal in self.objectives[objective]:
+            goal.print_ways()
+
 class freewill():
     def __init__(self):
 
@@ -90,8 +103,8 @@ class freewill():
         self.max_time_between_actions = 40 * 60  # * 45
         self.greetings = True
 
-        self.generic = ['awesome', 'cool', 'the best', 'brutal', 'average', 'satanic', 'synthetic', "nice", "ultra",
-                        "strange", "weird", " beautifull ", "ugly", " the worst ", " most ", " ", " ", " ", " "]
+        self.generic = ['awesome ', 'cool ', 'the best ', 'brutal ', 'average ', 'satanic ', 'synthetic ', "nice ", "ultra ",
+                        "strange ", "weird ", " beautifull ", "ugly ", " the worst ", " most "]
         self.entropy = []
         self.activefriends = []
         self.sentiment = ""
@@ -143,15 +156,18 @@ class freewill():
         self.load_word_bank()
 
         self.knowledge_objective()
+        self.dream_about_objective()
+
         self.obj.print_objectives()
+        self.obj.print_goals("Troll")
+
 
         #### testing objectives ####
         time.sleep(2)
-
-        self.obj.execute_objective("AdquireKnowledge")
+        self.obj.print_goals("Troll")
+        #self.obj.execute_objective("Troll")
         #self.obj.execute_objective("MakeNewDream")
-
-
+        #self.obj.execute_objective("MakeNewDreamAbout")
 
     ####### objectives #####
     def load_objectives_from_config(self):
@@ -164,13 +180,14 @@ class freewill():
                 name = goal
                 ways_string = objectives[objective][goal]["ways"]
                 #print ways_string
-                ways = {}
+
                 waylist = []
                 for intent in ways_string:
                     #print intent
                     for key in intent:
                         #print key
                         #print intent[key]
+                        ways = {}
                         ways.setdefault(key, intent[key])
                         waylist.append(ways)
 
@@ -195,7 +212,7 @@ class freewill():
     ###### manually created objectives
 
     def knowledge_objective(self):
-        name = "WikipediaIntent"
+        name = "KnowledgeIntent"
         waylist = []
         goals = []
         for word in self.word_bank:
@@ -206,9 +223,30 @@ class freewill():
         name = "Search_Wikipedia"
         goal = Goal(name, waylist)
         goals.append(goal)
+        ### todo wolphram goal
 
         self.obj.register_objective("AdquireKnowledge", goals)
 
+
+        ### "", "data": {"confidence": 0.375, "target": null, "WikipediaKeyword": "tell me about", "intent_type": "WikipediaIntent", "ArticleTitle": "god",
+        pass
+
+    def dream_about_objective(self):
+        name = "DreamAboutIntent"
+        waylist = []
+        goals = []
+        for word in self.word_bank:
+            ways = {}
+            #ways.setdefault(name, {"DreamSearch": word})
+            #waylist.append(ways)
+            ways.setdefault(name, {"DreamSearch": random.choice(self.generic) + word})
+            waylist.append(ways)
+
+        name = "Dream_About"
+        goal = Goal(name, waylist)
+        goals.append(goal)
+
+        self.obj.register_objective("MakeNewDreamAbout", goals)
 
         ### "", "data": {"confidence": 0.375, "target": null, "WikipediaKeyword": "tell me about", "intent_type": "WikipediaIntent", "ArticleTitle": "god",
         pass
@@ -405,6 +443,9 @@ class freewill():
         self.toughts['entropy'] = self.entropy
 
     ##########################33   available actions functions ####################33
+
+   # TODO refactor actions from intents into objectives
+
     def set_actions(self):
 
         #####actions are intents
@@ -501,6 +542,7 @@ class freewill():
         self.context.time_since_order = time.time() - self.context.time
 
     ########################hormones functions ############3333
+
     def balance_hormones(self):
         # mnimum threshold
         if self.context.serotonine <= 0:

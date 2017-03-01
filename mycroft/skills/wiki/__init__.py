@@ -45,10 +45,16 @@ class WikipediaSkill(MycroftSkill):
             join(dirname(__file__), 'dialog', self.lang,
                  'FeedbackSearch.dialog'))
 
+        self.savepath = dirname(__file__) +"/saved"
+
     def initialize(self):
         intent = IntentBuilder("WikipediaIntent").require(
             "WikipediaKeyword").require("ArticleTitle").build()
         self.register_intent(intent, self.handle_intent)
+
+        kintent = IntentBuilder("KnowledgeIntent").require(
+            "KnowledgeKeyword").require("ArticleTitle").optionally("SavePath").build()
+        self.register_intent(kintent, self.handle_knowledge_intent)
 
     def handle_intent(self, message):
         try:
@@ -61,7 +67,7 @@ class WikipediaSkill(MycroftSkill):
             summary = re.sub(
                 r'\([^)]*\)|/[^/]*/', '',
                 wiki.summary(results[0], self.max_phrases))
-            self.speak(summary)
+            self.speak(summary) #TODO add source url to results
 
         except wiki.exceptions.DisambiguationError as e:
             options = e.options[:self.max_results]
@@ -73,12 +79,68 @@ class WikipediaSkill(MycroftSkill):
             LOGGER.error("Error: {0}".format(e))
         self.emit_results()
 
+    def handle_knowledge_intent(self, message):
+        title = message.data.get("ArticleTitle")
+
+        savepath = message.data.get("SavePath")
+        if savepath is None:
+            savepath = self.savepath
+        savepath += "/" + title + ".txt"
+
+        try:
+
+            self.add_result("ArticleTitle",title)
+            self.add_result("SavePath", savepath)
+
+            self.__feedback_search(title)
+            results = wiki.search(title, self.max_results)
+            summary = re.sub(
+                r'\([^)]*\)|/[^/]*/', '',
+                wiki.summary(results[0], self.max_phrases))
+
+            wfile = open(savepath, "w")
+            wfile.write(summary)
+            wfile.close()
+            self.speak(summary)
+            self.emit_results()
+
+        except wiki.exceptions.DisambiguationError as e:
+            options = e.options[:self.max_results]
+            LOGGER.debug("Multiple options found: " + ', '.join(options))
+            self.__ask_more_about(options)
+
+            for opt in options:
+                savepath = message.data.get("SavePath")
+                if savepath is None:
+                    savepath = self.savepath
+                savepath += "/" + opt + ".txt"
+
+                self.add_result("ArticleTitle", opt)
+                self.add_result("SavePath", savepath)
+
+                self.__feedback_search(opt)
+                results = wiki.search(opt, self.max_results)
+                summary = re.sub(
+                    r'\([^)]*\)|/[^/]*/', '',
+                    wiki.summary(results[0], self.max_phrases))
+
+                wfile = open(savepath, "w")
+                wfile.write(summary)
+                wfile.close()
+                self.speak(summary)
+                self.emit_results()
+
+
+        except Exception as e:
+            LOGGER.error("Error: {0}".format(e))
+            self.speak("Couldn't find knowledge about " + title + " right now")
+
     def __feedback_search(self, title):
         prefix = self.feedback_prefix[randrange(len(self.feedback_prefix))]
         feedback = self.feedback_search[randrange(len(self.feedback_search))]
         sentence = feedback.replace('<prefix>', prefix).replace(
             '<title>', title)
-        self.speak(sentence)
+        #self.speak(sentence)
 
     def __ask_more_about(self, opts):
         sentence = self.question
