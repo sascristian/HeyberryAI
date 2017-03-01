@@ -145,9 +145,11 @@ class freewill():
         self.knowledge_objective()
         self.obj.print_objectives()
 
+        #### testing objectives ####
         time.sleep(2)
 
         self.obj.execute_objective("AdquireKnowledge")
+        #self.obj.execute_objective("MakeNewDream")
 
 
 
@@ -156,15 +158,23 @@ class freewill():
         objectives = ConfigurationManager.get(["/home/user/jarbas-core/mycroft/Subconscious/objectives.conf"])[
             "Objectives"]
         for objective in objectives:
+            #print objective
             goals = []
             for goal in objectives[objective]:
                 name = goal
                 ways_string = objectives[objective][goal]["ways"]
+                #print ways_string
                 ways = {}
+                waylist = []
                 for intent in ways_string:
+                    #print intent
                     for key in intent:
+                        #print key
+                        #print intent[key]
                         ways.setdefault(key, intent[key])
-                goal = Goal(name, ways)
+                        waylist.append(ways)
+
+                goal = Goal(name, waylist)
                 goals.append(goal)
 
             self.obj.register_objective(objective, goals)
