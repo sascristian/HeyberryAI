@@ -7,6 +7,7 @@ author = "Jarbas"
 from mycroft.context import FreeWillContext
 from mycroft.context import VisionContext
 
+from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 
@@ -28,6 +29,57 @@ client = None
 
 #neurologger.setLevel("ERROR")
 #logger.setLevel("ERROR")
+
+class Goal():
+    def __init__(self, name, ways):
+        self.name = name#"knowledge"
+        self.ways = ways#["wikipedia", "wolphram", "articles", "ask user"]
+
+    def way_selector(self):
+        #selected_way = random.choice(self.ways)
+        i = random.randint(0,len(self.ways))
+        c = 0
+        for way in self.ways:
+            #print way
+            selected_way = way
+            data = self.ways[way]
+            if c == i:
+                break
+            c +=1
+        return selected_way , data
+
+class Objectives():
+    def __init__(self):
+        self.objectives = {} #name : [Goals]
+
+    def register_objective(self, name, goals=None):
+        self.objectives.setdefault(name, goals)
+
+    def execute_objective(self, name, selectfunction=None):
+        if selectfunction is None:
+            selectfunction = self.default_select
+
+        intent , wayname = selectfunction(self.objectives[name])
+        print "\nExecuting\n"
+        print "objective: "+name
+        print "way: " + wayname
+        print "choosen action :"+str(intent)
+        #print intent[0]
+        #print intent[1]
+
+
+        global client
+        client.emit(Message(intent[0],intent[1]))
+
+    def default_select(self, goal_list):
+        selected_goal = random.choice(goal_list)
+        intent = selected_goal.way_selector()
+        return intent, selected_goal.name
+
+    def print_objectives(self):
+        print "\nAvailable Objectives:\n"
+        for objective in self.objectives:
+            print objective
 
 class freewill():
     def __init__(self):
@@ -84,6 +136,37 @@ class freewill():
         self.event_thread = Thread(target=connect)
         self.event_thread.setDaemon(True)
         self.event_thread.start()
+
+        self.obj = Objectives()
+
+        self.load_objectives_from_config()
+        self.obj.print_objectives()
+        # obj.execute_objective("Conquer", selector)
+
+    ####### objectives #####
+    def load_objectives_from_config(self):
+        objectives = ConfigurationManager.get(["/home/user/jarbas-core/mycroft/Subconscious/objectives.conf"])[
+            "Objectives"]
+        for objective in objectives:
+            goals = []
+            for goal in objectives[objective]:
+                name = goal
+                ways_string = objectives[objective][goal]["ways"]
+                ways = {}
+                for intent in ways_string:
+                    for key in intent:
+                        ways.setdefault(key, intent[key])
+                goal = Goal(name, ways)
+                goals.append(goal)
+
+            self.obj.register_objective(objective, goals)
+
+    def selector(self, goal_list):
+        selected_goal = random.choice(goal_list)
+        intent = selected_goal.way_selector()
+        print "overloaded selection - EXAMPLE\n\n\n\n\trololololol\n\n\n\lololotrolo\ntrolo\n\n\lololotrololol\n\n\n"
+        return intent, selected_goal.name
+
 
     ##################   signal processing #############3
     def contextupdate(self, message):
@@ -577,3 +660,5 @@ class freewill():
             self.context.update()
             self.context.close()
             sys.exit()
+
+
