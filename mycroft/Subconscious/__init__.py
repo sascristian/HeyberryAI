@@ -29,6 +29,8 @@ client = None
 
 #neurologger.setLevel("ERROR")
 #logger.setLevel("ERROR")
+def connect():
+    client.run_forever()
 
 class Goal():
     def __init__(self, name, ways):
@@ -40,13 +42,13 @@ class Goal():
         i = random.randint(0,len(self.ways))
         c = 0
         for way in self.ways:
-            #print way
-            selected_way = way
-            data = self.ways[way]
+            for key in way:
+                selected_way = way
+                data = selected_way[key]
             if c == i:
                 break
             c +=1
-        return selected_way , data
+        return selected_way , data, key
 
 class Objectives():
     def __init__(self):
@@ -59,22 +61,21 @@ class Objectives():
         if selectfunction is None:
             selectfunction = self.default_select
 
-        intent , wayname = selectfunction(self.objectives[name])
+        intent , data, key = selectfunction(self.objectives[name])
+
         print "\nExecuting\n"
         print "objective: "+name
-        print "way: " + wayname
-        print "choosen action :"+str(intent)
-        #print intent[0]
-        #print intent[1]
+        print "way: " + str(key)
+        print "way data :"+str(data)
 
+        client.emit(Message(key, data))
 
-        global client
-        client.emit(Message(intent[0],intent[1]))
+        return intent
 
     def default_select(self, goal_list):
         selected_goal = random.choice(goal_list)
-        intent = selected_goal.way_selector()
-        return intent, selected_goal.name
+        intent , data, key = selected_goal.way_selector()
+        return intent, data, key
 
     def print_objectives(self):
         print "\nAvailable Objectives:\n"
@@ -130,9 +131,6 @@ class freewill():
 
         ###### register as many of these as needed to have some executed skill influence something
 
-        def connect():
-            client.run_forever()
-
         self.event_thread = Thread(target=connect)
         self.event_thread.setDaemon(True)
         self.event_thread.start()
@@ -140,8 +138,18 @@ class freewill():
         self.obj = Objectives()
 
         self.load_objectives_from_config()
+
+        self.word_bank = []
+        self.load_word_bank()
+
+        self.knowledge_objective()
         self.obj.print_objectives()
-        # obj.execute_objective("Conquer", selector)
+
+        time.sleep(2)
+
+        self.obj.execute_objective("AdquireKnowledge")
+
+
 
     ####### objectives #####
     def load_objectives_from_config(self):
@@ -167,6 +175,33 @@ class freewill():
         print "overloaded selection - EXAMPLE\n\n\n\n\trololololol\n\n\n\lololotrolo\ntrolo\n\n\lololotrololol\n\n\n"
         return intent, selected_goal.name
 
+    def load_word_bank(self):
+        path = os.path.dirname(__file__) + '/wordbank.txt'
+        with open(path) as f:
+            words = f.readlines()
+            for word in words:
+                self.word_bank.append(word.replace("\n",""))
+
+    ###### manually created objectives
+
+    def knowledge_objective(self):
+        name = "WikipediaIntent"
+        waylist = []
+        goals = []
+        for word in self.word_bank:
+            ways = {}  # list dumb
+            ways.setdefault(name, {"ArticleTitle":word})
+            waylist.append(ways)
+
+        name = "Search_Wikipedia"
+        goal = Goal(name, waylist)
+        goals.append(goal)
+
+        self.obj.register_objective("AdquireKnowledge", goals)
+
+
+        ### "", "data": {"confidence": 0.375, "target": null, "WikipediaKeyword": "tell me about", "intent_type": "WikipediaIntent", "ArticleTitle": "god",
+        pass
 
     ##################   signal processing #############3
     def contextupdate(self, message):
@@ -336,6 +371,8 @@ class freewill():
                          }))
 
             ###########################    entropy generation / toughts  #####################3333
+
+    ##### helper / entropy ######
 
     def initialize_toughts(self):
         self.toughts = shelve.open("toughts", writeback=True)
