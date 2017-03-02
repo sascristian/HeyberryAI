@@ -187,7 +187,7 @@ class FacebookSkill(MycroftSkill):
 
         prefixes = [
             'fbpic']
-        self.__register_prefixed_regex(prefixes, "(?P<Skey>.*)")
+        self.__register_prefixed_regex(prefixes, "(?P<PicSearchKey>.*)")
 
         article_intent = IntentBuilder("FbArticleIntent"). \
             require("fbarticle").build()
@@ -358,7 +358,7 @@ class FacebookSkill(MycroftSkill):
         self.emit_results()
 
     def handle_search_picture_intent(self, message):
-        search = message.data.get("Skey")
+        search = message.data.get("PicSearchKey")
         #self.speak("please wait while i search google pictures for " + search)
         self.searchanddl(search)
         pics = []
