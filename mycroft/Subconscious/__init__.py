@@ -110,8 +110,8 @@ class freewill():
     def __init__(self):
 
         # dont be hiperactive, minimum 15 min max 1 hour between actions
-        self.min_time_between_actions = 15 * 60  # seconds
-        self.max_time_between_actions = 40 * 60  # * 45
+        self.min_time_between_actions = 30#15 * 60  # seconds
+        self.max_time_between_actions = 60#40 * 60  # * 45
         self.greetings = True
 
         self.generic = ['awesome ', 'cool ', 'the best ', 'brutal ', 'average ', 'satanic ', 'synthetic ', "nice ", "ultra ",
@@ -649,9 +649,6 @@ class freewill():
             actions = self.userpresent_actions
 
         self.innervoice = random.choice(actions)
-        # update internal clocks
-        if self.innervoice != 'do nothing':
-            self.context.time_since_order = 0
 
         # update time since order
         self.context.time_since_order = time.time() - self.context.time
@@ -838,18 +835,11 @@ class freewill():
                 if self.innervoice != 'do nothing' and self.context.time_since_order > self.time_between_actions:
                     # execute chosen action
                     logger.info(' action : ' + self.innervoice)
-                    #client.emit(
-                    #    Message("recognizer_loop:utterance",
-                    #            {'utterances': [self.innervoice.strip()]}))
-                    #data = {}
-                    #if self.innervoice == "FBPicturenSearchItent":
-                    #    data = {"Skey": random.choice(str(self.generic) + " " + str(random.choice(self.entropy)))}
-
-                    #client.emit(Message(self.innervoice , data))
 
                     self.obj.execute_objective(self.innervoice)
 
                     self.context.time_since_order = 0
+                    self.context.time = time.time()
 
                     self.context.tiredness += 1
                     neurologger.info(' increasing tiredness by :  1')
