@@ -56,15 +56,24 @@ class Goal():
         return selected_way , data, key
 
     def print_ways(self):
+        i = 0
+        if len(self.ways)>20:
+            print "Warning, lots of ways, printing first 20"
         for way in self.ways:
             print way
+            i+=1
+            if i>= 20:
+                break
 
 class Objectives():
     def __init__(self):
         self.objectives = {} #name : [Goals]
 
     def register_objective(self, name, goals=None):
-        self.objectives.setdefault(name, goals)
+        try:#update
+            self.objectives[name] = goals
+        except: #key doenst exist, register
+            self.objectives.setdefault(name, goals)
 
     def execute_objective(self, name, selectfunction=None):
         if selectfunction is None:
@@ -93,6 +102,7 @@ class Objectives():
 
     def print_goals(self, objective):
         for goal in self.objectives[objective]:
+            print goal.name
             goal.print_ways()
 
 class freewill():
@@ -162,6 +172,9 @@ class freewill():
 
         #### testing objectives ####
         time.sleep(2)
+        #self.obj.print_goals("MakeNewDream")
+        #self.obj.print_goals("AdquireKnowledge")
+        #self.obj.print_goals("FaceBookContent")
         #self.obj.print_goals("Troll")
         #self.obj.execute_objective("Troll")
         #self.obj.execute_objective("MakeNewDream")
@@ -208,7 +221,7 @@ class freewill():
                 self.word_bank.append(word.replace("\n",""))
 
     ###### manually created objectives
-
+            # create new objectives
     def knowledge_objective(self):
         name = "KnowledgeIntent"
         waylist = []
@@ -228,7 +241,7 @@ class freewill():
 
         ### "", "data": {"confidence": 0.375, "target": null, "WikipediaKeyword": "tell me about", "intent_type": "WikipediaIntent", "ArticleTitle": "god",
         pass
-
+            # update existing objectives
     def dream_about_objective(self):
         name = "DreamAboutIntent"
         waylist = []
@@ -244,9 +257,51 @@ class freewill():
         goal = Goal(name, waylist)
         goals.append(goal)
 
-        self.obj.register_objective("MakeNewDreamAbout", goals)
+        try: #if key exists in dict
+            old_goals = self.obj.objectives["MakeNewDream"]
+            for goal in old_goals:
+        #        print goal.name
+                goals.append(goal) #load previously defined goals
+        except:
+            pass
 
-        ### "", "data": {"confidence": 0.375, "target": null, "WikipediaKeyword": "tell me about", "intent_type": "WikipediaIntent", "ArticleTitle": "god",
+        self.obj.register_objective("MakeNewDream", goals) #update/register objective
+
+    def facebook_objective(self):
+        name = "FBPicturenSearchItent"
+        waylist = []
+        goals = []
+        for word in self.word_bank:
+            ways = {}
+            ways.setdefault(name, {"PicSearchKey": random.choice(self.generic) + word})
+            waylist.append(ways)
+        for word in self.toughts:
+            ways = {}
+            ways.setdefault(name, {"PicSearchKey": random.choice(self.generic) + word})
+            waylist.append(ways)
+
+        name = "Picture_Posts"
+        goal = Goal(name, waylist)
+        goals.append(goal)
+
+        try: #if key exists in dict
+            old_goals = self.obj.objectives["FaceBookContent"]
+            for goal in old_goals:
+        #        print goal.name
+                goals.append(goal) #load previously defined goals
+        except:
+            pass
+
+        self.obj.register_objective("FaceBookContent", goals) #update/register objective
+
+    #### overrided select objective functions
+
+    def fbselect(self):
+        #TODO make shit posting less frequent, make news more frequent
+        pass
+
+    def dreamselect(self):
+        #TODO make dream about less selected
         pass
 
     ##################   signal processing #############3
