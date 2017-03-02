@@ -79,10 +79,11 @@ class Objectives():
         if selectfunction is None:
             selectfunction = self.default_select
 
-        intent , data, key = selectfunction(self.objectives[name])
+        intent , data, key, goal = selectfunction(self.objectives[name])
 
         print "\nExecuting\n"
         print "objective: "+name
+        print "Goal: " + goal
         print "way: " + str(key)
         print "way data :"+str(data)
 
@@ -92,8 +93,8 @@ class Objectives():
 
     def default_select(self, goal_list):
         selected_goal = random.choice(goal_list)
-        intent , data, key = selected_goal.way_selector()
-        return intent, data, key
+        intent , data, key , name = selected_goal.way_selector()
+        return intent, data, key, selected_goal.name
 
     def print_objectives(self):
         print "\nAvailable Objectives:\n"
@@ -176,7 +177,7 @@ class freewill():
         #self.obj.print_goals("AdquireKnowledge")
         #self.obj.print_goals("FaceBookContent")
         #self.obj.print_goals("Troll")
-        #self.obj.execute_objective("Troll")
+        self.obj.execute_objective("FaceBookContent", self.fb_goal_select)
         #self.obj.execute_objective("MakeNewDream")
         #self.obj.execute_objective("MakeNewDreamAbout")
 
@@ -296,11 +297,26 @@ class freewill():
 
     #### overrided select objective functions
 
-    def fbselect(self):
-        #TODO make shit posting less frequent, make news more frequent
+    def fb_goal_select(self, goal_list):
+        print "Look at this! Magic! using a different selector functon passed as arg"
+        i = 0
+        selected_goal = random.choice(goal_list)
+        # if shit posting retry to choose another a few times
+        while i<5 or selected_goal.name == "ShitPosting":
+            selected_goal = random.choice(goal_list)
+            i+=1
+        # make news posts more frequent
+        if random.randint(0,20) < 10:
+            for goal in goal_list:
+                if goal.name == "NewsContent":
+                    selected_goal=goal
+                    break
+
+        intent, data, key = selected_goal.way_selector()#we can pass way selector function here, for more frequent news sources for example
+        return intent, data, key, selected_goal.name
         pass
 
-    def dreamselect(self):
+    def dream_goal_select(self):
         #TODO make dream about less selected
         pass
 
