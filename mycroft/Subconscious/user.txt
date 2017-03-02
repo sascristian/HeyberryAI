@@ -1,9 +1,1 @@
-BitcoinIntent
-factIntent
-Picturentent
-timetoliveIntent
-ReciteSciFiPoetryIntent
-quoteIntent
-FortuneIntent
-SuggestIntent
-TimeIntent
+EngageMaster

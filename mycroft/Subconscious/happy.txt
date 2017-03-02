@@ -1,12 +1,3 @@
-HappyIntent
-FbFortuneIntent
-FbRedditIntent
-fbBTCIntent
-FbdreamIntent
-YoutubeIntent
-FbQuoteIntent
-FbFactIntent
-FbjokeIntent
-FbArticleIntent
-JokingIntent
+FaceBookContent
+BeHappy
 

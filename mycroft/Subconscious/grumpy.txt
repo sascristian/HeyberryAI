@@ -1,5 +1,4 @@
-DepressedIntent
-ReciteSatanicPoetryIntent
-FbPoetryIntent
-factIntent
-quoteIntent
+FaceBookContent
+Troll
+BeAnnoyed
+AdquireKnowledge

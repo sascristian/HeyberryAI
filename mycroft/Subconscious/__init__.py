@@ -93,7 +93,7 @@ class Objectives():
 
     def default_select(self, goal_list):
         selected_goal = random.choice(goal_list)
-        intent , data, key , name = selected_goal.way_selector()
+        intent , data, key  = selected_goal.way_selector()
         return intent, data, key, selected_goal.name
 
     def print_objectives(self):
@@ -171,16 +171,6 @@ class freewill():
 
         self.obj.print_objectives()
 
-        #### testing objectives ####
-        time.sleep(2)
-        #self.obj.print_goals("MakeNewDream")
-        #self.obj.print_goals("AdquireKnowledge")
-        #self.obj.print_goals("FaceBookContent")
-        #self.obj.print_goals("Troll")
-        self.obj.execute_objective("FaceBookContent", self.fb_goal_select)
-        #self.obj.execute_objective("MakeNewDream")
-        #self.obj.execute_objective("MakeNewDreamAbout")
-
     ####### objectives #####
     def load_objectives_from_config(self):
         objectives = ConfigurationManager.get(["/home/user/jarbas-core/mycroft/Subconscious/objectives.conf"])[
@@ -208,12 +198,6 @@ class freewill():
 
             self.obj.register_objective(objective, goals)
 
-    def selector(self, goal_list):
-        selected_goal = random.choice(goal_list)
-        intent = selected_goal.way_selector()
-        print "overloaded selection - EXAMPLE\n\n\n\n\trololololol\n\n\n\lololotrolo\ntrolo\n\n\lololotrololol\n\n\n"
-        return intent, selected_goal.name
-
     def load_word_bank(self):
         path = os.path.dirname(__file__) + '/wordbank.txt'
         with open(path) as f:
@@ -223,6 +207,7 @@ class freewill():
 
     ###### manually created objectives
             # create new objectives
+
     def knowledge_objective(self):
         name = "KnowledgeIntent"
         waylist = []
@@ -243,6 +228,7 @@ class freewill():
         ### "", "data": {"confidence": 0.375, "target": null, "WikipediaKeyword": "tell me about", "intent_type": "WikipediaIntent", "ArticleTitle": "god",
         pass
             # update existing objectives
+
     def dream_about_objective(self):
         name = "DreamAboutIntent"
         waylist = []
@@ -300,6 +286,7 @@ class freewill():
     def fb_goal_select(self, goal_list):
         print "Look at this! Magic! using a different selector functon passed as arg"
         i = 0
+
         selected_goal = random.choice(goal_list)
         # if shit posting retry to choose another a few times
         while i<5 or selected_goal.name == "ShitPosting":
@@ -312,8 +299,56 @@ class freewill():
                     selected_goal=goal
                     break
 
+        #### mood influence
+        i = 0
+        if self.mood == "complain":
+            #more shit posting
+            # if not shit posting retry to choose another a few times
+            while i < 5 or selected_goal.name != "ShitPosting":
+                selected_goal = random.choice(goal_list)
+                i += 1
+
+        elif self.mood == "grumpy":
+            #more self-made
+            # if not self-made retry to choose another a few times
+            while i < 5 or selected_goal.name != "SelfMadeContent":
+                selected_goal = random.choice(goal_list)
+                i += 1
+        elif self.mood == "happy":
+            #no shit posting
+            # if shit posting retry until choose another
+            while selected_goal.name == "ShitPosting":
+                selected_goal = random.choice(goal_list)
+
+
         def secondoverride(ways):
-            print "ALL YOU BASE ARE BELONG TO US"
+            #TODO make dependant on mood
+            i = random.randint(0, len(ways))
+            c = 0
+            for way in ways:
+                for key in way:
+                    selected_way = way
+                    data = selected_way[key]
+                if c == i:
+                    break
+                c += 1
+
+            return selected_way, data, key
+
+        intent, data, key = selected_goal.way_selector(secondoverride)#we can pass way selector function here, for more frequent news sources for example
+        return intent, data, key, selected_goal.name
+        pass
+
+    def dream_goal_select(self, goal_list):
+        i = 0
+        selected_goal = random.choice(goal_list)
+        # if dream about retry to choose another a few times
+        while i < 5 or selected_goal.name == "Dream_About":
+            selected_goal = random.choice(goal_list)
+            i += 1
+
+        def secondoverride(ways):
+            #print "ALL YOU BASE ARE BELONG TO US"
             i = random.randint(0, len(ways))
             c = 0
             for way in ways:
@@ -325,13 +360,9 @@ class freewill():
                 c += 1
             return selected_way, data, key
 
-        intent, data, key = selected_goal.way_selector(secondoverride)#we can pass way selector function here, for more frequent news sources for example
+        intent, data, key = selected_goal.way_selector(
+            secondoverride)  # we can pass way selector function here, for more frequent pure dreams orsumethin
         return intent, data, key, selected_goal.name
-        pass
-
-    def dream_goal_select(self):
-        #TODO make dream about less selected
-        pass
 
     ##################   signal processing #############3
     def contextupdate(self, message):
@@ -525,8 +556,6 @@ class freewill():
         self.toughts['entropy'] = self.entropy
 
     ##########################33   available actions functions ####################33
-
-   # TODO refactor actions from intents into objectives
 
     def set_actions(self):
 

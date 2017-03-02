@@ -1,6 +1,2 @@
-LonelyIntent
-FbtimeIntent
-FbfriendnumberIntent
-FbweatherIntent
-FbdreamIntent
-FullDiagnosticsIntent
+BeIgnored
+FaceBookContent
