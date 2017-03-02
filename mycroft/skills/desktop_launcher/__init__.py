@@ -95,7 +95,10 @@ class DesktopLauncherSkill(MycroftSkill):
 
     def handle_launch_website(self, message):
         site = message.data.get("Website")
-        webbrowser.open(IFL_TEMPLATE % (urllib2.quote(site)))
+        if "http://" or "https://" in site:
+            webbrowser.open(site)
+        else:
+            webbrowser.open(IFL_TEMPLATE % (urllib2.quote(site)))
         self.add_result("launched_website", site)
         self.emit_results()
 
