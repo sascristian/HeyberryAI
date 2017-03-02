@@ -39,14 +39,14 @@ class Goal():
 
     def way_selector(self, function=None):
         if function is not None:
-            return function()
+            return function(self.ways)
         else:
-            return self.default_way_selector()
+            return self.default_way_selector(self.ways)
 
-    def default_way_selector(self):
-        i = random.randint(0,len(self.ways))
+    def default_way_selector(self, ways):
+        i = random.randint(0,len(ways))
         c = 0
-        for way in self.ways:
+        for way in ways:
             for key in way:
                 selected_way = way
                 data = selected_way[key]
@@ -312,7 +312,20 @@ class freewill():
                     selected_goal=goal
                     break
 
-        intent, data, key = selected_goal.way_selector()#we can pass way selector function here, for more frequent news sources for example
+        def secondoverride(ways):
+            print "ALL YOU BASE ARE BELONG TO US"
+            i = random.randint(0, len(ways))
+            c = 0
+            for way in ways:
+                for key in way:
+                    selected_way = way
+                    data = selected_way[key]
+                if c == i:
+                    break
+                c += 1
+            return selected_way, data, key
+
+        intent, data, key = selected_goal.way_selector(secondoverride)#we can pass way selector function here, for more frequent news sources for example
         return intent, data, key, selected_goal.name
         pass
 
