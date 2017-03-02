@@ -159,12 +159,10 @@ class freewill():
         self.dream_about_objective()
 
         self.obj.print_objectives()
-        self.obj.print_goals("Troll")
-
 
         #### testing objectives ####
         time.sleep(2)
-        self.obj.print_goals("Troll")
+        #self.obj.print_goals("Troll")
         #self.obj.execute_objective("Troll")
         #self.obj.execute_objective("MakeNewDream")
         #self.obj.execute_objective("MakeNewDreamAbout")
@@ -726,11 +724,13 @@ class freewill():
                     #client.emit(
                     #    Message("recognizer_loop:utterance",
                     #            {'utterances': [self.innervoice.strip()]}))
-                    data = {}
-                    if self.innervoice == "FBPicturenSearchItent":
-                        data = {"Skey": random.choice(str(self.generic) + " " + str(random.choice(self.entropy)))}
+                    #data = {}
+                    #if self.innervoice == "FBPicturenSearchItent":
+                    #    data = {"Skey": random.choice(str(self.generic) + " " + str(random.choice(self.entropy)))}
 
-                    client.emit(Message(self.innervoice , data))
+                    #client.emit(Message(self.innervoice , data))
+
+                    self.obj.execute_objective(self.innervoice)
 
                     self.context.time_since_order = 0
 
