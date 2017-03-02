@@ -46,3 +46,35 @@ SmartContracts:
 - earn own btc
 - have smart contract that when threshodl is reached hires someone to make a body (reproduce, living organism AI)
    - https://bitcoinmagazine.com/articles/plantoids-the-first-blockchain-based-artificial-life-forms-1482768916/
+
+
+General
+
+    Open street map: "How long will it take to get to London by car if I set off at 5pm?"
+    General Transit Feed Specification (GTFS): "When is the next train to Newcastle?"
+    Baby monitor mode - constant audio feed from 2nd Mycroft unit in baby's room (with beeping alert to main Mycroft if signal is lost)
+    Lotto: "Read me today's lottery numbers"
+    TV guide: "What science fiction films are on the TV tonight", "None, Darren, you should probably pay for Sky you cheapskate"
+    Currency conversion: "What's 150 dollars in pounds?"
+    Unit conversion: "What is 20 inches in centimetres?"
+    Recipes "Okay, done that, what's the next step?"
+    Read me a story - e.g. an audiobooks, e.g. from project Guttenberg or smashwords. If you don't like the computerised voice reading to you, I believe there librevox for pre-recorded stories too.
+    Dictation mode i.e. write down what I say to a document until I give the keyword to stop
+    Read IRC conversations outloud on a given channel - use festival or something to provide a different voice to each username (using the smae ones each time so you associate a certain voice with a certain username)
+    Facebook/twitter/steam integration - "You have a new facebook notification" or "a game on your Steam wishlist is on sale"
+
+With Camera Module
+
+    Security - I'm on holiday for the next week, so email me if movement is detected in my house ("show me" too if also have phone integration)
+
+With Ubuntu phone integration
+
+    Spoken to Mycroft base unit, but using an Ubuntu phone with Mycroft companion app on it:
+        SMS: "Send the following text to dad from my phone ..."
+        Shopping list: "Add milk to shopping list" (companion app can then display the full list on demand for when at shop. Maybe have one-offs and weekly shopping lists, too)
+        Essential (for me): "Mycroft, Find my phone" (makes phone ring until I find it).
+        File transfer: "Send this boarding pass pdf to my phone"
+    Spoken to phone directly:
+        Audio link to Mycroft unit based at home via WebRTC, so can call home fro free from abroad
+        stream music from home network to my phone
+        Print this out at home (assuming theres a mycroft base unit and a printer on the same network at "home")

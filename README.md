@@ -45,6 +45,14 @@ from third partys
 - [Command Skill](https://github.com/forslund/cmd_skill)
 - [Small Talk, Dice, Coin Flip, Rock Paper Scissors Skills](https://github.com/apquinit/mycroft-skills)
 
+changed skills
+
+- added results property to all skills
+
+- wikipedia skill - added adquire knowledge intent -> saves definition to disk
+
+- desktop_launcher - added ability to open urls instead of google searching (non-vocal skill usecase)
+
 
 # Privacy Enhancements
 
