@@ -104,7 +104,7 @@ class Objectives():
     def print_goals(self, objective):
         for goal in self.objectives[objective]:
             print goal.name
-            goal.print_ways()
+            #goal.print_ways()
 
 class freewill():
     def __init__(self):
@@ -171,6 +171,10 @@ class freewill():
 
         self.obj.print_objectives()
 
+       # for obj in self.obj.objectives:
+       #     print obj+"\n"
+       #     self.obj.print_goals(obj)
+
     ####### objectives #####
     def load_objectives_from_config(self):
         objectives = ConfigurationManager.get(["/home/user/jarbas-core/mycroft/Subconscious/objectives.conf"])[
@@ -235,24 +239,24 @@ class freewill():
         goals = []
         for word in self.word_bank:
             ways = {}
-            #ways.setdefault(name, {"DreamSearch": word})
-            #waylist.append(ways)
-            ways.setdefault(name, {"DreamSearch": random.choice(self.generic) + word})
+            # ways.setdefault(name, {"DreamSearch": word})
+            # waylist.append(ways)
+            ways.setdefault(name, {"DreamSearch": random.choice( word)})
             waylist.append(ways)
 
         name = "Dream_About"
         goal = Goal(name, waylist)
         goals.append(goal)
 
-        try: #if key exists in dict
+        try:  # if key exists in dict
             old_goals = self.obj.objectives["MakeNewDream"]
             for goal in old_goals:
-        #        print goal.name
-                goals.append(goal) #load previously defined goals
+                #        print goal.name
+                goals.append(goal)  # load previously defined goals
         except:
             pass
 
-        self.obj.register_objective("MakeNewDream", goals) #update/register objective
+        self.obj.register_objective("MakeNewDream", goals)  # update/register objective
 
     def facebook_objective(self):
         name = "FBPicturenSearchItent"
