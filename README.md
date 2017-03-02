@@ -48,10 +48,9 @@ from third partys
 changed skills
 
 - added results property to all skills
-
 - wikipedia skill - added adquire knowledge intent -> saves definition to disk
-
 - desktop_launcher - added ability to open urls instead of google searching (non-vocal skill usecase)
+- ip skill - blacklisted, using the7erm diagnostics skill for this
 
 
 # Privacy Enhancements
