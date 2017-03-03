@@ -29,13 +29,13 @@ class WallpaperSkill(MycroftSkill):
 
         self.USERAGENT = "Jarbas Ai Wallpaper finder"
         self.SUBREDDIT = "wallpapers"#"ImaginaryBestOf"
-        self.IMAGEFOLDERPATH = "/home/user/mycroft-core/mycroft/skills/dreamskill/dream_source"
+        self.IMAGEFOLDERPATH = "/home/user/jarbas-core/mycroft/skills/dreamskill/this"
 
         if not os.path.exists(self.IMAGEFOLDERPATH):
             os.makedirs(self.IMAGEFOLDERPATH)
 
         self.MAXPOSTS = 25
-        self.TIMEBETWEENIMAGES = 60
+        self.TIMEBETWEENIMAGES = 65
         self.FILETYPES = ('.jpg', '.jpeg', '.png')
 
         self.ID = self.config["reddit_id"]
@@ -47,15 +47,17 @@ class WallpaperSkill(MycroftSkill):
                              user_agent=self.USERAGENT)
         # populate on first run
         self.populate = True
-        def start_populate():
-            if self.populate:
-                self.removeFiles()
-                self.download_images(self.findImages())
+        #def start_populate():
+        if self.populate:
+            self.removeFiles()
+            self.download_images(self.findImages())
 
         def cyclethread():
             if self.cycleflag:
                 for imagePath in cycle(self.list_images()):
                     os.system(self.command.format(save_location=imagePath))
+                    self.add_result("wallpaper", imagePath)
+                    self.emit_results()
                     time.sleep(self.TIMEBETWEENIMAGES)
             else:
                 time.sleep(5)
