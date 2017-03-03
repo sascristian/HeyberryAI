@@ -152,7 +152,7 @@ class ContextSkill(MycroftSkill):
                 flag = False
                 for ctxt in contexts:
                     if ctxt["key"] == key and ctxt["data"] == dict[key]:
-                        flag = True  # its duplicate!
+                        flag = True  # its duplicate! dif confidence maybe
                 if not flag:
                     self.manager.inject_context(entity)
                     print "injecting " + str(entity)
@@ -161,27 +161,22 @@ class ContextSkill(MycroftSkill):
 
         dict = message.data["abstract"]
         for key in dict:
-                # build skill dict for testing
                 self.context_dict.setdefault(key, dict[key])
 
         dict = message.data["signals"]
         for key in dict:
-            # build skill dict for testing
             self.signals_dict.setdefault(key, dict[key])
 
-        dict = message.data["intents"]  # should i get all context or just regex?
+        dict = message.data["intents"]
         for key in dict:
-            # build skill dict for testing
             self.intents_dict.setdefault(key, dict[key])
 
-        dict = message.data["results"]  # should i get all context or just regex?
+        dict = message.data["results"]
         for key in dict:
-            # build skill dict for testing
             self.results_dict.setdefault(key, dict[key])
 
-        dict = message.data["skills"]  # should i get all context or just regex?
+        dict = message.data["skills"]
         for key in dict:
-            # build skill dict for testing
             self.skills_dict.setdefault(key)
 
         self.context_flag = True

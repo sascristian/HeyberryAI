@@ -87,7 +87,7 @@ class PoetrySkill(MycroftSkill):
                              self.handle_family_poetry_intent)
 
         poetry_intent = IntentBuilder("RecitePoetryIntent")\
-            .require("poetry").build()
+            .require("poetry").optionally("style").build()
         self.register_intent(poetry_intent,
                              self.handle_poetry_intent)
 
@@ -175,14 +175,17 @@ class PoetrySkill(MycroftSkill):
     def handle_poetry_intent(self, message):
         #self.speak_dialog("poetry")
         # choose style (black metal, death metal, trash metal)
-        style = random.choice(self.styles)
+        try:
+            style = message.data.get["Style"]
+            print style
+        except:
+            style = random.choice(self.styles)
         self.add_result("style", style)
         poem = self.poetry(style)
         self.save(style,poem)
         # speak
         self.speak(poem)
         self.emit_results()
-
 
     def poetry(self, style):
         # style = "shakespeare"

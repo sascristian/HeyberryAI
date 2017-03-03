@@ -70,7 +70,7 @@ class freewill():
         ###### register as many of these as needed to have some executed skill influence something
         client.emitter.on("diagnostics_request", self.diagnostics)
         client.emitter.on('vision_result', self.contextupdate)
-        client.emitter.on('recognizer_loop:utterance', self.action)
+        client.emitter.on('recognizer_loop:utterance', self.order)
         client.emitter.on('dopamine_increase_request', self.increasedopamine)
         client.emitter.on('dopamine_decrease_request', self.decreasedopamine)
         client.emitter.on('serotonine_increase_request', self.increaseserotonine)
@@ -100,7 +100,6 @@ class freewill():
         self.facebook_objective()
 
         self.obj.print_objectives()
-
 
     ####### objectives #####
     def load_objectives_from_config(self):
@@ -267,7 +266,7 @@ class freewill():
 
             # logger.info("updating vision context")
 
-    def action(self, message):
+    def order(self, message):
         # received order/did some action/ increase reward
         self.context.dopamine += 2
         self.context.tiredness += 15
@@ -304,6 +303,7 @@ class freewill():
         self.context.serotonine -= x
 
     def entropyate(self, message):
+        #### the idea is to populate entropy from fbchat sentences, hope jarbasdoesnt become a nazi
         flag = False
         afriend = message.data.get('friend')
         for friend in self.activefriends:

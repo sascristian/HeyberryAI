@@ -1,14 +1,13 @@
 # mycroft---freewill---service
 
-- context and events influence neurotransmitters
 - makes an action based on context and neurotransmitters
-
+- listens to a bunch of signals to affect neurotransmitters (TODO get all info from context manager)
 
 Requires
 
         objectives skill
 
-Recomends
+Recommends
 
         vision service
         sentiment analisys skill
