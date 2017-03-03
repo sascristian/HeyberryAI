@@ -30,15 +30,10 @@ class Goal():
             return self.default_way_selector(self.ways)
 
     def default_way_selector(self, ways):
-        i = random.randint(0,len(ways))
-        c = 0
-        for way in ways:
-            for key in way:
-                selected_way = way
-                data = selected_way[key]
-            if c == i:
-                break
-            c +=1
+        selected_way = random.choice(ways)
+        for key in selected_way:
+            #selected_way = way
+            data = selected_way[key]
         return selected_way , data, key
 
     def print_ways(self):
@@ -146,10 +141,13 @@ class ObjectivesSkill(MycroftSkill):
     ### example coded objectives
     # more available in freewill service
     def wiki_objective(self):
+
+        word_bank = self.load_word_bank()
+
         name = "WikipediaIntent"
         waylist = []
         goals = {}
-        word_bank = self.load_word_bank()
+        g = []
         for word in word_bank:
             ways = {}  # list dumb
             ways.setdefault(name, {"ArticleTitle": word})
@@ -157,13 +155,28 @@ class ObjectivesSkill(MycroftSkill):
 
         name = "Search_Wikipedia" #goal name
         goals.setdefault(name, waylist)
+        g.append(Goal(name,waylist))
 
         name = "wiki" #objective name to invoke for executing
 
-        # you can do this from inside this skill
-        #self.obj.register_objective(name, goals)
-        # or from any other skill you can do this T
-        self.emitter.emit(Message("Register_Objective", {"name":name,"goals":goals}))
+        # you can do this from inside this skill as long as goals is a list
+        self.obj.register_objective(name, g)
+        # or from any other skill you can do this, goals is a dict
+        #self.emitter.emit(Message("Register_Objective", {"name":name,"goals":goals}))
+
+        name = "KnowledgeIntent"
+        waylist = []
+        g = []
+        for word in word_bank:
+            ways = {}
+            ways.setdefault(name, {"ArticleTitle": word})
+            waylist.append(ways)
+
+        name = "Search_Wikipedia"
+        g.append(Goal(name, waylist))
+
+        name = "AdquireKnowledge"
+        self.obj.register_objective(name, g)
 
     def load_word_bank(self):
         word_bank = []

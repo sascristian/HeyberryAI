@@ -32,83 +32,7 @@ client = None
 def connect():
     client.run_forever()
 
-class Goal():
-    def __init__(self, name, ways):
-        self.name = name#"knowledge"
-        self.ways = ways#["wikipedia", "wolphram", "articles", "ask user"]
-
-    def way_selector(self, function=None):
-        if function is not None:
-            return function(self.ways)
-        else:
-            return self.default_way_selector(self.ways)
-
-    def default_way_selector(self, ways):
-        i = random.randint(0,len(ways))
-        c = 0
-        for way in ways:
-            for key in way:
-                selected_way = way
-                data = selected_way[key]
-            if c == i:
-                break
-            c +=1
-        return selected_way , data, key
-
-    def print_ways(self):
-        i = 0
-        if len(self.ways)>20:
-            print "Warning, lots of ways, printing first 20"
-        for way in self.ways:
-            print way
-            i+=1
-            if i>= 20:
-                break
-
-class Objectives():
-    def __init__(self, client):
-        self.objectives = {} #name : [Goals]
-        self.client = client
-
-    def register_objective(self, name, goals=None):
-        try:  # if key exists in dict
-            old_goals = self.objectives[name.lower()]
-            for goal in old_goals:
-                goals.append(goal)  # load previously defined goals
-            self.objectives[name.lower()] = goals
-        except:#doesnt exit, register
-            self.objectives.setdefault(name.lower(), goals)
-
-    def execute_objective(self, name, selectfunction=None):
-        if selectfunction is None:
-            selectfunction = self.default_select
-
-        intent , data, key, goal = selectfunction(self.objectives[name.lower()])
-
-        print "\nExecuting\n"
-        print "objective: "+name
-        print "Goal: " + goal
-        print "way: " + str(key)
-        print "way data :"+str(data)
-
-        self.client.emit(Message(key, data))
-
-        return intent
-
-    def default_select(self, goal_list):
-        selected_goal = random.choice(goal_list)
-        intent , data, key  = selected_goal.way_selector()
-        return intent, data, key, selected_goal.name
-
-    def print_objectives(self):
-        print "\nAvailable Objectives:\n"
-        for objective in self.objectives:
-            print objective
-
-    def print_goals(self, objective):
-        for goal in self.objectives[objective]:
-            print goal.name
-            goal.print_ways()
+from mycroft.skills.objective_skill import Goal, Objectives
 
 class freewill():
     def __init__(self):
@@ -132,7 +56,8 @@ class freewill():
 
         self.ignorevision = False
 
-        self.clock = time.time()
+        self.clock = time.time() # time sine action track
+        self.userclock = time.time() #time since user track
 
         self.context = FreeWillContext(name="Subconscious")
         self.visioncontext = VisionContext(name="Vision")
@@ -166,7 +91,7 @@ class freewill():
 
         self.obj = Objectives(client)
 
-        #self.load_objectives_from_config()
+        self.load_objectives_from_config()
 
         self.word_bank = []
         self.load_word_bank()
@@ -175,7 +100,7 @@ class freewill():
         self.dream_about_objective()
         self.facebook_objective()
 
-        #self.obj.print_objectives()
+        self.obj.print_objectives()
 
        # for obj in self.obj.objectives:
        #     print obj+"\n"
@@ -218,27 +143,6 @@ class freewill():
     ###### manually created objectives
             # create new objectives
 
-    def knowledge_objective(self):
-        print "creating search wikipedia goal"
-        name = "KnowledgeIntent"
-        waylist = []
-        goals = []
-        for word in self.word_bank:
-            ways = {}  # list dumb
-            ways.setdefault(name, {"ArticleTitle":word})
-            waylist.append(ways)
-
-        name = "Search_Wikipedia"
-        goal = Goal(name, waylist)
-        goals.append(goal)
-
-      #  self.obj.register_objective("AdquireKnowledge", goals)
-
-        goals = {}
-        goals.setdefault(name,waylist)
-
-        client.emit(Message("Register_Objective", {"name":"AdquireKnowledge","goals":goals}))
-
     def dream_about_objective(self):
         print "creating dream about goal"
         name = "DreamAboutIntent"
@@ -257,10 +161,10 @@ class freewill():
 
         self.obj.register_objective("MakeNewDream", goals)  # update/register objective
 
-        goals = {}
-        goals.setdefault(name, waylist)
+        #goals = {}
+        #goals.setdefault(name, waylist)
 
-        client.emit(Message("Register_Objective", {"name": "MakeNewDream", "goals": goals}))
+        #client.emit(Message("Register_Objective", {"name": "MakeNewDream", "goals": goals}))
 
     def facebook_objective(self):
         print "creating facebook picture search goal"
@@ -281,11 +185,11 @@ class freewill():
         goals.append(goal)
 
         self.obj.register_objective("FaceBookContent", goals) #update/register objective
+        ######## so so so slow because of huge dict
+        #goals = {}
+        #goals.setdefault(name, waylist)
 
-        goals = {}
-        goals.setdefault(name, waylist)
-
-        client.emit(Message("Register_Objective", {"name": "FaceBookContent", "goals": goals}))
+        #client.emit(Message("Register_Objective", {"name": "FaceBookContent", "goals": goals}))
 
     #### overrided select objective functions
 
@@ -352,18 +256,14 @@ class freewill():
         while i < 5 or selected_goal.name == "Dream_About":
             selected_goal = random.choice(goal_list)
             i += 1
+            print i
 
         def secondoverride(ways):
-            #print "ALL YOU BASE ARE BELONG TO US"
-            i = random.randint(0, len(ways))
-            c = 0
-            for way in ways:
-                for key in way:
-                    selected_way = way
-                    data = selected_way[key]
-                if c == i:
-                    break
-                c += 1
+            way = random.choice(ways)
+            for key in way:
+                selected_way = way
+                data = selected_way[key]
+
             return selected_way, data, key
 
         intent, data, key = selected_goal.way_selector(
@@ -382,16 +282,16 @@ class freewill():
             self.clock = time.time()
             self.visioncontext.multiple_persons = True
             self.visioncontext.person_on_screen = True
+            self.userclock = time.time()
         elif self.visioncontext.num_persons == 1:
             self.context.timeuser = 0
             self.clock = time.time()
             self.visioncontext.multiple_persons = False
             self.visioncontext.person_on_screen = True
+            self.userclock = time.time()
         else:
             self.visioncontext.multiple_persons = False
             self.visioncontext.person_on_screen = False
-            self.context.timeuser = message.data.get('time') - self.clock
-
 
             # logger.info("updating vision context")
 
@@ -654,6 +554,7 @@ class freewill():
 
         # update time since order
         self.context.time_since_order = time.time() - self.context.time
+        self.context.timeuser = time.time() - self.userclock
 
     ########################hormones functions ############3333
 
@@ -834,12 +735,12 @@ class freewill():
                     logger.info(' action : ' + self.innervoice)
                     #todo refacor into using objectives skill instead of having own obj instance
                     if self.innervoice == "FaceBookContent":
-                        self.obj.execute_objective(self.innervoice, self.fb_goal_select)
+                        self.obj.execute_objective(self.innervoice.lower(), self.fb_goal_select)
                     elif self.innervoice == "MakeNewDream":
-                        self.obj.execute_objective(self.innervoice, self.dream_goal_select)
+                        self.obj.execute_objective(self.innervoice.lower(), self.dream_goal_select)
                     else:
                     #    self.obj.execute_objective(self.innervoice)
-                        client.emit(Message("ExecuteObjectiveIntent", {"Objective":self.innervoice}))
+                        client.emit(Message("ExecuteObjectiveIntent", {"Objective":self.innervoice.lower()}))
 
                     self.context.time_since_order = 0
                     self.context.time = time.time()
