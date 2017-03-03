@@ -64,7 +64,7 @@ class Objectives():
         for goal in goals:
             data.append(goal.name)
 
-        data = {"Goals":data}
+        data = {"Name":name,"Goals":data}
         self.client.emit(Message("Objective_Registered", data))
 
     def execute_objective(self, name, selectfunction=None):
