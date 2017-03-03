@@ -96,15 +96,11 @@ class freewill():
         self.word_bank = []
         self.load_word_bank()
 
-        self.knowledge_objective()
         self.dream_about_objective()
         self.facebook_objective()
 
         self.obj.print_objectives()
 
-       # for obj in self.obj.objectives:
-       #     print obj+"\n"
-       #     self.obj.print_goals(obj)
 
     ####### objectives #####
     def load_objectives_from_config(self):
@@ -230,22 +226,7 @@ class freewill():
             while selected_goal.name == "ShitPosting":
                 selected_goal = random.choice(goal_list)
 
-
-        def secondoverride(ways):
-            #TODO make dependant on mood
-            i = random.randint(0, len(ways))
-            c = 0
-            for way in ways:
-                for key in way:
-                    selected_way = way
-                    data = selected_way[key]
-                if c == i:
-                    break
-                c += 1
-
-            return selected_way, data, key
-
-        intent, data, key = selected_goal.way_selector(secondoverride)#we can pass way selector function here, for more frequent news sources for example
+        intent, data, key = selected_goal.way_selector()#we can pass way selector function here, for more frequent news sources for example
         return intent, data, key, selected_goal.name
         pass
 
@@ -258,16 +239,7 @@ class freewill():
             i += 1
             print i
 
-        def secondoverride(ways):
-            way = random.choice(ways)
-            for key in way:
-                selected_way = way
-                data = selected_way[key]
-
-            return selected_way, data, key
-
-        intent, data, key = selected_goal.way_selector(
-            secondoverride)  # we can pass way selector function here, for more frequent pure dreams orsumethin
+        intent, data, key = selected_goal.way_selector()  # we can pass way selector function here, for more frequent pure dreams orsumethin
         return intent, data, key, selected_goal.name
 
     ##################   signal processing #############3
