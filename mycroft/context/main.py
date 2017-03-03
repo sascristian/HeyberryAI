@@ -25,6 +25,8 @@ class ContextService():
         client.emitter.on("context_key_override", self.handle_key_context_override)
         client.emitter.on("register_intent", self.handle_register_intent)
         client.emitter.on("chat_request", self.handle_fbchat_intent)
+        client.emitter.on("Objective_Registered", self.handle_objective_registered)
+        client.emitter.on("ExecuteObjectiveIntent", self.handle_objective_execute)
 
         ############## database
         self.vocab = [] #all keys
@@ -44,6 +46,10 @@ class ContextService():
         self.abstract_dict = {}# other data
         # facebook hcat data
         self.fbchat_dict = {}# userid: last sentence   and   username: userid
+        #objectives
+        self.objectives_dict = {}
+        self.objectives_dict.setdefault("Last_Executed_Objective")
+        self.context_dict.setdefault("Last_Executed_Objective")
 
         #future / POC
         self.bluetooth_dict = {"me":True} # bluetooth ids for user presence    666 : False
@@ -75,6 +81,8 @@ class ContextService():
                     self.bluetooth_dict.setdefault(name)
                 elif type == "facebook":
                     self.fbchat_dict.setdefault(name)
+                elif type == "objective":
+                    self.objectives_dict.setdefault(name)
 
 
                 print "registering context " + name + "   type: " + type
@@ -109,10 +117,6 @@ class ContextService():
         self.signals_dict["fails"] = 0
         self.signals_dict["last_fail"] = "achieve sentience"
 
-    def handle_register_skill(self, message):
-        params = [message.data.get("skill_name")]
-        self.register_context(params, type="skill")
-
     def request_update(self, target="all"):
         # target = freewill / vision / all
         client.emit(Message("context_update", {'target': target}))
@@ -122,6 +126,22 @@ class ContextService():
         self.regex_dict[regex] = result #this was already added in results dict also
 
     #### implement more signals
+    def handle_register_skill(self, message):
+        params = [message.data.get("skill_name")]
+        self.register_context(params, type="skill")
+
+    def handle_objective_execute(self, message):
+        obj = message.data["Objective"]
+        self.objectives_dict["Last_Executed_Objective"] = obj
+        self.context_dict["Last_Executed_Objective"] = obj
+
+    def handle_objective_registered(self, message):
+        obj = message.data["Name"]
+        goals = message.data["Goals"]
+        self.register_context([obj], type="objective")
+        self.context_dict[obj] = goals  # populate
+        self.objectives_dict[obj] = goals  # populate
+        print "populating objective: " + obj + " with data: " + goals
 
     def handle_fbchat_intent(self, message):
         user = message.data["id"]

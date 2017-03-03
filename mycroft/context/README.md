@@ -19,6 +19,8 @@ on request emits current context to bus
         register_vocab - context for all regex expressions in skills
         skill_loaded - context for available skills
         register_intent - context for registered intents
+        Objective_Registered - context for registered objectives
+        ExecuteObjectiveIntent - context for last executed objective
         
         Responds to:
         
