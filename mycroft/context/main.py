@@ -172,7 +172,7 @@ class ContextService():
 
         # emit unified response from all contexts   ### need a better title for message
         client.emit(
-            Message("context_result", {'full_dictionary': self.context_dict,'bluetooth': self.bluetooth_dict, 'abstract': self.abstract_dict, 'signals': self.signals_dict, 'results': self.results_dict, 'intents': self.intents_dict,'regex': self.regex_dict,'skills': self.skills_dict}))
+            Message("context_result", {'full_dictionary': self.context_dict,'bluetooth': self.bluetooth_dict, 'abstract': self.abstract_dict, 'signals': self.signals_dict, 'results': self.results_dict, 'intents': self.intents_dict,'regex': self.regex_dict,'skills': self.skills_dict,"objectives":self.objectives_dict}))
 
     def handle_register_vocab(self, message):
         regex = message.data.get("regex")

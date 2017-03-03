@@ -21,6 +21,7 @@ class ContextSkill(MycroftSkill):
         self.signals_dict = {}
         self.skills_dict = {}
         self.results_dict = {}
+        self.objectives_dict = {}
 
     def initialize(self):
         #self.load_data_files(dirname(__file__))
@@ -54,6 +55,11 @@ class ContextSkill(MycroftSkill):
             .require("RcontextKeyword").build()
         self.register_intent(results_context_intent,
                              self.handle_results_context_intent)
+
+        obj_context_intent = IntentBuilder("ObjectivesContextIntent") \
+            .require("ObjcontextKeyword").build()
+        self.register_intent(obj_context_intent,
+                             self.handle_objectives_context_intent)
 
         self.emitter.on("context_result", self.handle_context_result)   ### only thing you need to have context in your skill!
         #### receives the following data
@@ -138,6 +144,19 @@ class ContextSkill(MycroftSkill):
 
         self.context_flag = False
 
+    def handle_objectives_context_intent(self, message):
+        self.emitter.emit(Message("context_request"))  # update context
+        while not self.context_flag:
+            pass  # wait results response
+        self.speak_dialog("override")
+
+        for key in self.objectives_dict:
+            if self.results_dict[key] is not None:
+                text = key + " result context has value " + str(self.objectives_dict[key])
+                self.speak(text)
+
+        self.context_flag = False
+
     ###### only if you need to override, function already in core
     def handle_context_result(self, message):
         #### this is the default function getting all regex contexts
@@ -178,6 +197,10 @@ class ContextSkill(MycroftSkill):
         dict = message.data["skills"]
         for key in dict:
             self.skills_dict.setdefault(key)
+
+        dict = message.data["objectives"]
+        for key in dict:
+            self.objectives_dict.setdefault(key)
 
         self.context_flag = True
 
