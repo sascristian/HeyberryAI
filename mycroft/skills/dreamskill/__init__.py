@@ -23,15 +23,12 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
-from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 
 __author__ = 'jarbas'
 
 logger = getLogger(__name__)
 dreamlogger = getLogger('Dream ')
-
-client = None
 
 class DreamSkill(MycroftSkill):
 
@@ -97,7 +94,7 @@ class DreamSkill(MycroftSkill):
 		#    ,
 
 		# random dreaming mode choice
-		self.choice = self.config["mode"]  # guided dream=1 normal = 0
+		self.choice = 0#self.config["mode"]  # guided dream=1 normal = 0
 
 		# Define the codec and create VideoWriter object
 		self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -216,7 +213,7 @@ class DreamSkill(MycroftSkill):
 
 	def handle_psy_dream_intent(self, message):
 		if not self.dreaming:
-			client.emit(Message("entropy_request")) #ask for new strings
+			self.emitter.emit(Message("entropy_request")) #ask for new strings
 			makeImage(self.psypath, 3)
 
 		chosenpic = random.choice(os.listdir(self.psypath))
@@ -249,7 +246,7 @@ class DreamSkill(MycroftSkill):
 	def handle_pure_dream_intent(self, message):
 
 		if not self.dreaming:
-			client.emit(Message("entropy_request")) #ask for new strings
+			self.emitter.emit(Message("entropy_request")) #ask for new strings
 			self.generate_pattern(random.choice(self.strings))
 
 		chosenpic = random.choice(os.listdir(self.patternpath))
