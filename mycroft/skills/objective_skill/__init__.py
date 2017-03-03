@@ -1,5 +1,5 @@
 import sys
-from os.path import dirname, abspath, basename
+from os.path import abspath
 
 from mycroft.skills.core import MycroftSkill
 from adapt.intent import IntentBuilder
