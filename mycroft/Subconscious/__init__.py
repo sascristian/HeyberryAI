@@ -66,20 +66,24 @@ class Goal():
                 break
 
 class Objectives():
-    def __init__(self):
+    def __init__(self, client):
         self.objectives = {} #name : [Goals]
+        self.client = client
 
     def register_objective(self, name, goals=None):
-        try:#update
-            self.objectives[name] = goals
-        except: #key doenst exist, register
-            self.objectives.setdefault(name, goals)
+        try:  # if key exists in dict
+            old_goals = self.objectives[name.lower()]
+            for goal in old_goals:
+                goals.append(goal)  # load previously defined goals
+            self.objectives[name.lower()] = goals
+        except:#doesnt exit, register
+            self.objectives.setdefault(name.lower(), goals)
 
     def execute_objective(self, name, selectfunction=None):
         if selectfunction is None:
             selectfunction = self.default_select
 
-        intent , data, key, goal = selectfunction(self.objectives[name])
+        intent , data, key, goal = selectfunction(self.objectives[name.lower()])
 
         print "\nExecuting\n"
         print "objective: "+name
@@ -87,7 +91,7 @@ class Objectives():
         print "way: " + str(key)
         print "way data :"+str(data)
 
-        client.emit(Message(key, data))
+        self.client.emit(Message(key, data))
 
         return intent
 
@@ -104,14 +108,14 @@ class Objectives():
     def print_goals(self, objective):
         for goal in self.objectives[objective]:
             print goal.name
-            #goal.print_ways()
+            goal.print_ways()
 
 class freewill():
     def __init__(self):
 
         # dont be hiperactive, minimum 15 min max 1 hour between actions
-        self.min_time_between_actions = 30#15 * 60  # seconds
-        self.max_time_between_actions = 60#40 * 60  # * 45
+        self.min_time_between_actions = 15 * 60  # seconds
+        self.max_time_between_actions = 40 * 60  # * 45
         self.greetings = True
 
         self.generic = ['awesome ', 'cool ', 'the best ', 'brutal ', 'average ', 'satanic ', 'synthetic ', "nice ", "ultra ",
@@ -138,6 +142,7 @@ class freewill():
         global client
         client = WebsocketClient()
 
+        ###### register as many of these as needed to have some executed skill influence something
         client.emitter.on("diagnostics_request", self.diagnostics)
         client.emitter.on('vision_result', self.contextupdate)
         client.emitter.on('recognizer_loop:utterance', self.action)
@@ -153,23 +158,24 @@ class freewill():
         client.emitter.on('speak', self.onspeak)
         client.emitter.on("context_update", self.context)
 
-        ###### register as many of these as needed to have some executed skill influence something
+
 
         self.event_thread = Thread(target=connect)
         self.event_thread.setDaemon(True)
         self.event_thread.start()
 
-        self.obj = Objectives()
+        self.obj = Objectives(client)
 
-        self.load_objectives_from_config()
+        #self.load_objectives_from_config()
 
         self.word_bank = []
         self.load_word_bank()
 
         self.knowledge_objective()
         self.dream_about_objective()
+        self.facebook_objective()
 
-        self.obj.print_objectives()
+        #self.obj.print_objectives()
 
        # for obj in self.obj.objectives:
        #     print obj+"\n"
@@ -213,6 +219,7 @@ class freewill():
             # create new objectives
 
     def knowledge_objective(self):
+        print "creating search wikipedia goal"
         name = "KnowledgeIntent"
         waylist = []
         goals = []
@@ -224,16 +231,16 @@ class freewill():
         name = "Search_Wikipedia"
         goal = Goal(name, waylist)
         goals.append(goal)
-        ### todo wolphram goal
 
-        self.obj.register_objective("AdquireKnowledge", goals)
+      #  self.obj.register_objective("AdquireKnowledge", goals)
 
+        goals = {}
+        goals.setdefault(name,waylist)
 
-        ### "", "data": {"confidence": 0.375, "target": null, "WikipediaKeyword": "tell me about", "intent_type": "WikipediaIntent", "ArticleTitle": "god",
-        pass
-            # update existing objectives
+        client.emit(Message("Register_Objective", {"name":"AdquireKnowledge","goals":goals}))
 
     def dream_about_objective(self):
+        print "creating dream about goal"
         name = "DreamAboutIntent"
         waylist = []
         goals = []
@@ -248,17 +255,15 @@ class freewill():
         goal = Goal(name, waylist)
         goals.append(goal)
 
-        try:  # if key exists in dict
-            old_goals = self.obj.objectives["MakeNewDream"]
-            for goal in old_goals:
-                #        print goal.name
-                goals.append(goal)  # load previously defined goals
-        except:
-            pass
-
         self.obj.register_objective("MakeNewDream", goals)  # update/register objective
 
+        goals = {}
+        goals.setdefault(name, waylist)
+
+        client.emit(Message("Register_Objective", {"name": "MakeNewDream", "goals": goals}))
+
     def facebook_objective(self):
+        print "creating facebook picture search goal"
         name = "FBPicturenSearchItent"
         waylist = []
         goals = []
@@ -275,15 +280,12 @@ class freewill():
         goal = Goal(name, waylist)
         goals.append(goal)
 
-        try: #if key exists in dict
-            old_goals = self.obj.objectives["FaceBookContent"]
-            for goal in old_goals:
-        #        print goal.name
-                goals.append(goal) #load previously defined goals
-        except:
-            pass
-
         self.obj.register_objective("FaceBookContent", goals) #update/register objective
+
+        goals = {}
+        goals.setdefault(name, waylist)
+
+        client.emit(Message("Register_Objective", {"name": "FaceBookContent", "goals": goals}))
 
     #### overrided select objective functions
 
@@ -815,11 +817,6 @@ class freewill():
         self.visioncontext.master = False
         self.visioncontext.person_on_screen = False
         self.visioncontext.movement = False
-        # context.timeuser = 31*60
-        # mood cheats
-        # self.context.serotonine = 3000
-        # self.context.dopamine = 3000
-        # context.tiredness = 10
 
         try:
             while True:
@@ -835,8 +832,14 @@ class freewill():
                 if self.innervoice != 'do nothing' and self.context.time_since_order > self.time_between_actions:
                     # execute chosen action
                     logger.info(' action : ' + self.innervoice)
-
-                    self.obj.execute_objective(self.innervoice)
+                    #todo refacor into using objectives skill instead of having own obj instance
+                    if self.innervoice == "FaceBookContent":
+                        self.obj.execute_objective(self.innervoice, self.fb_goal_select)
+                    elif self.innervoice == "MakeNewDream":
+                        self.obj.execute_objective(self.innervoice, self.dream_goal_select)
+                    else:
+                    #    self.obj.execute_objective(self.innervoice)
+                        client.emit(Message("ExecuteObjectiveIntent", {"Objective":self.innervoice}))
 
                     self.context.time_since_order = 0
                     self.context.time = time.time()
