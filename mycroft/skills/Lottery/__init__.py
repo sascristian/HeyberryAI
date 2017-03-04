@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-### Portugal lotteries : name, chance of matching all numbers, sample play, Totoloto, = 1 in 24789492, 4, 8, 24, 25, 45, 3, EuroMillions, = 1 in 116531800, 10, 34, 37, 40, 41, 1, 8
+### chance of matching all numbers, sample play, EuroMillions, = 1 in 116531800
 
 import unirest
 
@@ -46,6 +46,8 @@ class LotterySkill(MycroftSkill):
         self.register_intent(jackpot_intent,
                              self.handle_jackpot_intent)
 
+        ### TODO add historic numbers data
+        ### TODO read prizes and winners
         ### TODO add non european lotterys and stuff
 
     def handle_last_numbers_intent(self, message):
