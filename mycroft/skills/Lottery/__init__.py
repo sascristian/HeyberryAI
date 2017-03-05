@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-### chance of matching all numbers, sample play, EuroMillions, = 1 in 116531800
+
 
 import unirest
 
@@ -41,15 +41,22 @@ class LotterySkill(MycroftSkill):
         self.register_intent(last_numbers_intent,
                              self.handle_last_numbers_intent)
 
-        jackpot_intent = IntentBuilder("SuggestIntent") \
+        jackpot_intent = IntentBuilder("JackpotIntent") \
             .require("JackPotKeyword").build()
         self.register_intent(jackpot_intent,
                              self.handle_jackpot_intent)
+
+        next_key_intent = IntentBuilder("NextLotteryResultIntent") \
+            .require("NextKeyKeyword").build()
+        self.register_intent(next_key_intent,
+                             self.handle_next_key_intent)
 
         ### TODO add historic numbers data
         ### TODO read prizes and winners
         ### TODO add non european lotterys and stuff
 
+    def handle_next_key_intent(self, message):
+        self.speak_dialog("nextlottery")
     def handle_last_numbers_intent(self, message):
         # These code snippets use an open-source library. http://unirest.io/python
         response = unirest.get("https://euromillions.p.mashape.com/ResultsService/FindLast",

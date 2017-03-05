@@ -15,6 +15,7 @@ usage:
 
         euromillions -> Lattest Numbers
         jackpot -> last and next jackpot
+        next euromillions -> tell you the next week's euromillions key using a neural network
 
 TODO:
 
