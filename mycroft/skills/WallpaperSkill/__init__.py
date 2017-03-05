@@ -46,7 +46,7 @@ class WallpaperSkill(MycroftSkill):
                              client_secret=self.SECRET,
                              user_agent=self.USERAGENT)
         # populate on first run
-        self.populate = True
+        self.populate = False
         #def start_populate():
         if self.populate:
             self.removeFiles()

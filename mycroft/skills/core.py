@@ -25,6 +25,7 @@ import re
 from adapt.intent import Intent
 from os.path import join, dirname, splitext, isdir
 
+from mycroft.messagebus.message import Message
 from mycroft.client.enclosure.api import EnclosureAPI
 from mycroft.configuration import ConfigurationManager
 from mycroft.dialog import DialogLoader
@@ -87,14 +88,14 @@ def load_regex(basedir, emitter):
 
 
 def open_intent_envelope(message):
-    intent_dict = message.data
+    intent_dict = message.data["intent"]
     return Intent(intent_dict.get('name'),
                   intent_dict.get('requires'),
                   intent_dict.get('at_least_one'),
                   intent_dict.get('optional'))
 
 
-def load_skill(skill_descriptor, emitter):
+def load_skill(skill_descriptor, emitter, skill_id):
     try:
         logger.info("ATTEMPTING TO LOAD SKILL: " + skill_descriptor["name"])
         skill_module = imp.load_module(
@@ -103,11 +104,12 @@ def load_skill(skill_descriptor, emitter):
                 callable(skill_module.create_skill)):
             # v2 skills framework
             skill = skill_module.create_skill()
+            skill.id = skill_id  # register unique id
             skill.bind(emitter)
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
             skill.initialize()
-            logger.info("Lodaded " + skill_descriptor["name"])
-            emitter.emit(Message("skill_loaded", {'skill_name': skill_descriptor["name"]}))
+
+            logger.info("Loaded " + skill_descriptor["name"] +" ID: "+str(skill_id))
             return skill
         else:
             logger.warn(
@@ -117,7 +119,6 @@ def load_skill(skill_descriptor, emitter):
         logger.error(
             "Failed to load skill: " + skill_descriptor["name"], exc_info=True)
     return None
-
 
 def get_skills(skills_folder):
     logger.info("LOADING SKILLS FROM " + skills_folder)
@@ -151,14 +152,17 @@ def load_skills(emitter, skills_root=SKILLS_BASEDIR):
     logger.info("Checking " + skills_root + " for new skills")
     skill_list = []
     skills = get_skills(skills_root)
+    id = 0
     for skill in skills:
         if skill['name'] in PRIMARY_SKILLS:
-            skill_list.append(load_skill(skill, emitter))
+            skill_list.append(load_skill(skill, emitter, id))
+            id+=1
 
     for skill in skills:
         if (skill['name'] not in PRIMARY_SKILLS and
                 skill['name'] not in BLACKLISTED_SKILLS):
-            skill_list.append(load_skill(skill, emitter))
+            skill_list.append(load_skill(skill, emitter,id))
+            id+=1
     return skill_list
 
 
@@ -182,13 +186,12 @@ class MycroftSkill(object):
         self.file_system = FileSystemAccess(join('skills', name))
         self.registered_intents = []
         self.log = getLogger(name)
+        self.skill_id = 0
+        #######   this is not official code, hacked around,
         self.results = {}
         ##### global context
         self.manager = ContextManager()
         self.context_flag = False #results received flag
-
-        #### receives the following data
-        #  Message("context_result", {'full_dictionary': self.context_dict,'bluetooth': self.bluetooth_dict, 'abstract': self.abstract_dict, 'signals': self.signals_dict, 'results': self.results_dict, 'intents': self.intents_dict,'regex': self.regex_dict,'skills': self.skills_dict})
 
     @property
     def location(self):
@@ -241,6 +244,7 @@ class MycroftSkill(object):
         """
         raise Exception("Initialize not implemented for skill: " + self.name)
 
+    ###### trying to get context into adapt - ignore for now, doesnt break code anyway
     def handle_context_result(self, message):
         dict = message.data["regex"] #should i get all context or just regex?
         for key in dict:
@@ -258,10 +262,15 @@ class MycroftSkill(object):
                     print "injecting " + str(entity)
 
         self.context_flag = True
+    ######################################################################
 
+    def Converse(self, transcript, lang="en-us"): #TODO read language from config?
+        return False
 
     def register_intent(self, intent_parser, handler):
-        self.emitter.emit(Message("register_intent", intent_parser.__dict__))
+        #### add source skill to info
+        dict = {"intent":intent_parser.__dict__,"source_skill":self.id}
+        self.emitter.emit(Message("register_intent", dict))
         self.registered_intents.append(intent_parser.name)
 
         def receive_handler(message):
@@ -287,8 +296,10 @@ class MycroftSkill(object):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
+    ###### results property -> mycroft team doesnt agree with this exact aproach
+
     def add_result(self, key, value):
-        self.results['skill_name'] = self.name
+        self.results['skill_name'] = self.name #auto-add skill_name
         self.results[str(key)] = value
 
     def emit_results(self):
@@ -301,10 +312,11 @@ class MycroftSkill(object):
         self.emitter.emit(Message("speak", {'utterance': utterance}))
         self.add_result("speak",utterance)
 
+    #### end of results property stuff changes
+
     def speak_dialog(self, key, data={}):
         utterance = self.dialog_renderer.render(key, data)
         self.speak(utterance)
-        #self.add_result("dialog", utterance) #already in speak
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)
