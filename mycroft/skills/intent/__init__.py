@@ -34,7 +34,7 @@ class IntentSkill(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self, name="IntentSkill")
         self.engine = IntentDeterminationEngine()
-        #### converse
+        # converse
         self.skills_5min = {}  # name:timestamp
         self.intent_to_skill = {}  # intent:source_skill
 
@@ -43,10 +43,12 @@ class IntentSkill(MycroftSkill):
         self.emitter.on('register_intent', self.handle_register_intent)
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
         self.emitter.on('detach_intent', self.handle_detach_intent)
-        self.emitter.on('converse_status_response', self.handle_conversation_response)
+        self.emitter.on('converse_status_response',
+                        self.handle_conversation_response)
 
     def doConversation(self, utterances, skill):
-        self.emitter.emit(Message("converse_status_request",{"skill_id":skill, "utterances":utterances}))
+        self.emitter.emit(Message("converse_status_request", {
+                          "skill_id": skill, "utterances": utterances}))
         self.waiting = True
         self.result = False
         while self.waiting:
@@ -55,7 +57,8 @@ class IntentSkill(MycroftSkill):
 
     def handle_conversation_response(self, message):
         #id = message.data["skill_id"]
-        #no need to crosscheck id because waiting before new request, no other skill will make this request is safe assumption
+        # no need to crosscheck id because waiting before new request, no other
+        # skill will make this request is safe assumption
         result = message.data["result"]
         self.result = result
         self.waiting = False
@@ -64,22 +67,22 @@ class IntentSkill(MycroftSkill):
 
         utterances = message.data.get('utterances', '')
 
-        ##### loop trough last 5 min skills
-        ### TODO sort by timestamp
+        # loop trough last 5 min skills
+        # TODO sort by timestamp
         for skill in self.skills_5min:
-            #print skill
-            ##### prune last_5mins_intent_dict
-            #print str((time.time()- self.skills_5min[skill]) / 60) + " mins ago"
-            if time.time() - self.skills_5min[skill] >= 5 * 60:  # TODO make configurable?
+            # prune last_5mins_intent_dict
+            # TODO make configurable?
+            if time.time() - self.skills_5min[skill] >= 5 * 60:
                 self.skills_5min.pop(skill, None)
-            #### call skills in 5minlist skill.Converse(utterance)
+            # call skills in 5minlist skill.Converse(utterance)
             if self.doConversation(utterances, skill):
-                ##### skill list always empty if import doConversation from main
-                ##### how to execute skill.Converse method directly? currently using messagebus but thats ugly!
-                #### update timestamp, or there will be a 5min timeout where intent stops conversing
-                self.skills_5min[skill]=time.time()
+                # skill list always empty if import doConversation from main
+                # how to execute skill.Converse method directly? currently using messagebus but thats ugly!
+                # update timestamp, or there will be a 5min timeout where
+                # intent stops conversing
+                self.skills_5min[skill] = time.time()
                 return
-        #### no skill wants to handle utterance, proceed
+        # no skill wants to handle utterance, proceed
 
         best_intent = None
         for utterance in utterances:
@@ -96,7 +99,7 @@ class IntentSkill(MycroftSkill):
             reply = message.reply(
                 best_intent.get('intent_type'), best_intent)
             self.emitter.emit(reply)
-            #### best intent detected -> update called skills dict
+            # best intent detected -> update called skills dict
             name = self.intent_to_skill[best_intent['intent_type']]
             try:
                 self.skills_5min[name] = time.time()
@@ -127,7 +130,8 @@ class IntentSkill(MycroftSkill):
         intent = open_intent_envelope(message)
         self.engine.register_intent_parser(intent)
         # map intent to source skill
-        self.intent_to_skill.setdefault(intent.name, message.data["source_skill"])
+        self.intent_to_skill.setdefault(
+            intent.name, message.data["source_skill"])
 
     def handle_detach_intent(self, message):
         intent_name = message.data.get('intent_name')

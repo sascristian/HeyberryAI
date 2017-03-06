@@ -33,6 +33,9 @@
 - [Leaks Skill](https://github.com/JarbasAI/leaks-skill)
 - [Jarbas Diagnostics Skill](https://github.com/JarbasAI/mycroft-diagnostics-skill)
 - [Sentiment Analisys Service](https://github.com/JarbasAI/mycroft---sentiment-analisys---service) - REFACTORED INTO [SKILL](https://github.com/JarbasAI/mycroft---sentiment-analisys---skill)
+- [Metal Recomendation Skill](https://github.com/JarbasAI/mycroft---metal-recomend---skill)
+- [Euromillions Skill](https://github.com/JarbasAI/mycroft---euromillions-skill)
+- [Parrot Skill](https://github.com/JarbasAI/mycroft---parrot-skill)
 
 from third partys
 

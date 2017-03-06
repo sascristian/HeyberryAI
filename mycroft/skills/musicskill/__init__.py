@@ -73,7 +73,6 @@ class MP3DemoSkill(MycroftSkill):
             self.search = f.readlines()
 
     def initialize(self):
-       # self.load_data_files(dirname(__file__))
 
         prefixes = [
             'youtube', 'play', 'play from youtube','youtube play','pm']

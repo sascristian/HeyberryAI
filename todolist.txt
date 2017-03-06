@@ -78,3 +78,25 @@ With Ubuntu phone integration
         Audio link to Mycroft unit based at home via WebRTC, so can call home fro free from abroad
         stream music from home network to my phone
         Print this out at home (assuming theres a mycroft base unit and a printer on the same network at "home")
+
+voip
+
+something i would like to see is an emergency services skill. for example, if someone is breaking into your home,
+MyCroft could call 911 over VoIP, and simultaneously record audio from the phone call and environment,
+in case someone gets murdered or injured during the break in. it could be used as evidence in a court case
+for defence of the home owner. possibly even pulling live video feeds from any existing home security system.
+ the home owner, could say to MyCroft, "MyCroft call 911..." or "MyCroft call for help..."
+  and it would call 911 over the intercom link or straight to a cell phone. in the even of a fire,
+  if someone has a smart device carbon monoxide / fire detector, MyCroft could connect to the device,
+  receive an alert, and then in intercom mode, post an alert warning of carbon monoxide or fire warning,
+   and also send an alert text message to your phone. it would prompt for an response either text or vocal for acknowledgement,
+   and if no acknowledgement was given, it would make a call to 911, and send the data of the fire alert / carbon monoxide alert,
+    GPS coordinates, and patch in the 911 operator over the intercom system. another thing that i would like to see -
+    especially because i live in Oklahoma city, 3 miles from the May 3rd tornado area (biggest tornado in world history),
+     is have an emergency weather alert system skill as part of emergency services. for instance,
+     if there is a weather warning for a specific county, it would receive an alert from NOAA,
+     and automatically post a weather warning over the intercom system.
+  it could then patch in a local weather internet radio station / or emergency weather radio station. in the event that
+  the Tornado / hurricane is in your local neighborhood / county, it could give the command for the people listening
+   to find immediate shelter. - i don't have the complete coding knowhow to do this, but would love to see it done.
+    this would make siri look like a toy.

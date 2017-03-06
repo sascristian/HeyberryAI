@@ -1,9 +1,17 @@
 # MusicSkill
 
 This skill illustrates a very simple general music player.  It works by downloading
-music files from youtube (1st result, can be tunned) and playing with Cvlc
+music files from youtube and playing with Cvlc
 
 Its intended to be a cheap way to play anything without any account (eg. spotify) or having a music library on disk
+
+####### NEW #####
+
+Can be used to download music to disk and create a database
+
+music dl -> searches and downloads music from searchterms.txt
+metal dl -> searches encyclopedia metallvm for a random band and downloads music from it
+
 
 ## Current state
 

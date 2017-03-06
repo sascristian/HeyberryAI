@@ -16,8 +16,6 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
-
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
@@ -63,5 +61,3 @@ class ParrotSkill(MycroftSkill):
 
 def create_skill():
     return ParrotSkill()
-
-
