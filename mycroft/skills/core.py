@@ -302,6 +302,7 @@ class MycroftSkill(object):
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
     # results property -> mycroft team doesnt agree with this exact aproach
+    # https://github.com/MycroftAI/mycroft-core/pull/281
 
     def add_result(self, key, value):
         self.results['skill_name'] = self.name  # auto-add skill_name

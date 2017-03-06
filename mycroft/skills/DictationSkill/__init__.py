@@ -62,11 +62,9 @@ class DictationSkill(MycroftSkill):
     def handle_read_last_dictation_intent(self, message):
         self.speak_dialog("dictation")
         self.speak(self.words)
-        print self.words
 
     def save(self):
         # save
-        print self.words
         #TODO let user set savefile name
         path = self.path + "/" + str(time.time()) + ".txt"
         wfile = open(path, "w")

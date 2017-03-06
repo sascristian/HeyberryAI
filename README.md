@@ -36,6 +36,7 @@
 - [Metal Recomendation Skill](https://github.com/JarbasAI/mycroft---metal-recomend---skill)
 - [Euromillions Skill](https://github.com/JarbasAI/mycroft---euromillions-skill)
 - [Parrot Skill](https://github.com/JarbasAI/mycroft---parrot-skill)
+- [Dictation Skill] (https://github.com/JarbasAI/mycroft-dictation-skill)
 
 from third partys
 
@@ -85,7 +86,9 @@ the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start"
 
 - cli client now listens for do not speak requests, so jarbas can shut up by external request without running in quiet mode
 - configuration no longer loads from mycroft servers, configuration skill was blacklisted, reason is for more control and privacy
-- added results property to skills, so they can emit more than utterances
+- added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
+- added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
+- added flag to not reload skill [PR#541](https://github.com/MycroftAI/mycroft-core/pull/541)
 
 
 Forked from Mycroft 
