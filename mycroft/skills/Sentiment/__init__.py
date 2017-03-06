@@ -23,7 +23,7 @@ class SentimentSkill(MycroftSkill):
     def __init__(self):
         super(SentimentSkill, self).__init__(name="SentimentSkill")
 
-        self.mashapekey = self.config.get('mashape')
+        self.mashapekey = self.apiconfig.get('MashapeAPI')
 
         self.defaultapi = 2
 

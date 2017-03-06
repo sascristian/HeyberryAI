@@ -181,6 +181,7 @@ class MycroftSkill(object):
         self.name = name
         self.bind(emitter)
         self.config_core = ConfigurationManager.get()
+        self.apiconfig = self.config_core.get("APIS")
         self.config = self.config_core.get(name)
         self.dialog_renderer = None
         self.file_system = FileSystemAccess(join('skills', name))
@@ -192,6 +193,7 @@ class MycroftSkill(object):
         ##### global context
         self.manager = ContextManager()
         self.context_flag = False  # results received flag
+
 
     @property
     def location(self):

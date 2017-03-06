@@ -1,6 +1,6 @@
 
 from time import sleep
-from selenium import webdriver
+import sys
 import grey_harvest
 from time import gmtime, strftime
 import thread
@@ -75,7 +75,7 @@ class FacebookSkill(MycroftSkill):
         super(FacebookSkill, self).__init__(name="FacebookSkill")
         self.__init_owm()
         # expies march 4th
-        self.api_key = self.config['graph_api_key']
+        self.api_key = self.apiconfig.get('GraphAPI')
         self.graph = facebook.GraphAPI(self.api_key)
         self.default=self.config['default']
         self.friendnum = 30#self.config['friendnum']
@@ -86,8 +86,8 @@ class FacebookSkill(MycroftSkill):
 
         ########### make all this shit (and fb about me section!) load from config file #########
         #reddit
-        self.reddit = praw.Reddit(client_id= self.config['redditid'],
-                             client_secret=self.config['redditsecret'],
+        self.reddit = praw.Reddit(client_id= self.apiconfig.get('RedditAPI'),
+                             client_secret=self.apiconfig.get('RedditSecret'),
                              user_agent='JarbasAI')
 
         ## load subreddits of interest
@@ -110,15 +110,15 @@ class FacebookSkill(MycroftSkill):
         f.close()
 
         #pic identify
-        apikey = self.config["cloudsightapi"]
-        apisecret = self.config["cloudsightsecret"]
+        apikey = self.apiconfig.get('CloudsightAPI')
+        apisecret = self.apiconfig.get('CloudsightSecret')
         auth = cloudsight.OAuth(apikey, apisecret)
         self.api = cloudsight.API(auth)
         #apis
-        self.mashape = self.config["mashapekey"]
+        self.mashape = self.apiconfig.get('MashapeAPI')
 
         #poetry
-        self.path = "/home/user/mycroft-core/mycroft/skills/Poetry/"
+        self.path = "/home/user/jarbast-core/mycroft/skills/Poetry/"
         self.styles = ["blackmetal", "deathmetal","viking","scifi","shakespeare"]
 
         self.posts=[]
@@ -158,7 +158,8 @@ class FacebookSkill(MycroftSkill):
         client.emitter.on("diagnostics_request", diagnostics)
         thread.start_new_thread(connect, ())
 
-        self.dreampath = "/home/user/mycroft-core/mycroft/skills/dreamskill/dream_output/"
+        self.dreampath = "/home/user/jarbas-core/mycroft/skills/dreamskill/dream_output/"
+
     def load_agended_posts(self):
         path = os.path.dirname(__file__) + '/agenda'
         self.agenda = shelve.open(path, writeback=True)
@@ -176,7 +177,7 @@ class FacebookSkill(MycroftSkill):
             self.agenda['posts'] = self.posts
 
     def __init_owm(self):
-        key = self.config.get('wapi_key')
+        key = self.apiconfig.get('WeatherAPI')
         if key and not self.config.get('proxy'):
             self.owm = OWM(key)
         else:

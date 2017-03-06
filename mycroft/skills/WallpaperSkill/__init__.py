@@ -38,8 +38,8 @@ class WallpaperSkill(MycroftSkill):
         self.TIMEBETWEENIMAGES = 65
         self.FILETYPES = ('.jpg', '.jpeg', '.png')
 
-        self.ID = self.config["reddit_id"]
-        self.SECRET = self.config["secret"]
+        self.ID = self.apiconfig.get('RedditAPI')
+        self.SECRET = self.apiconfig.get('RedditSecre')
 
         self.cycleflag = True
         self.r = praw.Reddit(client_id=self.ID,

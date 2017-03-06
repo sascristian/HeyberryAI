@@ -22,7 +22,7 @@ class PhotoSkill(MycroftSkill):
 
     def __init__(self):
         super(PhotoSkill, self).__init__(name="PhotoSkill")
-        self.wikimapia_key = self.config['wikimapia_key']
+        self.wikimapia_key = self.apiconfig.get('WikimapiaAPI')
         self.geolocator = Nominatim()
 
         self.search_name = "Berlin, Germany" #default location

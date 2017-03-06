@@ -98,7 +98,7 @@ class WeatherSkill(MycroftSkill):
         self.CODES['50d', '50n'] = 7
 
     def __init_owm(self):
-        key = self.config.get('api_key')
+        key = self.apiconfig.get('WeatherAPI')
         if key and not self.config.get('proxy'):
             self.owm = OWM(key)
         else:

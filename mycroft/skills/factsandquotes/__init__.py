@@ -16,7 +16,7 @@ class QuotesSkill(MycroftSkill):
 
     def __init__(self):
         super(QuotesSkill, self).__init__(name="QuotesSkill")
-        self.mashape = self.config['mashape_key']
+        self.mashape = self.apiconfig.get('MashapeAPI')
         self.birth = self.config['birthdate']
         self.gender = self.config['gender']
 

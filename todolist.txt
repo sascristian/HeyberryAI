@@ -59,7 +59,6 @@ General
     Unit conversion: "What is 20 inches in centimetres?"
     Recipes "Okay, done that, what's the next step?"
     Read me a story - e.g. an audiobooks, e.g. from project Guttenberg or smashwords. If you don't like the computerised voice reading to you, I believe there librevox for pre-recorded stories too.
-    Dictation mode i.e. write down what I say to a document until I give the keyword to stop
     Read IRC conversations outloud on a given channel - use festival or something to provide a different voice to each username (using the smae ones each time so you associate a certain voice with a certain username)
     Facebook/twitter/steam integration - "You have a new facebook notification" or "a game on your Steam wishlist is on sale"
 
