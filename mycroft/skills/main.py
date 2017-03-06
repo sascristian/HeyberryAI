@@ -108,9 +108,9 @@ def watch_skills():
                         continue
                     elif skill.get(
                             "instance") and modified > last_modified_skill:
-                        # this would break stuff during testing always trigger
-                        # wolphram alpha on intent reload
-                        if skill_folder == "intent":
+                        # some skills must'nt be reloaded, variables get reset
+                        # intent skill, dictation skill
+                        if not skill["instance"].reload_skill:
                             continue
                         #####
                         logger.debug("Reloading Skill: " + skill_folder)

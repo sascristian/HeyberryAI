@@ -188,6 +188,7 @@ class MycroftSkill(object):
         self.registered_intents = []
         self.log = getLogger(name)
         self.skill_id = 0
+        self.reload_skill = True
         # this is not official code, hacked around,
         self.results = {}
         ##### global context

@@ -37,6 +37,8 @@ class IntentSkill(MycroftSkill):
         # converse
         self.skills_5min = {}  # name:timestamp
         self.intent_to_skill = {}  # intent:source_skill
+        # dont reload
+        self.reload_skill = False
 
     def initialize(self):
         self.emitter.on('register_vocab', self.handle_register_vocab)
