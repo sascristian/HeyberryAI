@@ -39,8 +39,8 @@ class PictureSkill(MycroftSkill):
 
     def __init__(self):
         super(PictureSkill, self).__init__(name="PictureSkill")
-        apikey = self.config["cloudsight_key"]
-        apisecret = self.config["secret"]
+        apikey = self.apiconfig["CloudsightAPI"]
+        apisecret = self.apiconfig["CloudsightSecret"]
         auth = cloudsight.OAuth(apikey, apisecret)
         self.api = cloudsight.API(auth)
 
