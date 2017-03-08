@@ -38,11 +38,11 @@ class OpticalNerve():
         # face_cascade = cv2.CascadeClassifier('cascades/lbpcascade_frontalface.xml')
         # face_cascade3 = cv2.CascadeClassifier('cascades/haarcascade_frontalface_default.xml')
         # face_cascade2 = cv2.CascadeClassifier('cascades/haarcascade_frontalface_alt.xml')
-        self.face_cascade = cv2.CascadeClassifier('/home/user/mycroft-core/mycroft/OpticalNerve/cascades/haarcascade_frontalface_alt2.xml')
-        self.smile_cascade = cv2.CascadeClassifier('/home/user/mycroft-core/mycroft/OpticalNerve/cascades/haarcascade_smile.xml')
-        self.leye_cascade = cv2.CascadeClassifier('/home/user/mycroft-core/mycroft/OpticalNerve/cascades/haarcascade_lefteye.xml')
-        self.reye_cascade = cv2.CascadeClassifier('/home/user/mycroft-core/mycroft/OpticalNerve/cascades/haarcascade_righteye.xml')
-        self.profileface_cascade = cv2.CascadeClassifier('/home/user/mycroft-core/mycroft/OpticalNerve/cascades/lbpcascade_profileface.xml')
+        self.face_cascade = cv2.CascadeClassifier('/home/user/jarbas-core/mycroft/OpticalNerve/cascades/haarcascade_frontalface_alt2.xml')
+        self.smile_cascade = cv2.CascadeClassifier('/home/user/jarbas-core/mycroft/OpticalNerve/cascades/haarcascade_smile.xml')
+        self.leye_cascade = cv2.CascadeClassifier('/home/user/jarbas-core/mycroft/OpticalNerve/cascades/haarcascade_lefteye.xml')
+        self.reye_cascade = cv2.CascadeClassifier('/home/user/jarbas-core/mycroft/OpticalNerve/cascades/haarcascade_righteye.xml')
+        self.profileface_cascade = cv2.CascadeClassifier('/home/user/jarbas-core/mycroft/OpticalNerve/cascades/lbpcascade_profileface.xml')
 
         #######video streaming and fps ###########33
         logger.info("initializing videostream")
@@ -225,18 +225,6 @@ class OpticalNerve():
         return img
 
     ###### image filters#####
-    #### cartoonify
-    def cartoonify(self, pic):
-        logger.info("applying cartoonify filter")
-        return cv2.stylization(pic, sigma_s=60, sigma_r=0.07)
-    ### nightmare
-    def nightmarify(self, pic, bw=True):
-        logger.info("applying nightmarify filter")
-        nght_gray, nght_color = cv2.pencilSketch(pic, sigma_s=60, sigma_r=0.07, shade_factor=0.05)
-        if bw:
-            #nght_gray = cv2.cvtColor(nght_gray, cv2.COLOR_GRAY2BGR)
-            return nght_gray
-        return nght_color
     #### detail enhance
     def detail_enhance(self, pic):
         logger.info("applying detail enhance filter")
