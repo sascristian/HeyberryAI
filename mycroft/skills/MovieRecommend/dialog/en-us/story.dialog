@@ -1,0 +1,2 @@
+The movie is about {{ synopsis }}
+Short synopsis {{ synopsis }}
