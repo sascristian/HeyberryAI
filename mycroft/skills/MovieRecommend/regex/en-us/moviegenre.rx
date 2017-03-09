@@ -1,2 +1,2 @@
-(recommend|recomend|suggest) (?P<genre>.*) (movie|film)
-(?P<genre>.*) (movie) (recommend|recomend|suggest)
+(mgr|recommend|recomend|suggest) (?P<genre>.*)
+(?P<genre>.*) (mgr|recommend|recomend|suggest|movie recommend|movie recomend|movie suggest)
