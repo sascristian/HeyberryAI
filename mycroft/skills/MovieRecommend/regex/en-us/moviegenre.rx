@@ -1,0 +1,2 @@
+(recommend|recomend|suggest) (?P<genre>.*) (movie|film)
+(?P<genre>.*) (movie) (recommend|recomend|suggest)
