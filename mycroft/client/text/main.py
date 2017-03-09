@@ -40,19 +40,17 @@ def unsetflag(event):
     disable_speak_flag = False
 
 def handle_speak(event):
+    utterance = event.data.get('utterance')
+    logger.info("Speak: " + utterance)
     global disable_speak_flag
     if not disable_speak_flag:
         mutex.acquire()
         ws.emit(Message("recognizer_loop:audio_output_start"))
         try:
-            utterance = event.data.get('utterance')
-            logger.info("Speak: " + utterance)
             tts.execute(utterance)
         finally:
             mutex.release()
             ws.emit(Message("recognizer_loop:audio_output_end"))
-    #disable_speak_flag = False
-
 
 def connect():
     ws.run_forever()

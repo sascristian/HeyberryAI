@@ -40,15 +40,17 @@ class StopSkill(MycroftSkill):
         speak_enable_intent = IntentBuilder("SpeakEnableIntent").require("SpeakEnableKeyword").build()
         self.register_intent(speak_enable_intent, self.handle_speak_enable_intent)
 
-        speak_disable_intent = IntentBuilder("SpeakDiableIntent").require("SpeakDisableKeyword").build()
+        speak_disable_intent = IntentBuilder("SpeakDisableIntent").require("SpeakDisableKeyword").build()
         self.register_intent(speak_disable_intent, self.handle_speak_disable_intent)
 
     def handle_speak_disable_intent(self, event):
+        self.speak_dialog("speak_disabled")
         self.emitter.emit(
             Message("do_not_speak_flag_enable"))
         self.emit_results()
 
     def handle_speak_enable_intent(self, event):
+        self.speak_dialog("speak_enabled")
         self.emitter.emit(
             Message("do_not_speak_flag_disable"))
         self.emit_results()
