@@ -31,11 +31,12 @@ from mycroft.dialog import DialogLoader
 from mycroft.filesystem import FileSystemAccess
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
+from adapt.context import ContextManager
 
 __author__ = 'seanfitz'
 
 PRIMARY_SKILLS = ['intent', 'wake']
-BLACKLISTED_SKILLS = ["send_sms", "media"]
+BLACKLISTED_SKILLS = ["send_sms", "media", "configuration", "ip_skill", "dial_call"]
 SKILLS_BASEDIR = dirname(__file__)
 THIRD_PARTY_SKILLS_DIR = ["/opt/mycroft/third_party", "/opt/mycroft/skills"]
 # Note: /opt/mycroft/skills is recommended, /opt/mycroft/third_party
@@ -86,26 +87,31 @@ def load_regex(basedir, emitter):
 
 
 def open_intent_envelope(message):
-    intent_dict = message.data
+    intent_dict = message.data["intent"]
     return Intent(intent_dict.get('name'),
                   intent_dict.get('requires'),
                   intent_dict.get('at_least_one'),
                   intent_dict.get('optional'))
 
 
-def load_skill(skill_descriptor, emitter):
+def load_skill(skill_descriptor, emitter, skill_id):
     try:
         logger.info("ATTEMPTING TO LOAD SKILL: " + skill_descriptor["name"])
+        if skill_descriptor['name'] in BLACKLISTED_SKILLS:
+            logger.info("SKILL IS BLACKLISTED " + skill_descriptor["name"])
+            return None
         skill_module = imp.load_module(
             skill_descriptor["name"] + MainModule, *skill_descriptor["info"])
         if (hasattr(skill_module, 'create_skill') and
                 callable(skill_module.create_skill)):
             # v2 skills framework
             skill = skill_module.create_skill()
+            skill.id = skill_id  # register unique id
             skill.bind(emitter)
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
             skill.initialize()
-            logger.info("Lodaded " + skill_descriptor["name"])
+            logger.info(
+                "Loaded " + skill_descriptor["name"] + " ID: " + str(skill_id))
             return skill
         else:
             logger.warn(
@@ -149,14 +155,17 @@ def load_skills(emitter, skills_root=SKILLS_BASEDIR):
     logger.info("Checking " + skills_root + " for new skills")
     skill_list = []
     skills = get_skills(skills_root)
+    id = 0
     for skill in skills:
         if skill['name'] in PRIMARY_SKILLS:
-            skill_list.append(load_skill(skill, emitter))
+            skill_list.append(load_skill(skill, emitter, id))
+            id += 1
 
     for skill in skills:
         if (skill['name'] not in PRIMARY_SKILLS and
                 skill['name'] not in BLACKLISTED_SKILLS):
-            skill_list.append(load_skill(skill, emitter))
+            skill_list.append(load_skill(skill, emitter, id))
+            id += 1
     return skill_list
 
 
@@ -175,12 +184,15 @@ class MycroftSkill(object):
         self.name = name
         self.bind(emitter)
         self.config_core = ConfigurationManager.get()
+        self.apiconfig = self.config_core.get("APIS")
         self.config = self.config_core.get(name)
         self.dialog_renderer = None
         self.file_system = FileSystemAccess(join('skills', name))
         self.registered_intents = []
         self.log = getLogger(name)
+        self.skill_id = 0
         self.reload_skill = True
+
 
     @property
     def location(self):
@@ -233,8 +245,13 @@ class MycroftSkill(object):
         """
         raise Exception("Initialize not implemented for skill: " + self.name)
 
+    def converse(self, transcript, lang="en-us"):  # TODO read language from config?
+        return False
+
     def register_intent(self, intent_parser, handler):
-        self.emitter.emit(Message("register_intent", intent_parser.__dict__))
+        # add source skill to info
+        dict = {"intent": intent_parser.__dict__, "source_skill": self.id}
+        self.emitter.emit(Message("register_intent", dict))
         self.registered_intents.append(intent_parser.name)
 
         def receive_handler(message):
@@ -263,8 +280,16 @@ class MycroftSkill(object):
     def speak(self, utterance):
         self.emitter.emit(Message("speak", {'utterance': utterance}))
 
+    def feedback(self, feedback, utterance):
+        # get sentiment result utterance and confidences, do something
+        if feedback == "positive":
+            self.log.info("Positive feedback for skill " + self.name)
+        elif feedback == "negative":
+            self.log.info("Negative feedback for skill " + self.name)
+
     def speak_dialog(self, key, data={}):
-        self.speak(self.dialog_renderer.render(key, data))
+        utterance = self.dialog_renderer.render(key, data)
+        self.speak(utterance)
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)
