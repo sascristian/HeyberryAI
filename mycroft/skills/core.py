@@ -97,6 +97,9 @@ def open_intent_envelope(message):
 def load_skill(skill_descriptor, emitter, skill_id):
     try:
         logger.info("ATTEMPTING TO LOAD SKILL: " + skill_descriptor["name"])
+        if skill_descriptor['name'] in BLACKLISTED_SKILLS:
+            logger.info("SKILL IS BLACKLISTED " + skill_descriptor["name"])
+            return None
         skill_module = imp.load_module(
             skill_descriptor["name"] + MainModule, *skill_descriptor["info"])
         if (hasattr(skill_module, 'create_skill') and
@@ -269,7 +272,7 @@ class MycroftSkill(object):
         self.context_flag = True
     ######################################################################
 
-    def Converse(self, transcript, lang="en-us"):  # TODO read language from config?
+    def converse(self, transcript, lang="en-us"):  # TODO read language from config?
         return False
 
     def register_intent(self, intent_parser, handler):
