@@ -1,0 +1,1 @@
+The clock rate typically refers to the frequency at which a chip like a central processing unit , one core of a multi-core processor, is running and is used as an indicator of the processor's speed. It is measured in clock cycles per second or its equivalent, the SI unit hertz .
