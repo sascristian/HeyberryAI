@@ -17,8 +17,8 @@ class MovieSkill(MycroftSkill):
 
     def __init__(self):
         super(MovieSkill, self).__init__(name="MovieSkill")
-        self.populate = True
-        self.reload_skill = False
+        self.populate = False
+       # self.reload_skill = False
         # current movie info
         self.Movie = ""
         self.Synopsis = ""
@@ -86,14 +86,21 @@ class MovieSkill(MycroftSkill):
     def handle_genre_suggest_intent(self, message):
 
         genre = message.data["genre"]
+
+        # TODO fix this lazy workaround
+        if genre == "movie" or genre == "film":
+            self.handle_suggest_intent(message)
+
         genre = genre.replace(" film", "")
         genre = genre.replace(" movie", "")
         genre = genre.replace(" ", "_")
 
-        if len(self.genre_movie_list[genre])==0:
-            if not self.get_genre_movie_list(genre):
-                self.speak_dialog("invalidgenre")
-                return
+        try:
+            if len(self.genre_movie_list[genre])==0:
+                if not self.get_genre_movie_list(genre):
+                    self.speak_dialog("invalidgenre")
+        except:
+            self.speak_dialog("invalidgenre")
 
         self.imdblink = random.choice(self.genre_movie_list[genre])
 
@@ -152,7 +159,7 @@ class MovieSkill(MycroftSkill):
             return False
 
     def parse_movie(self, movie_link):
-        response = requests.get(movie_link)
+        response = requests.get(movie_link+"&lang=en_us")
         tree = html.fromstring(response.content)
         name = tree.xpath(".//*[@id='title-overview-widget']/div[2]/div[2]/div/div[2]/div[2]/h1/text()")[0]
         try:

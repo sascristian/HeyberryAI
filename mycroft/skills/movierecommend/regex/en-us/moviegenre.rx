@@ -1,0 +1,2 @@
+(recommend|recomend|suggest) (?P<genre>.*)
+(?P<genre>.*) (recommend|recomend|suggest|movie recommend|movie recomend|movie suggest)

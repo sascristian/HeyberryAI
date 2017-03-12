@@ -1,2 +1,0 @@
-(mgr|recommend|recomend|suggest) (?P<genre>.*)
-(?P<genre>.*) (mgr|recommend|recomend|suggest|movie recommend|movie recomend|movie suggest)
