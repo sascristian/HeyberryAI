@@ -163,7 +163,7 @@ class DiagnosticsSkill(MycroftSkill):
     def count(self):
         # poems composed
         self.poems = 0
-        for f in os.listdir("/home/user/jarbas-core/mycroft/skills/Poetry/results"):
+        for f in os.listdir("/home/user/jarbas-core/mycroft/skills/poetry/results"):
             self.poems += 1
 
         self.add_result("poems_composed", self.poems)
