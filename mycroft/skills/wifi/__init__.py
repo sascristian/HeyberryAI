@@ -32,7 +32,7 @@ class WifiSkill(MycroftSkill):
         self.scriptpath = "anonsurf"#os.path.dirname(__file__) + '/anonsurf.sh'
         # (TODO make configurable, off by default)
         #self.disablewifi()
-
+        self.reload_skill = False
         self.vpns=[]
         self.aps=[]
 
@@ -227,13 +227,13 @@ class WifiSkill(MycroftSkill):
 
     ### wireless on and off   -> refactor with network manager lib
     def enablewifi(self):
-        print "enabling wifi"
+        self.log.info( "enabling wifi")
         manager_props.Set("org.freedesktop.NetworkManager", "WirelessEnabled",
                           True)
 
     def disablewifi(self):
         # Disable Wireless (optional step)
-        print "disabling WiFi"
+        self.log.info( "disabling WiFi")
         manager_props.Set("org.freedesktop.NetworkManager", "WirelessEnabled",
                           False)
 
@@ -270,7 +270,7 @@ class WifiSkill(MycroftSkill):
                 if dev.State == NetworkManager.NM_DEVICE_STATE_ACTIVATED and dev.Managed:
                     break
             else:
-                print("No active, managed device found")
+                self.log.info("No active, managed device found")
                 return False
         else:
             dtype = {
@@ -285,9 +285,9 @@ class WifiSkill(MycroftSkill):
                     if dev.State == NetworkManager.NM_DEVICE_STATE_DISCONNECTED:
                         break
                     else:
-                        print "cant connect to " + name
+                        self.log.info( "cant connect to " + name)
             else:
-                print("No suitable and available %s device found" % ctype)
+                self.log.info("No suitable and available %s device found" % ctype)
                 return False
                 # sys.exit(1)
 
@@ -312,77 +312,57 @@ class WifiSkill(MycroftSkill):
         # network manager info
         c = NetworkManager.const
 
-        print("%-30s %s" % ("Version:", NetworkManager.NetworkManager.Version))
-        print("%-30s %s" % ("Hostname:", NetworkManager.Settings.Hostname))
-        print("%-30s %s" % ("Can modify:", NetworkManager.Settings.CanModify))
-        print("%-30s %s" % ("Networking enabled:", NetworkManager.NetworkManager.NetworkingEnabled))
-        print("%-30s %s" % ("Wireless enabled:", NetworkManager.NetworkManager.WirelessEnabled))
-        print("%-30s %s" % ("Wireless hw enabled:", NetworkManager.NetworkManager.WirelessHardwareEnabled))
-        print("%-30s %s" % ("Wwan enabled:", NetworkManager.NetworkManager.WwanEnabled))
-        print("%-30s %s" % ("Wwan hw enabled:", NetworkManager.NetworkManager.WwanHardwareEnabled))
-        print("%-30s %s" % ("Wimax enabled:", NetworkManager.NetworkManager.WimaxEnabled))
-        print("%-30s %s" % ("Wimax hw enabled:", NetworkManager.NetworkManager.WimaxHardwareEnabled))
-        print("%-30s %s" % ("Overall state:", c('state', NetworkManager.NetworkManager.State)))
+        self.log.info("%-30s %s" % ("Version:", NetworkManager.NetworkManager.Version))
+        self.log.info("%-30s %s" % ("Hostname:", NetworkManager.Settings.Hostname))
+        self.log.info("%-30s %s" % ("Can modify:", NetworkManager.Settings.CanModify))
+        self.log.info("%-30s %s" % ("Networking enabled:", NetworkManager.NetworkManager.NetworkingEnabled))
+        self.log.info("%-30s %s" % ("Wireless enabled:", NetworkManager.NetworkManager.WirelessEnabled))
+        self.log.info("%-30s %s" % ("Wireless hw enabled:", NetworkManager.NetworkManager.WirelessHardwareEnabled))
+        self.log.info("%-30s %s" % ("Wwan enabled:", NetworkManager.NetworkManager.WwanEnabled))
+        self.log.info("%-30s %s" % ("Wwan hw enabled:", NetworkManager.NetworkManager.WwanHardwareEnabled))
+        self.log.info("%-30s %s" % ("Wimax enabled:", NetworkManager.NetworkManager.WimaxEnabled))
+        self.log.info("%-30s %s" % ("Wimax hw enabled:", NetworkManager.NetworkManager.WimaxHardwareEnabled))
+        self.log.info("%-30s %s" % ("Overall state:", c('state', NetworkManager.NetworkManager.State)))
 
-        print("")
         ### permission info
-        print("Permissions")
         for perm, val in sorted(NetworkManager.NetworkManager.GetPermissions().items()):
-            print("%-30s %s" % (perm[31:] + ':', val))
-
-        print("")
-
+            self.log.info("Permission: %-30s %s" % (perm[31:] + ':', val))
         self.devices()
-
-        print("")
-
         self.available()
-
-        print("")
-
         self.vpn()
-
-        print("")
-
         self.active()
-
-        print("")
-
         self.activeinfo()
 
     ## scan acess points
     def available(self):
-        print("Available connections")
         self.aps[:]=[]
         for conn in NetworkManager.Settings.ListConnections():
             try:
                 settings = conn.GetSettings()['connection']
                 if settings['type'] == "802-11-wireless":
-                    print settings['id']
+                    self.log.info("Available Connection " + str(settings['id']))
                     self.aps.append(settings['id'])
             except:
                 pass
 
     def seen(self):
-        print("Seen connections")
         self.aps[:] = []
         for conn in NetworkManager.Settings.ListConnections():
             try:
                 settings = conn.GetSettings()['connection']
                 if settings['type'] == "802-11-wireless":
-                    print settings['id']
+                    self.log.info("Seen Connection: "+  str(settings['id']))
                     self.aps.append(settings['id'])
             except:
                 pass
 
     def vpn(self):
-        print("VPN connections")
         self.vpns[:] = []
         for conn in NetworkManager.Settings.ListConnections():
             try:
                 settings = conn.GetSettings()['connection']
                 if settings['type'] == "vpn":
-                    print settings['id']
+                    self.log.info( "VPN connection " + str(settings['id']))
                     self.vpns.append(settings['id'])
             except:
                 pass
