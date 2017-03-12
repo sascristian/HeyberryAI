@@ -34,7 +34,7 @@ class DreamSkill(MycroftSkill):
 
 	def __init__(self):
 		super(DreamSkill, self).__init__(name="DreamSkill")
-
+		self.reload_skill = False
 		caffepath = self.config["caffe_path"]
 
 		sys.path.append(caffepath)
@@ -486,7 +486,6 @@ class DreamSkill(MycroftSkill):
 		self.emit_results()
 
 	def stop(self):
-		self.out.release()
 		cv2.destroyAllWindows()
 		self.bc.cleanup()
 

@@ -1,2 +1,1 @@
 (tell us about|tell me about|what does wikipedia say about|wiki|wikipedia) (?P<ArticleTitle>.*)
-(adquire knowledge about|save knowledge about) (?P<SavePath>.*)

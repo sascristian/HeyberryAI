@@ -154,7 +154,7 @@ class freewill():
         goal = Goal(name, waylist)
         goals.append(goal)
 
-        self.obj.register_objective("MakeNewDream", goals)  # update/register objective
+        self.obj.register_objective("make new dream", goals)  # update/register objective
 
         #goals = {}
         #goals.setdefault(name, waylist)
@@ -179,7 +179,7 @@ class freewill():
         goal = Goal(name, waylist)
         goals.append(goal)
 
-        self.obj.register_objective("FaceBookContent", goals) #update/register objective
+        self.obj.register_objective("facebook content", goals) #update/register objective
         ######## so so so slow because of huge dict
         #goals = {}
         #goals.setdefault(name, waylist)

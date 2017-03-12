@@ -10,3 +10,4 @@ http://www.technology.org
 https://www.newscientist.com/section/news/
 http:/www.deepdotweb.com
 https://cointelegraph.com/
+http://www.cracked.com/

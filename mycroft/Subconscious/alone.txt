@@ -1,5 +1,5 @@
-MakePoetry
-MakeNewDream
-FaceBookContent
-AdquireKnowledge
-MusicDatabase
+make poetry
+make new dream
+facebook content
+adquire knowledge
+music database

@@ -37,6 +37,7 @@ class PoetrySkill(MycroftSkill):
         self.minsize = 10
         self.maxsize = 20
         self.mode = 1
+        self.reload_skill = False
 
     def initialize(self):
         #self.load_data_files(dirname(__file__))

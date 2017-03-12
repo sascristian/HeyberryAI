@@ -19,7 +19,7 @@ from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from mycroft.skills.Facebook.youtube_search_and_download import YouTubeHandler
+from mycroft.skills.facebook.youtube_search_and_download import YouTubeHandler
 
 import praw
 import facebook
@@ -37,7 +37,7 @@ import json
 
 import shelve
 
-from mycroft.skills.Poetry import addToDict, makepoem
+from mycroft.skills.poetry import addToDict, makepoem
 
 __author__ = 'jarbas'
 

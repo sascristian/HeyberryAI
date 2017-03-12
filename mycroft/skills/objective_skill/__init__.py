@@ -112,8 +112,6 @@ class ObjectivesSkill(MycroftSkill):
 
         self.wiki_objective()
 
-        self.obj.print_objectives()
-
         prefixes = [
             'Objective', 'obj']
         self.__register_prefixed_regex(prefixes, "(?P<Objective>.*)")
@@ -134,6 +132,7 @@ class ObjectivesSkill(MycroftSkill):
 
     def handle_execute_objective_intent(self, message):
         objective = message.data.get("Objective")
+        objective.replace(" ","_")
         try:
             self.obj.execute_objective(objective)
             ### TODO abstract this with probabilities for each goal and way
@@ -182,7 +181,7 @@ class ObjectivesSkill(MycroftSkill):
         name = "Search_Wikipedia"
         g.append(Goal(name, waylist))
 
-        name = "AdquireKnowledge"
+        name = "adquire_knowledge"
         self.obj.register_objective(name, g)
 
     def load_word_bank(self):

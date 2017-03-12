@@ -1,2 +1,2 @@
-AnnoyMaster
-MakePoetry
+annoy master
+make poetry
