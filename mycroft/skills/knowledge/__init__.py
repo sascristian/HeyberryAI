@@ -38,6 +38,8 @@ LOGGER = getLogger(__name__)
 class KnowledgeSkill(MycroftSkill):
     def __init__(self):
         super(KnowledgeSkill, self).__init__(name="KnowledgeSkill")
+        self.reload_skill = False
+
         self.max_results = self.config['max_results']
         self.max_phrases = self.config['max_phrases']
 
@@ -52,7 +54,7 @@ class KnowledgeSkill(MycroftSkill):
         def aquisition():
             start_time = time.time()
             while True:
-                if time.time() - start_time >= 5*60: #every 5 min
+                if time.time() - start_time >= 20*60: #every 5 min
                     self.emitter.emit(Message("ExecuteObjectiveIntent",{"Objective":"adquire knowledge"}))
                     start_time = time.time()
 
@@ -77,8 +79,7 @@ class KnowledgeSkill(MycroftSkill):
             try:
                 with open(path) as f:
                     words = f.readlines()
-                    for word in words:
-                        self.knowledge.append(word.replace("\n", ""))
+                    self.knowledge.append(words[0])
             except:
                 pass
 
