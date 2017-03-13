@@ -41,7 +41,7 @@
 - [Feedback Skill](https://github.com/JarbasAI/mycroft-feedback-skill)
 - [Objectives Skill](https://github.com/JarbasAI/mycroft---objectives-skill)
 - [Movie Recommendation Skill](https://github.com/JarbasAI/mycroft---movie-recommend-skill)
-- [Mute Skill]()
+- [Mute Skill](https://github.com/JarbasAI/mycroft---mute-skill)
 
 from third partys
 
@@ -226,7 +226,6 @@ Mycroft provides `start.sh` to run a large number of common tasks. This script u
 - run `./start.sh voice`
 - run `./start.sh vision`
 - run `./start.sh dumpmon`
-- run `./start.sh freewill`
 - run `./start.sh fbclient`
 - run `./start.sh context`
 - run `./start.sh cli`
