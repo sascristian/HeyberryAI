@@ -36,7 +36,11 @@
 - [Metal Recomendation Skill](https://github.com/JarbasAI/mycroft---metal-recomend---skill)
 - [Euromillions Skill](https://github.com/JarbasAI/mycroft---euromillions-skill)
 - [Parrot Skill](https://github.com/JarbasAI/mycroft---parrot-skill)
-- [Dictation Skill] (https://github.com/JarbasAI/mycroft-dictation-skill)
+- [Dictation Skill](https://github.com/JarbasAI/mycroft-dictation-skill)
+- [Knowledge Skill](https://github.com/JarbasAI/mycroft---knowledge-skill)
+- [Feedback Skill](https://github.com/JarbasAI/mycroft-feedback-skill)
+- [Objectives Skill](https://github.com/JarbasAI/mycroft---objectives-skill)
+- [Movie Recommendation Skill](https://github.com/JarbasAI/mycroft---movie-recommend-skill)
 
 from third partys
 
@@ -52,7 +56,6 @@ from third partys
 changed skills
 
 - added results property to all skills
-- wikipedia skill - added adquire knowledge intent -> saves definition to disk
 - desktop_launcher - added ability to open urls instead of google searching (non-vocal skill usecase)
 - ip skill - blacklisted, using the7erm diagnostics skill for this
 
