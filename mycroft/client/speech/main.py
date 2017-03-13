@@ -38,6 +38,7 @@ loop = None
 
 config = ConfigurationManager.get()
 
+disable_speak_flag = False
 
 def handle_record_begin():
     logger.info("Begin Recording...")
@@ -65,20 +66,32 @@ def handle_wakeword(event):
 
 def handle_utterance(event):
     logger.info("Utterance: " + str(event['utterances']))
-    ws.emit(Message('recognizer_loop:utterance', event))
+    ws.emit(
+        Message("recognizer_loop:utterance",
+                {'utterances': event, 'source': "speech"}))
+   # ws.emit(Message('recognizer_loop:utterance', event))
 
+def setflag(event):
+    global disable_speak_flag
+    disable_speak_flag = True
+
+def unsetflag(event):
+    global disable_speak_flag
+    disable_speak_flag = False
 
 def mute_and_speak(utterance):
     lock.acquire()
     ws.emit(Message("recognizer_loop:audio_output_start"))
-    try:
-        logger.info("Speak: " + utterance)
-        loop.mute()
-        tts.execute(utterance)
-    finally:
-        loop.unmute()
-        lock.release()
-        ws.emit(Message("recognizer_loop:audio_output_end"))
+    logger.info("Speak: " + utterance)
+    global disable_speak_flag
+    if not disable_speak_flag:
+        try:
+            loop.mute()
+            tts.execute(utterance)
+        finally:
+            loop.unmute()
+            lock.release()
+            ws.emit(Message("recognizer_loop:audio_output_end"))
 
 
 def handle_multi_utterance_intent_failure(event):
@@ -154,6 +167,8 @@ def main():
     ws.on('recognizer_loop:wake_up', handle_wake_up)
     ws.on('mycroft.stop', handle_stop)
     ws.on("mycroft.paired", handle_paired)
+    ws.on('do_not_speak_flag_enable', setflag)
+    ws.on('do_not_speak_flag_disable', unsetflag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
