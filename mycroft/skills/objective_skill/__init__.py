@@ -181,7 +181,7 @@ class ObjectivesSkill(MycroftSkill):
         name = "Search_Wikipedia"
         g.append(Goal(name, waylist))
 
-        name = "adquire_knowledge"
+        name = "adquire knowledge"
         self.obj.register_objective(name, g)
 
     def load_word_bank(self):
