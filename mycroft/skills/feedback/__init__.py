@@ -52,7 +52,7 @@ class FeedbackSkill(MycroftSkill):
     def handle_positive_feedback_intent(self, message):
         utterance = message.data["utterance"]
         # evaluate sentiment from sentiment analisys service?
-        #self.emitter.emit(Message("sentiment_request",{"utterances":utterance}))
+        # self.emitter.emit(Message("sentiment_request",{"utterances":utterance}))
         self.waiting = True
         while self.waiting:
             pass
@@ -64,6 +64,7 @@ class FeedbackSkill(MycroftSkill):
                                   # "conf+":self.positive_conf,
                                   # "conf-":self.negative_conf,
                                    "utterance":utterance}))
+
 
     def handle_negative_feedback_intent(self, message):
         utterance = message.data["utterance"]
@@ -80,15 +81,18 @@ class FeedbackSkill(MycroftSkill):
                                    # "conf-":self.negative_conf,
                                    "utterance": utterance}))
 
+
     def handle_skill_id_feedback(self, message):
         self.active_skill = message.data["active_skill"]
         self.waiting = False
+
 
     def handle_sentiment_result(self, message):
         self.result = message.data["result"]
         self.positive_conf = message.data["conf+"]
         self.negative_conf= message.data["conf-"]
         self.waiting = False
+
 
     def stop(self):
         pass
