@@ -54,6 +54,7 @@ log_line_offset = 0  # num lines back in logs to show
 mergedLog = []
 log_filters = ["enclosure.mouth.viseme"]
 
+disable_speak_flag = False
 
 ##############################################################################
 # Helper functions
@@ -65,6 +66,15 @@ def clamp(n, smallest, largest):
 def stripNonAscii(text):
     return ''.join([i if ord(i) < 128 else ' ' for i in text])
 
+
+def set_speak_flag(event):
+    global disable_speak_flag
+    disable_speak_flag = True
+
+
+def unset_speak_flag(event):
+    global disable_speak_flag
+    disable_speak_flag = False
 
 ##############################################################################
 # Log file monitoring
@@ -124,6 +134,7 @@ def startLogMonitor(filename, logid):
 def handle_speak(event):
     global chat
     global tts
+    global disable_speak_flag
     mutex.acquire()
     if not bQuiet:
         ws.emit(Message("recognizer_loop:audio_output_start"))
@@ -134,7 +145,7 @@ def handle_speak(event):
         else:
             chat.append(">> " + utterance)
         draw_screen()
-        if not bQuiet:
+        if not bQuiet and not disable_speak_flag:
             if not tts:
                 tts = TTSFactory.create()
                 tts.init(ws)
@@ -351,6 +362,8 @@ def main(stdscr):
 
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
+    ws.on('do_not_speak_flag_enable', set_speak_flag)
+    ws.on('do_not_speak_flag_disable', unset_speak_flag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
