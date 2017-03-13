@@ -94,6 +94,7 @@ the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start"
 - centralized APIs in configfile, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
 - ip skill blacklisted, using the7erm diagnostics skill for this
 - configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
+- allowed intents to be de-registered [PR#558](https://github.com/MycroftAI/mycroft-core/pull/558)
 
 Forked from Mycroft 
 ==========
