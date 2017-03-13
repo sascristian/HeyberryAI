@@ -94,7 +94,7 @@ class WolframAlphaSkill(MycroftSkill):
         self.question_parser = EnglishQuestionParser()
 
     def __init_client(self):
-        key = self.apiconfig.get('WolphramAlphaAPI')
+        key = self.config_apis.get('WolphramAlphaAPI')
         if key and not self.config.get('proxy'):
             self.client = wolframalpha.Client(key)
         else:

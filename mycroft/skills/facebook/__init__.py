@@ -75,7 +75,7 @@ class FacebookSkill(MycroftSkill):
         super(FacebookSkill, self).__init__(name="FacebookSkill")
         self.__init_owm()
         # expies march 4th
-        self.api_key = self.apiconfig.get('GraphAPI')
+        self.api_key = self.config_apis.get('GraphAPI')
         self.graph = facebook.GraphAPI(self.api_key)
         self.default=self.config['default']
         self.friendnum = 30#self.config['friendnum']
@@ -86,8 +86,8 @@ class FacebookSkill(MycroftSkill):
 
         ########### make all this shit (and fb about me section!) load from config file #########
         #reddit
-        self.reddit = praw.Reddit(client_id= self.apiconfig.get('RedditAPI'),
-                             client_secret=self.apiconfig.get('RedditSecret'),
+        self.reddit = praw.Reddit(client_id= self.config_apis.get('RedditAPI'),
+                             client_secret=self.config_apis.get('RedditSecret'),
                              user_agent='JarbasAI')
 
         ## load subreddits of interest
@@ -110,12 +110,12 @@ class FacebookSkill(MycroftSkill):
         f.close()
 
         #pic identify
-        apikey = self.apiconfig.get('CloudsightAPI')
-        apisecret = self.apiconfig.get('CloudsightSecret')
+        apikey = self.config_apis.get('CloudsightAPI')
+        apisecret = self.config_apis.get('CloudsightSecret')
         auth = cloudsight.OAuth(apikey, apisecret)
         self.api = cloudsight.API(auth)
         #apis
-        self.mashape = self.apiconfig.get('MashapeAPI')
+        self.mashape = self.config_apis.get('MashapeAPI')
 
         #poetry
         self.path = "/home/user/jarbast-core/mycroft/skills/Poetry/"

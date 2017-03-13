@@ -184,7 +184,7 @@ class MycroftSkill(object):
         self.name = name
         self.bind(emitter)
         self.config_core = ConfigurationManager.get()
-        self.apiconfig = self.config_core.get("APIS")
+        self.config_apis = self.config_core.get("APIS")
         self.config = self.config_core.get(name)
         self.dialog_renderer = None
         self.file_system = FileSystemAccess(join('skills', name))
@@ -231,7 +231,6 @@ class MycroftSkill(object):
             self.emitter = emitter
             self.enclosure = EnclosureAPI(emitter)
             self.__register_stop()
-            self.emitter.on("do_feedback",self.do_feedback)
 
     def __register_stop(self):
         self.stop_time = time.time()
@@ -324,17 +323,12 @@ class MycroftSkill(object):
 
     # end of results property stuff changes
 
-    # handle feedback
-    def do_feedback(self, message):
-        id = message.data["skill_id"]
-        if id == self.skill_id:
-            result = message.data["sentiment"]
-            utterance = message.data["utterance"]
-            self.feedback(result, utterance)
-
     def feedback(self, feedback, utterance):
         # get sentiment result utterance and confidences, do something
-        return False
+        if feedback == "positive":
+            self.log.info("Positive feedback for skill " + self.name)
+        elif feedback == "negative":
+            self.log.info("Negative feedback for skill " + self.name)
 
     def speak_dialog(self, key, data={}):
         utterance = self.dialog_renderer.render(key, data)

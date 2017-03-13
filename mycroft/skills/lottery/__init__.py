@@ -32,7 +32,7 @@ class LotterySkill(MycroftSkill):
 
     def __init__(self):
         super(LotterySkill, self).__init__(name="LotterySkill")
-        self.mashape = self.apiconfig.get('MashapeAPI')
+        self.mashape = self.config_apis.get('MashapeAPI')
 
     def initialize(self):
 

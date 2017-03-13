@@ -71,11 +71,11 @@ def handle_utterance(event):
                 {'utterances': event, 'source': "speech"}))
    # ws.emit(Message('recognizer_loop:utterance', event))
 
-def setflag(event):
+def set_speak_flag(event):
     global disable_speak_flag
     disable_speak_flag = True
 
-def unsetflag(event):
+def unset_speak_flag(event):
     global disable_speak_flag
     disable_speak_flag = False
 
@@ -167,8 +167,8 @@ def main():
     ws.on('recognizer_loop:wake_up', handle_wake_up)
     ws.on('mycroft.stop', handle_stop)
     ws.on("mycroft.paired", handle_paired)
-    ws.on('do_not_speak_flag_enable', setflag)
-    ws.on('do_not_speak_flag_disable', unsetflag)
+    ws.on('do_not_speak_flag_enable', set_speak_flag)
+    ws.on('do_not_speak_flag_disable', unset_speak_flag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()

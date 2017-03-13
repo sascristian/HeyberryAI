@@ -31,11 +31,11 @@ logger = getLogger("CLIClient")
 
 disable_speak_flag = False
 
-def setflag(event):
+def set_speak_flag(event):
     global disable_speak_flag
     disable_speak_flag = True
 
-def unsetflag(event):
+def unset_speak_flag(event):
     global disable_speak_flag
     disable_speak_flag = False
 
@@ -62,8 +62,8 @@ def main():
     tts.init(ws)
     if '--quiet' not in sys.argv:
         ws.on('speak', handle_speak)
-        ws.on('do_not_speak_flag_enable', setflag)
-        ws.on('do_not_speak_flag_disable', unsetflag)
+        ws.on('do_not_speak_flag_enable', set_speak_flag)
+        ws.on('do_not_speak_flag_disable', unset_speak_flag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()

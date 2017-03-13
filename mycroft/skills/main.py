@@ -41,7 +41,7 @@ last_modified_skill = 0
 skills_directories = []
 skill_reload_thread = None
 id_counter = 0
-prioritary_skills = ["intent","feedback"]
+prioritary_skills = ["intent"]
 
 def connect():
     global ws
@@ -84,7 +84,7 @@ def clear_skill_events(instance):
 
 def watch_skills():
     global ws, loaded_skills, last_modified_skill, skills_directories, id_counter, prioritary_skills
-    # load intent skill first
+    # load prioritary skill first
     for p_skill in prioritary_skills:
         if p_skill not in loaded_skills:
             id_counter += 1
@@ -152,6 +152,17 @@ def handle_conversation_request(message):
                     "skill_id": skill_id, "result": result}))
             return
 
+def handle_feedback_request(message):
+    global loaded_skills
+    skill_id = message.data["skill_id"]
+    utterance = message.data["utterance"]
+    result = message.data["sentiment"]
+    # loop trough skills list and call feedback for skill with skill_id
+    for skill in loaded_skills:
+        if loaded_skills[skill]["id"] == skill_id:
+            instance = loaded_skills[skill]["instance"]
+            instance.feedback(result, utterance)
+            return
 
 def main():
     global ws
@@ -173,6 +184,7 @@ def main():
     ws.on('message', echo)
     ws.once('open', load_watch_skills)
     ws.on('converse_status_request', handle_conversation_request)
+    ws.on('do_feedback', handle_feedback_request)
     ws.run_forever()
 
 

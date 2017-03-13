@@ -41,6 +41,7 @@
 - [Feedback Skill](https://github.com/JarbasAI/mycroft-feedback-skill)
 - [Objectives Skill](https://github.com/JarbasAI/mycroft---objectives-skill)
 - [Movie Recommendation Skill](https://github.com/JarbasAI/mycroft---movie-recommend-skill)
+- [Mute Skill]()
 
 from third partys
 
@@ -57,8 +58,6 @@ changed skills
 
 - added results property to all skills
 - desktop_launcher - added ability to open urls instead of google searching (non-vocal skill usecase)
-- ip skill - blacklisted, using the7erm diagnostics skill for this
-
 
 # Privacy Enhancements
 
@@ -83,16 +82,18 @@ gets you a https proxy
 - TODO - traffic blackhole if vpn goes down
 
 
-the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start" 
+the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start" , "wifi disable" whenever intenert connection is not needed
 
 # Other Changes
 
-- cli client now listens for do not speak requests, so jarbas can shut up by external request without running in quiet mode
-- configuration no longer loads from mycroft servers, configuration skill was blacklisted, reason is for more control and privacy
+- cli and speech clients now listen for do not speak requests, so jarbas can shut up by external request without running in quiet mode [PR#556](https://github.com/MycroftAI/mycroft-core/pull/556)
 - added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
 - added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
 - added feedback method to allow skills to process feedback [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
 - blacklist fix [PR#549](https://github.com/MycroftAI/mycroft-core/pull/549)
+- centralized APIs in configfile, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
+- ip skill blacklisted, using the7erm diagnostics skill for this
+- configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
 
 Forked from Mycroft 
 ==========
@@ -154,21 +155,28 @@ It's useful to know the location of the identity file when troubleshooting devic
 ## Using Mycroft without Home.
 If you do not wish to use our service, you may insert your own API keys into the configuration files listed below in <b>configuration</b>.
 
-The place to insert the API key looks like the following:
+The place to insert the API keys looks like the following:
 
-`[WeatherSkill]`
+`"APIS": {`
+`    "WolframAlphaAPI": "key",`
+`    "WeatherAPI": "key",`
+`    "GraphAPI": "key",`
+`    "MashapeAPI": "key",`
+`    "WikimapiaAPI": "key",`
+`    "CloudsightAPI": "key",`
+`    "RedditAPI": "key",`
+`    "CloudsightSecret": "secret",`
+`    "RedditSecret": "secret"`
+`  },`
 
-`api_key = ""`
 
 Put the relevant key in between the quotes and Mycroft Core should begin to use the key immediately.
 
 ### APIs and dependencies in this fork ###
 
-some api keys are needed, check config file for placeholders to change
-
 caffe must be installed for dream skill and path added to config file
 
-requirments.txt will be updated in the future, check links bellow and watch skills log for debug on missing dependencies
+requirements.txt will be updated in the future, check skill links for dependencies and watch skills log for debug on missing dependencies
 
 ### API Key services
 
