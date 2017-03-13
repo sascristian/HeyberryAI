@@ -54,7 +54,7 @@ class KnowledgeSkill(MycroftSkill):
         def aquisition():
             start_time = time.time()
             while True:
-                if time.time() - start_time >= 20*60: #every 5 min
+                if time.time() - start_time >= 20*60: #every 20 min
                     self.emitter.emit(Message("ExecuteObjectiveIntent",{"Objective":"adquire knowledge"}))
                     start_time = time.time()
 

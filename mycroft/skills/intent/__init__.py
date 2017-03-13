@@ -107,6 +107,9 @@ class IntentSkill(MycroftSkill):
             # best intent detected -> update called skills dict
             name = self.intent_to_skill[best_intent['intent_type']]
             self.add_active_skill(name)
+            if best_intent['intent_type'] == "PositiveFeedbackIntent" or best_intent['intent_type'] == "NegativeFeedbackIntent":
+                self.emitter.emit(Message("feedback_id",{"active_skill":self.active_skills[1][0]}))
+
         elif len(utterances) == 1:
             self.emitter.emit(Message("intent_failure", {
                 "utterance": utterances[0]

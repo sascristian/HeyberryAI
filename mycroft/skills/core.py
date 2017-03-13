@@ -231,6 +231,7 @@ class MycroftSkill(object):
             self.emitter = emitter
             self.enclosure = EnclosureAPI(emitter)
             self.__register_stop()
+            self.emitter.on("do_feedback",self.do_feedback)
 
     def __register_stop(self):
         self.stop_time = time.time()
@@ -322,6 +323,18 @@ class MycroftSkill(object):
         self.add_result("speak", utterance)
 
     # end of results property stuff changes
+
+    # handle feedback
+    def do_feedback(self, message):
+        id = message.data["skill_id"]
+        if id == self.skill_id:
+            result = message.data["sentiment"]
+            utterance = message.data["utterance"]
+            self.feedback(result, utterance)
+
+    def feedback(self, feedback, utterance):
+        # get sentiment result utterance and confidences, do something
+        return False
 
     def speak_dialog(self, key, data={}):
         utterance = self.dialog_renderer.render(key, data)
