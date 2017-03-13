@@ -20,12 +20,15 @@ from random import randrange
 
 import re
 import wikipedia as wiki
+import random
+import time
 from adapt.intent import IntentBuilder
-from os.path import join, dirname
-
+from os.path import dirname
+from os import listdir
+from threading import Thread
 from mycroft.skills.core import MycroftSkill
-from mycroft.util import read_stripped_lines
 from mycroft.util.log import getLogger
+from mycroft.messagebus.message import Message
 
 __author__ = 'jarbas'
 
@@ -40,11 +43,47 @@ class KnowledgeSkill(MycroftSkill):
 
         self.savepath = dirname(__file__) +"/saved"
 
+        self.knowledge = []
+        self.load_knowledge()
+
+        # auto adquire knowledge using knowledge objective, every 5 mins gets an article
+        self.autoadquire = True
+
+        def aquisition():
+            start_time = time.time()
+            while True:
+                if time.time() - start_time >= 5*60: #every 5 min
+                    self.emitter.emit(Message("ExecuteObjectiveIntent",{"Objective":"adquire knowledge"}))
+                    start_time = time.time()
+
+        if self.autoadquire:
+            self.event_thread = Thread(target=aquisition)
+            self.event_thread.setDaemon(True)
+            self.event_thread.start()
+
     def initialize(self):
 
         knowledge_intent = IntentBuilder("KnowledgeIntent").require(
             "KnowledgeKeyword").require("ArticleTitle").optionally("SavePath").build()
         self.register_intent(knowledge_intent, self.handle_knowledge_intent)
+
+        teach_me_intent = IntentBuilder("TeachIntent").require(
+            "TeachKeyword").build()
+        self.register_intent(teach_me_intent, self.handle_teach_intent)
+
+    def load_knowledge(self):
+        for file in listdir(self.savepath):
+            path = self.savepath + "/" + file
+            try:
+                with open(path) as f:
+                    words = f.readlines()
+                    for word in words:
+                        self.knowledge.append(word.replace("\n", ""))
+            except:
+                pass
+
+    def handle_teach_intent(self, message):
+        self.speak(random.choice(self.knowledge))
 
     def handle_knowledge_intent(self, message):
         title = message.data.get("ArticleTitle")
@@ -64,9 +103,10 @@ class KnowledgeSkill(MycroftSkill):
                 wiki.summary(results[0], self.max_phrases))
 
             wfile = open(savepath, "w")
-            wfile.write(summary)
+            wfile.write(summary.encode('utf-8'))
             wfile.close()
-            self.speak(summary)
+            #self.speak(summary)
+            self.knowledge.append(summary)
             #self.emit_results()
 
         except wiki.exceptions.DisambiguationError as e:
@@ -88,15 +128,16 @@ class KnowledgeSkill(MycroftSkill):
                     wiki.summary(results[0], self.max_phrases))
 
                 wfile = open(savepath, "w")
-                wfile.write(summary)
+                wfile.write(summary.encode('utf-8'))
                 wfile.close()
-                self.speak(summary)
+                #self.speak(summary)
+                self.knowledge.append(summary)
                 #self.emit_results()
 
 
         except Exception as e:
             LOGGER.error("Error: {0}".format(e))
-            self.speak("Couldn't find knowledge about " + title + " right now")
+            #self.speak("Couldn't find knowledge about " + title + " right now")
 
     def stop(self):
         pass

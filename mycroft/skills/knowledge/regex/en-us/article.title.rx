@@ -1,1 +1,1 @@
-(adquire knowledge about|save knowledge about) (?P<SavePath>.*)
+(adquire knowledge about|save knowledge about) (?P<ArticleTitle>.*)
