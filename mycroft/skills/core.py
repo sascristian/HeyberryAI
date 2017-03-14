@@ -313,7 +313,9 @@ class MycroftSkill(object):
                 self.registered_intents.remove((name, intent, handler))
                 intent.name = name
                 self.register_intent(intent, None)
-                break
+                self.log.info("Enabling Intent " + name)
+                return
+        self.log.error("Could not Re-enable Intent " + intent_name)
 
 
     def register_vocabulary(self, entity, entity_type):
