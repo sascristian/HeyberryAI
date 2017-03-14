@@ -91,7 +91,6 @@ the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start"
 - added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
 - added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
 - added feedback method to allow skills to process feedback/reinforcement learning [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
-- blacklist fix [PR#549](https://github.com/MycroftAI/mycroft-core/pull/549)
 - centralized APIs in config file, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
 - ip skill blacklisted, using the7erm diagnostics skill for this
 - configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
