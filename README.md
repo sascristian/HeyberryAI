@@ -42,6 +42,7 @@
 - [Objectives Skill](https://github.com/JarbasAI/mycroft---objectives-skill)
 - [Movie Recommendation Skill](https://github.com/JarbasAI/mycroft---movie-recommend-skill)
 - [Mute Skill](https://github.com/JarbasAI/mycroft---mute-skill)
+- [Konami Code Skill](https://github.com/JarbasAI/mycroft---konami-code)
 
 from third partys
 
@@ -89,9 +90,9 @@ the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start"
 - cli and speech clients now listen for do not speak requests, so jarbas can shut up by external request without running in quiet mode [PR#556](https://github.com/MycroftAI/mycroft-core/pull/556)
 - added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
 - added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
-- added feedback method to allow skills to process feedback [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
+- added feedback method to allow skills to process feedback/reinforcement learning [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
 - blacklist fix [PR#549](https://github.com/MycroftAI/mycroft-core/pull/549)
-- centralized APIs in configfile, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
+- centralized APIs in config file, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
 - ip skill blacklisted, using the7erm diagnostics skill for this
 - configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
 - allowed intents to be de-registered [PR#558](https://github.com/MycroftAI/mycroft-core/pull/558)
@@ -268,7 +269,7 @@ ask me questions and help you shall receive
 
 https://github.com/JarbasAI/jarbas-core/blob/dev/todolist.txt
 
-Or you could make a suggestion?
+Or you could make a suggestion? open issues
 
 ##### What are the Privacy Concerns i should worry about regarding AI assistants?
 
