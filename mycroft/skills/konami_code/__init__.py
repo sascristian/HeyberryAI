@@ -3,6 +3,8 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
+from os.path import dirname, exists
+
 __author__ = 'jarbas'
 
 LOGGER = getLogger(__name__)
@@ -12,8 +14,13 @@ class KonamiCodeSkill(MycroftSkill):
     def __init__(self):
         super(KonamiCodeSkill, self).__init__(name="KonamiCode")
         # UP UP DOWN DOWN LEFT RIGHT LEFT RIGHT B A
+        self.cheat_code_script = dirname(__file__)+"/cheat_code.py"
+        # TODO use this path instead of importing default script and read from config file
+        self.reload_skill = False
         self.counter = 0
         self.next_cheat = "up"
+
+
 
     def initialize(self):
         
@@ -96,7 +103,20 @@ class KonamiCodeSkill(MycroftSkill):
 
 
     def handle_a_intent(self, message):
+        if not self.cheat_code_script:
+            self.speak_dialog("no.script")
+            return
+
+        if not exists(self.cheat_code_script):
+            data = {
+                "script": self.cheat_code_script
+            }
+            self.speak_dialog("missing.script", data)
+            return
+
         self.speak_dialog("cheat_code")
+        # TODO change this lazy mechanism, use subprocess ?
+        import mycroft.skills.konami_code.cheat_code
         self.counter = 0
         self.disable_intent('KonamiDownIntent')
         self.disable_intent('KonamiLeftIntent')
@@ -104,6 +124,7 @@ class KonamiCodeSkill(MycroftSkill):
         self.disable_intent('KonamiBIntent')
         self.disable_intent('KonamiAIntent')
         self.enable_intent('KonamiUpIntent')
+
 
     # reset code input on invalid utterance
     def converse(self, transcript, lang="en-us"):
