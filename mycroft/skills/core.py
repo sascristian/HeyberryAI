@@ -239,9 +239,8 @@ class MycroftSkill(object):
         self.emitter.on('mycroft.stop', self.__handle_stop)
 
     def detach(self):
-        for (name, intent, handler) in self.registered_intents:
-            name = self.name + ':' + name
-            self.emitter.emit(Message("detach_intent", {"intent_name": name}))
+        for intent in self.registered_intents:
+            self.emitter.emit(Message("detach_intent", {"intent_name": intent}))
 
     def initialize(self):
         """
@@ -277,9 +276,7 @@ class MycroftSkill(object):
         return False
 
     def register_intent(self, intent_parser, handler):
-        name = intent_parser.name
-        intent_parser.name = self.name + ':' + intent_parser.name
-        self.registered_intents.append((name, intent_parser, handler))
+        self.registered_intents.append(intent_parser)
         # add source skill_id to info
         dict = {"intent": intent_parser.__dict__, "source_skill": self.id}
         self.emitter.emit(Message("register_intent", dict))
@@ -302,18 +299,16 @@ class MycroftSkill(object):
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
-        name = self.name + ':' + intent_name
-        self.emitter.emit(Message("detach_intent", {"intent_name": name}))
+        self.emitter.emit(Message("detach_intent", {"intent_name": intent_name}))
 
 
     def enable_intent(self, intent_name):
         """Reenable a registered intent"""
-        for (name, intent, handler) in self.registered_intents:
-            if name == intent_name:
-                self.registered_intents.remove((name, intent, handler))
-                intent.name = name
+        for intent in self.registered_intents:
+            if intent.name == intent_name:
+                self.registered_intents.remove(intent)
                 self.register_intent(intent, None)
-                self.log.info("Enabling Intent " + name)
+                self.log.info("Enabling Intent " + intent_name)
                 return
         self.log.error("Could not Re-enable Intent " + intent_name)
 
