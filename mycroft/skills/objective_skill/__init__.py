@@ -12,11 +12,99 @@ import os
 from os.path import dirname
 from mycroft.util.log import getLogger
 
+from mycroft.messagebus.client.ws import WebsocketClient
+from mycroft.messagebus.message import Message
+
+from threading import Thread
+
+from time import sleep
+
 sys.path.append(abspath(dirname(__file__)))
 
 logger = getLogger(abspath(__file__).split('/')[-2])
 
 __author__ = 'jarbas'
+
+client = None
+
+
+def connect():
+    global client
+    client.run_forever()
+
+class ObjectiveBuilder():
+    def __init__(self, objective_name):
+        self.goals = {}
+        self.objective_name = objective_name
+        self.objective = self.objective_name , self.goals
+
+
+        global client
+        client = WebsocketClient()
+
+        event_thread = Thread(target=connect)
+        event_thread.setDaemon(True)
+        event_thread.start()
+        sleep(1)# wait for connect
+
+    def add_goal(self, goal_name):
+        for goal in self.goals:
+            if goal == goal_name:
+                return
+        self.goals.setdefault(goal_name, [])
+
+    def add_way(self, goal_name, intent_name, params=None):
+        # add goal if it doesnt exist
+        self.add_goal(goal_name)
+
+        # build way
+        if params is None:
+            params = {}
+        goal_way = {intent_name: params}
+
+        # update goal
+        for way in self.goals[goal_name]:
+            if way == goal_way:
+                #way already registered
+                return
+        self.goals[goal_name].append(goal_way)
+
+    def build(self):
+        self.objective = self.objective_name, self.goals
+
+    def reset(self, objective_name):
+        self.goals = {}
+        self.objective_name = objective_name
+        self.objective = self.objective_name, self.goals
+
+    def get_objective_intent(self, keywords = None):
+        self.build()
+        objective_name , goals = self.objective
+        objective_keyword = objective_name + "ObjectiveKeyword"
+        objective_intent_name = objective_name + "ObjectiveIntent"
+
+        # Register_Objective
+        client.emit(Message("Register_Objective", {"name": objective_name, "goals": goals}))
+
+        # Register intent
+        objective_intent = IntentBuilder(objective_intent_name)
+        if keywords is None:
+            # register vocab for objective intent with objective name
+            client.emit(Message("register_vocab", {'start': objective_name, 'end': objective_keyword}))
+            # Create intent for objective
+            objective_intent.require(objective_keyword)
+        else:
+            for keyword in keywords:
+                objective_intent.require(keyword)
+        objective_intent.build()
+
+        # return objective intent and handler
+        return objective_intent, self.execute_objective
+
+    # handler to execute objective
+    def execute_objective(self, message):
+        client.emit(Message("Execute_Objective", {"Objective": self.objective_name}))
+
 
 class Goal():
     def __init__(self, name, ways):
@@ -46,6 +134,7 @@ class Goal():
             if i>= 20:
                 break
 
+
 class Objectives():
     def __init__(self, client):
         self.objectives = {} #name : [Goals]
@@ -53,7 +142,7 @@ class Objectives():
 
     def register_objective(self, name, goals=None):
         try:  # if key exists in dict
-            old_goals = self.objectives[name]
+            old_goals = self.objectives[name.lower()]
             for goal in old_goals:
                 goals.append(goal)  # load previously defined goals
             self.objectives[name.lower()] = goals
@@ -98,9 +187,11 @@ class Objectives():
             print goal.name
             goal.print_ways()
 
+
 class ObjectivesSkill(MycroftSkill):
     def __init__(self):
         super(ObjectivesSkill, self).__init__(name='ObjectivesSkill')
+        self.reload_skill = False
 
     def initialize(self):
 
@@ -109,6 +200,7 @@ class ObjectivesSkill(MycroftSkill):
         self.load_objectives_from_config()
 
         self.emitter.on("Register_Objective", self.register_objective)
+        self.emitter.on("Execute_Objective", self.handle_execute_objective_intent)
 
         self.wiki_objective()
 

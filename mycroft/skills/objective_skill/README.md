@@ -7,6 +7,61 @@ In the objectives.config file you define keywords with a list of actions that ca
 
 i tought it was best to have a separate config instead of spamming mycroft config
 
+# ObjectiveBuilder
+
+to use objectives in other skill an helper class has been coded
+
+        from mycroft.skills.core import MycroftSkill
+        from mycroft.skills.objective_skill import ObjectiveBuilder
+
+        __author__ = 'jarbas'
+
+        class TestRegisterObjectiveSkill(MycroftSkill):
+            def __init__(self):
+                super(TestRegisterObjectiveSkill, self).__init__(name="TestRegisterObjectiveSkill")
+
+            def initialize(self):
+
+                # objective name
+                name = "test"
+                my_objective = ObjectiveBuilder(name)
+
+                # create way
+                goal = "test this shit"
+                intent = "speak"
+                intent_params = {"utterance":"this is test"}
+                # register way for goal
+                # if goal doesnt exist its created
+                my_objective.add_way(goal, intent, intent_params)
+
+                # do my_objective.add_way() as many times as needed for as many goals as desired
+                intent = "speak"
+                intent_params = {"utterance": "testing alright"}
+                my_objective.add_way(goal, intent, intent_params)
+
+                # get objective intent and handler
+
+                # get an intent to execute this objective by its name
+                # intent , self.handler = my_objective.get_objective_intent()
+
+                # instead of name to trigger objective lets register a keyword from voc
+                # required keywords list, same as doing .require(keyword) in intent for each item
+                keywords = ["TestKeyword"]
+                intent, self.handler = my_objective.get_objective_intent(keywords)
+
+                # objective can still be executed without registering intent by saying
+                # objective objective_name , and directly using objective skill
+
+                self.register_intent(intent, self.handler)
+
+            def stop(self):
+                pass
+
+
+        def create_skill():
+            return TestRegisterObjectiveSkill()
+
+
 Example Config:
 
 ```json
@@ -91,10 +146,18 @@ In above example when a user says *Hey Mycroft, objective troll*, the objectives
 
 So the skill would choose either videotroll or website troll intent, and execute one of the ways, in this case open a link in browser or a youtube video
 
-An example wiki objective has been coded in the skill, this created a bunch of ways with different searchterms and searches wikipedia, this is used in small talk goal to say random stuff, a way may also be other objective
 
-There is a way to overload the selector function for both ways and goals, but i havent still worked out how to configure this without using IFTTT in the code for each over-rided objective
+
+# more ways to code objectives
+
+An example wiki objective has been coded in the skill (without ObjectiveBuilder), this created a bunch of ways with different searchterms and searches wikipedia, this is used in small talk goal to say random stuff, a way may also be other objective
+
+There is a way to overload the selector function for both ways and goals, but i havent still worked out how to configure this
 
 Objectives can be registered from other skills/programs by sending a message to messagebus with the format
 
         Message("Register_Objective", {"name":name,"goals":goals})
+
+ # future
+
+ probabilities for each way executing, integration with feedback skill to adjust probabilities
