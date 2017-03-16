@@ -33,19 +33,20 @@ def connect():
     client.run_forever()
 
 class ObjectiveBuilder():
-    def __init__(self, objective_name):
+    def __init__(self, objective_name, emitter = None):
         self.goals = {}
         self.objective_name = objective_name
         self.objective = self.objective_name , self.goals
 
-
         global client
-        client = WebsocketClient()
-
-        event_thread = Thread(target=connect)
-        event_thread.setDaemon(True)
-        event_thread.start()
-        sleep(1)# wait for connect
+        if emitter is None:
+            client = WebsocketClient()
+            event_thread = Thread(target=connect)
+            event_thread.setDaemon(True)
+            event_thread.start()
+            sleep(1)  # wait for connect
+        else:
+            client = emitter
 
     def add_goal(self, goal_name):
         for goal in self.goals:
@@ -77,7 +78,7 @@ class ObjectiveBuilder():
         self.objective_name = objective_name
         self.objective = self.objective_name, self.goals
 
-    def get_objective_intent(self, keywords = None):
+    def get_objective_intent(self, keyword = None):
         self.build()
         objective_name , goals = self.objective
         objective_keyword = objective_name + "ObjectiveKeyword"
@@ -88,14 +89,13 @@ class ObjectiveBuilder():
 
         # Register intent
         objective_intent = IntentBuilder(objective_intent_name)
-        if keywords is None:
+        if keyword is None:
             # register vocab for objective intent with objective name
             client.emit(Message("register_vocab", {'start': objective_name, 'end': objective_keyword}))
             # Create intent for objective
             objective_intent.require(objective_keyword)
         else:
-            for keyword in keywords:
-                objective_intent.require(keyword)
+            objective_intent.require(keyword)
         objective_intent.build()
 
         # return objective intent and handler
@@ -122,7 +122,7 @@ class Goal():
         for key in selected_way:
             #selected_way = way
             data = selected_way[key]
-        return selected_way , data, key
+            return selected_way , data, key
 
     def print_ways(self):
         i = 0
@@ -159,7 +159,6 @@ class Objectives():
     def execute_objective(self, name, selectfunction=None):
         if selectfunction is None:
             selectfunction = self.default_select
-
         intent , data, key, goal = selectfunction(self.objectives[name])
 
         print "\nExecuting\n"
@@ -172,7 +171,7 @@ class Objectives():
 
         return intent
 
-    def default_select(self, goal_list):
+    def default_select(self, goal_list):#
         selected_goal = random.choice(goal_list)
         intent , data, key  = selected_goal.way_selector()
         return intent, data, key, selected_goal.name
@@ -202,8 +201,6 @@ class ObjectivesSkill(MycroftSkill):
         self.emitter.on("Register_Objective", self.register_objective)
         self.emitter.on("Execute_Objective", self.handle_execute_objective_intent)
 
-        self.wiki_objective()
-
         prefixes = [
             'Objective', 'obj']
         self.__register_prefixed_regex(prefixes, "(?P<Objective>.*)")
@@ -224,7 +221,7 @@ class ObjectivesSkill(MycroftSkill):
 
     def handle_execute_objective_intent(self, message):
         objective = message.data.get("Objective")
-        objective.replace(" ","_")
+        #objective.replace(" ","_")
         try:
             self.obj.execute_objective(objective)
             ### TODO abstract this with probabilities for each goal and way
@@ -236,55 +233,6 @@ class ObjectivesSkill(MycroftSkill):
         for obj in self.obj.objectives:
             self.speak(obj)
 
-    ### example coded objectives
-    # more available in freewill service
-    def wiki_objective(self):
-
-        word_bank = self.load_word_bank()
-
-        name = "WikipediaIntent"
-        waylist = []
-        goals = {}
-        g = []
-        for word in word_bank:
-            ways = {}  # list dumb
-            ways.setdefault(name, {"ArticleTitle": word})
-            waylist.append(ways)
-
-        name = "Search_Wikipedia" #goal name
-        goals.setdefault(name, waylist)
-        g.append(Goal(name,waylist))
-
-        name = "wiki" #objective name to invoke for executing
-
-        # you can do this from inside this skill as long as goals is a list
-        self.obj.register_objective(name, g)
-        # or from any other skill you can do this, goals is a dict
-        #self.emitter.emit(Message("Register_Objective", {"name":name,"goals":goals}))
-
-        name = "KnowledgeIntent"
-        waylist = []
-        g = []
-        for word in word_bank:
-            ways = {}
-            ways.setdefault(name, {"ArticleTitle": word})
-            waylist.append(ways)
-
-        name = "Search_Wikipedia"
-        g.append(Goal(name, waylist))
-
-        name = "adquire knowledge"
-        self.obj.register_objective(name, g)
-
-    def load_word_bank(self):
-        word_bank = []
-        path = os.path.dirname(__file__) + '/wordbank.txt'
-        with open(path) as f:
-            words = f.readlines()
-            for word in words:
-                word_bank.append(word.replace("\n", ""))
-
-        return word_bank
 
     ####### objectives #####
 

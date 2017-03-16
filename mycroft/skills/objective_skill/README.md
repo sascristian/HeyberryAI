@@ -45,9 +45,9 @@ to use objectives in other skill an helper class has been coded
                 # intent , self.handler = my_objective.get_objective_intent()
 
                 # instead of name to trigger objective lets register a keyword from voc
-                # required keywords list, same as doing .require(keyword) in intent for each item
-                keywords = ["TestKeyword"]
-                intent, self.handler = my_objective.get_objective_intent(keywords)
+                # required keywords same as doing .require(keyword) in intent
+                keyword = "TestKeyword"
+                intent, self.handler = my_objective.get_objective_intent(keyword)
 
                 # objective can still be executed without registering intent by saying
                 # objective objective_name , and directly using objective skill
@@ -150,9 +150,9 @@ So the skill would choose either videotroll or website troll intent, and execute
 
 # more ways to code objectives
 
-An example wiki objective has been coded in the skill (without ObjectiveBuilder), this created a bunch of ways with different searchterms and searches wikipedia, this is used in small talk goal to say random stuff, a way may also be other objective
+An example wiki objective has been coded with ObjectiveBuilder, this creates a bunch of ways with different searchterms and searches wikipedia, this is used in small talk goal to say random stuff, a way may also be other objective
 
-There is a way to overload the selector function for both ways and goals, but i havent still worked out how to configure this
+There is a way to overload the selector function for both ways and goals, but i havent still worked out how to configure this, used in freewill service to select fb posts
 
 Objectives can be registered from other skills/programs by sending a message to messagebus with the format
 

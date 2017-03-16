@@ -29,14 +29,12 @@ LOGGER = getLogger(__name__)
 class TestRegisterObjectiveSkill(MycroftSkill):
     def __init__(self):
         super(TestRegisterObjectiveSkill, self).__init__(name="TestRegisterObjectiveSkill")
-        self.reload_skill = True
-        self.na = 0
 
     def initialize(self):
 
         # objective name
         name = "test"
-        my_objective = ObjectiveBuilder(name)
+        my_objective = ObjectiveBuilder(name, self.emitter)
 
         # create way
         goal = "test this shit"
@@ -50,6 +48,8 @@ class TestRegisterObjectiveSkill(MycroftSkill):
         intent = "speak"
         intent_params = {"utterance": "testing alright"}
         my_objective.add_way(goal, intent, intent_params)
+        # if you dont register any way you will always get a no such objective error
+        # if you register too much ways (10) adapt seems to crash and no utterance is handled in intent skill
 
         # get objective intent and handler
 
@@ -57,8 +57,8 @@ class TestRegisterObjectiveSkill(MycroftSkill):
         # intent , self.handler = my_objective.get_objective_intent()
 
         # instead of name to trigger objective lets register a keyword from voc
-        keywords = ["TestKeyword"] #required keywords list, same as doing .require(keyword) in intent for each item
-        intent, self.handler = my_objective.get_objective_intent(keywords)
+        keyword = "TestKeyword" # same as doing .require(keyword) in intent
+        intent, self.handler = my_objective.get_objective_intent(keyword)
 
         # objective can still be executed without registering intent by saying
         # objective objective_name and directly using objective skill
