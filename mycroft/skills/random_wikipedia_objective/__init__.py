@@ -48,7 +48,7 @@ class WikiObjectiveSkill(MycroftSkill):
         goal_name = "Search_Wikipedia"
         intent = "WikipediaIntent"
         i = 0
-        while i < 500: #too much ways crash intent registering
+        while i < 1000: #too much ways crash intent registering
             word = random.choice(self.word_bank)
             intent_params = {"ArticleTitle": word}
             my_objective.add_way(goal_name, intent, intent_params)
@@ -67,7 +67,7 @@ class WikiObjectiveSkill(MycroftSkill):
         goal_name = "Search_Wikipedia"
         intent = "KnowledgeIntent"
         i = 0
-        while i < 500:  # too much ways crash intent registering
+        while i < 1000:  # too much ways crash intent registering
             word = random.choice(self.word_bank)
             intent_params = {"ArticleTitle": word}
             my_objective.add_way(goal_name, intent, intent_params)

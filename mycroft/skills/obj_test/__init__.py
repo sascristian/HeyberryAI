@@ -31,7 +31,6 @@ class TestRegisterObjectiveSkill(MycroftSkill):
         super(TestRegisterObjectiveSkill, self).__init__(name="TestRegisterObjectiveSkill")
 
     def initialize(self):
-
         # objective name
         name = "test"
         my_objective = ObjectiveBuilder(name, self.emitter)
