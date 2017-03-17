@@ -41,7 +41,7 @@ last_modified_skill = 0
 skills_directories = []
 skill_reload_thread = None
 id_counter = 0
-prioritary_skills = ["intent"]
+prioritary_skills = ["intent" , "objective_skill" , "feedback", "obj_test"]
 
 def connect():
     global ws
@@ -97,6 +97,7 @@ def watch_skills():
             skill["loaded"] = True
             skill["instance"] = load_skill(
                 create_skill_descriptor(skill["path"]), ws, skill["id"])
+        time.sleep (1)
 
     while True:
         for dir in skills_directories:

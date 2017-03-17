@@ -7,7 +7,7 @@ In the objectives.config file you define keywords with a list of actions that ca
 
 i tought it was best to have a separate config instead of spamming mycroft config
 
-# ObjectiveBuilder
+# Objective Builder
 
 to use objectives in other skill an helper class has been coded
 
@@ -62,7 +62,10 @@ to use objectives in other skill an helper class has been coded
             return TestRegisterObjectiveSkill()
 
 
-Example Config:
+in the above example saying "stupid test" , which is the sentence in TestKeyword.voc, will trigger TestRegisterObjectiveSkill
+
+
+# Example Config:
 
 ```json
   {

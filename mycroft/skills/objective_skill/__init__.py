@@ -44,7 +44,7 @@ class ObjectiveBuilder():
             event_thread = Thread(target=connect)
             event_thread.setDaemon(True)
             event_thread.start()
-            sleep(1)  # wait for connect
+            sleep(1)  # wait for connectr
         else:
             client = emitter
 
@@ -107,9 +107,14 @@ class ObjectiveBuilder():
 
 
 class Goal():
-    def __init__(self, name, ways):
+    def __init__(self, name, ways, probs = None):
         self.name = name#"knowledge"
-        self.ways = ways#["wikipedia", "wolphram", "articles", "ask user"]
+        self.ways = ways#[{"wikipedia":{"ArticleTitle":article}}]
+        self.way_prob_dict = {}
+        if probs is None:
+            self.set_default_probs()
+        else:
+            self.way_prob_dict = probs
 
     def way_selector(self, function=None):
         if function is not None:
@@ -117,7 +122,18 @@ class Goal():
         else:
             return self.default_way_selector(self.ways)
 
+    def set_default_probs(self):
+        num_ways = len(self.ways)
+        prob = 100 / num_ways
+        for way in self.ways:
+            for key in way:
+                self.way_prob_dict.setdefault(key, prob)
+
+
     def default_way_selector(self, ways):
+        for way in self.way_prob_dict:
+            way_prob = self.way_prob_dict[way]
+
         selected_way = random.choice(ways)
         for key in selected_way:
             #selected_way = way
@@ -155,6 +171,7 @@ class Objectives():
 
         data = {"Name":name,"Goals":data}
         self.client.emit(Message("Objective_Registered", data))
+
 
     def execute_objective(self, name, selectfunction=None):
         if selectfunction is None:
@@ -196,8 +213,6 @@ class ObjectivesSkill(MycroftSkill):
 
         self.obj = Objectives(self.emitter)
 
-        self.load_objectives_from_config()
-
         self.emitter.on("Register_Objective", self.register_objective)
         self.emitter.on("Execute_Objective", self.handle_execute_objective_intent)
 
@@ -215,13 +230,14 @@ class ObjectivesSkill(MycroftSkill):
 
         self.register_intent(available_objectives_intent, self.handle_available_objectives)
 
+        self.load_objectives_from_config()
+
     def __register_prefixed_regex(self, prefixes, suffix_regex):
         for prefix in prefixes:
             self.register_regex(prefix + ' ' + suffix_regex)
 
     def handle_execute_objective_intent(self, message):
         objective = message.data.get("Objective")
-        #objective.replace(" ","_")
         try:
             self.obj.execute_objective(objective)
             ### TODO abstract this with probabilities for each goal and way
@@ -229,38 +245,27 @@ class ObjectivesSkill(MycroftSkill):
             self.speak("No such objective")
 
     def handle_available_objectives(self, message):
-        self.speak("The following objectives are registered")
+        self.speak_dialog("available_objectives")
         for obj in self.obj.objectives:
             self.speak(obj)
-
-
-    ####### objectives #####
 
     def load_objectives_from_config(self):
         objectives = ConfigurationManager.get([dirname(__file__)+"/objectives.conf"])[
             "Objectives"]
         for objective in objectives:
-            # print objective
-            goals = []
-            for goal in objectives[objective]:
-                name = goal
-                ways_string = objectives[objective][goal]["ways"]
-                # print ways_string
-
-                waylist = []
+            objective_name = objective
+            my_objective = ObjectiveBuilder(objective_name, self.emitter)
+            for goal_name in objectives[objective]:
+                ways_string = objectives[objective][goal_name]["ways"]
                 for intent in ways_string:
-                    # print intent
-                    for key in intent:
-                        # print key
-                        # print intent[key]
+                    for intent_name in intent:
                         ways = {}
-                        ways.setdefault(key, intent[key])
-                        waylist.append(ways)
+                        ways.setdefault(intent_name, intent[intent_name])
+                        my_objective.add_way(goal_name, intent_name, intent[intent_name])
 
-                goal = Goal(name, waylist)
-                goals.append(goal)
-
-            self.obj.register_objective(objective, goals)
+            # create intent with objective name as vocab
+            intent, self.handle_wiki_objective = my_objective.get_objective_intent()
+            self.register_intent(intent, self.handle_wiki_objective)
 
     def register_objective(self, message):
         name = message.data["name"]

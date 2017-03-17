@@ -77,7 +77,6 @@ class IntentSkill(MycroftSkill):
     def handle_utterance(self, message):
 
         utterances = message.data.get('utterances', '')
-
         # check for conversation time-out
         self.active_skills = [skill for skill in self.active_skills
                               if time.time() - skill[1] <= self.converse_timeout * 60]
@@ -98,6 +97,7 @@ class IntentSkill(MycroftSkill):
                     utterance, 100))
                 # TODO - Should Adapt handle this?
                 best_intent['utterance'] = utterance
+
             except StopIteration, e:
                 logger.exception(e)
                 continue
@@ -106,11 +106,14 @@ class IntentSkill(MycroftSkill):
             reply = message.reply(
                 best_intent.get('intent_type'), best_intent)
             self.emitter.emit(reply)
+
             # best intent detected -> update called skills dict
             skill_id = self.intent_to_skill_id[best_intent['intent_type']]
             self.add_active_skill(skill_id)
+            # process feedback
             if best_intent['intent_type'] == "PositiveFeedbackIntent" or best_intent['intent_type'] == "NegativeFeedbackIntent":
                 self.emitter.emit(Message("feedback_id",{"active_skill":self.active_skills[1][0]}))
+            # convert intent to objective and execute
 
         elif len(utterances) == 1:
             self.emitter.emit(Message("intent_failure", {

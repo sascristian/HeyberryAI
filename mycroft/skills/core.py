@@ -36,7 +36,7 @@ from adapt.context import ContextManager
 __author__ = 'seanfitz'
 
 PRIMARY_SKILLS = ['intent', 'wake']
-BLACKLISTED_SKILLS = ["send_sms", "media", "configuration", "ip_skill", "dial_call"]
+BLACKLISTED_SKILLS = ["send_sms", "media", "configuration", "ip_skill", "dial_call", "dreamskill" , "desktop_launcher"]#, "random_wikipedia_objective"]
 SKILLS_BASEDIR = dirname(__file__)
 THIRD_PARTY_SKILLS_DIR = ["/opt/mycroft/third_party", "/opt/mycroft/skills"]
 # Note: /opt/mycroft/skills is recommended, /opt/mycroft/third_party
@@ -322,6 +322,7 @@ class MycroftSkill(object):
     def register_regex(self, regex_str):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
+
 
     # results property -> mycroft team doesnt agree with this exact aproach
     # https://github.com/MycroftAI/mycroft-core/pull/281

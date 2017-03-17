@@ -49,7 +49,7 @@ class TestRegisterObjectiveSkill(MycroftSkill):
         intent_params = {"utterance": "testing alright"}
         my_objective.add_way(goal, intent, intent_params)
         # if you dont register any way you will always get a no such objective error
-        # if you register too much ways (10) adapt seems to crash and no utterance is handled in intent skill
+        # if you register too much ways (100000) objective isnt properly registered
 
         # get objective intent and handler
 

@@ -87,6 +87,7 @@ class KnowledgeSkill(MycroftSkill):
         self.speak(random.choice(self.knowledge))
 
     def handle_knowledge_intent(self, message):
+        self.speak_dialog("knowledge_dialog")
         title = message.data.get("ArticleTitle")
 
         savepath = message.data.get("SavePath")

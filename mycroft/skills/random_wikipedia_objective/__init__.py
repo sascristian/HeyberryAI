@@ -38,7 +38,7 @@ class WikiObjectiveSkill(MycroftSkill):
     def initialize(self):
 
         self.wiki_objective()
-        #self.knowledge_objective()
+        self.knowledge_objective()
 
 
     def wiki_objective(self):
@@ -61,7 +61,7 @@ class WikiObjectiveSkill(MycroftSkill):
 
 
     def knowledge_objective(self):
-        objective_name = "adquire_knowledge"
+        objective_name = "adquire knowledge"
         my_objective = ObjectiveBuilder(objective_name, self.emitter)
 
         goal_name = "Search_Wikipedia"

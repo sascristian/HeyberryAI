@@ -16,7 +16,7 @@ class KonamiCodeSkill(MycroftSkill):
         # UP UP DOWN DOWN LEFT RIGHT LEFT RIGHT B A
         self.cheat_code_script = dirname(__file__)+"/cheat_code.py"
         # TODO use this path instead of importing default script and read from config file
-        self.reload_skill = False
+        # self.reload_skill = False
         self.counter = 0
         self.next_cheat = "up"
 
@@ -124,6 +124,7 @@ class KonamiCodeSkill(MycroftSkill):
         self.disable_intent('KonamiBIntent')
         self.disable_intent('KonamiAIntent')
         self.enable_intent('KonamiUpIntent')
+        self.next_cheat = "up"
 
 
     # reset code input on invalid utterance
@@ -137,6 +138,8 @@ class KonamiCodeSkill(MycroftSkill):
             self.disable_intent('KonamiAIntent')
             self.next_cheat = "up"
             self.counter = 0
+            self.speak_dialog("wrong.answer")
+            return True
         return False
 
     def stop(self):
