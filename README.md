@@ -54,6 +54,7 @@ from third partys
 - [Event Skill](https://github.com/forslund/event_skill)
 - [Command Skill](https://github.com/forslund/cmd_skill)
 - [Small Talk, Dice, Coin Flip, Rock Paper Scissors Skills](https://github.com/apquinit/mycroft-skills)
+- [Traffic Skill](https://github.com/BongoEADGC6/mycroft-traffic)
 
 changed skills
 
@@ -161,6 +162,7 @@ The place to insert the API keys looks like the following:
 `"APIS": {`
 `    "WolframAlphaAPI": "key",`
 `    "WeatherAPI": "key",`
+`    "GoogleMapsDirectionsAPI": "key",
 `    "GraphAPI": "key",`
 `    "MashapeAPI": "key",`
 `    "WikimapiaAPI": "key",`
@@ -194,6 +196,7 @@ new apis:
 - [Mashape API](https://market.mashape.com) 
 - [CloudSight API](http://cloudsight.ai/api_client_users/new) 
 - [Wikimapia API](http://wikimapia.org/api/)
+- [Google Drive Maps API] (https://console.developers.google.com/apis/api/directions_backend?project=)
 
 ## Configuration
 Mycroft configuration consists of 3 possible config files.
