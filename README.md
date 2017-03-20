@@ -55,6 +55,8 @@ from third partys
 - [Command Skill](https://github.com/forslund/cmd_skill)
 - [Small Talk, Dice, Coin Flip, Rock Paper Scissors Skills](https://github.com/apquinit/mycroft-skills)
 - [Traffic Skill](https://github.com/BongoEADGC6/mycroft-traffic)
+- [Solar Times Skill](https://github.com/marksev1/Mycroft-SunSkill)
+- [Sunspot Count Skill](https://github.com/BoatrightTBC/sunspots)
 
 changed skills
 
