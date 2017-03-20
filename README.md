@@ -1,5 +1,75 @@
 # Jarbas Core
 
+a fork of mycroft-core , the following things were added
+
+
+### Basic Skills
+
+        these skills are more or less passive, they are mostly helper skills to be used elsewhere
+
+[Mood Quotes Skill](https://github.com/JarbasAI/mycroft-mood-quotes) - Random stuff to say depending on mood
+[Chatbot Skill](https://github.com/JarbasAI/mycroft---wolphram-alpha-chatbot---skill) - chatbot response when dont know what to do  ---- BROKEN
+[Sentiment Analisys Skill](https://github.com/JarbasAI/mycroft---sentiment-analisys---skill)  - Classifies sentences into positive and negative
+[Feedback Skill](https://github.com/JarbasAI/mycroft-feedback-skill) - Gives positive or negative feedback to last executed action
+[Objectives Skill](https://github.com/JarbasAI/mycroft---objectives-skill) - Programmable objectives with several ways of being executed
+[Event Skill](https://github.com/forslund/event_skill) - chains of events , programmable times
+[Command Skill](https://github.com/forslund/cmd_skill) - execute system commands
+
+### Entertainment Skills
+
+        skills that entertain you
+
+[Parrot Skill](https://github.com/JarbasAI/mycroft---parrot-skill) - Speaks Everything back to user
+[Music Skill](https://github.com/JarbasAI/mycroft-music-skill) - Download and play music from youtube
+[Random Quotes Skill](https://github.com/JarbasAI/mycroft---quotes---skill) - Movie Quotes / Number Facts / Time left to live
+[Pickup Line Skill](https://github.com/JarbasAI/mycroft---pick-up-line---skill) - Pickup Lines
+[Konami Code Skill](https://github.com/JarbasAI/mycroft---konami-code) - cheat code sequence
+[Fortune Skill](https://github.com/jaevans/mycroft-fortuneskill) - Tells you your fortune
+[Daily Meditation Skill](https://github.com/kfezer/daily_meditation) - Meditation podcast
+[Small Talk, Dice, Coin Flip, Rock Paper Scissors Skills](https://github.com/apquinit/mycroft-skills)
+
+
+### Control Skills
+
+        skills that help you control stuff
+
+[Mute Skill](https://github.com/JarbasAI/mycroft---mute-skill) - Disables and enables speech on demand
+[Wallpaper Skill](https://github.com/JarbasAI/mycroft---wallpaper---skill) - download and change wallpapers
+[Wifi Skill](https://github.com/JarbasAI/mycroft-wifi-skill) - manage wifi (network-manager)
+[Jarbas Diagnostics Skill](https://github.com/JarbasAI/mycroft-diagnostics-skill) - Jarbas Services Info
+[Diagnostics Skill](https://github.com/the7erm/mycroft-skill-diagnostics) - System Info
+
+
+### Productivity Skills
+
+        skills that help you create/do stuff
+
+[Dictation Skill](https://github.com/JarbasAI/mycroft-dictation-skill) - Writes everything user says to disk
+[Dream Skill](https://github.com/JarbasAI/mycroft-deepdream-skill) - Create Deep Dream Images
+[Poetry Skill](https://github.com/JarbasAI/mycroft-poetry-skill) - Create Poetry
+[Picture Search Skill](https://github.com/JarbasAI/mycroft-pictureskill) - Search and download pictures
+[Facebook Skill](https://github.com/JarbasAI/mycroft-facebook-skill) - Generate Facebook Posts
+[Proxy Scrapping Skill](https://github.com/JarbasAI/mycroft--proxy-scrapping---skill) - Get https proxys
+[Leaks Skill](https://github.com/JarbasAI/leaks-skill) - Find leaked info online
+
+### Informational Skills
+
+        skills that give you information
+
+[Translate Skill](https://github.com/jcasoft/TranslateSkill) - Translate and speak sentences into other languages
+[PhotoLocation Skill](https://github.com/JarbasAI/mycroft-photolocation-skill) - photos from locations
+[Bitcoin Price Skill](https://github.com/JarbasAI/jarbas-core/tree/dev/mycroft/skills/bitcoin) - current bitcoin price
+[Articles Skill](https://github.com/JarbasAI/mycroft-articles-skill) - read/open articles from websites
+[Movie Recommendation Skill](https://github.com/JarbasAI/mycroft---movie-recommend-skill) - Recommends Movies from imdb top
+[Metal Recomendation Skill](https://github.com/JarbasAI/mycroft---metal-recomend---skill) - Recommends metal bands
+[Euromillions Skill](https://github.com/JarbasAI/mycroft---euromillions-skill) - last lottery numbers
+[Knowledge Skill](https://github.com/JarbasAI/mycroft---knowledge-skill) - saves/teachs you random things from wikipedia
+[Space Launch Skill](https://github.com/marksev1/Mycroft-SpaceLaunch-Skill) - Next rocket launch
+[Traffic Skill](https://github.com/BongoEADGC6/mycroft-traffic) - traffic driving times between locations
+[Solar Times Skill](https://github.com/marksev1/Mycroft-SunSkill) - times for solar events (dusk, dawn...)
+[Sunspot Count Skill](https://github.com/BoatrightTBC/sunspots) - number of currently visible sunspots
+
+
 ### New Client
 
 - [Facebook Chat Client](https://github.com/JarbasAI/mycroft---facebookchat---client)
@@ -13,54 +83,8 @@
 - [Context Manager Service](https://github.com/JarbasAI/mycroft---context-manager---service)
 
 
-### New Skills
+### Changed skills
 
-- [Wallpaper Skill](https://github.com/JarbasAI/mycroft---wallpaper---skill)
-- [Wifi Skill](https://github.com/JarbasAI/mycroft-wifi-skill)
-- [Articles Skill](https://github.com/JarbasAI/mycroft-articles-skill)
-- [Music Skill](https://github.com/JarbasAI/mycroft-music-skill)
-- [Dream Skill](https://github.com/JarbasAI/mycroft-deepdream-skill)
-- [Poetry Skill](https://github.com/JarbasAI/mycroft-poetry-skill)
-- [Picture Search Skill](https://github.com/JarbasAI/mycroft-pictureskill)
-- [PhotoLocation Skill](https://github.com/JarbasAI/mycroft-photolocation-skill)
-- [Chatbot Skill](https://github.com/JarbasAI/mycroft---wolphram-alpha-chatbot---skill) ------- BROKEN
-- [Facebook Skill](https://github.com/JarbasAI/mycroft-facebook-skill)
-- [Proxy Scrapping Skill](https://github.com/JarbasAI/mycroft--proxy-scrapping---skill)
-- [Random Quotes Skill](https://github.com/JarbasAI/mycroft---quotes---skill)
-- [Pickup Line Skill](https://github.com/JarbasAI/mycroft---pick-up-line---skill)
-- [Bitcoin Price Skill](https://github.com/JarbasAI/jarbas-core/tree/dev/mycroft/skills/bitcoin)
-- [Mood Quotes Skill](https://github.com/JarbasAI/mycroft-mood-quotes)
-- [Leaks Skill](https://github.com/JarbasAI/leaks-skill)
-- [Jarbas Diagnostics Skill](https://github.com/JarbasAI/mycroft-diagnostics-skill)
-- [Sentiment Analisys Service](https://github.com/JarbasAI/mycroft---sentiment-analisys---service) - REFACTORED INTO [SKILL](https://github.com/JarbasAI/mycroft---sentiment-analisys---skill)
-- [Metal Recomendation Skill](https://github.com/JarbasAI/mycroft---metal-recomend---skill)
-- [Euromillions Skill](https://github.com/JarbasAI/mycroft---euromillions-skill)
-- [Parrot Skill](https://github.com/JarbasAI/mycroft---parrot-skill)
-- [Dictation Skill](https://github.com/JarbasAI/mycroft-dictation-skill)
-- [Knowledge Skill](https://github.com/JarbasAI/mycroft---knowledge-skill)
-- [Feedback Skill](https://github.com/JarbasAI/mycroft-feedback-skill)
-- [Objectives Skill](https://github.com/JarbasAI/mycroft---objectives-skill)
-- [Movie Recommendation Skill](https://github.com/JarbasAI/mycroft---movie-recommend-skill)
-- [Mute Skill](https://github.com/JarbasAI/mycroft---mute-skill)
-- [Konami Code Skill](https://github.com/JarbasAI/mycroft---konami-code)
-
-from third partys
-
-- [Fortune Skill](https://github.com/jaevans/mycroft-fortuneskill)
-- [Translate Skill](https://github.com/jcasoft/TranslateSkill)
-- [Diagnostics Skill](https://github.com/the7erm/mycroft-skill-diagnostics)
-- [Daily Meditation Skill](https://github.com/kfezer/daily_meditation)
-- [Space Launch Skill](https://github.com/marksev1/Mycroft-SpaceLaunch-Skill)
-- [Event Skill](https://github.com/forslund/event_skill)
-- [Command Skill](https://github.com/forslund/cmd_skill)
-- [Small Talk, Dice, Coin Flip, Rock Paper Scissors Skills](https://github.com/apquinit/mycroft-skills)
-- [Traffic Skill](https://github.com/BongoEADGC6/mycroft-traffic)
-- [Solar Times Skill](https://github.com/marksev1/Mycroft-SunSkill)
-- [Sunspot Count Skill](https://github.com/BoatrightTBC/sunspots)
-
-changed skills
-
-- added results property to all skills
 - desktop_launcher - added ability to open urls instead of google searching (non-vocal skill usecase)
 
 # Privacy Enhancements
@@ -90,7 +114,6 @@ the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start"
 
 # Other Changes
 
-- cli and speech clients now listen for do not speak requests, so jarbas can shut up by external request without running in quiet mode [PR#556](https://github.com/MycroftAI/mycroft-core/pull/556)
 - added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
 - added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
 - added feedback method to allow skills to process feedback/reinforcement learning [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
