@@ -40,3 +40,17 @@ pyroute2==0.4.5
 urllib5==5.0.0
 pyric==0.1.6
 inflection==0.3.1
+praw==4.4.0
+unirest==1.1.7
+pafy==0.5.3.1
+arrow==0.10.0
+solartime==0.1b0
+geopy==1.11.0
+grey_harvest==0.1.15
+mtranslate==1.6
+pattern==2.6
+opencv-python==3.2.0.6
+cloudsight==0.9.2
+newspaper==0.0.9.8
+requests==2.6.0
+bat-country==0.2

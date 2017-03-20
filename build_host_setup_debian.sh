@@ -20,5 +20,8 @@ sudo apt-get install -y \
     mpg123 \
     screen \
     flac \
+    fortune \
+    libxml2-dev \
+    libxslt1-dev \
     curl
 
