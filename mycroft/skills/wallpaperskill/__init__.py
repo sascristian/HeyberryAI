@@ -23,7 +23,7 @@ class WallpaperSkill(MycroftSkill):
     def __init__(self):
         super(WallpaperSkill, self).__init__(name="WallpaperSkill")
 
-        self.desktop = "mate"
+        self.desktop = "jwm"
         self.add_result("desktop", self.desktop)
         self.command = self.processcommand(self.desktop)
 
@@ -46,7 +46,7 @@ class WallpaperSkill(MycroftSkill):
                              client_secret=self.SECRET,
                              user_agent=self.USERAGENT)
         # populate on first run
-        self.populate = False
+        self.populate = True
         #def start_populate():
         if self.populate:
             self.removeFiles()
@@ -65,8 +65,6 @@ class WallpaperSkill(MycroftSkill):
         thread.start_new_thread(cyclethread, ())
 
     def initialize(self):
-       # self.load_data_files(dirname(__file__))
-
         start_cycle_intent = IntentBuilder("CycleWallpaperIntent")\
             .require("startcycle").build()
         self.register_intent(start_cycle_intent,
@@ -99,6 +97,7 @@ class WallpaperSkill(MycroftSkill):
 
     def handle_empty_folder_intent(self, message):
         ## delete walpaper files to folder
+        # TODO add backup of previous wallpapers
         self.removeFiles()
         self.emit_results()
 
@@ -160,6 +159,8 @@ class WallpaperSkill(MycroftSkill):
             os.remove(file)
 
     def processcommand(self, desktop):
+        # TODO add all desktops, autodetect?
+        # http://stackoverflow.com/questions/1977694/change-desktop-background
         if desktop == "kde":
             command = """
                            qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
@@ -181,6 +182,8 @@ class WallpaperSkill(MycroftSkill):
             command = "pcmanfm -w {save_location} --wallpaper-mode=fit"
         elif desktop == "mate":
             command = "gsettings set org.mate.background picture-filename {save_location}"
+        elif desktop == "jwm" or desktop == "fluxbox" or desktop == "openbox" or desktop == "afterstep":
+            command = "fbsetbg {save_location}"
         else:  # to do, other environments
             print "Command not coded for " + desktop
             command = ""
