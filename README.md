@@ -260,6 +260,7 @@ new apis:
 - [CloudSight API](http://cloudsight.ai/api_client_users/new) 
 - [Wikimapia API](http://wikimapia.org/api/)
 - [Google Drive Maps API] (https://console.developers.google.com/apis/api/directions_backend?project=)
+- [NASA API](https://api.nasa.gov/index.html#apply-for-an-api-key)
 
 ## Configuration
 Mycroft configuration consists of 3 possible config files.
