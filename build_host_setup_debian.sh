@@ -23,5 +23,6 @@ sudo apt-get install -y \
     fortune \
     libxml2-dev \
     libxslt1-dev \
+    libopencv-dev \
     curl
 
