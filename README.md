@@ -42,7 +42,7 @@ a fork of mycroft-core , the following things were added
 
 [Small Talk, Dice, Coin Flip, Rock Paper Scissors Skills](https://github.com/apquinit/mycroft-skills)
 
-
+[Astronomy Picture of the Day](https://github.com/JarbasAI/mycroft---astronomy-picture-of-teh-day)
 
 ### Control Skills
 
