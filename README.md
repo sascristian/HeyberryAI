@@ -54,8 +54,6 @@ a fork of mycroft-core , the following things were added
 
 [Wifi Skill](https://github.com/JarbasAI/mycroft-wifi-skill) - manage wifi (network-manager)
 
-[Jarbas Diagnostics Skill](https://github.com/JarbasAI/mycroft-diagnostics-skill) - Jarbas Services Info
-
 [Diagnostics Skill](https://github.com/the7erm/mycroft-skill-diagnostics) - System Info
 
 
@@ -76,7 +74,7 @@ a fork of mycroft-core , the following things were added
 
 [Proxy Scrapping Skill](https://github.com/JarbasAI/mycroft--proxy-scrapping---skill) - Get https proxys
 
-[Leaks Skill](https://github.com/JarbasAI/leaks-skill) - Find leaked info online
+[Leaks Skill](https://github.com/JarbasAI/leaks-skill) - warn user about leaked info online
 
 
 ### Informational Skills
@@ -107,6 +105,7 @@ a fork of mycroft-core , the following things were added
 
 [Sunspot Count Skill](https://github.com/BoatrightTBC/sunspots) - number of currently visible sunspots
 
+[Ping Skill]() - get target website ping time or status
 
 ### New Client
 
@@ -144,14 +143,16 @@ starts a global tor tunnel, all traffic is routed trough tor, requires [anonsurf
 gets you a https proxy
 
 - TODO - auto proxy setup
-- TODO - local speech to text
+- TODO - local/offline speech to text
 - TODO - traffic blackhole if vpn goes down
+- TODO - wicd network manager version / any other common network managers?
 
 
 the most private setup would be "wifi enable" + "vpn connect" + "anonsurf start" , "wifi disable" whenever intenert connection is not needed
 
 # Other Changes
 
+- created a folder named database that is populated with created/scraped content during jarbas life-time (offline backups)
 - added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
 - added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
 - added feedback method to allow skills to process feedback/reinforcement learning [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
@@ -235,6 +236,7 @@ The place to insert the API keys looks like the following:
 `    "WeatherAPI": "key",`
 `    "GoogleMapsDirectionsAPI": "key",
 `    "GraphAPI": "key",`
+`    "NASAAPI": "DEMO_KEY"`,
 `    "MashapeAPI": "key",`
 `    "WikimapiaAPI": "key",`
 `    "CloudsightAPI": "key",`
@@ -248,9 +250,10 @@ Put the relevant key in between the quotes and Mycroft Core should begin to use 
 
 ### APIs and dependencies in this fork ###
 
-caffe must be installed for dream skill and path added to config file
+caffe must be installed for dream skill and path added to config file, dependencies for this skill are not all pre-installed install of this is hard
+dreamskill is blacklisted by default because of this, remove from skills/core.py blacklist to use
 
-requirements.txt will be updated in the future, check skill links for dependencies and watch skills log for debug on missing dependencies
+requirements.txt / dev_setup.sh will be updated in the future, check skill links for dependencies and watch skills log for debug on missing dependencies
 
 ### API Key services
 
