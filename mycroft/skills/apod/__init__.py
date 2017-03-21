@@ -24,7 +24,7 @@ class AstronomyPicSkill(MycroftSkill):
         except:
             self.key = self.config["NASAAPI"]
         self.save = True
-        self.save_path = self.config["database_path"] + "/apod"
+        self.save_path = self.config_core["database_path"] + "/apod"
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
 
@@ -42,9 +42,9 @@ class AstronomyPicSkill(MycroftSkill):
         summary = response.body["explanation"]
 
         apod = urllib2.urlopen(url)
-        apod = urllib2.urlopen(apod).read()
-        #apod = np.array(bytearray(apod.read()), dtype=np.uint8)
-        #apod = cv2.imdecode(apod, -1)
+        #apod = urllib2.urlopen(apod).read()
+        apod = np.array(bytearray(apod.read()), dtype=np.uint8)
+        apod = cv2.imdecode(apod, -1)
 
         if self.save:
             save_path = self.save_path + "/" + title.replace(" ", "_") + ".jpg"
@@ -53,7 +53,7 @@ class AstronomyPicSkill(MycroftSkill):
             f = open(self.save_path+"/"+title.replace(" ", "_")+".txt", 'wb')
             f.write(summary)
             f.close()
-        apod = imutils.resize(apod, 300, 300)
+        apod = imutils.resize(apod, 500, 500)
 
         self.speak(title)
         cv2.imshow("Astronomy Picture of the Day", apod)
