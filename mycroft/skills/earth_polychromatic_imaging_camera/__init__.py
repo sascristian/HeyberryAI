@@ -50,14 +50,14 @@ class EPICSkill(MycroftSkill):
         pic = urllib2.urlopen(url)
         pic = np.array(bytearray(pic.read()), dtype=np.uint8)
         pic = cv2.imdecode(pic, -1)
-
+        date = response.body[0]["date"]
         if self.save:
-            save_path = self.save_path + "/" + time.asctime() + ".jpg"
+            save_path = self.save_path + "/" + date + ".jpg"
             cv2.imwrite(save_path, pic)
         pic = imutils.resize(pic, 500, 500)
 
-        self.speak_dialog("EPIC")
-        cv2.imshow("EPIC " + time.asctime(), pic)
+        self.speak_dialog("EPIC", {"date":date})
+        cv2.imshow("EPIC " + date, pic)
         cv2.waitKey(120)
         cv2.destroyAllWindows()
 
