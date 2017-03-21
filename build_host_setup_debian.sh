@@ -24,5 +24,6 @@ sudo apt-get install -y \
     libxml2-dev \
     libxslt1-dev \
     libopencv-dev \
+    python-opencv \
     curl
 

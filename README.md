@@ -42,7 +42,7 @@ a fork of mycroft-core , the following things were added
 
 [Small Talk, Dice, Coin Flip, Rock Paper Scissors Skills](https://github.com/apquinit/mycroft-skills)
 
-[Astronomy Picture of the Day](https://github.com/JarbasAI/mycroft---astronomy-picture-of-teh-day)
+[Astronomy Picture of the Day](https://github.com/JarbasAI/mycroft---astronomy-picture-of-teh-day) - Downloads and display NASA astronomy picture of the day
 
 ### Control Skills
 
@@ -202,6 +202,14 @@ The following packages are required for setting up the development environment,
  - `flac`
  - `curl`
 
+ added in this fork
+
+ - fortune
+ - libxml2-dev
+ - libxslt1-dev
+ - libopencv-dev
+ - python-opencv
+
 ## Home Device and Account Manager
 Mycroft AI, Inc. - the company behind Mycroft maintains the Home device and account management system. Developers can sign up at https://home.mycroft.ai
 
@@ -259,7 +267,7 @@ new apis:
 - [Mashape API](https://market.mashape.com) 
 - [CloudSight API](http://cloudsight.ai/api_client_users/new) 
 - [Wikimapia API](http://wikimapia.org/api/)
-- [Google Drive Maps API] (https://console.developers.google.com/apis/api/directions_backend?project=)
+- [Google Drive Maps API] (https://console.developers.google.com/apis/api/directions_backend)
 - [NASA API](https://api.nasa.gov/index.html#apply-for-an-api-key)
 
 ## Configuration
