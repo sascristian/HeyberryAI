@@ -35,11 +35,13 @@ class ProxySkill(MycroftSkill):
     def __init__(self):
         super(ProxySkill, self).__init__(name="ProxySkill")
 
-        self.path =  os.path.dirname(__file__) + "/harvest"
+        self.path = self.config_core["database_path"] + "/proxys"
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
         self.limit = 50
 
     def initialize(self):
-       # self.load_data_files(dirname(__file__))
 
         prefixes = [
             'proxy from', 'proxy form' ]
@@ -65,8 +67,8 @@ class ProxySkill(MycroftSkill):
         path = self.harvestproxy()
         self.speak("proxies sucefully harvested and saved at "+path)
 
-        self.add_result("path", path)
-        self.emit_results()
+        #self.add_result("path", path)
+        #self.emit_results()
 
 
     def handle_single_proxy_intent(self, message):
@@ -75,10 +77,10 @@ class ProxySkill(MycroftSkill):
         txt = "here is a proxy from "+c+" : " + proxy
         self.speak(txt)
 
-        self.add_result("proxy", proxy)
-        self.add_result("country", c)
+        #self.add_result("proxy", proxy)
+        #self.add_result("country", c)
 
-        self.emit_results()
+        #self.emit_results()
 
     def handle_proxyfrom_intent(self, message):
         country = message.data.get("Country")
@@ -92,11 +94,11 @@ class ProxySkill(MycroftSkill):
             txt = "proxy from " + country + " wasn't found maybe this one from " + c +" serves your purpose anyway  " + proxy
         self.speak(txt)
 
-        self.add_result("proxy", proxy)
-        self.add_result("country", c)
-        self.add_result("Requested_Country", country)
+        #self.add_result("proxy", proxy)
+        #self.add_result("country", c)
+        #self.add_result("Requested_Country", country)
 
-        self.emit_results()
+        #self.emit_results()
 
     def harvestsingleproxy(self, country="any"):
 

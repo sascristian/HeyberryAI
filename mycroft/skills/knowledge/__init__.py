@@ -15,15 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from random import randrange
-
 import re
 import wikipedia as wiki
 import random
 import time
 from adapt.intent import IntentBuilder
-from os.path import dirname
+import os
 from os import listdir
 from threading import Thread
 from mycroft.skills.core import MycroftSkill
@@ -43,7 +40,9 @@ class KnowledgeSkill(MycroftSkill):
         self.max_results = self.config['max_results']
         self.max_phrases = self.config['max_phrases']
 
-        self.savepath = dirname(__file__) +"/saved"
+        self.savepath = self.config_core["database_path"] + "/knowledge"
+        if not os.path.exists(self.savepath):
+            os.makedirs(self.savepath)
 
         self.knowledge = []
         self.load_knowledge()

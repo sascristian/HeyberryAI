@@ -38,7 +38,9 @@ class PhotoSkill(MycroftSkill):
         self.long_min = self.center_long - self.radius
         self.long_max = self.center_long + self.radius
 
-        self.savepath = dirname(__file__)
+        self.savepath = self.config_core["database_path"] + "/wikimapia"
+        if not os.path.exists(self.savepath):
+            os.makedirs(self.savepath)
         self.limit = 50
 
 

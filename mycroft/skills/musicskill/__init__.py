@@ -59,7 +59,7 @@ class MP3DemoSkill(MycroftSkill):
         self.video_link_title_keylist = []#will be the list of dict key for the self.video_link_title_dict, for sorting purpose
 
         ## Storage
-        self.video_download_folder = self.config["save"]
+        self.video_download_folder = self.config_core["database_path"] + "/music"
         self.dbfolder = self.video_download_folder + "/metal"
 
         if not os.path.exists(self.video_download_folder):

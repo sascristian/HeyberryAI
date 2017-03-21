@@ -8,7 +8,7 @@ import numpy as np
 import cv2
 from os.path import dirname
 import imutils
-import time
+import os
 
 __author__ = 'jarbas'
 
@@ -24,6 +24,9 @@ class AstronomyPicSkill(MycroftSkill):
         except:
             self.key = self.config["NASAAPI"]
         self.save = True
+        self.save_path = self.config["database_path"] + "/apod"
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
 
     def initialize(self):
         apod_intent = IntentBuilder("ApodIntent").\
@@ -36,14 +39,22 @@ class AstronomyPicSkill(MycroftSkill):
         response = unirest.get(apod_url)
         title = response.body["title"]
         url = response.body["url"]
-        apod = urllib2.urlopen(url)
-        apod = np.array(bytearray(apod.read()), dtype=np.uint8)
-        apod = cv2.imdecode(apod, -1)
-        if self.save:
-            save_path = dirname(__file__) + "/apod/" + title.replace(" ", "_") + ".jpg"
-            cv2.imwrite(save_path, apod)
-        apod = imutils.resize(apod, 300, 300)
         summary = response.body["explanation"]
+
+        apod = urllib2.urlopen(url)
+        apod = urllib2.urlopen(apod).read()
+        #apod = np.array(bytearray(apod.read()), dtype=np.uint8)
+        #apod = cv2.imdecode(apod, -1)
+
+        if self.save:
+            save_path = self.save_path + "/" + title.replace(" ", "_") + ".jpg"
+            cv2.imwrite(save_path, apod)
+            # save description
+            f = open(self.save_path+"/"+title.replace(" ", "_")+".txt", 'wb')
+            f.write(summary)
+            f.close()
+        apod = imutils.resize(apod, 300, 300)
+
         self.speak(title)
         cv2.imshow("Astronomy Picture of the Day", apod)
         self.speak(summary)

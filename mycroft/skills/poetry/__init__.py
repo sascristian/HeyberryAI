@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from os.path import dirname
 import random
 import re
+import os
 
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
@@ -33,14 +33,17 @@ class PoetrySkill(MycroftSkill):
     def __init__(self):
         super(PoetrySkill, self).__init__(name="PoetrySkill")
         self.styles = ["blackmetal", "deathmetal","scifi","viking","love","family","friends","inspirational","life"]
-        self.path = self.config["path"]
+        #self.path = self.config["path"]
         self.minsize = 10
         self.maxsize = 20
         self.mode = 1
         self.reload_skill = False
 
+        self.path = self.config_core["database_path"] + "/poetry"
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
     def initialize(self):
-        #self.load_data_files(dirname(__file__))
 
         viking_poetry_intent = IntentBuilder("ReciteVikingPoetryIntent") \
             .require("viking").build()
@@ -190,7 +193,7 @@ class PoetrySkill(MycroftSkill):
 
     def poetry(self, style):
         # style = "shakespeare"
-        path = self.path + "/styles/" + style + ".txt"
+        path = self.path + "_styles/" + style + ".txt"
         # init dicionares
         poemFreqDict = {}
         poemProbDict = addToDict(path, poemFreqDict, self.mode)
@@ -204,7 +207,7 @@ class PoetrySkill(MycroftSkill):
 
     def save(self, style, poem):
         # save
-        path = self.path + "/results/" + style + "_" + poem[:20] + ".txt"
+        path = self.path + "/" + style + "_" + poem[:20] + ".txt"
         wfile = open(path, "w")
         wfile.write(poem)
         wfile.close()

@@ -29,40 +29,42 @@ class WallpaperSkill(MycroftSkill):
 
         self.USERAGENT = "Jarbas Ai Wallpaper finder"
         self.SUBREDDIT = "wallpapers"#"ImaginaryBestOf"
-        self.IMAGEFOLDERPATH = "/home/user/jarbas-core/mycroft/skills/dreamskill/this"
+        self.IMAGEFOLDERPATH = self.config_core["database_path"] + "/wallpapers"
 
         if not os.path.exists(self.IMAGEFOLDERPATH):
             os.makedirs(self.IMAGEFOLDERPATH)
 
-        self.MAXPOSTS = 25
-        self.TIMEBETWEENIMAGES = 65
+        self.MAXPOSTS = 10
+        self.TIMEBETWEENIMAGES = 75
         self.FILETYPES = ('.jpg', '.jpeg', '.png')
 
         self.ID = self.config_apis.get('RedditAPI')
-        self.SECRET = self.config_apis.get('RedditSecre')
+        self.SECRET = self.config_apis.get('RedditSecret')
 
         self.cycleflag = True
         self.r = praw.Reddit(client_id=self.ID,
                              client_secret=self.SECRET,
                              user_agent=self.USERAGENT)
         # populate on first run
-        self.populate = True
-        #def start_populate():
+        self.populate = False
+
         if self.populate:
             self.removeFiles()
             self.download_images(self.findImages())
 
-        def cyclethread():
-            if self.cycleflag:
-                for imagePath in cycle(self.list_images()):
-                    os.system(self.command.format(save_location=imagePath))
-                    self.add_result("wallpaper", imagePath)
-                    self.emit_results()
-                    time.sleep(self.TIMEBETWEENIMAGES)
-            else:
-                time.sleep(5)
+        thread.start_new_thread(self.cyclethread, ())
 
-        thread.start_new_thread(cyclethread, ())
+        self.reload_skill = False
+
+    def cyclethread(self):
+        if self.cycleflag:
+            for imagePath in cycle(self.list_images()):
+                os.system(self.command.format(save_location=imagePath))
+                self.add_result("wallpaper", imagePath)
+                self.emit_results()
+                time.sleep(self.TIMEBETWEENIMAGES)
+        else:
+            time.sleep(5)
 
     def initialize(self):
         start_cycle_intent = IntentBuilder("CycleWallpaperIntent")\
@@ -119,7 +121,7 @@ class WallpaperSkill(MycroftSkill):
             paths.append(imagePath)
         wallpaper = random.choice(paths)
         os.system(self.command.format(save_location=wallpaper))
-        self.add_result("wallpaper",wallpaper)
+        self.add_result("wallpaper", wallpaper)
         self.emit_results()
 
     #### helper

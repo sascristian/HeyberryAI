@@ -57,7 +57,8 @@ class LeaksSkill(MycroftSkill):
         self.mails = []
 
         # load dumps from disk
-        self.dumppath = self.config["dump_path"]
+        self.dumppath = self.config_core["database_path"] + "/dumps"
+
         self.dumps = []
         self.rawdump = []
 
@@ -104,7 +105,6 @@ class LeaksSkill(MycroftSkill):
         self.event_thread.start()
 
     def initialize(self):
-        #self.load_data_files(dirname(__file__))
 
         oldleaks_intent = IntentBuilder("OldLeaksMailIntent"). \
             require("oldleaks").build()
