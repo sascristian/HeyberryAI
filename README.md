@@ -105,7 +105,9 @@ a fork of mycroft-core , the following things were added
 
 [Sunspot Count Skill](https://github.com/BoatrightTBC/sunspots) - number of currently visible sunspots
 
-[Ping Skill]() - get target website ping time or status
+[Ping Skill](https://github.com/nogre/ping-skill) - get target website ping time or status
+
+[Near Earth Object Tracking Skill](https://github.com/JarbasAI/mycroft---near-earth-object-tracker/) - tracks near earth objects
 
 ### New Client
 
@@ -236,7 +238,7 @@ The place to insert the API keys looks like the following:
 `    "WeatherAPI": "key",`
 `    "GoogleMapsDirectionsAPI": "key",
 `    "GraphAPI": "key",`
-`    "NASAAPI": "DEMO_KEY"`,
+`    "NASAAPI": "DEMO_KEY",`
 `    "MashapeAPI": "key",`
 `    "WikimapiaAPI": "key",`
 `    "CloudsightAPI": "key",`
