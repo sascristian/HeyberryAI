@@ -17,7 +17,7 @@ from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 
-requestpost = True
+requestpost = False
 mind= 0 #instant
 maxd= 60 * 60 *1 #3 hours
 
@@ -46,8 +46,12 @@ client = WebsocketClient()
 def connect():
     client.run_forever()
 
-thread.start_new_thread(connect,())
-dumppath = "/home/user/mycroft-core/mycroft/dumpmon/dumps"
+thread.start_new_thread(connect, ())
+
+dumppath = os.path.dirname(__file__).replace("dumpmon", "database/dumps")
+if not os.path.exists(dumppath):
+    os.makedirs(dumppath)
+
 while True:
     
     try:
