@@ -53,7 +53,8 @@ class ParrotSkill(MycroftSkill):
                 self.parroting = False
                 self.speak("Parrot Mode Stopped")
             else:
-                self.speak(transcript[0])
+                # keep listening without wakeword
+                self.speak(transcript[0], expect_response=True)
             return True
         else:
             return False

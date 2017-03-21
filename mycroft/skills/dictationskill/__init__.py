@@ -33,12 +33,13 @@ class DictationSkill(MycroftSkill):
         super(DictationSkill, self).__init__(name="DictationSkill")
         self.dictating = False
         self.words = ""
-        self.path = "/home/user/jarbas-core/mycroft/skills/DictationSkill/dictations"
-        self.path = os.path.dirname(__file__) + "/dictations"
-        self.reload_skill = False
-        # check if folders exist
+        self.path = self.config_core["database_path"] + "/dictations"
         if not os.path.exists(self.path):
             os.makedirs(self.path)
+
+        self.reload_skill = False
+
+        self.name = ""
 
     def initialize(self):
 
@@ -63,13 +64,19 @@ class DictationSkill(MycroftSkill):
         self.speak_dialog("dictation")
         self.speak(self.words)
 
+    def handle_set_name(self, message):
+        self.name = message.data["name"]
+        self.speak("Name set to " + self.name)
+
     def save(self):
         # save
-        #TODO let user set savefile name
-        path = self.path + "/" + str(time.time()) + ".txt"
+        if self.name == "":
+            self.name = time.time()
+        path = self.path + "/" + self.name + ".txt"
         wfile = open(path, "w")
         wfile.write(self.words)
         wfile.close()
+        self.name = ""
 
     def stop(self):
         pass
@@ -83,6 +90,8 @@ class DictationSkill(MycroftSkill):
                 self.dictating = False
             else:
                 self.words += (transcript[0]) + "\n"
+                # keep listening without wakeword
+                self.speak("", expect_response=True)
             return True
         else:
             return False
