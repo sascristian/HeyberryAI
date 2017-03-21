@@ -337,8 +337,11 @@ class MycroftSkill(object):
                 Message("results", self.results))
             self.results.clear()
 
-    def speak(self, utterance):
-        self.emitter.emit(Message("speak", {'utterance': utterance}))
+    def speak(self, utterance, expect_response=False):
+        data = {'utterance': utterance,
+                'expect_response': expect_response}
+
+        self.emitter.emit(Message("speak", data))
         self.add_result("speak", utterance)
 
     # end of results property stuff changes
@@ -350,9 +353,9 @@ class MycroftSkill(object):
         elif feedback == "negative":
             self.log.info("Negative feedback for skill " + self.name)
 
-    def speak_dialog(self, key, data={}):
-        utterance = self.dialog_renderer.render(key, data)
-        self.speak(utterance)
+    def speak_dialog(self, key, data={}, expect_response=False):
+        data['expect_response'] = expect_response
+        self.speak(self.dialog_renderer.render(key, data))
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)
