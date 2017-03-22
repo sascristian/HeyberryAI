@@ -184,6 +184,7 @@ class MycroftSkill(object):
         self.registered_intents = []
         self.log = getLogger(name)
         self.reload_skill = True
+        self.results = {}
 
     @property
     def location(self):
@@ -271,6 +272,18 @@ class MycroftSkill(object):
     def speak_dialog(self, key, data={}, expect_response=False):
         data['expect_response'] = expect_response
         self.speak(self.dialog_renderer.render(key, data))
+
+    def add_result(self, key, value):
+        self.results[str(key)] = [value]
+        #self.emitter.emit(Message("register_result", {"msg_type": key + "_result"}))
+
+    def emit_results(self):
+        if len(self.results) > 0:
+            for key in self.results:
+                message_type = key + "_result"
+                self.emitter.emit(
+                    Message(message_type, self.results[key]))
+            self.results.clear()
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)
