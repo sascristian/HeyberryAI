@@ -60,6 +60,7 @@ class JarbasGUI(gtk.Window):
 
         ws.on("speak", self.handle_speech)
         ws.on("Register_Objective", self.handle_register_objective)
+        ws.on("objective_listing", self.handle_objective_update)
         event_thread = Thread(target=connect)
         event_thread.setDaemon(True)
         event_thread.start()
@@ -73,11 +74,19 @@ class JarbasGUI(gtk.Window):
             self.objectives_list.append(name)
             print "added objective: " + name
 
+    def handle_objective_update(self, message):
+        self.objectives_list = message.data["objectives"]
+        self.waiting = False
+
     def handle_speech(self, message):
         self.speech = message.data.get('utterance')
         print "Jarbas said: " + self.speech
         self.waiting = False
 
+    def request_objective_list(self):
+        ws.emit(Message("objectives_request", {}))
+        self.waiting = True
+        self.update()
 
     def send_utterance(self, utterance):
         ws.emit(
@@ -402,6 +411,8 @@ class JarbasGUI(gtk.Window):
 
     def on_refresh(self, widget, dummy):
         self.update()
+        print "If you don't have objectives skill installed this will hang! \nWARNING: possible infinite loop"
+        self.request_objective_list()
 
     def on_execute_objective(self, widget, name):
         print "objective: " + str(name)
@@ -440,10 +451,9 @@ class JarbasGUI(gtk.Window):
 
     def on_connect(self, widget, dummy):
 
-        self.waiting = True
-        while self.waiting:
-            self.speak(random.choice(self.greetings))
-            sleep(0.1)
+        self.speak(" connecting ")
+        sleep(0.1)
+        self.speak(random.choice(self.greetings))
         self.connected = True
         self.update()
 

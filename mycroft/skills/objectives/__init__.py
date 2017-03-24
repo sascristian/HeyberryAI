@@ -418,6 +418,8 @@ class ObjectivesSkill(MycroftSkill):
 
         self.emitter.on("Register_Objective", self.register_objective)
         self.emitter.on("Execute_Objective", self.handle_execute_objective_intent)
+        self.emitter.on("objectives_request", self.handle_list_objectives)
+
 
         prefixes = [
             'Objective', 'obj']
@@ -456,6 +458,12 @@ class ObjectivesSkill(MycroftSkill):
         self.speak_dialog("available_objectives")
         for obj in self.obj.objectives:
             self.speak(obj)
+
+    def handle_list_objectives(self, message):
+        objs = []
+        for obj in self.obj.objectives:
+            objs.append(obj)
+        self.emitter.emit(Message("objective_listing", {"objectives":objs}))
 
     def handle_set_on_top_active_list(self):
         # all objectives registered will be taken as coming from objective skill
