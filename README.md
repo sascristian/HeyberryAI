@@ -1,5 +1,7 @@
 # Jarbas Core
 
+![alt tag](https://github.com/JarbasAI/jarbas---pygtk---GUI/blob/master/screenshot.jpg)
+
 a fork of mycroft-core , the following things were added
 
 
@@ -110,6 +112,7 @@ a fork of mycroft-core , the following things were added
 ### New Client
 
 - [Facebook Chat Client](https://github.com/JarbasAI/mycroft---facebookchat---client)
+- [Graphic User Interface](https://github.com/JarbasAI/jarbas---pygtk---GUI)
 
 ### New Services
 
