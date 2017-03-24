@@ -28,6 +28,7 @@ class EPICSkill(MycroftSkill):
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
 
+        self.reload_skill = False
         self.current = 0
         self.get_EPIC()
 
@@ -120,7 +121,8 @@ class EPICSkill(MycroftSkill):
         try:
             if "previous" not in transcript[0]:
                 self.disable_intent("PreviousEPICIntent")
-                self.current = 0
+                if "next" not in transcript[0]:
+                    self.current = 0
         except:
             pass
         return False

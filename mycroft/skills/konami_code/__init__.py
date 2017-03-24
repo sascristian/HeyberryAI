@@ -19,7 +19,7 @@ class KonamiCodeSkill(MycroftSkill):
         # self.reload_skill = False
         self.counter = 0
         self.next_cheat = "up"
-
+        self.reload_skill = False
 
 
     def initialize(self):
@@ -48,6 +48,12 @@ class KonamiCodeSkill(MycroftSkill):
         self.register_intent(right_intent, self.handle_right_intent)
         self.register_intent(b_intent, self.handle_b_intent)
         self.register_intent(a_intent, self.handle_a_intent)
+
+        self.disable_intent('KonamiDownIntent')
+        self.disable_intent('KonamiLeftIntent')
+        self.disable_intent('KonamiRightIntent')
+        self.disable_intent('KonamiBIntent')
+        self.disable_intent('KonamiAIntent')
 
 
 
@@ -138,8 +144,6 @@ class KonamiCodeSkill(MycroftSkill):
             self.disable_intent('KonamiAIntent')
             self.next_cheat = "up"
             self.counter = 0
-            self.speak_dialog("wrong.answer")
-            return True
         return False
 
     def stop(self):

@@ -27,6 +27,7 @@ from mycroft.api import Api
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+from mycroft.util.parse import normalize
 
 __author__ = 'seanfitz'
 
@@ -45,9 +46,6 @@ class EnglishQuestionParser(object):
                 ".*(?P<QuestionWord>who|what|when|where|why|which) "
                 "(?P<Query1>.*) (?P<QuestionVerb>is|are|was|were) "
                 "(?P<Query2>.*)"),
-            re.compile(
-                ".*(?P<QuestionWord>what)(?P<QuestionVerb>\'s|s) "
-                "(?P<Query>.*)"),
             re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which) "
                 "(?P<QuestionVerb>\w+) (?P<Query>.*)")
@@ -95,8 +93,10 @@ class WolframAlphaSkill(MycroftSkill):
 
     def __init_client(self):
         key = self.config_apis.get('WolframAlphaAPI')
+        print key
         if key and not self.config.get('proxy'):
             self.client = wolframalpha.Client(key)
+            print "gra"
         else:
             self.client = WAApi()
 
@@ -124,15 +124,15 @@ class WolframAlphaSkill(MycroftSkill):
     # TODO: Localization
     def handle_fallback(self, message):
         self.enclosure.mouth_think()
-        LOG.debug(
-            "Could not determine intent, falling back to WolframAlpha Skill!")
-        utterance = message.data.get('utterance')
+        LOG.debug("Falling back to WolframAlpha Skill!")
+        lang = message.data.get('lang')
+        if not lang:
+            lang = "en-us"
+
+        utterance = normalize(message.data.get('utterance'), lang)
         parsed_question = self.question_parser.parse(utterance)
 
-        self.add_result("parsed_question",parsed_question)
-
         query = utterance
-
         if parsed_question:
             # Try to store pieces of utterance (None if not parsed_question)
             utt_word = parsed_question.get('QuestionWord')
@@ -142,12 +142,9 @@ class WolframAlphaSkill(MycroftSkill):
                 utt_verb = 'is'
                 parsed_question['QuestionVerb'] = 'is'
             query = "%s %s %s" % (utt_word, utt_verb, utt_query)
-            self.add_result("query", query)
             phrase = "know %s %s %s" % (utt_word, utt_query, utt_verb)
         else:
             phrase = "understand the phrase " + utterance
-
-        self.add_result("phrase", phrase)
 
         try:
             res = self.client.query(query)
@@ -179,17 +176,15 @@ class WolframAlphaSkill(MycroftSkill):
             input_interpretation = \
                 self.process_wolfram_string(input_interpretation)
             response = "%s %s %s" % (input_interpretation, verb, result)
-            self.add_result("response", response)
-            self.speak(response)
 
+            self.speak(response)
         else:
             if len(others) > 0:
                 self.speak_dialog('others.found',
-                                  data={'utterance': utterance, 'alternative':
-                                        others[0]})
+                                  data={'utterance': utterance,
+                                        'alternative': others[0]})
             else:
                 self.speak_dialog("not.understood", data={'phrase': phrase})
-        self.emit_results()
 
     @staticmethod
     def __find_pod_id(pods, pod_id):
