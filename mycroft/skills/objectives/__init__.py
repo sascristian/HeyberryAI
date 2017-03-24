@@ -12,6 +12,7 @@ from adapt.intent import IntentBuilder
 from mycroft.configuration import ConfigurationManager
 
 import random
+import os
 
 from os.path import dirname
 from mycroft.util.log import getLogger
@@ -143,6 +144,7 @@ class Goal():
 
     def set_default_probs(self):
         try:
+
             self.read_probs_from_disk()
         except:
             num_ways = len(self.ways)
@@ -412,6 +414,10 @@ class ObjectivesSkill(MycroftSkill):
         self.way_reward = 4
         self.goal_reward = 1
 
+        self.prob_path = dirname(__file__) + "/probs"
+        if not os.path.exists(self.prob_path):
+            os.makedirs(self.prob_path)
+
     def initialize(self):
 
         self.obj = Objectives(self.emitter)
@@ -491,6 +497,7 @@ class ObjectivesSkill(MycroftSkill):
             self.register_intent(intent, self.handle_wiki_objective)
 
     def register_objective(self, message):
+
         name = message.data["name"]
         goals = message.data["goals"]
         goalis = []

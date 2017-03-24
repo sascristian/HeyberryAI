@@ -68,7 +68,7 @@ class SunSkill(MycroftSkill):
     def handle_dawn_intent(self, message):
         dawn = self.schedule['dawn'].astimezone(self.localtz)
         self.speak_dialog("dawn", {"dawn": str(dawn)[10:16]})
-        self.add_result("dawn", dawn)
+        self.add_result("dawn", str(dawn)[10:16])
         self.emit_results()
 
     def handle_dusk_intent(self, message):

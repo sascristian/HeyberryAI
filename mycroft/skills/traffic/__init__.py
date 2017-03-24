@@ -37,7 +37,7 @@ class TrafficSkill(MycroftSkill):
         self.debug = False
 
     def __init_traffic(self):
-        self.api_key = self.config_api.get('GoogleTrafficAPI')
+        self.api_key = self.config_apis.get('GoogleTrafficAPI')
         self.poi_dict = self.config.get('pois')
 
     def initialize(self):

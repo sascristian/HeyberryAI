@@ -38,7 +38,8 @@ class AstronomyPicSkill(MycroftSkill):
         self.register_intent(apod_intent, self.handle_apod_intent)
 
     def handle_apod_intent(self, message):
-        apod_url = "https://api.nasa.gov/planetary/astronomy_picture_of_the_day?api_key=" + self.key
+        apod_url = "https://api.nasa.gov/planetary/apod?api_key=" + self.key
+        print apod_url
         response = unirest.get(apod_url)
         title = response.body["title"]
         url = response.body["url"]
