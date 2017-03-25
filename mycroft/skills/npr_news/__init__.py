@@ -19,13 +19,13 @@
 import feedparser
 import time
 from os.path import dirname
-import re
 
 import mycroft.skills.weather as weather
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
-from mycroft.util import play_mp3
 from mycroft.util.log import getLogger
+from mycroft.skills.audioservice import AudioService
+import re
 
 __author__ = 'jdorleans'
 
@@ -40,25 +40,30 @@ class NPRNewsSkill(MycroftSkill):
         self.process = None
 
     def initialize(self):
+        self.load_data_files(dirname(__file__))
         intent = IntentBuilder("NPRNewsIntent").require(
             "NPRNewsKeyword").build()
         self.register_intent(intent, self.handle_intent)
 
         self.weather.bind(self.emitter)
         self.weather.load_data_files(dirname(weather.__file__))
+        self.audio_service = AudioService(self.emitter)
 
     def handle_intent(self, message):
         try:
             data = feedparser.parse(self.url_rss)
             self.speak_dialog('npr.news')
             time.sleep(3)
-            self.process = play_mp3(
-                re.sub(
-                    'https', 'http', data['entries'][0]['links'][0]['href']))
+            #self.process = play_mp3(
+            #    re.sub(
+            #        'https', 'http', data['entries'][0]['links'][0]['href']))
+            self.audio_service.play([re.sub(
+                                    'https', 'http',
+                                     data['entries'][0]['links'][0]['href'])],
+                                     message.data['utterance'])
 
         except Exception as e:
             LOGGER.error("Error: {0}".format(e))
-        self.emit_results()
 
     def stop(self):
         if self.process and self.process.poll() is None:
