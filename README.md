@@ -5,10 +5,10 @@ https://github.com/MycroftAI/mycroft-core/pull/433
 
 # Changed files
 
-mycroft.config , added displays
-mycroft.skills, added displayservice.py
-mycroft.skills, added display_control skill
-mycroft.skills, added diplay_test skill
+- mycroft.config , added displays
+- mycroft.skills, added displayservice.py
+- mycroft.skills, added display_control skill
+- mycroft.skills, added diplay_test skill
 
 say: test display service to show an image using this service
 
