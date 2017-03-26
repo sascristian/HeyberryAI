@@ -1,135 +1,71 @@
-Mycroft [![Build Status](https://travis-ci.org/MycroftAI/mycroft-core.svg?branch=master)](https://travis-ci.org/MycroftAI/mycroft-core)
-==========
+# Display Service based on:
 
-NOTE: The default branch for this repo is dev. This should be considered a working beta. If you want to clone a more stable version, switch over to the 'master' branch.  
+audio service from forslund
+https://github.com/MycroftAI/mycroft-core/pull/433
 
-Full docs at: https://docs.mycroft.ai
+# Changed files
 
-Release notes at: https://docs.mycroft.ai/release-notes
+mycroft.config , added displays
+mycroft.skills, added displayservice.py
+mycroft.skills, added display_control skill
+mycroft.skills, added diplay_test skill
 
-Pair Mycroft instance at: https://home.mycroft.ai
+say: test display service to show an image using this service
 
-Join the Mycroft Slack(chat) channel: http://mycroft-ai-slack-invite.herokuapp.com/
+# WORK IN PROGRESS - HELP WANTED
 
-Looking to join in developing?  Check out the [Project Wiki](../../wiki/Home) for tasks you can tackle!
+- opencv backend was working
+- added pygtk backend and opencv stopped working
+- cant pinpoint the change that broke this
+- in add_list self.pics is a populated list, in self.show self.pics is always []
+- tried a self.emitter.on in add_list, self.pics is now populated (always with first call pic)
+- self.pics on emit message is always self.pics at register time! but wasnt before unhknown change!
+- didnt need next and previous, so removed list altogether and directly pass pic_path into show function
+- gtk backend shows picture twice, only emits one message in bus but goes twice into _show function?
+- opencv is throwing a exit 139, it worked previously but i have no idea how long ago that was or what i changed
 
-# Getting Started
+# LOGS
 
-### Ubuntu/Debian, Arch, or Fedora
-- Run the build host setup script for your OS (Ubuntu/Debian: `build_host_setup_debian.sh`, Arch: `build_host_setup_arch.sh`, Fedora: `build_host_setup_fedora.sh`). This installs necessary packages, please read it
-- Run `dev_setup.sh` (feel free to read it, as well)
-- Restart session (reboot computer, or logging out and back in might work).
+gtk backend log
 
-### Other environments
+      2017-03-27 00:01:18,329 - Skills - DEBUG - {"type": "displayTestIntent", "data": {"intent_type": "displayTestIntent", "stKeyword": "test display service", "utterance": "test display service", "confidence": 1.0, "target": null}, "context": {"target": null}}
+     2017-03-27 00:01:18,341 - Skills - DEBUG - {"type": "speak", "data": {"expect_response": false, "utterance": "showing with display service"}, "context": null}
+     2017-03-27 00:01:18,378 - Skills - DEBUG - {"type": "MycroftDisplayServiceShow", "data": {"picture": "/home/user/jarbas-core/mycroft/skills/display_test/test_pic.jpg", "utterance": "test display service"}, "context": null}
+     2017-03-27 00:01:18,379 - Skills - DEBUG - {"type": "recognizer_loop:audio_output_start", "data": {}, "context": null}
+     2017-03-27 00:01:18,380 - display_control - INFO - MycroftDisplayServiceShow
+     2017-03-27 00:01:18,380 - display_control - INFO - /home/user/jarbas-core/mycroft/skills/display_test/test_pic.jpg
+     2017-03-27 00:01:18,380 - display_control - INFO - opencv
+     2017-03-27 00:01:18,380 - display_control - INFO - gtk
+     2017-03-27 00:01:18,380 - display_control - INFO - local
+     2017-03-27 00:01:18,381 - display_control - INFO - show
+     2017-03-27 00:01:18,381 - display_control - INFO - stopping all displaying services
+     2017-03-27 00:01:18,381 - display_control - INFO - Using default backend
+     2017-03-27 00:01:18,381 - display_control - INFO - local
+     2017-03-27 00:01:18,381 - display_control - INFO - Displaying
+     2017-03-27 00:01:18,381 - display_control - INFO - Call pygtkServiceShow
+     2017-03-27 00:01:18,382 - playback_control - INFO - lowering volume
+     2017-03-27 00:01:18,385 - Skills - DEBUG - {"type": "pygtkServiceShow", "data": {"pic": "/home/user/jarbas-core/mycroft/skills/display_test/test_pic.jpg"}, "context": null}
+     2017-03-27 00:01:18,385 - display_control - INFO - pygtkService._Show
+     ***** close gtk window
+     2017-03-27 00:02:39,142 - display_control - INFO - pygtkService._Show
+     ****** new gtk window
 
-The following packages are required for setting up the development environment,
- and are what is installed by `build_host_setup` scripts.
+opencv backend log
 
- - `git`
- - `python 2`
- - `python-setuptools`
- - `python-virtualenv`
- - `pygobject`
- - `virtualenvwrapper`
- - `libtool`
- - `libffi`
- - `openssl`
- - `autoconf`
- - `bison`
- - `swig`
- - `glib2.0`
- - `s3cmd`
- - `portaudio19`
- - `mpg123`
- - `flac`
- - `curl`
+      2017-03-27 00:03:33,280 - Skills - DEBUG - {"type": "displayTestIntent", "data": {"intent_type": "displayTestIntent", "stKeyword": "test display service", "utterance": "test display service opencv", "confidence": 1.0, "target": null}, "context": {"target": null}}
+     2017-03-27 00:03:33,296 - Skills - DEBUG - {"type": "speak", "data": {"expect_response": false, "utterance": "showing with display service"}, "context": null}
+     2017-03-27 00:03:33,367 - Skills - DEBUG - {"type": "recognizer_loop:audio_output_start", "data": {}, "context": null}
+     2017-03-27 00:03:33,385 - Skills - DEBUG - {"type": "MycroftDisplayServiceShow", "data": {"picture": "/home/user/jarbas-core/mycroft/skills/display_test/test_pic.jpg", "utterance": "test display service opencv"}, "context": null}
+     2017-03-27 00:03:33,511 - display_control - INFO - MycroftDisplayServiceShow
+     2017-03-27 00:03:33,511 - display_control - INFO - /home/user/jarbas-core/mycroft/skills/display_test/test_pic.jpg
+     2017-03-27 00:03:33,511 - display_control - INFO - opencv
+     2017-03-27 00:03:33,511 - display_control - INFO - opencv would be prefered
+     2017-03-27 00:03:33,511 - display_control - INFO - show
+     2017-03-27 00:03:33,512 - display_control - INFO - stopping all displaying services
+     2017-03-27 00:03:33,512 - display_control - INFO - pygtkServiceStop
+     2017-03-27 00:03:33,512 - display_control - INFO - Displaying
+     2017-03-27 00:03:33,512 - display_control - INFO - Call OpenCVServiceShow
+     2017-03-27 00:03:33,515 - Skills - DEBUG - {"type": "OpenCVServiceShow", "data": {"pic": "/home/user/jarbas-core/mycroft/skills/display_test/test_pic.jpg"}, "context": null}
+     2017-03-27 00:03:33,516 - display_control - INFO - OpenCVService._Show
 
-## Home Device and Account Manager
-Mycroft AI, Inc. - the company behind Mycroft maintains the Home device and account management system. Developers can sign up at https://home.mycroft.ai
-
-By default the Mycroft software is configured to use Home, upon any request such as "Hey Mycroft, what is the weather?", you will be informed that you need to pair and Mycroft will speak a 6-digit code, which you enter into the pairing page on the [Home site](https://home.mycroft.ai).
-
-Once signed and a device is paired, the unit will use our API keys for services, such as the STT (Speech-to-Text) API. It also allows you to use our API keys for weather, Wolfram-Alpha, and various other skills.
-
-Pairing information generated by registering with Home is stored in:
-
-`~/.mycroft/identity/identity2.json` <b><-- DO NOT SHARE THIS WITH OTHERS!</b>
-
-It's useful to know the location of the identity file when troubleshooting device pairing issues.
-
-## Using Mycroft without Home.
-If you do not wish to use our service, you may insert your own API keys into the configuration files listed below in <b>configuration</b>.
-
-The place to insert the API key looks like the following:
-
-`[WeatherSkill]`
-
-`api_key = ""`
-
-Put the relevant key in between the quotes and Mycroft Core should begin to use the key immediately.
-
-### API Key services
-
-- [STT API, Google STT](http://www.chromium.org/developers/how-tos/api-keys)
-- [Weather Skill API, OpenWeatherMap](http://openweathermap.org/api)
-- [Wolfram-Alpha Skill](http://products.wolframalpha.com/api/)
-
-These are the keys currently in use in Mycroft Core.
-
-## Configuration
-Mycroft configuration consists of 3 possible config files.
-- `mycroft-core/mycroft/configuration/mycroft.conf`
-- `/etc/mycroft/mycroft.conf`
-- `$HOME/.mycroft/mycroft.conf`
-
-When the configuration loader starts, it looks in those locations in that order, and loads ALL configuration. Keys that exist in multiple config files will be overridden by the last file to contain that config value. This results in a minimal amount of config being written for a specific device/user, without modifying the distribution files.
-
-# Running Mycroft Quick Start
-To start the essential tasks run `./mycroft.sh start`. Which will start the service, skills, voice and cli (using --quiet mode) in a detched screen and log the output of the screens to the their respective log files (e.g. ./log/mycroft-service.log).
-Optionally you can run `./mycroft.sh start -v` Which will start the service, skills and voice. Or `./mycroft.sh start -c` Which will start the service, skills and cli.
-
-To stop Mycroft run `./mycroft.sh stop`. This will quit all of the detached screens.
-To restart Mycroft run './mycroft.sh restart`.
-
-Quick screen tips
-- run `screen -list` to see all running screens
-- run `screen -r [screen-name]` (e.g. `screen -r mycroft-service`) to reatach a screen
-- to detach a running screen press `ctrl + a, ctrl + d`
-See the screen man page for more details 
-
-# Running Mycroft
-## With `start.sh`
-Mycroft provides `start.sh` to run a large number of common tasks. This script uses the virtualenv created by `dev_setup.sh`. The usage statement lists all run targets, but to run a Mycroft stack out of a git checkout, the following processes should be started:
-
-- run `./start.sh service`
-- run `./start.sh skills`
-- run `./start.sh voice`
-
-*Note: The above scripts are blocking, so each will need to be run in a separate terminal session.*
-
-## Without `start.sh`
-
-Activate your virtualenv.
-
-With virtualenv-wrapper:
-```
-workon mycroft
-```
-
-Without virtualenv-wrapper:
-```
-source ~/.virtualenvs/mycroft/bin/activate
-```
-
-
-- run `PYTHONPATH=. python client/speech/main.py` # the main speech detection loop, which prints events to stdout and broadcasts them to a message bus
-- run `PYTHONPATH=. python client/messagebus/service/main.py` # the main message bus, implemented via web sockets
-- run `PYTHONPATH=. python client/skills/main.py` # main skills executable, loads all skills under skills dir
-
-*Note: The above scripts are blocking, so each will need to be run in a separate terminal session. Each terminal session will require that the virtualenv be activated. There are very few reasons to use this method.*
-
-# FAQ/Common Errors
-
-#### When running mycroft, I get the error `mycroft.messagebus.client.ws - ERROR - Exception("Uncaught 'error' event.",)`
-
-This means that you are not running the `./start.sh service` process. In order to fully run Mycroft, you must run `./start.sh service`, `./start.sh skills`, and `./start.sh voice`/`./start.sh cli` all at the same time. This can be done using different terminal windows, or by using the included `./mycroft.sh start`, which runs all four process using `screen`.
+     Process finished with exit code 139 (interrupted by signal 11: SIGSEGV)
