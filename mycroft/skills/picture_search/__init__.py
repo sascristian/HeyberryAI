@@ -89,7 +89,7 @@ class PictureSkill(MycroftSkill):
                 f.write(raw_img)
                 f.close()
                 sucess = True
-                self.display_service.show([save_path])
+                self.display_service.show(save_path, message.data["utterance"])
                 self.speak_dialog("iden")
                 self.speak(label)
 
@@ -125,7 +125,7 @@ class PictureSkill(MycroftSkill):
                 f.write(raw_img)
                 f.close()
                 sucess = True
-                self.display_service.show([save_path])
+                self.display_service.show(save_path, message.data["utterance"])
 
             except Exception as e:
                 LOGGER.error(str(e))
@@ -144,7 +144,7 @@ class PictureSkill(MycroftSkill):
             if os.path.isfile(os.path.join(path, f)):
                 pics.append(os.path.join(path, f))
         pic = random.choice(pics)
-        self.display_service.show([pic])
+        self.display_service.show(pic, message.data["utterance"])
         self.speak("heres your picture")
 
     def get_soup(self, url, header):

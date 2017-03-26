@@ -73,7 +73,7 @@ class EPICSkill(MycroftSkill):
 
     def handle_epic_intent(self, message):
         self.current = self.lenght
-        self.EPIC(self.current)
+        self.EPIC(self.current, message.data["utterance"])
         try:
             self.enable_intent("PreviousEPICIntent")
         except:
@@ -82,7 +82,7 @@ class EPICSkill(MycroftSkill):
 
     def handle_previous_epic_intent(self, message):
         self.current -= 1
-        self.EPIC(self.current)
+        self.EPIC(self.current, message.data["utterance"])
 
     def handle_next_epic_intent(self, message):
         self.current += 1
@@ -91,7 +91,7 @@ class EPICSkill(MycroftSkill):
             self.speak_dialog("maxEPIC")
             return
 
-        self.EPIC(self.current)
+        self.EPIC(self.current, message.data["utterance"])
         try:
             self.enable_intent("PreviousEPICIntent")
         except:
@@ -103,7 +103,7 @@ class EPICSkill(MycroftSkill):
         self.response = unirest.get(url)
         self.lenght = len(self.response.body)
 
-    def EPIC(self, count=0):
+    def EPIC(self, count=0, utterance = ""):
         url = "https://epic.gsfc.nasa.gov/epic-archive/jpg/" + self.response.body[count]["image"] + ".jpg"
         date = self.response.body[count]["date"]
         img = urllib2.Request(url)
@@ -113,7 +113,7 @@ class EPICSkill(MycroftSkill):
         f.write(raw_img)
         f.close()
         self.speak_dialog("EPIC", {"date": date})
-        self.display_service.show([save_path])
+        self.display_service.show(save_path, utterance)
 
     def converse(self, transcript, lang="en-us"):
         try:

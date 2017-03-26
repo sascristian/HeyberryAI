@@ -42,7 +42,7 @@ class WikiObjectiveSkill(MycroftSkill):
 
 
     def wiki_objective(self):
-        objective_name = "wiki"
+        objective_name = "random wiki"
         my_objective = ObjectiveBuilder(objective_name, self.emitter)
 
         goal_name = "Search_Wikipedia"

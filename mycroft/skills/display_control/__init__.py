@@ -4,6 +4,7 @@ from os.path import dirname, abspath
 from mycroft.skills.core import MycroftSkill
 from mycroft.configuration import ConfigurationManager
 from mycroft.skills.display_control.opencv_service import OpenCVService
+from mycroft.skills.display_control.pygtk_service import GTKService
 from mycroft.util.log import getLogger
 
 config = ConfigurationManager.get().get('Displays')
@@ -24,7 +25,6 @@ class DisplayControlSkill(MycroftSkill):
 
     def initialize(self):
         logger.info('initializing Display Control Skill')
-        self.load_data_files(dirname(__file__))
 
         for name in config['backends']:
             b = config['backends'][name]
@@ -32,6 +32,9 @@ class DisplayControlSkill(MycroftSkill):
             if b['type'] == 'opencv' and b.get('active', False):
                 logger.info('starting OpenCV service')
                 self.service.append(OpenCVService(b, self.emitter, name))
+            if b['type'] == 'pygtk' and b.get('active', False):
+                logger.info('starting PyGTK service')
+                self.service.append(GTKService(b, self.emitter, name))
 
         default_name = config.get('default-backend', '')
         for s in self.service:
@@ -44,7 +47,7 @@ class DisplayControlSkill(MycroftSkill):
 
         self.emitter.on('MycroftDisplayServiceShow', self._show)
 
-    def show(self, pics, prefered_service):
+    def show(self, pic, prefered_service):
         logger.info('show')
         self.stop()
         # check if user requested a particular service
@@ -58,19 +61,15 @@ class DisplayControlSkill(MycroftSkill):
             logger.error("NO DEFAULT DISPLAY BACKEND")
             return
 
-        logger.info('Clear list')
-        service.clear_list()
-        logger.info('Add pics' + str(pics))
-        service.add_list(pics)
         logger.info('Displaying')
-        service.show()
+        service.show(pic)
         self.current = service
 
     def _show(self, message):
         logger.info('MycroftDisplayServiceShow')
-        logger.info(message.data['pictures'])
+        logger.info(message.data['picture'])
 
-        pics = message.data['pictures']
+        pic = message.data['picture']
 
         # Find if the user wants to use a specific backend
         for s in self.service:
@@ -81,25 +80,13 @@ class DisplayControlSkill(MycroftSkill):
                 break
         else:
             prefered_service = None
-        self.show(pics, prefered_service)
+        self.show(pic, prefered_service)
 
     def stop(self, message=None):
         logger.info('stopping all displaying services')
         if self.current:
             self.current.stop()
             self.current = None
-
-    def handle_next(self, message):
-        if self.current:
-            self.current.next()
-
-    def handle_prev(self, message):
-        if self.current:
-            self.current.previous()
-
-    def handle_show(self, message):
-        if self.current:
-            self.current.show()
 
 
 def create_skill():

@@ -20,13 +20,12 @@ class DisplayTestSkill(MycroftSkill):
                 require("stKeyword").build()
 
         self.register_intent(test_display_intent, self.handle_display_test_intent)
-
         self.display_service = DisplayService(self.emitter)
 
     def handle_display_test_intent(self, message):
         save_path = dirname(__file__) + "/test_pic.jpg"
         self.speak_dialog("display_test")
-        self.display_service.show([save_path])
+        self.display_service.show(save_path, message.data["utterance"])
 
     def stop(self):
         pass

@@ -303,11 +303,15 @@ class Objectives():
 
     def default_select(self, goal_list, objective_name):
         # choose a goal from list of goal objects
-
         # create weigthed list for this objective goals only
-        goal_prob_dict = self.goal_prob_dict[objective_name]
-        list = [k for k in goal_prob_dict for dummy in range(goal_prob_dict[k])]
+        try:
+            goal_prob_dict = self.goal_prob_dict[objective_name]
+        except:
+            print "probability file corrupted, creating default probs"
+            self.set_default_probs(objective_name)
+            goal_prob_dict = self.goal_prob_dict[objective_name]
 
+        list = [k for k in goal_prob_dict for dummy in range(goal_prob_dict[k])]
         # get a random goal from weighted list
         selected_goal_name = random.choice(list)
 
@@ -493,8 +497,8 @@ class ObjectivesSkill(MycroftSkill):
                         my_objective.add_way(goal_name, intent_name, intent[intent_name])
 
             # create intent with objective name as vocab
-            intent, self.handle_wiki_objective = my_objective.get_objective_intent()
-            self.register_intent(intent, self.handle_wiki_objective)
+            intent, handler = my_objective.get_objective_intent()
+            self.register_intent(intent, handler)
 
     def register_objective(self, message):
 

@@ -1,3 +1,12 @@
+# BROKEN STUFF
+
+- display backend service -> https://github.com/JarbasAI/jarbas-core/tree/patch-3/
+- facebook skill (havent used for a while, probably update on fb python package)
+- chatbot skill (cleverbot now paid)
+- open issues for anything you find!!!
+
+
+
 # Jarbas Core
 
 ![alt tag](https://github.com/JarbasAI/jarbas---pygtk---GUI/blob/master/screenshot.jpg)

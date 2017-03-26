@@ -63,7 +63,7 @@ class AstronomyPicSkill(MycroftSkill):
             f.close()
 
         self.speak(title)
-        self.display_service.show([save_path])
+        self.display_service.show(save_path, message.data["utterance"])
         self.speak(summary)
 
     def stop(self):

@@ -452,7 +452,7 @@ class JarbasGUI(gtk.Window):
     def on_connect(self, widget, dummy):
 
         self.speak(" connecting ")
-        sleep(0.1)
+        sleep(0.2)
         self.speak(random.choice(self.greetings))
         self.connected = True
         self.update()

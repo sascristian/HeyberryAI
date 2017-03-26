@@ -209,7 +209,7 @@ class DreamSkill(MycroftSkill):
 		dream = random.choice(dreams)
 
 		self.speak("look at this dream i had")
-		self.screen_service.show([dream])
+		self.screen_service.show(dream, message.data["utterance"])
 
 	def handle_psy_dream_intent(self, message):
 		if not self.dreaming:
@@ -231,7 +231,7 @@ class DreamSkill(MycroftSkill):
 			save_path = self.outputdir + "/dream/psy/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			self.screen_service.show([save_path])
+			self.screen_service.show(save_path, message.data["utterance"])
 
 	def handle_pure_dream_intent(self, message):
 
@@ -255,7 +255,7 @@ class DreamSkill(MycroftSkill):
 			save_path = self.outputdir + "/pure/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			self.screen_service.show([save_path])
+			self.screen_service.show(save_path, message.data["utterance"])
 
 	def handle_dream_intent(self, message):
 		if not self.dreaming:
@@ -278,7 +278,7 @@ class DreamSkill(MycroftSkill):
 			save_path = self.outputdir + "/dream/random/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			self.screen_service.show([save_path])
+			self.screen_service.show(save_path, message.data["utterance"])
 
 	def handle_dream_about_webcam_intent(self, message):
 
@@ -307,7 +307,7 @@ class DreamSkill(MycroftSkill):
 			save_path = self.outputdir + "/webcam/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			self.screen_service.show([save_path])
+			self.screen_service.show(save_path, message.data["utterance"])
 
 	def handle_dream_about_dreams_intent(self, message):
 
@@ -331,7 +331,7 @@ class DreamSkill(MycroftSkill):
 			save_path = self.outputdir + "/recursive/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			self.screen_service.show([save_path])
+			self.screen_service.show(save_path, message.data["utterance"])
 
 	def handle_dream_about_this_intent(self, message):
 		chosenpic = random.choice(os.listdir(self.sharedfolder))
@@ -356,7 +356,7 @@ class DreamSkill(MycroftSkill):
 			save_path = self.outputdir + "/this/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			self.screen_service.show([save_path])
+			self.screen_service.show(save_path, message.data["utterance"])
 
 	def handle_dream_about_intent(self, message):
 		imagepath = ""
@@ -378,7 +378,7 @@ class DreamSkill(MycroftSkill):
 			save_path = self.outputdir + "/about/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
-			self.screen_service.show([save_path])
+			self.screen_service.show(save_path, message.data["utterance"])
 
 	def stop(self):
 		cv2.destroyAllWindows()
