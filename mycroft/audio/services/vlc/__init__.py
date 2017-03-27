@@ -1,10 +1,10 @@
 from os.path import dirname, abspath, basename
+from mycroft.audio.services import AudioBackend
 from mycroft.util.log import getLogger
-from mycroft.skills.audioservice import AudioBackend
+import vlc
 
 logger = getLogger(abspath(__file__).split('/')[-2])
 
-import vlc
 
 class VlcService(AudioBackend):
     def __init__(self, config, emitter=None, name='vlc'):
@@ -68,3 +68,9 @@ class VlcService(AudioBackend):
         return ret
 
 
+def load_service(base_config, emitter):
+    backends = base_config.get('backends', [])
+    services = [(b, backends[b]) for b in backends
+                if backends[b]['type'] == 'vlc']
+    instances = [VlcService(s[1], emitter, s[0]) for s in services]
+    return instances

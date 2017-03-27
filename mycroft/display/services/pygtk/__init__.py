@@ -1,5 +1,4 @@
-from mycroft.skills.displayservice import DisplayBackend
-from mycroft.messagebus.message import Message
+from mycroft.display.services import DisplayBackend
 from mycroft.util.log import getLogger
 from os.path import abspath
 import gtk
@@ -29,15 +28,10 @@ class GTKService(DisplayBackend):
         self.emitter = emitter
         self.name = name
         self.pic = ""
-        self.emitter.on('pygtkServiceShow', self._show)
 
     def show(self, pic):
         logger.info('Call pygtkServiceShow')
-        self.emitter.emit(Message('pygtkServiceShow', {"pic": pic}))
-
-    def _show(self, message):
-        logger.info('pygtkService._Show')
-        pic = message.data["pic"]
+        logger.info('Picture is ' + pic)
         # show in pygtk
         gtkimageshow(pic)
         gtk.main()
@@ -45,3 +39,10 @@ class GTKService(DisplayBackend):
     def stop(self):
         logger.info('pygtkServiceStop')
         # TODO make this actually quit, how to send gtk destroy signal?
+
+def load_service(base_config, emitter):
+    backends = base_config.get('backends', [])
+    services = [(b, backends[b]) for b in backends
+                if backends[b]['type'] == 'pygtk']
+    instances = [GTKService(s[1], emitter, s[0]) for s in services]
+    return instances

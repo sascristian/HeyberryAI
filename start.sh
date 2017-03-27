@@ -21,6 +21,8 @@ case $1 in
     "audioanalisys") SCRIPT=${TOP}/mycroft/ears/main.py ;;
     "fbclient") SCRIPT=${TOP}/mycroft/client/FacebookChat/main.py ;;
     "context") SCRIPT=${TOP}/mycroft/context/main.py ;;
+    "audio") SCRIPT=${TOP}/mycroft/audio/main.py ;;
+    "display") SCRIPT=${TOP}/mycroft/display/main.py ;;
 	*) echo "Usage: start.sh [service | skills | skill_container | voice | cli | audiotest | collector | unittest | enclosure | sdkdoc | wifi | sentiment | dumpmon | freewill | vision | context |audioanalisys |fbclient ]"; exit ;;
 esac
 

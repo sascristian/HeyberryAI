@@ -1,5 +1,4 @@
-from mycroft.skills.displayservice import DisplayBackend
-from mycroft.messagebus.message import Message
+from mycroft.display.services import DisplayBackend
 from mycroft.util.log import getLogger
 from os.path import abspath
 import imutils
@@ -13,19 +12,12 @@ class OpenCVService(DisplayBackend):
         self.process = None
         self.emitter = emitter
         self.name = name
-        self.emitter.on('OpenCVServiceShow', self._show)
         # image size
         self.width = 500
         self.height = 500
 
     def show(self, pic):
         logger.info('Call OpenCVServiceShow')
-        self.emitter.emit(Message('OpenCVServiceShow', {"pic": pic}))
-
-    def _show(self, message):
-        logger.info('OpenCVService._Show')
-        pic = message.data["pic"]
-
         # show in opencv2
         image = cv2.imread(pic)
         image = imutils.resize(image, self.width, self.height)
@@ -38,3 +30,10 @@ class OpenCVService(DisplayBackend):
     def stop(self):
         logger.info('OpenCVServiceStop')
         cv2.destroyAllWindows()
+
+def load_service(base_config, emitter):
+    backends = base_config.get('backends', [])
+    services = [(b, backends[b]) for b in backends
+                if backends[b]['type'] == 'opencv']
+    instances = [OpenCVService(s[1], emitter, s[0]) for s in services]
+    return instances

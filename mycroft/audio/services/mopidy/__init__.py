@@ -1,6 +1,6 @@
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-from mycroft.skills.audioservice import AudioBackend
+from mycroft.audio.services import AudioBackend
 from os.path import dirname, abspath, basename
 import sys
 import time
@@ -88,3 +88,10 @@ class MopidyService(AudioBackend):
             ret['album'] = ''
         return ret
 
+
+def load_service(base_config, emitter):
+    backends = base_config.get('backends', [])
+    services = [(b, backends[b]) for b in backends
+                if backends[b]['type'] == 'mopidy']
+    instances = [MopidyService(s[1], emitter, s[0]) for s in services]
+    return instances
