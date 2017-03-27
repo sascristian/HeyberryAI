@@ -25,11 +25,25 @@ class JarbasGUI(gtk.Window):
         self.current_suggest = []
         self.objectives_list = []
         self.entry = ""
-        self.speech = ""
+        self.speech = " "
         self.greetings = ["Waiting for query","Ready to serve", "Hello", "Hello Human", "Connected", "State your purpose"]
 
         self.waiting = False
         self.connected = False
+        # ws client
+        global ws
+        ws = WebsocketClient()
+
+        def connect():
+            ws.run_forever()
+
+        ws.on("speak", self.handle_speech)
+        ws.on("Register_Objective", self.handle_register_objective)
+        ws.on("objective_listing", self.handle_objective_update)
+        event_thread = Thread(target=connect)
+        event_thread.setDaemon(True)
+        event_thread.start()
+
         ### gui
 
         # quit button
@@ -50,20 +64,6 @@ class JarbasGUI(gtk.Window):
         self.add(self.gui)
         # show
         self.show_all()
-
-        # ws client
-        global ws
-        ws = WebsocketClient()
-
-        def connect():
-            ws.run_forever()
-
-        ws.on("speak", self.handle_speech)
-        ws.on("Register_Objective", self.handle_register_objective)
-        ws.on("objective_listing", self.handle_objective_update)
-        event_thread = Thread(target=connect)
-        event_thread.setDaemon(True)
-        event_thread.start()
 
 
 
@@ -396,10 +396,14 @@ class JarbasGUI(gtk.Window):
             container.child_set_property(new, name, value)
 
     def wait_for_bus(self):
+        i = 0
         while self.waiting:
-            sleep(1)
+            if i > 80:
+                self.waiting = False
+            sleep(0.1)
+            i+=1
 
-    #### gui events ###
+    #### gui events ##
     def on_mute(self, widget, dummy):
         self.execute_intent("SpeakDisableIntent")
 
@@ -431,9 +435,9 @@ class JarbasGUI(gtk.Window):
 
     def on_say(self, widget, dummy):
         print "text entry: " + self.entry
-        if self.entry != "":
+        if self.entry != " ":
             self.send_utterance(self.entry)
-            self.entry = ""
+            self.entry = " "
         self.waiting = True
         self.update()
         self.connected = True
@@ -451,7 +455,7 @@ class JarbasGUI(gtk.Window):
 
     def on_connect(self, widget, dummy):
 
-        self.speak(" connecting ")
+        #self.speak(" connecting ")
         sleep(0.2)
         self.speak(random.choice(self.greetings))
         self.connected = True

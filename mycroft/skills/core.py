@@ -36,7 +36,7 @@ from adapt.context import ContextManager
 __author__ = 'seanfitz'
 
 PRIMARY_SKILLS = ['intent', 'wake']
-BLACKLISTED_SKILLS = ["send_sms", "media", "configuration", "ip_skill", "dial_call", "facebook", "deep_dream", "wifi", "leaks"]
+BLACKLISTED_SKILLS = ["send_sms", "media", "configuration", "ip_skill", "dial_call", "facebook", "deep_dream", "wifi", "leaks", "objectives_test", "context_manager_test"]
 SKILLS_BASEDIR = dirname(__file__)
 THIRD_PARTY_SKILLS_DIR = ["/opt/mycroft/third_party", "/opt/mycroft/skills"]
 # Note: /opt/mycroft/skills is recommended, /opt/mycroft/third_party

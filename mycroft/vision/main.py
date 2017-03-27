@@ -34,7 +34,6 @@ class OpticalNerve():
         self.context = VisionContext("vision.context")
         self.context.setdefaultcontext()
         self.font = cv2.FONT_HERSHEY_SIMPLEX
-        self.line = cv2.LINE_AA
         ##############cascades##############
         logger.info("initializing haar cascades")
         # face_cascade = cv2.CascadeClassifier('cascades/lbpcascade_frontalface.xml')
@@ -57,7 +56,7 @@ class OpticalNerve():
         #self.faced = userdetect.UserDetect()
         # refactor this into a config file
         #bools
-        self.showfeed = False
+        self.showfeed = True
         self.showboundingboxes = True
         self.showdetected = True
 

@@ -116,10 +116,11 @@ class NEOSkill(MycroftSkill):
 
     def get_neo_info(self):
         start_date = time.strftime("%Y-%m-%d", time.gmtime())
-        neo_url = "https://api.nasa.gov/near_earth_objects_tracker/rest/v1/feed?start_date=" + start_date + "&api_key=" + self.key
+        neo_url = "https://api.nasa.gov/neo/rest/v1/feed?start_date=" + start_date + "&api_key=" + self.key
 
         response = unirest.get(neo_url)
         self.neos = []
+        print response.body
         neos = response.body["near_earth_objects"]
         self.neo_num = len(neos)
         for date in neos:
@@ -141,7 +142,7 @@ class NEOSkill(MycroftSkill):
                 # save neo data
                 f = open(save_path, 'wb')
                 for key in neo:
-                    f.write(key + " : " + str(neo[key]))
+                    f.write(key + " : " + str(neo[key]) + "\n")
                 f.close()
             self.neos.append(neo)
 

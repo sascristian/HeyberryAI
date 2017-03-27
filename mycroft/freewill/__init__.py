@@ -21,6 +21,7 @@ from threading import Thread
 import random
 from mycroft.util.log import getLogger
 
+from os.path import dirname
 
 logger = getLogger("Subconscious")
 neurologger = getLogger("Neurological")
@@ -103,7 +104,7 @@ class freewill():
 
     ####### objectives #####
     def load_objectives_from_config(self):
-        objectives = ConfigurationManager.get(["/home/user/jarbas-core/mycroft/Subconscious/objectives.conf"])[
+        objectives = ConfigurationManager.get([dirname(__file__)+"/objectives.conf"])[
             "Objectives"]
         for objective in objectives:
             #print objective

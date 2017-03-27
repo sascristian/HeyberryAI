@@ -55,6 +55,10 @@ class AstronomyPicSkill(MycroftSkill):
         f.write(raw_img)
         f.close()
 
+        self.speak(title)
+        self.display_service.show(save_path, message.data["utterance"])
+        self.speak(summary)
+
         if self.save:
             save_path = self.txt_save_path + "/" + title.replace(" ", "_") + ".txt"
             # save description
@@ -62,9 +66,7 @@ class AstronomyPicSkill(MycroftSkill):
             f.write(summary)
             f.close()
 
-        self.speak(title)
-        self.display_service.show(save_path, message.data["utterance"])
-        self.speak(summary)
+
 
     def stop(self):
         pass
