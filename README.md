@@ -11,7 +11,7 @@
 
 ![alt tag](https://github.com/JarbasAI/jarbas---pygtk---GUI/blob/master/screenshot.jpg)
 
-a fork of mycroft-core , the following things are available
+a fork of mycroft-core , the following things were added
 
 
 ### Basic Skills
@@ -147,7 +147,7 @@ a fork of mycroft-core , the following things are available
 - configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
 - allowed intents to be de-registered [PR#558](https://github.com/MycroftAI/mycroft-core/pull/558)
 - added audioservice backend[PR#433](https://github.com/MycroftAI/mycroft-core/pull/433)
-- added screenservice backend
+- added screenservice backend[future PR](https://github.com/JarbasAI/jarbas-core/tree/patch-3/)
 
 
 # Developing skills for Jarbas

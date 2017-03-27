@@ -72,7 +72,7 @@ class EPICSkill(MycroftSkill):
         self.speak_dialog("aboutEPIC")
 
     def handle_epic_intent(self, message):
-        self.current = self.lenght
+        self.current = self.lenght - 1
         self.EPIC(self.current, message.data["utterance"])
         try:
             self.enable_intent("PreviousEPICIntent")
@@ -86,8 +86,8 @@ class EPICSkill(MycroftSkill):
 
     def handle_next_epic_intent(self, message):
         self.current += 1
-        if self.current > self.lenght:
-            self.current = self.lenght
+        if self.current >= self.lenght:
+            self.current = self.lenght - 1
             self.speak_dialog("maxEPIC")
             return
 

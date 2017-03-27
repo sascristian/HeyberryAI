@@ -14,6 +14,9 @@ class OpenCVService(DisplayBackend):
         self.emitter = emitter
         self.name = name
         self.emitter.on('OpenCVServiceShow', self._show)
+        # image size
+        self.width = 500
+        self.height = 500
 
     def show(self, pic):
         logger.info('Call OpenCVServiceShow')
@@ -25,7 +28,7 @@ class OpenCVService(DisplayBackend):
 
         # show in opencv2
         image = cv2.imread(pic)
-        image = imutils.resize(image, 500, 500)
+        image = imutils.resize(image, self.width, self.height)
         # Process finished with exit code 139 (interrupted by signal 11: SIGSEGV)
         #  SIGSEGV 139 attempt to access a virtual address which is not in your address space
         cv2.imshow("OpenCV Display", image)
