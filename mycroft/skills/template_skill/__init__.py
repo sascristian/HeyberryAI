@@ -84,6 +84,27 @@ class TemplateSkill(MycroftSkill):
         # register intent to execute objective by keyword
         self.register_intent(intent, self.handler)
 
+    def handle_result_intent(self, message):
+        # do stuff and get results
+        result = "Sucess string"
+        # prepare data to be emitted to message bus to be consumed somewhere else
+        self.add_result("String", result)
+        # this emits a message for listeners to register messages of the type {"String_result": data} message
+        # saves results as data to emit when asked
+        # Do more stuff
+        result2 = "Evil String"
+        self.add_result("Evil_String", result2)
+        # emit results from the skills when finished doing stuff
+        # this emits and clears results list
+        self.emit_results()
+        # in this case emits
+        #{"String_result": "Sucess string"}
+        #{"Evil_String_result": "Evil string}
+
+
+
+
+
     def handle_pic_intent(self, message):
         pic_path = "path to picture"
         utterance = "used for backend name parsing"
