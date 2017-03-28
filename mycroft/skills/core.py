@@ -256,6 +256,7 @@ class MycroftSkill(object):
         self.emitter.on(intent_parser.name, receive_handler)
 
     def register_self_intent(self, intent_parser, handler):
+        self.registered_intents.append(intent_parser)
         if self.intents is None:
             self.log.error("did no initialize self skills")
             return
@@ -278,7 +279,18 @@ class MycroftSkill(object):
             self.emitter.on(intent_parser.name, receive_handler)
 
 
+    
+    def enable_intent(self, intent_name):
+        """Reenable a registered intent"""
+        for intent in self.registered_intents:
+            if intent.name == intent_name:
+                self.registered_intents.remove(intent)
+                self.register_intent(intent, None)
+                self.log.info("Enabling Intent " + intent_name)
+                return
+        self.log.error("Could not Re-enable Intent " + intent_name)
 
+        
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
         self.emitter.emit(Message("detach_intent", {"intent_name": intent_name}))
