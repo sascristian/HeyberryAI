@@ -62,7 +62,7 @@ class TemplateSkill(MycroftSkill):
         self.register_self_intent(self_intent,
                                   self.handle_second_intent)
         # disable until needed
-        self.disable_intent("SelfIntent")
+        self.disable_intent("SecondIntent")
 
         # build objectives
         name = "test objective"
@@ -101,10 +101,6 @@ class TemplateSkill(MycroftSkill):
         #{"String_result": "Sucess string"}
         #{"Evil_String_result": "Evil string}
 
-
-
-
-
     def handle_pic_intent(self, message):
         pic_path = "path to picture"
         utterance = "used for backend name parsing"
@@ -113,24 +109,27 @@ class TemplateSkill(MycroftSkill):
     def handle_sound_intent(self, message):
         sound_path = "path to sound file"
         utterance = "used for backend name parsing"
-        # list of soundtracks
+        # list of sound files / playlist
         self.audio_service.play([sound_path], utterance)
 
     def handle_enable_second_intent(self, message):
         # do stuff
-        # enable secondary intent
+        # enable second intent
         self.enable_self_intent("SecondIntent")
-        # disable self until needed
+        # disable self until / if reset needed
         self.disable_intent("FirstIntent")
 
     def handle_second_intent(self, message):
         # do stuff
-        # disable self after executing
+        # disable self after executing if desired
+        # (one time execution, or toggleable execution?)
         self.disable_intent("SecondIntent")
-        # enable parent intent again
+        # enable parent intent again if desired
+        # (reset or is there supposed to be no going back?)
         self.enable_intent("FirstIntent")
 
     def stop(self):
+        # reset intents to start-up state if desired
         # disable secondary intents
         self.disable_intent("SecondIntent")
         # re-enable global intents
@@ -140,7 +139,7 @@ class TemplateSkill(MycroftSkill):
         # determine self intent from transcript
         determined, intent = self.intents.determine_intent(transcript)
         handled = False
-        # try to handle intent if it was sucefully determined
+        # try to handle intent if it was sucessfully determined
         if determined:
             handled = self.intents.execute_intent()
 
