@@ -184,6 +184,7 @@ class MycroftSkill(object):
         self.registered_intents = []
         self.log = getLogger(name)
         self.reload_skill = True
+        self.intents = None
 
     @property
     def location(self):
@@ -253,6 +254,34 @@ class MycroftSkill(object):
                     self.name, exc_info=True)
 
         self.emitter.on(intent_parser.name, receive_handler)
+
+    def register_self_intent(self, intent_parser, handler):
+        if self.intents is None:
+            self.log.error("did no initialize self skills")
+            return
+
+        self.intents.register_intent(intent_parser.__dict__)
+
+        def receive_handler(message):
+            try:
+                handler(message)
+            except:
+                # TODO: Localize
+                self.speak(
+                    "An error occurred while processing a request in " +
+                    self.name)
+                self.log.error(
+                    "An error occurred while processing a request in " +
+                    self.name, exc_info=True)
+
+        if handler:
+            self.emitter.on(intent_parser.name, receive_handler)
+
+
+
+    def disable_intent(self, intent_name):
+        """Disable a registered intent"""
+        self.emitter.emit(Message("detach_intent", {"intent_name": intent_name}))
 
     def register_vocabulary(self, entity, entity_type):
         self.emitter.emit(Message('register_vocab', {
