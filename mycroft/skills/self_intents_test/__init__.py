@@ -59,4 +59,4 @@ class OwnIntentsSkill(MycroftSkill):
         pass
 
 def create_skill():
-    return AdaptSkill()
+    return OwnIntentsSkill()
