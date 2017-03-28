@@ -279,7 +279,17 @@ class MycroftSkill(object):
             self.emitter.on(intent_parser.name, receive_handler)
 
 
-    
+    def enable_self_intent(self, intent_name):
+        """Reenable a registered self intent"""
+        for intent in self.registered_intents:
+            if intent.name == intent_name:
+                self.registered_intents.remove(intent)
+                self.register_self_intent(intent, None)
+                self.log.info("Enabling Self Intent " + intent_name)
+                return
+        self.log.error("Could not Re-enable Self Intent " + intent_name)
+        
+        
     def enable_intent(self, intent_name):
         """Reenable a registered intent"""
         for intent in self.registered_intents:
