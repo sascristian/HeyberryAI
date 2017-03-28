@@ -33,7 +33,7 @@ class OwnIntentsSkill(MycroftSkill):
 
     def handle_enable2_intent(self, message):
         self.speak("say level 2 to proceed")
-        self.enable_intent("LevelIntent")
+        self.enable_self_intent("LevelIntent")
 
     def handle_level2_intent(self, message):
         self.speak("this is level 2 intent executing")
