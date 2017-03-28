@@ -36,7 +36,7 @@ from adapt.context import ContextManager
 __author__ = 'seanfitz'
 
 PRIMARY_SKILLS = ['intent', 'wake']
-BLACKLISTED_SKILLS = ["send_sms", "media", "adapt_test", "configuration", "ip_skill", "dial_call", "facebook", "deep_dream", "wifi", "leaks", "objectives_test", "context_manager_test"]
+BLACKLISTED_SKILLS = ["send_sms", "media", "configuration", "ip_skill", "dial_call", "facebook", "deep_dream", "wifi", "leaks", "objectives_test", "context_manager_test"]
 SKILLS_BASEDIR = dirname(__file__)
 THIRD_PARTY_SKILLS_DIR = ["/opt/mycroft/third_party", "/opt/mycroft/skills"]
 # Note: /opt/mycroft/skills is recommended, /opt/mycroft/third_party
@@ -327,6 +327,15 @@ class MycroftSkill(object):
         """Disable a registered intent"""
         self.emitter.emit(Message("detach_intent", {"intent_name": intent_name}))
 
+    def enable_self_intent(self, intent_name):
+        """Reenable a registered self intent"""
+        for intent in self.registered_intents:
+            if intent.name == intent_name:
+                self.registered_intents.remove(intent)
+                self.register_self_intent(intent, None)
+                self.log.info("Enabling Self Intent " + intent_name)
+                return
+        self.log.error("Could not Re-enable Self Intent " + intent_name)
 
     def enable_intent(self, intent_name):
         """Reenable a registered intent"""

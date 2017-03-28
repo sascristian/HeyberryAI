@@ -317,7 +317,38 @@ So you dont need to parse the utterance to determine intent, just determine if i
 
 # Sequential Events 2
 
- with intent parser abstracted we can also do it otherway check -> https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skills/adapt_test/__init__.py
+ with intent parser abstracted we can also do it by registering intents inside the skill instead of using global intent skill
+
+            from mycroft.skills.skill_intents import SkillIntents
+
+            in initialize -> self.intents = SkillIntents(self.emitter)
+                          -> self.register_self_intent(level2_intent, self.handle_level2_intent)
+                          -> self.disable_intent("intent_name")
+
+            handling skill where intent is activated -> self.enable_self_intent("intent_name")
+
+            in intent after executing or wherever necessary (timer?) -> self.disable_intent("intent_name")
+
+            on converse method -> get intent instead of manually parsing utterance
+
+                def converse(self, transcript, lang="en-us"):
+                    determined, intent = self.intents.determine_intent(transcript)
+                    handled = False
+                    if determined:
+                        try:
+                            intent_name = intent.get('intent_type')
+                            self.speak("trying to handle intent " + intent_name + " from inside a skill")
+                            handled = self.intents.execute_intent()
+                        except:
+                            pass
+                    if handled:
+                        self.speak("intent executed from intent parser inside skill")
+
+                    return handled
+
+
+
+            in skill_handling -> self.display_service.show(pic_path, utterance)
 
 # Privacy Enhancements (requires network manager)
 

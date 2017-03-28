@@ -4,7 +4,6 @@ from mycroft.util.log import getLogger
 
 from mycroft.skills.skill_intents import SkillIntents
 
-import time
 
 __author__ = 'jarbas'
 
@@ -50,10 +49,7 @@ class OwnIntentsSkill(MycroftSkill):
             except:
                 pass
         if handled:
-            # de-register
-            time.sleep(5)
-            self.disable_intent("LevelIntent")
-            self.speak("disabling level 2 and going back to level 1")
+            self.speak("level 2 executed from intent parser inside skill")
 
         return handled
 
