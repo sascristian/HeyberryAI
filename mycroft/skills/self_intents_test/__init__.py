@@ -24,16 +24,20 @@ class OwnIntentsSkill(MycroftSkill):
 
         self.register_intent(enable2_intent, self.handle_enable2_intent)
 
-
-    def handle_enable2_intent(self, message):
-        self.speak("say level 2 to proceed")
-
         level2_intent = IntentBuilder("LevelIntent"). \
             require("level2").build()
         self.register_self_intent(level2_intent, self.handle_level2_intent)
 
+        self.disable_intent("LevelIntent")
+
+
+    def handle_enable2_intent(self, message):
+        self.speak("say level 2 to proceed")
+        self.enable_intent("LevelIntent")
+
     def handle_level2_intent(self, message):
         self.speak("this is level 2 intent executing")
+        self.disable_intent("LevelIntent")
 
     def converse(self, transcript, lang="en-us"):
         det, intent = self.intents.determine_intent(transcript)
@@ -48,7 +52,7 @@ class OwnIntentsSkill(MycroftSkill):
         if handled:
             # de-register
             time.sleep(5)
-            self.disable_intent(intent_name)
+            self.disable_intent("LevelIntent")
             self.speak("disabling level 2 and going back to level 1")
 
         return handled
