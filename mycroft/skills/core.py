@@ -192,6 +192,7 @@ class MycroftSkill(object):
         self.log = getLogger(name)
         self.skill_id = 0
         self.reload_skill = True
+        self.intents = None
         # this is not official code, hacked around,
         self.results = {}
         ##### global context
@@ -275,7 +276,7 @@ class MycroftSkill(object):
     def converse(self, transcript, lang="en-us"):  # TODO read language from config?
         return False
 
-    def register_intent(self, intent_parser, handler):
+    def register_intent(self, intent_parser, handler=None):
         self.registered_intents.append(intent_parser)
         # add source skill_id to info
         dict = {"intent": intent_parser.__dict__, "source_skill": self.id}
@@ -293,8 +294,33 @@ class MycroftSkill(object):
                     "An error occurred while processing a request in " +
                     self.name, exc_info=True)
 
+        if handler is not None:
+            self.emitter.on(intent_parser.name, receive_handler)
+
+
+    def register_self_intent(self, intent_parser, handler):
+        self.registered_intents.append(intent_parser)
+        if self.intents is None:
+            self.log.error("did no initialize self skills")
+            return
+
+        self.intents.register_intent(intent_parser.__dict__)
+
+        def receive_handler(message):
+            try:
+                handler(message)
+            except:
+                # TODO: Localize
+                self.speak(
+                    "An error occurred while processing a request in " +
+                    self.name)
+                self.log.error(
+                    "An error occurred while processing a request in " +
+                    self.name, exc_info=True)
+
         if handler:
             self.emitter.on(intent_parser.name, receive_handler)
+
 
 
     def disable_intent(self, intent_name):

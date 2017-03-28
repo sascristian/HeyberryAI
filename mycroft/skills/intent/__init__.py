@@ -15,8 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from adapt.engine import IntentDeterminationEngine
+from mycroft.intent_tree.skill_intents import SkillIntents
 
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import open_intent_envelope, MycroftSkill
@@ -33,17 +32,17 @@ logger = getLogger(__name__)
 class IntentSkill(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self, name="IntentSkill")
-        self.engine = IntentDeterminationEngine()
+        #self.engine = IntentDeterminationEngine()
+        self.intents = None
         self.reload_skill = False
         self.active_skills = [] # [skill_id , timestamp]
         self.intent_to_skill_id = {} # intent:source_skill_id
         self.converse_timeout = 5 # minutes to prune active_skills
 
     def initialize(self):
-        self.emitter.on('register_vocab', self.handle_register_vocab)
+        self.intents = SkillIntents(self.emitter)
         self.emitter.on('register_intent', self.handle_register_intent)
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
-        self.emitter.on('detach_intent', self.handle_detach_intent)
         self.emitter.on('converse_status_response', self.handle_conversation_response)
 
     def do_conversation(self, utterances, skill):
@@ -91,21 +90,15 @@ class IntentSkill(MycroftSkill):
         # no skill wants to handle utterance, proceed
 
         best_intent = None
-        for utterance in utterances:
-            try:
-                best_intent = next(self.engine.determine_intent(
-                    utterance, 100))
-                # TODO - Should Adapt handle this?
-                best_intent['utterance'] = utterance
+        success = False
 
-            except StopIteration, e:
-                logger.exception(e)
-                continue
+        try:
+            success, best_intent = self.intents.determine_intent(utterances)
+        except:
+            print "FAIL"
 
-        if best_intent and best_intent.get('confidence', 0.0) > 0.0:
-            reply = message.reply(
-                best_intent.get('intent_type'), best_intent)
-            self.emitter.emit(reply)
+        if success:
+            self.intents.execute_intent()
 
             # best intent detected -> update called skills dict
             skill_id = self.intent_to_skill_id[best_intent['intent_type']]
@@ -113,7 +106,6 @@ class IntentSkill(MycroftSkill):
             # process feedback
             if best_intent['intent_type'] == "PositiveFeedbackIntent" or best_intent['intent_type'] == "NegativeFeedbackIntent":
                 self.emitter.emit(Message("feedback_id",{"active_skill":self.active_skills[1][0]}))
-            # convert intent to objective and execute
 
         elif len(utterances) == 1:
             self.emitter.emit(Message("intent_failure", {
@@ -124,29 +116,12 @@ class IntentSkill(MycroftSkill):
                 "utterances": utterances
             }))
 
-    def handle_register_vocab(self, message):
-        start_concept = message.data.get('start')
-        end_concept = message.data.get('end')
-        regex_str = message.data.get('regex')
-        alias_of = message.data.get('alias_of')
-        if regex_str:
-            self.engine.register_regex_entity(regex_str)
-        else:
-            self.engine.register_entity(
-                start_concept, end_concept, alias_of=alias_of)
-
     def handle_register_intent(self, message):
-        intent = open_intent_envelope(message)
-        self.engine.register_intent_parser(intent)
+        intent = message.data["intent"]
+        self.intents.register_intent(intent)
         # map intent to source skill
         self.intent_to_skill_id.setdefault(
-            intent.name, message.data["source_skill"])
-
-    def handle_detach_intent(self, message):
-        intent_name = message.data.get('intent_name')
-        new_parsers = [
-            p for p in self.engine.intent_parsers if p.name != intent_name]
-        self.engine.intent_parsers = new_parsers
+            intent["name"], message.data["source_skill"])
 
     def stop(self):
         pass
