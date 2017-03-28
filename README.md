@@ -148,7 +148,7 @@ a fork of mycroft-core , the following things were added
 - allowed intents to be de-registered [PR#558](https://github.com/MycroftAI/mycroft-core/pull/558)
 - added audioservice backend[PR#433](https://github.com/MycroftAI/mycroft-core/pull/433)
 - added screenservice backend[future PR](https://github.com/JarbasAI/mycroft---display-backend)
-
+- skills now can have their own intent parser, abstracted away from intent skill [future PR](https://github.com/JarbasAI/jarbas-core/tree/patch-7)
 
 # Developing skills for Jarbas
 
@@ -315,6 +315,9 @@ So you dont need to parse the utterance to determine intent, just determine if i
 
 
 
+# Sequential Events 2
+
+ with intent parser abstracted we can also do it otherway check -> https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skills/adapt_test/__init__.py
 
 # Privacy Enhancements (requires network manager)
 

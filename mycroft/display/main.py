@@ -17,10 +17,9 @@
 
 
 import json
-from os.path import expanduser, exists, abspath, dirname, basename, isdir, join
+from os.path import abspath, dirname, basename, isdir, join
 from os import listdir
 import sys
-import time
 import imp
 
 from mycroft.configuration import ConfigurationManager
@@ -139,8 +138,7 @@ def _stop(message=None):
 
 def show(pic, prefered_service):
     """
-        play starts playing the audio on the prefered service if it supports
-        the uri. If not the next best backend is found.
+        show starts displaying the pic on the prefered service
     """
     global current
     logger.info('show')

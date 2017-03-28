@@ -86,8 +86,8 @@ class KnowledgeSkill(MycroftSkill):
         self.speak(random.choice(self.knowledge))
 
     def handle_knowledge_intent(self, message):
-        self.speak_dialog("knowledge_dialog")
         title = message.data.get("ArticleTitle")
+        self.speak_dialog("knowledge_dialog", {"about": title})
 
         savepath = message.data.get("SavePath")
         if savepath is None:
@@ -109,6 +109,7 @@ class KnowledgeSkill(MycroftSkill):
             #self.speak(summary)
             self.knowledge.append(summary)
             #self.emit_results()
+            self.log.info("adquiring knowledge about " + title)
 
         except wiki.exceptions.DisambiguationError as e:
             options = e.options[:self.max_results]
@@ -134,11 +135,12 @@ class KnowledgeSkill(MycroftSkill):
                 #self.speak(summary)
                 self.knowledge.append(summary)
                 #self.emit_results()
+                self.log.info("adquiring knowledge about " + opt)
 
 
         except Exception as e:
             LOGGER.error("Error: {0}".format(e))
-            #self.speak("Couldn't find knowledge about " + title + " right now")
+            self.log.info("Couldn't find knowledge about " + title + " right now")
 
     def stop(self):
         pass

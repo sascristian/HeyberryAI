@@ -3,6 +3,8 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from mycroft.skills.displayservice import DisplayService
 
+from mycroft.intent_tree.skill_intents import SkillIntents
+
 import unirest
 import urllib2
 import os
