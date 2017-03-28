@@ -5,6 +5,8 @@ from mycroft.util.log import getLogger
 
 from os.path import dirname, exists
 
+from mycroft.skills.skill_intents import SkillIntents
+
 __author__ = 'jarbas'
 
 LOGGER = getLogger(__name__)
@@ -16,14 +18,13 @@ class KonamiCodeSkill(MycroftSkill):
         # UP UP DOWN DOWN LEFT RIGHT LEFT RIGHT B A
         self.cheat_code_script = dirname(__file__)+"/cheat_code.py"
         # TODO use this path instead of importing default script and read from config file
-        # self.reload_skill = False
         self.counter = 0
-        self.next_cheat = "up"
         self.reload_skill = False
 
 
     def initialize(self):
-        
+        self.intents = SkillIntents(self.emitter)
+
         up_intent = IntentBuilder('KonamiUpIntent'). \
             require("KonamiUpKeyword").build()
 
@@ -42,70 +43,60 @@ class KonamiCodeSkill(MycroftSkill):
         a_intent = IntentBuilder('KonamiAIntent'). \
             require("KonamiAKeyword").build()
 
-        self.register_intent(up_intent, self.handle_up_intent)
-        self.register_intent(down_intent, self.handle_down_intent)
-        self.register_intent(left_intent, self.handle_left_intent)
-        self.register_intent(right_intent, self.handle_right_intent)
-        self.register_intent(b_intent, self.handle_b_intent)
-        self.register_intent(a_intent, self.handle_a_intent)
-
+        # register local intents
+        self.register_self_intent(down_intent, self.handle_down_intent)
+        self.register_self_intent(left_intent, self.handle_left_intent)
+        self.register_self_intent(right_intent, self.handle_right_intent)
+        self.register_self_intent(b_intent, self.handle_b_intent)
+        self.register_self_intent(a_intent, self.handle_a_intent)
+        # disable local intents until needed
         self.disable_intent('KonamiDownIntent')
         self.disable_intent('KonamiLeftIntent')
         self.disable_intent('KonamiRightIntent')
         self.disable_intent('KonamiBIntent')
         self.disable_intent('KonamiAIntent')
 
+        # register global intents
+        self.register_intent(up_intent, self.handle_up_intent)
 
 
     def handle_up_intent(self, message):
-        self.disable_intent('KonamiDownIntent')
-        self.disable_intent('KonamiLeftIntent')
-        self.disable_intent('KonamiRightIntent')
-        self.disable_intent('KonamiBIntent')
-        self.disable_intent('KonamiAIntent')
         self.speak_dialog("up")
         self.counter += 1
         if self.counter == 2:
+            # disable up
             self.disable_intent('KonamiUpIntent')
-            self.enable_intent("KonamiDownIntent")
+            # enable down
+            self.enable_self_intent("KonamiDownIntent")
             self.counter = 0
-            self.next_cheat = "down"
 
     def handle_down_intent(self, message):
         self.speak_dialog("down")
         self.counter += 1
         if self.counter == 2:
             self.disable_intent('KonamiDownIntent')
-            self.enable_intent("KonamiLeftIntent")
+            self.enable_self_intent("KonamiLeftIntent")
             self.counter = 0
-            self.next_cheat = "left"
 
     def handle_left_intent(self, message):
         self.speak_dialog("left")
         self.disable_intent('KonamiLeftIntent')
-        self.enable_intent("KonamiRightIntent")
-        self.next_cheat = "right"
+        self.enable_self_intent("KonamiRightIntent")
 
     def handle_right_intent(self, message):
         self.speak_dialog("right")
         self.counter += 1
         self.disable_intent('KonamiRightIntent')
-        self.enable_intent("KonamiLeftIntent")
-        self.next_cheat = "left"
+        self.enable_self_intent("KonamiLeftIntent")
         if self.counter == 2:
             self.disable_intent('KonamiLeftIntent')
-            self.enable_intent("KonamiBIntent")
+            self.enable_self_intent("KonamiBIntent")
             self.counter = 0
-            self.next_cheat = "b"
 
     def handle_b_intent(self, message):
         self.speak_dialog("b")
-        self.disable_intent('KonamiDownIntent')
-        self.disable_intent('KonamiLeftIntent')
-        self.disable_intent('KonamiRightIntent')
         self.disable_intent('KonamiBIntent')
-        self.enable_intent('KonamiAIntent')
-        self.next_cheat = "a"
+        self.enable_self_intent('KonamiAIntent')
 
 
     def handle_a_intent(self, message):
@@ -124,27 +115,27 @@ class KonamiCodeSkill(MycroftSkill):
         # TODO change this lazy mechanism, use subprocess ?
         import mycroft.skills.konami_code.cheat_code
         self.counter = 0
-        self.disable_intent('KonamiDownIntent')
-        self.disable_intent('KonamiLeftIntent')
-        self.disable_intent('KonamiRightIntent')
-        self.disable_intent('KonamiBIntent')
         self.disable_intent('KonamiAIntent')
         self.enable_intent('KonamiUpIntent')
-        self.next_cheat = "up"
 
 
     # reset code input on invalid utterance
     def converse(self, transcript, lang="en-us"):
-        if self.next_cheat not in transcript:
+        determined, intent = self.intents.determine_intent(transcript)
+        handled = False
+
+        if determined:
+            handled = self.intents.execute_intent()
+
+        if not handled and self.counter == 0:
             self.enable_intent('KonamiUpIntent')
             self.disable_intent('KonamiDownIntent')
             self.disable_intent('KonamiLeftIntent')
             self.disable_intent('KonamiRightIntent')
             self.disable_intent('KonamiBIntent')
             self.disable_intent('KonamiAIntent')
-            self.next_cheat = "up"
             self.counter = 0
-        return False
+        return handled
 
     def stop(self):
         pass

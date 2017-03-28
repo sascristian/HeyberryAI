@@ -152,6 +152,8 @@ a fork of mycroft-core , the following things were added
 
 # Developing skills for Jarbas
 
+A [template skill](https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skills/template_skill/__init__.py) is available as a guideline
+
 ### Adding Results
 
 to add a result and emit a message of the format "register_result" : "resultname_result"
@@ -346,9 +348,7 @@ So you dont need to parse the utterance to determine intent, just determine if i
 
                     return handled
 
-
-
-            in skill_handling -> self.display_service.show(pic_path, utterance)
+check parrot , dictation and konami skill recently updated to use this
 
 # Privacy Enhancements (requires network manager)
 
