@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from mycroft.intent_tree.skill_intents import SkillIntents
+from mycroft.skills.skill_intents import SkillIntents
 
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import open_intent_envelope, MycroftSkill
