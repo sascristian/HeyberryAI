@@ -1,9 +1,8 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from mycroft.skills.displayservice import DisplayService
 
-from mycroft.intent_tree.skill_intents import SkillIntents
+from mycroft.skills.skill_intents import SkillIntents
 
 import time
 
@@ -25,7 +24,6 @@ class OwnIntentsSkill(MycroftSkill):
 
         self.register_intent(enable2_intent, self.handle_enable2_intent)
 
-        self.display_service = DisplayService(self.emitter)
 
     def handle_enable2_intent(self, message):
         self.speak("say level 2 to proceed")
