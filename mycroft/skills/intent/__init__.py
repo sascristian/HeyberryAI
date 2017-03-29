@@ -15,10 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from mycroft.intent_tree.skill_intents import SkillIntents
+from mycroft.skills.skill_intents import SkillIntents
 
 from mycroft.messagebus.message import Message
-from mycroft.skills.core import open_intent_envelope, MycroftSkill
+from mycroft.skills.core import  MycroftSkill
 from mycroft.util.log import getLogger
 
 import time
@@ -45,9 +45,9 @@ class IntentSkill(MycroftSkill):
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
         self.emitter.on('converse_status_response', self.handle_conversation_response)
 
-    def do_conversation(self, utterances, skill):
+    def do_conversation(self, utterances, skill, lang):
         self.emitter.emit(Message("converse_status_request", {
-                          "skill_id": skill, "utterances": utterances}))
+                          "skill_id": skill, "utterances": utterances, "lang":lang}))
         self.waiting = True
         self.result = False
         while self.waiting:
@@ -74,6 +74,10 @@ class IntentSkill(MycroftSkill):
         self.active_skills.insert(0, [skill_id, time.time()])
 
     def handle_utterance(self, message):
+        # Get language of the utterance
+        lang = message.data.get('lang', None)
+        if not lang:
+            lang = "en-us"
 
         utterances = message.data.get('utterances', '')
         # check for conversation time-out
@@ -82,7 +86,7 @@ class IntentSkill(MycroftSkill):
 
         # check if any skill wants to handle utterance
         for skill in self.active_skills:
-            if self.do_conversation(utterances, skill[0]):
+            if self.do_conversation(utterances, skill[0], lang):
                 # update timestamp, or there will be a timeout where
                 # intent stops conversing wether its being used or not
                 self.add_active_skill(skill[0])
@@ -109,11 +113,13 @@ class IntentSkill(MycroftSkill):
 
         elif len(utterances) == 1:
             self.emitter.emit(Message("intent_failure", {
-                "utterance": utterances[0]
+                "utterance": utterances[0],
+                "lang": lang
             }))
         else:
             self.emitter.emit(Message("multi_utterance_intent_failure", {
-                "utterances": utterances
+                "utterances": utterances,
+                "lang": lang
             }))
 
     def handle_register_intent(self, message):
