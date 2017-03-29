@@ -20,7 +20,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
-from mycroft.skills.intent_parser import IntentParser
+from mycroft.skills.intent_parser import IntentParser, IntentTree
 from mycroft.skills.displayservice import DisplayService
 from mycroft.skills.audioservice import AudioService
 from mycroft.skills.objectives import ObjectiveBuilder
@@ -41,29 +41,42 @@ class TemplateSkill(MycroftSkill):
     def initialize(self):
         # initialize display service
         self.display_service = DisplayService(self.emitter)
-
         # initialize audio service
         self.audio_service = AudioService(self.emitter)
-
         # initialize self intent parser
-        self.intents = IntentParser(self.emitter)
+        self.intent_parser = IntentParser(self.emitter)
+        # register intents
+        self.build_intents()
+        # register objectives
+        self.build_objectives()
+        # make tree
+        self.build_intent_tree()
 
-        # register global intents
-        enable_second_intent = IntentBuilder("FirstIntent")\
+    def build_intent_tree(self):
+        layers = [["FirstIntent"], ["SecondIntent"]]
+        timer_timeout_in_seconds = 60
+        self.tree = IntentTree(self.emitter, layers, timer_timeout_in_seconds)
+        # not sure where to put this in core, should be in initialize of every skill
+        self.emitter.on('enable_intent', self.handle_enable_intent)
+
+    def build_intents(self):
+        # build
+        enable_second_intent = IntentBuilder("FirstIntent") \
             .require("FirstKeyword").build()
-
-        self.register_intent(enable_second_intent,
-                             self.handle_enable_second_intent)
-
-        # register self-intents
-        self_intent = IntentBuilder("SecondIntent") \
+        second_intent = IntentBuilder("SecondIntent") \
             .require("SecondKeyword").build()
 
-        self.register_self_intent(self_intent,
-                                  self.handle_second_intent)
-        # disable until needed
-        self.disable_intent("SecondIntent")
+        # register in intent skill
+        self.register_intent(enable_second_intent,
+                             self.handle_enable_second_intent)
+        self.register_intent(second_intent,
+                             self.handle_second_intent)
 
+        #register in self-parser
+        self.intent_parser.register_intent(enable_second_intent.__dict__)
+        self.intent_parser.register_intent(second_intent.__dict__)
+
+    def build_objectives(self):
         # build objectives
         name = "test objective"
         my_objective = ObjectiveBuilder(name)
@@ -83,6 +96,8 @@ class TemplateSkill(MycroftSkill):
         intent, self.handler = my_objective.get_objective_intent(keyword)
         # register intent to execute objective by keyword
         self.register_intent(intent, self.handler)
+        # if wanted register in self-parser
+        self.intent_parser.register_intent(intent.__dict__)
 
     def handle_result_intent(self, message):
         # do stuff and get results
@@ -114,39 +129,25 @@ class TemplateSkill(MycroftSkill):
 
     def handle_enable_second_intent(self, message):
         # do stuff
-        # enable second intent
-        self.enable_self_intent("SecondIntent")
-        # disable self until / if reset needed
-        self.disable_intent("FirstIntent")
+        # climb intent tree
+        self.tree.next()
 
     def handle_second_intent(self, message):
         # do stuff
-        # disable self after executing if desired
-        # (one time execution, or toggleable execution?)
-        self.disable_intent("SecondIntent")
-        # enable parent intent again if desired
-        # (reset or is there supposed to be no going back?)
-        self.enable_intent("FirstIntent")
+        # go back to level one or next or previous...
+        self.tree.reset()
 
     def stop(self):
         # reset intents to start-up state if desired
-        # disable secondary intents
-        self.disable_intent("SecondIntent")
-        # re-enable global intents
-        self.enable_intent("FirstIntent")
+        self.tree.reset()
 
     def converse(self, transcript, lang="en-us"):
         # determine self intent from transcript
-        determined, intent = self.intents.determine_intent(transcript)
-        handled = False
-        # try to handle intent if it was sucessfully determined
-        if determined:
-            handled = self.intents.execute_intent()
-
-        # check if it was handled
-        if not handled:
-            # de-register secondary intents here if you want a conditional chain
-            self.disable_intent("SecondIntent")
+        determined, intent = self.intent_parser.determine_intent(transcript)
+        if not determined:
+            # check for any conditions
+            # wrong sequence entry
+            self.tree.reset()
             # in here handle the utterance if it doesnt trigger a self intent
             if self.flag:
                 # keep listening without wakeword
@@ -154,7 +155,7 @@ class TemplateSkill(MycroftSkill):
                 return True
 
         # tell intent skill if you handled intent
-        return handled
+        return False
 
     def feedback(self, feedback, lang):
         if feedback == "positive":
