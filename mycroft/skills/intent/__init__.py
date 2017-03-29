@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from mycroft.skills.skill_intents import SkillIntents
+from mycroft.skills.intent_parser import IntentParser
 
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import  MycroftSkill
@@ -32,15 +32,14 @@ logger = getLogger(__name__)
 class IntentSkill(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self, name="IntentSkill")
-        #self.engine = IntentDeterminationEngine()
-        self.intents = None
+        self.intent_parser = None
         self.reload_skill = False
         self.active_skills = [] # [skill_id , timestamp]
         self.intent_to_skill_id = {} # intent:source_skill_id
         self.converse_timeout = 5 # minutes to prune active_skills
 
     def initialize(self):
-        self.intents = SkillIntents(self.emitter)
+        self.intent_parser = IntentParser(self.emitter)
         self.emitter.on('register_intent', self.handle_register_intent)
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
         self.emitter.on('converse_status_response', self.handle_conversation_response)
@@ -88,7 +87,7 @@ class IntentSkill(MycroftSkill):
         for skill in self.active_skills:
             if self.do_conversation(utterances, skill[0], lang):
                 # update timestamp, or there will be a timeout where
-                # intent stops conversing wether its being used or not
+                # intent stops conversing whether its being used or not
                 self.add_active_skill(skill[0])
                 return
         # no skill wants to handle utterance, proceed
@@ -97,12 +96,12 @@ class IntentSkill(MycroftSkill):
         success = False
 
         try:
-            success, best_intent = self.intents.determine_intent(utterances)
+            success, best_intent = self.intent_parser.determine_intent(utterances)
         except:
             print "FAIL"
 
         if success:
-            self.intents.execute_intent()
+            self.intent_parser.execute_intent()
 
             # best intent detected -> update called skills dict
             skill_id = self.intent_to_skill_id[best_intent['intent_type']]
@@ -124,7 +123,7 @@ class IntentSkill(MycroftSkill):
 
     def handle_register_intent(self, message):
         intent = message.data["intent"]
-        self.intents.register_intent(intent)
+        self.intent_parser.register_intent(intent)
         # map intent to source skill
         self.intent_to_skill_id.setdefault(
             intent["name"], message.data["source_skill"])

@@ -20,7 +20,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
-from mycroft.skills.skill_intents import SkillIntents
+from mycroft.skills.intent_parser import IntentParser
 from mycroft.skills.displayservice import DisplayService
 from mycroft.skills.audioservice import AudioService
 from mycroft.skills.objectives import ObjectiveBuilder
@@ -46,7 +46,7 @@ class TemplateSkill(MycroftSkill):
         self.audio_service = AudioService(self.emitter)
 
         # initialize self intent parser
-        self.intents = SkillIntents(self.emitter)
+        self.intents = IntentParser(self.emitter)
 
         # register global intents
         enable_second_intent = IntentBuilder("FirstIntent")\

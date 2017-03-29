@@ -192,8 +192,7 @@ class MycroftSkill(object):
         self.log = getLogger(name)
         self.skill_id = 0
         self.reload_skill = True
-        self.intents = None
-        # this is not official code, hacked around,
+        self.intent_parser = None
         self.results = {}
         ##### global context
         self.manager = ContextManager()
@@ -232,6 +231,7 @@ class MycroftSkill(object):
             self.emitter = emitter
             self.enclosure = EnclosureAPI(emitter)
             self.__register_stop()
+
 
     def __register_stop(self):
         self.stop_time = time.time()
@@ -278,6 +278,8 @@ class MycroftSkill(object):
 
     def register_intent(self, intent_parser, handler=None):
         self.registered_intents.append(intent_parser)
+        if self.intent_parser is not None:
+            self.intent_parser.register_intent(intent_parser.__dict__)
         # add source skill_id to info
         dict = {"intent": intent_parser.__dict__, "source_skill": self.id}
         self.emitter.emit(Message("register_intent", dict))
@@ -298,55 +300,23 @@ class MycroftSkill(object):
             self.emitter.on(intent_parser.name, receive_handler)
 
 
-    def register_self_intent(self, intent_parser, handler):
-        self.registered_intents.append(intent_parser)
-        if self.intents is None:
-            self.log.error("did no initialize self skills")
-            return
-
-        self.intents.register_intent(intent_parser.__dict__)
-
-        def receive_handler(message):
-            try:
-                handler(message)
-            except:
-                # TODO: Localize
-                self.speak(
-                    "An error occurred while processing a request in " +
-                    self.name)
-                self.log.error(
-                    "An error occurred while processing a request in " +
-                    self.name, exc_info=True)
-
-        if handler:
-            self.emitter.on(intent_parser.name, receive_handler)
-
-
-
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
         self.emitter.emit(Message("detach_intent", {"intent_name": intent_name}))
 
-    def enable_self_intent(self, intent_name):
-        """Reenable a registered self intent"""
-        for intent in self.registered_intents:
-            if intent.name == intent_name:
-                self.registered_intents.remove(intent)
-                self.register_self_intent(intent, None)
-                self.log.info("Enabling Self Intent " + intent_name)
-                return
-        self.log.error("Could not Re-enable Self Intent " + intent_name)
-
     def enable_intent(self, intent_name):
-        """Reenable a registered intent"""
+        """Reenable a registered self intent"""
+        self.emitter.emit(Message("enable_intent", {"intent_name": intent_name}))
+
+    def handle_enable_intent(self, message):
+        intent_name = message.data["intent_name"]
         for intent in self.registered_intents:
             if intent.name == intent_name:
                 self.registered_intents.remove(intent)
                 self.register_intent(intent, None)
-                self.log.info("Enabling Intent " + intent_name)
+                logger.info("Enabling Intent " + intent_name)
                 return
-        self.log.error("Could not Re-enable Intent " + intent_name)
-
+        logger.error("Could not Re-enable Intent " + intent_name)
 
     def register_vocabulary(self, entity, entity_type):
         self.emitter.emit(Message('register_vocab', {

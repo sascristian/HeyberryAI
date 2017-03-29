@@ -1,16 +1,14 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-import time
-from time import sleep
 
-from multiprocessing import Process
 
 from os.path import dirname, exists
 __author__ = 'jarbas'
 
-LOGGER = getLogger(__name__)
+logger = getLogger(__name__)
 
+from mycroft.skills.intent_parser import IntentParser, IntentTree
 
 class KonamiCodeSkill(MycroftSkill):
     def __init__(self):
@@ -20,14 +18,20 @@ class KonamiCodeSkill(MycroftSkill):
         self.reload_skill = False
 
     def initialize(self):
+        self.intent_parser = IntentParser(self.emitter)
         self.build_intents()
         self.build_intent_tree()
-        self.tree_reset()
 
     def build_intents(self):
-        # build intents
+
+        # build intent
         up_intent = IntentBuilder('KonamiUpIntent'). \
             require("KonamiUpKeyword").build()
+        # register intent
+        self.register_intent(up_intent, self.handle_up_intent)
+        # register in self-intent parser
+        self.intent_parser.register_intent(up_intent.__dict__)
+
 
         down_intent = IntentBuilder('KonamiDownIntent'). \
             require("KonamiDownKeyword").build()
@@ -44,153 +48,71 @@ class KonamiCodeSkill(MycroftSkill):
         a_intent = IntentBuilder('KonamiAIntent'). \
             require("KonamiAKeyword").build()
 
-        # register intents
-        self.register_intent(up_intent, self.handle_up_intent)
         self.register_intent(down_intent, self.handle_down_intent)
         self.register_intent(left_intent, self.handle_left_intent)
         self.register_intent(right_intent, self.handle_right_intent)
         self.register_intent(b_intent, self.handle_b_intent)
         self.register_intent(a_intent, self.handle_a_intent)
 
+        self.intent_parser.register_intent(down_intent.__dict__)
+        self.intent_parser.register_intent(left_intent.__dict__)
+        self.intent_parser.register_intent(right_intent.__dict__)
+        self.intent_parser.register_intent(b_intent.__dict__)
+        self.intent_parser.register_intent(a_intent.__dict__)
+
     def build_intent_tree(self):
-        # make intent tree for N layers
-        self.tree = []
-        sequence = ["KonamiUpIntent", "KonamiUpIntent", "KonamiDownIntent", "KonamiDownIntent",
-                    "KonamiLeftIntent", "KonamiRightIntent", "KonamiLeftIntent", "KonamiRightIntent",
-                    "KonamiBIntent", "KonamiAIntent", ]
-        for intent_name in sequence:
-            self.add_layer([intent_name])
-
-        self.current_layer = 0
-        self.timer_mins = 0.5
-        self.timer_thread = None
-
-    def tree_start_timer(self):
-        self.log.info("Stopping previous timer")
-        try:
-            # cancel previous timers
-            self.timer_thread.terminate()
-        except:
-            pass
-
-        # set new timer
-        def timer():
-            self.log.info("New Timer Started")
-            start_time = time.time()
-            while time.time() - start_time <= self.timer_mins * 60:
-                sleep(1)
-            # on end of timer reset tree
-            self.log.info("Timer Ended - resetting tree")
-            self.tree_reset()
-
-        self.timer_thread = Process(target=timer)
-        self.timer_thread.start()
-
-    def tree_reset(self):
-        self.log.info("Reseting Tree")
-        self.activate_layer(0)
-
-    def tree_next(self):
-        self.log.info("Going to next Tree Layer")
-        self.current_layer += 1
-        if self.current_layer > len(self.tree):
-            self.log.info("Already in last layer, going to layer 0")
-            self.current_layer = 0
-        if self.current_layer != 0:
-            self.tree_start_timer()
-        self.activate_layer(self.current_layer)
-
-    def tree_previous(self):
-        self.log.info("Going to previous Tree Layer")
-        self.current_layer -= 1
-        if self.current_layer < 0:
-            self.current_layer = len(self.tree)
-            self.log.info("Already in layer 0, going to last layer")
-        if self.current_layer != 0:
-            self.tree_start_timer()
-        self.activate_layer(self.current_layer)
-
-    def add_layer(self, intent_list=[]):
-        self.tree.append(intent_list)
-        self.log.info("Adding layer to tree " + str(intent_list))
-
-    def activate_layer(self, layer_num):
-        # error check
-        if layer_num < 0 or layer_num > len(self.tree):
-            self.log.error("invalid layer number")
-            return
-
-        # disable other layers
-        self.log.info("Deactivating active layers")
-        for i in range(0, len(self.tree)):
-            self.deactivate_layer(i)
-
-        # TODO in here we should wait for all intents to be detached
-        # sometimes detach intent from this step comes after register from next
-        sleep(0.3)
-        # enable layer
-        self.log.info("Activating Layer " + str(layer_num))
-        for intent_name in self.tree[layer_num]:
-            self.enable_intent(intent_name)
-
-    def deactivate_layer(self, layer_num):
-        # error check
-        if layer_num < 0 or layer_num > len(self.tree):
-            self.log.error("invalid layer number")
-            return
-        self.log.info("Deactivating Layer " + str(layer_num))
-        for intent_name in self.tree[layer_num]:
-            self.disable_intent(intent_name)
+        layers = [["KonamiUpIntent"], ["KonamiUpIntent"], ["KonamiDownIntent"], ["KonamiDownIntent"],
+                    ["KonamiLeftIntent"], ["KonamiRightIntent"], ["KonamiLeftIntent"], ["KonamiRightIntent"],
+                    ["KonamiBIntent"], ["KonamiAIntent"]]
+        self.tree = IntentTree(self.emitter, layers, 60)
+        self.emitter.on('enable_intent', self.handle_enable_intent)
 
     def handle_up_intent(self, message):
         self.speak_dialog("up")
-        self.tree_next()
+        self.tree.next()
 
     def handle_down_intent(self, message):
         self.speak_dialog("down")
-        self.tree_next()
+        self.tree.next()
 
     def handle_left_intent(self, message):
         self.speak_dialog("left")
-        self.tree_next()
+        self.tree.next()
 
     def handle_right_intent(self, message):
         self.speak_dialog("right")
-        self.tree_next()
+        self.tree.next()
 
     def handle_b_intent(self, message):
         self.speak_dialog("b")
-        self.tree_next()
+        self.tree.next()
 
     def handle_a_intent(self, message):
         # check for script
         if not self.cheat_code_script:
             self.speak_dialog("no.script")
-            self.tree_reset()
-            return
-
-        if not exists(self.cheat_code_script):
+        elif not exists(self.cheat_code_script):
             data = {
                 "script": self.cheat_code_script
             }
             self.speak_dialog("missing.script", data)
-            self.tree_reset()
-            return
-
-        self.speak_dialog("cheat_code")
-        # execute user script
-        # TODO change this lazy mechanism, use subprocess ?
-        import mycroft.skills.konami_code.cheat_code
-
-        self.tree_reset()
+        else:
+            self.speak_dialog("cheat_code")
+            # execute user script
+            # TODO change this lazy mechanism, use subprocess ?
+            import mycroft.skills.konami_code.cheat_code
+        self.tree.reset()
 
     def stop(self):
-        pass
+        self.tree.reset()
 
     def converse(self, transcript, lang="en-us"):
-
+        # check if some of the intents will be handled
+        determined, intent = self.intent_parser.determine_intent(transcript)
+        if not determined:
+            # wrong cheat code entry
+            self.tree.reset()
         return False
-
 
 def create_skill():
     return KonamiCodeSkill()
