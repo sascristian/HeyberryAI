@@ -1,11 +1,8 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-
-from os.path import dirname, exists
-
 from time import sleep
-
+from os.path import dirname, exists
 __author__ = 'jarbas'
 
 LOGGER = getLogger(__name__)
@@ -62,20 +59,6 @@ class KonamiCodeSkill(MycroftSkill):
 
         self.current_layer = 0
 
-        self.waiting_for_message=False
-
-        def end_waiting():
-            self.waiting_for_message = False
-
-        # TODO add name checking or not needed ?
-        self.emitter.on("register_intent", end_waiting)
-        self.emitter.on("detach_intent", end_waiting)
-
-    def tree_wait(self):
-        self.waiting_for_message = True
-        while self.waiting_for_message:
-            sleep(0.1)
-
     def tree_set_timer(self):
         # TODO set a timer to reset tree
         pass
@@ -115,11 +98,13 @@ class KonamiCodeSkill(MycroftSkill):
         for i in range(0, len(self.tree)):
             self.deactivate_layer(i)
 
+        # TODO in here we should wait for all intents to be detached
+        # sometimes detach intent from this step comes after register from next
+        sleep(1)
         # enable layer
         self.log.info("Activating Layer " + str(layer_num))
         for intent_name in self.tree[layer_num]:
             self.enable_intent(intent_name)
-            self.tree_wait()
 
     def deactivate_layer(self, layer_num):
         # error check
@@ -129,7 +114,6 @@ class KonamiCodeSkill(MycroftSkill):
         self.log.info("Deactivating Layer " + str(layer_num))
         for intent_name in self.tree[layer_num]:
             self.disable_intent(intent_name)
-            self.tree_wait()
 
     def handle_up_intent(self, message):
         self.speak_dialog("up")
