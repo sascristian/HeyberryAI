@@ -1,11 +1,8 @@
-
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
 from os.path import dirname, exists
-
-from mycroft.skills.skill_intents import SkillIntents
 
 __author__ = 'jarbas'
 
@@ -15,16 +12,13 @@ LOGGER = getLogger(__name__)
 class KonamiCodeSkill(MycroftSkill):
     def __init__(self):
         super(KonamiCodeSkill, self).__init__(name="KonamiCode")
-        self.cheat_code_script = dirname(__file__)+"/cheat_code.py"
         # TODO use this path instead of importing default script and read from config file
-        self.reload_skill = False
-
+        self.cheat_code_script = dirname(__file__)+"/cheat_code.py"
 
     def initialize(self):
-
         self.build_intents()
         self.build_intent_tree()
-        self.reset_tree()
+        self.tree_reset()
 
     def build_intents(self):
         # build intents
@@ -65,23 +59,33 @@ class KonamiCodeSkill(MycroftSkill):
 
         self.current_layer = 0
 
-    def reset_tree(self):
+    def tree_set_timer(self):
+        # TODO set a timer to reset tree
+        pass
+
+    def tree_reset(self):
+        self.log.info("Reseting Tree")
         self.activate_layer(0)
 
     def tree_next(self):
+        self.log.info("Going to next Tree Layer")
         self.current_layer += 1
         if self.current_layer > len(self.tree):
+            self.log.info("Already in last layer, going to layer 0")
             self.current_layer = 0
         self.activate_layer(self.current_layer)
 
     def tree_previous(self):
+        self.log.info("Going to previous Tree Layer")
         self.current_layer -= 1
         if self.current_layer < 0:
             self.current_layer = len(self.tree)
+            self.log.info("Already in layer 0, going to last layer")
         self.activate_layer(self.current_layer)
 
-    def add_layer(self, intent_list = []):
+    def add_layer(self, intent_list=[]):
         self.tree.append(intent_list)
+        self.log.info("Adding layer to tree " + str(intent_list))
 
     def activate_layer(self, layer_num):
         # error check
@@ -89,12 +93,14 @@ class KonamiCodeSkill(MycroftSkill):
             self.log.error("invalid layer number")
             return
         # disable other layers
+        self.log.info("Deactivating active layers")
         i = 0
         for layer in self.tree:
-            if layer_num != i:
-                self.deactivate_layer(i)
+            self.deactivate_layer(i)
             i+= 1
+
         # enable layer
+        self.log.info("Activating Layer " + str(layer_num))
         for intent_name in self.tree[layer_num]:
             self.enable_intent(intent_name)
 
@@ -103,6 +109,7 @@ class KonamiCodeSkill(MycroftSkill):
         if layer_num < 0 or layer_num > len(self.tree):
             self.log.error("invalid layer number")
             return
+        self.log.info("Deactivating Layer " + str(layer_num))
         for intent_name in self.tree[layer_num]:
             self.disable_intent(intent_name)
 
@@ -130,7 +137,7 @@ class KonamiCodeSkill(MycroftSkill):
         # check for script
         if not self.cheat_code_script:
             self.speak_dialog("no.script")
-            self.tree_next()
+            self.tree_reset()
             return
 
         if not exists(self.cheat_code_script):
@@ -138,7 +145,7 @@ class KonamiCodeSkill(MycroftSkill):
                 "script": self.cheat_code_script
             }
             self.speak_dialog("missing.script", data)
-            self.tree_next()
+            self.tree_reset()
             return
 
         self.speak_dialog("cheat_code")
@@ -146,10 +153,15 @@ class KonamiCodeSkill(MycroftSkill):
         # TODO change this lazy mechanism, use subprocess ?
         import mycroft.skills.konami_code.cheat_code
 
-        self.tree_next()
+        self.tree_reset()
 
     def stop(self):
         pass
+
+    def converse(self, transcript, lang="en-us"):
+        # reset sequence
+        self.tree_reset()
+        return False
 
 
 def create_skill():
