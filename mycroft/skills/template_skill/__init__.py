@@ -118,14 +118,16 @@ class TemplateSkill(MycroftSkill):
 
     def handle_pic_intent(self, message):
         pic_path = "path to picture"
-        utterance = "used for backend name parsing"
+        utterance = "used for backend name parsing, get from message or spoof"
         self.display_service.show(pic_path, utterance)
 
     def handle_sound_intent(self, message):
         sound_path = "path to sound file"
-        utterance = "used for backend name parsing"
+        sound_path_two = "path to sound file 2"
         # list of sound files / playlist
-        self.audio_service.play([sound_path], utterance)
+        playlist = [sound_path, sound_path_two]
+        utterance = "used for backend name parsing, get from message or spoof"
+        self.audio_service.play(playlist, utterance)
 
     def handle_enable_second_intent(self, message):
         # do stuff
