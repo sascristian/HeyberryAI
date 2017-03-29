@@ -1,7 +1,11 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+import time
 from time import sleep
+
+from multiprocessing import Process
+
 from os.path import dirname, exists
 __author__ = 'jarbas'
 
@@ -58,10 +62,29 @@ class KonamiCodeSkill(MycroftSkill):
             self.add_layer([intent_name])
 
         self.current_layer = 0
+        self.timer_mins = 0.5
+        self.timer_thread = None
 
-    def tree_set_timer(self):
-        # TODO set a timer to reset tree
-        pass
+    def tree_start_timer(self):
+        self.log.info("Stopping previous timer")
+        try:
+            # cancel previous timers
+            self.timer_thread.terminate()
+        except:
+            pass
+
+        # set new timer
+        def timer():
+            self.log.info("New Timer Started")
+            start_time = time.time()
+            while time.time() - start_time <= self.timer_mins * 60:
+                sleep(1)
+            # on end of timer reset tree
+            self.log.info("Timer Ended - resetting tree")
+            self.tree_reset()
+
+        self.timer_thread = Process(target=timer)
+        self.timer_thread.start()
 
     def tree_reset(self):
         self.log.info("Reseting Tree")
@@ -73,6 +96,8 @@ class KonamiCodeSkill(MycroftSkill):
         if self.current_layer > len(self.tree):
             self.log.info("Already in last layer, going to layer 0")
             self.current_layer = 0
+        if self.current_layer != 0:
+            self.tree_start_timer()
         self.activate_layer(self.current_layer)
 
     def tree_previous(self):
@@ -81,6 +106,8 @@ class KonamiCodeSkill(MycroftSkill):
         if self.current_layer < 0:
             self.current_layer = len(self.tree)
             self.log.info("Already in layer 0, going to last layer")
+        if self.current_layer != 0:
+            self.tree_start_timer()
         self.activate_layer(self.current_layer)
 
     def add_layer(self, intent_list=[]):
@@ -100,7 +127,7 @@ class KonamiCodeSkill(MycroftSkill):
 
         # TODO in here we should wait for all intents to be detached
         # sometimes detach intent from this step comes after register from next
-        sleep(1)
+        sleep(0.3)
         # enable layer
         self.log.info("Activating Layer " + str(layer_num))
         for intent_name in self.tree[layer_num]:
@@ -161,8 +188,7 @@ class KonamiCodeSkill(MycroftSkill):
         pass
 
     def converse(self, transcript, lang="en-us"):
-        # reset sequence
-        self.tree_reset()
+
         return False
 
 
