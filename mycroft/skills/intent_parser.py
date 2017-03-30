@@ -8,7 +8,7 @@ __author__ = 'jarbas'
 logger = getLogger(__name__)
 
 
-class SkillIntents():
+class IntentParser():
     def __init__(self, emitter):
         self.engine = IntentDeterminationEngine()
         self.emitter = emitter
