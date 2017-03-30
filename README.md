@@ -283,9 +283,9 @@ Here is an example of parrot skill, that will talk back everything to user
                 else:
                     return False
 
-### Sequential Events
+### Sequential Events - Registering and de-registering intents
 
-It is also possible to require a few steps in order to achieve some action, a simple example was coded with konami code skill
+It is also possible to require a few steps in order to achieve some action
 
 We can use converse method to (de)register intents in case correct utterance is heard and always return false so the utterance is processed in intent skill
 
@@ -317,38 +317,59 @@ So you dont need to parse the utterance to determine intent, just determine if i
 
 
 
-# Sequential Events 2
+# Intent Parsing inside skills
 
- with intent parser abstracted we can also do it by registering intents inside the skill instead of using global intent skill
+ with intent parser abstracted we can also do the parsing by registering intents inside the skill
 
-            from mycroft.skills.skill_intents import SkillIntents
+            from mycroft.skills.intent_parser import IntentParser
 
-            in initialize -> self.intents = SkillIntents(self.emitter)
-                          -> self.register_self_intent(level2_intent, self.handle_level2_intent)
-                          -> self.disable_intent("intent_name")
-
-            handling skill where intent is activated -> self.enable_self_intent("intent_name")
-
-            in intent after executing or wherever necessary (timer?) -> self.disable_intent("intent_name")
+            in initialize -> self.intent_parser = IntentParser(self.emitter)
 
             on converse method -> get intent instead of manually parsing utterance
 
                 def converse(self, transcript, lang="en-us"):
-                    determined, intent = self.intents.determine_intent(transcript)
-                    handled = False
+                    determined, intent = self.intent_parser.determine_intent(transcript)
                     if determined:
-                        try:
-                            intent_name = intent.get('intent_type')
-                            self.speak("trying to handle intent " + intent_name + " from inside a skill")
-                            handled = self.intents.execute_intent()
-                        except:
-                            pass
-                    if handled:
-                        self.speak("intent executed from intent parser inside skill")
+                        # intent was registered and detected on own parser
+                        # no need to parse utterance
+                        # return false to handle in intent skill
+                        return False
+                    else:
+                        handled = False
+                        # Handle utterance manually
+                        if handled:
+                            return True
+                    return False
 
-                    return handled
 
-check parrot , dictation and konami skill recently updated to use this
+# Coding States - Intent Trees
+
+In this example konami code was made in a way that each letter is a state, each state has different intents available to be executed
+
+
+            from mycroft.skills.intent_parser import IntentTree
+
+            in initialize
+
+            layers = [["KonamiUpIntent"], ["KonamiUpIntent"], ["KonamiDownIntent"], ["KonamiDownIntent"],
+                    ["KonamiLeftIntent"], ["KonamiRightIntent"], ["KonamiLeftIntent"], ["KonamiRightIntent"],
+                    ["KonamiBIntent"], ["KonamiAIntent"]]
+
+            # 60 is the number of seconds for the layer timer
+            self.tree = IntentTree(self.emitter, layers, 60)
+            self.emitter.on('enable_intent', self.handle_enable_intent)
+
+            to activate next layer/state -> self.tree.next()
+            to activate previous layer/state -> self.tree.previous()
+            to activate layer/state 0 -> self.tree.reset()
+            to get current layer/state -> state = self.tree.current_layer
+
+            each state as a timer, after changing state this timer starts and at the end resets the tree
+            to disable timer, after doing next/previous -> self.tree.stop_timer()
+
+            on converse -> parse intent/utterance and reset tree if needed (bad sequence)
+
+check parrot , dictation skill and konami code for state/sequential/continuous events examples
 
 # Privacy Enhancements (requires network manager)
 
