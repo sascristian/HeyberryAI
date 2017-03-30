@@ -64,6 +64,7 @@ class ParrotSkill(MycroftSkill):
         determined, intent = self.intent_parser.determine_intent(transcript)
         # stop requested
         if determined:
+            # stop intent will be handled in intent skill
             return False
         # if not stopped
         if self.parroting:

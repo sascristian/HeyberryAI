@@ -325,8 +325,11 @@ So you dont need to parse the utterance to determine intent, just determine if i
 
             in initialize -> self.intent_parser = IntentParser(self.emitter)
 
-            on converse method -> get intent instead of manually parsing utterance
+            registering intents -> intent = IntentBuilder('NameofIntent')
+                                -> self.register_intent(intent, self.handle_intent)
+                                -> self.intent_parser.register_intent(intent.__dict__)
 
+            on converse method -> get intent instead of manually parsing utterance
                 def converse(self, transcript, lang="en-us"):
                     determined, intent = self.intent_parser.determine_intent(transcript)
                     if determined:

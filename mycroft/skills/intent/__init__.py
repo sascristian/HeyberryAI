@@ -44,9 +44,9 @@ class IntentSkill(MycroftSkill):
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
         self.emitter.on('converse_status_response', self.handle_conversation_response)
 
-    def do_conversation(self, utterances, skill, lang):
+    def do_conversation(self, utterances, skill_id, lang):
         self.emitter.emit(Message("converse_status_request", {
-                          "skill_id": skill, "utterances": utterances, "lang":lang}))
+                          "skill_id": skill_id, "utterances": utterances, "lang":lang}))
         self.waiting = True
         self.result = False
         while self.waiting:
