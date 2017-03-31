@@ -185,7 +185,7 @@ this allows other services/skills to process skill results, wikipedia skill coul
 
 ### Objective Builder
 
-to use objectives in other skill an helper class has been coded
+You can use objectives to have several ways of accomplishing something / randomness in intents
 
         from mycroft.skills.core import MycroftSkill
         from mycroft.skills.objective_skill import ObjectiveBuilder
@@ -367,12 +367,37 @@ In this example konami code was made in a way that each letter is a state, each 
             to activate layer/state 0 -> self.tree.reset()
             to get current layer/state -> state = self.tree.current_layer
 
-            each state as a timer, after changing state this timer starts and at the end resets the tree
+            each tree has a timer, after changing state this timer starts and at the end resets the tree
             to disable timer, after doing next/previous -> self.tree.stop_timer()
 
-            on converse -> parse intent/utterance and reset tree if needed (bad sequence)
+            to go directly to a layer do -> self.tree.activate_layer(layer_num)
+            in this case no timer is started so you should also do - > self.tree.start_timer()
+
+            on converse -> parse intent/utterance and manipulate tree if needed (bad sequence)
 
 check parrot , dictation skill and konami code for state/sequential/continuous events examples
+
+# Multiple Intent Trees
+
+Actual trees can be made by making a IntentTree for each intent, we can always do
+
+            self.tree_1.disable()
+
+and have an inactive tree to activate later when needed
+
+            self.tree_1.reset()
+
+intent parsing in converse method can manipulate correct tree if needed
+
+this allows for much more complex skills with each intent triggering their own sub-intents / sub - trees
+
+on demand manipulation of tree layers may also open several unforeseen opportunities for intent data structures
+
+            self.tree.add_layer([intent_list])
+            self.tree.remove_layer(layer_num)
+            self.tree.replace_layer(self, layer_num, intent_list)
+            list = self.tree.find_layer_num(self, intent_list)
+
 
 # Privacy Enhancements (requires network manager)
 

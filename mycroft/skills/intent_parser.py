@@ -84,6 +84,29 @@ class IntentTree():
         self.tree.append(intent_list)
         logger.info("Adding layer to tree " + str(intent_list))
 
+    def replace_layer(self, layer_num, intent_list=[]):
+        logger.info("Removing layer number " + str(layer_num) + " from tree ")
+        self.tree.pop(layer_num)
+        self.tree[layer_num] = intent_list
+        logger.info("Adding layer" + str(intent_list) + " to tree in position " + str(layer_num) )
+
+    def remove_layer(self, layer_num):
+        self.tree.pop(layer_num)
+        logger.info("Removing layer number " + str(layer_num) + " from tree ")
+
+    def find_layer(self, intent_list=[]):
+        layer_list = []
+        for i in range(0, len(self.tree)):
+            if self.tree[i] == intent_list:
+                layer_list.append(i)
+        return layer_list
+
+    def disable(self):
+        logger.info("Disabling tree")
+        # disable all tree layers
+        for i in range(0, len(self.tree)):
+            self.deactivate_layer(i)
+
     def activate_layer(self, layer_num):
         # error check
         if layer_num < 0 or layer_num > len(self.tree):
@@ -93,13 +116,12 @@ class IntentTree():
         self.current_layer = layer_num
 
         # disable other layers
-        logger.info("Deactivating active layers")
-        for i in range(0, len(self.tree)):
-            self.deactivate_layer(i)
+        self.disable()
 
         # TODO in here we should wait for all intents to be detached
         # sometimes detach intent from this step comes after register from next
         time.sleep(0.3)
+
         # enable layer
         logger.info("Activating Layer " + str(layer_num))
         for intent_name in self.tree[layer_num]:
@@ -123,12 +145,23 @@ class IntentParser():
         self.emitter.on('register_vocab', self.handle_register_vocab)
         self.emitter.on('detach_intent', self.handle_detach_intent)
 
-    def register_intent(self, intent_dict):
+    def register_intent(self, intent_dict, handler=None):
         intent = Intent(intent_dict.get('name'),
                       intent_dict.get('requires'),
                       intent_dict.get('at_least_one'),
                       intent_dict.get('optional'))
         self.engine.register_intent_parser(intent)
+
+        def receive_handler(message):
+            try:
+                handler(message)
+            except:
+                # TODO: Localize
+                logger.error(
+                    "An error occurred while processing a request in IntentParser", exc_info=True)
+
+        if handler is not None:
+            self.emitter.on(intent_dict.get('name'), receive_handler)
 
     def determine_intent(self, utterances):
         best_intent = None
