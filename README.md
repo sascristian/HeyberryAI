@@ -142,13 +142,15 @@ a fork of mycroft-core , the following things were added
 - added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
 - added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
 - added feedback method to allow skills to process feedback/reinforcement learning [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
+- added audioservice backend[PR#433](https://github.com/MycroftAI/mycroft-core/pull/433)
+- added screenservice backend[future PR](https://github.com/JarbasAI/mycroft---display-backend)
+- intent parser, abstracted away from intent skill [Issue#594](https://github.com/MycroftAI/mycroft-core/issues/594)
+- intent tree implementation was added [Issue#606](https://github.com/MycroftAI/mycroft-core/issues/606)
+- intent registering and de-registering is slightly different
 - centralized APIs in config file, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
 - ip skill blacklisted, using the7erm diagnostics skill for this
 - configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
-- allowed intents to be de-registered [PR#558](https://github.com/MycroftAI/mycroft-core/pull/558)
-- added audioservice backend[PR#433](https://github.com/MycroftAI/mycroft-core/pull/433)
-- added screenservice backend[future PR](https://github.com/JarbasAI/mycroft---display-backend)
-- skills now can have their own intent parser, abstracted away from intent skill [future PR](https://github.com/JarbasAI/jarbas-core/tree/patch-7)
+
 
 # Developing skills for Jarbas
 
