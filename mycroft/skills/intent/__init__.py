@@ -35,7 +35,6 @@ class IntentSkill(MycroftSkill):
         self.intent_parser = None
         self.reload_skill = False
         self.active_skills = [] # [skill_id , timestamp]
-        self.intent_to_skill_id = {} # intent:source_skill_id
         self.converse_timeout = 5 # minutes to prune active_skills
 
     def initialize(self):
@@ -98,17 +97,17 @@ class IntentSkill(MycroftSkill):
         try:
             success, best_intent = self.intent_parser.determine_intent(utterances)
         except:
-            print "FAIL"
+            logger.error("Could not determine best intent")
 
         if success:
             self.intent_parser.execute_intent()
 
-            # best intent detected -> update called skills dict
-            skill_id = self.intent_to_skill_id[best_intent['intent_type']]
+            skill_id = int(best_intent['intent_type'].split(":")[0])
+
             self.add_active_skill(skill_id)
 
             # process feedback
-            if best_intent['intent_type'] == "PositiveFeedbackIntent" or best_intent['intent_type'] == "NegativeFeedbackIntent":
+            if best_intent['intent_type'].split(":")[1] == "PositiveFeedbackIntent" or best_intent['intent_type'] == "NegativeFeedbackIntent":
                 self.emitter.emit(Message("feedback_id", {"active_skill": self.active_skills[1][0]}))
 
         elif len(utterances) == 1:
@@ -123,11 +122,8 @@ class IntentSkill(MycroftSkill):
             }))
 
     def handle_register_intent(self, message):
-        intent = message.data["intent"]
+        intent = message.data
         self.intent_parser.register_intent(intent)
-        # map intent to source skill
-        self.intent_to_skill_id.setdefault(
-            intent["name"], message.data["source_skill"])
 
     def stop(self):
         pass

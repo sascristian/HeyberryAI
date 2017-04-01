@@ -141,7 +141,7 @@ def watch_skills():
 
 
 def handle_conversation_request(message):
-    skill_id = message.data["skill_id"]
+    skill_id = int(message.data["skill_id"])
     utterances = message.data["utterances"]
     lang = message.data["lang"]
     global ws, loaded_skills
@@ -153,6 +153,8 @@ def handle_conversation_request(message):
             ws.emit(Message("converse_status_response", {
                     "skill_id": skill_id, "result": result}))
             return
+    ws.emit(Message("converse_status_response", {
+        "skill_id": 0, "result": False}))
 
 def handle_feedback_request(message):
     global loaded_skills

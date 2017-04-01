@@ -4,11 +4,14 @@ from mycroft.util.log import getLogger
 
 
 from os.path import dirname, exists
+
 __author__ = 'jarbas'
 
 logger = getLogger(__name__)
 
 from mycroft.skills.intent_parser import IntentParser, IntentTree
+
+import subprocess
 
 class KonamiCodeSkill(MycroftSkill):
     def __init__(self):
@@ -29,8 +32,6 @@ class KonamiCodeSkill(MycroftSkill):
             require("KonamiUpKeyword").build()
         # register intent
         self.register_intent(up_intent, self.handle_up_intent)
-        # register in self-intent parser
-        self.intent_parser.register_intent(up_intent.__dict__)
 
 
         down_intent = IntentBuilder('KonamiDownIntent'). \
@@ -54,18 +55,13 @@ class KonamiCodeSkill(MycroftSkill):
         self.register_intent(b_intent, self.handle_b_intent)
         self.register_intent(a_intent, self.handle_a_intent)
 
-        self.intent_parser.register_intent(down_intent.__dict__)
-        self.intent_parser.register_intent(left_intent.__dict__)
-        self.intent_parser.register_intent(right_intent.__dict__)
-        self.intent_parser.register_intent(b_intent.__dict__)
-        self.intent_parser.register_intent(a_intent.__dict__)
-
     def build_intent_tree(self):
         layers = [["KonamiUpIntent"], ["KonamiUpIntent"], ["KonamiDownIntent"], ["KonamiDownIntent"],
                     ["KonamiLeftIntent"], ["KonamiRightIntent"], ["KonamiLeftIntent"], ["KonamiRightIntent"],
                     ["KonamiBIntent"], ["KonamiAIntent"]]
         self.tree = IntentTree(self.emitter, layers, 60)
         self.emitter.on('enable_intent', self.handle_enable_intent)
+        self.emitter.on('disable_intent', self.handle_disable_intent)
 
     def handle_up_intent(self, message):
         self.speak_dialog("up")
@@ -101,6 +97,7 @@ class KonamiCodeSkill(MycroftSkill):
             # execute user script
             # TODO change this lazy mechanism, use subprocess ?
             import mycroft.skills.konami_code.cheat_code
+            #subprocess.Popen(self.cheat_code_script, shell=True)
         self.tree.reset()
 
     def stop(self):

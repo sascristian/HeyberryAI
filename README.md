@@ -329,7 +329,6 @@ So you dont need to parse the utterance to determine intent, just determine if i
 
             registering intents -> intent = IntentBuilder('NameofIntent')
                                 -> self.register_intent(intent, self.handle_intent)
-                                -> self.intent_parser.register_intent(intent.__dict__)
 
             on converse method -> get intent instead of manually parsing utterance
                 def converse(self, transcript, lang="en-us"):
@@ -362,7 +361,9 @@ In this example konami code was made in a way that each letter is a state, each 
 
             # 60 is the number of seconds for the layer timer
             self.tree = IntentTree(self.emitter, layers, 60)
+            # this should be on initialize of every skill
             self.emitter.on('enable_intent', self.handle_enable_intent)
+            self.emitter.on('disable_intent', self.handle_disable_intent)
 
             to activate next layer/state -> self.tree.next()
             to activate previous layer/state -> self.tree.previous()

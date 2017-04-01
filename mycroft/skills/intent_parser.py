@@ -24,7 +24,7 @@ class IntentTree():
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
-        self.emitter.emit(Message("detach_intent", {"intent_name": intent_name}))
+        self.emitter.emit(Message("disable_intent", {"intent_name": intent_name}))
 
     def enable_intent(self, intent_name):
         """Reenable a registered self intent"""
@@ -146,6 +146,7 @@ class IntentParser():
         self.emitter.on('detach_intent', self.handle_detach_intent)
 
     def register_intent(self, intent_dict, handler=None):
+
         intent = Intent(intent_dict.get('name'),
                       intent_dict.get('requires'),
                       intent_dict.get('at_least_one'),

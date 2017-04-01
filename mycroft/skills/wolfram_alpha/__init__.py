@@ -93,10 +93,8 @@ class WolframAlphaSkill(MycroftSkill):
 
     def __init_client(self):
         key = self.config_apis.get('WolframAlphaAPI')
-        print key
         if key and not self.config.get('proxy'):
             self.client = wolframalpha.Client(key)
-            print "gra"
         else:
             self.client = WAApi()
 

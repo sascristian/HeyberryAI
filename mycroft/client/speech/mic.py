@@ -287,6 +287,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
             else:  # Remove beginning of audio and add new chunk to end
                 byte_data = byte_data[len(chunk):] + chunk
 
+
             buffers_since_check += 1.0
             if buffers_since_check < buffers_per_check:
                 buffers_since_check -= buffers_per_check

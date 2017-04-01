@@ -31,6 +31,7 @@ class ParrotSkill(MycroftSkill):
     def __init__(self):
         super(ParrotSkill, self).__init__(name="ParrotSkill")
         self.parroting = False
+        self.reload_skill = False
 
     def initialize(self):
         self.intent_parser = IntentParser(self.emitter)
