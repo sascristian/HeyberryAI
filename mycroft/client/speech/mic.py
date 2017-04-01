@@ -151,6 +151,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         self.energy_ratio = listener_config.get('energy_ratio')
         self.mic_level_file = os.path.join(get_ipc_directory(), "mic_level")
         self.forced_wake = False
+        self.save_wake_words = listener_config.get('record_wake_words')
 
     @staticmethod
     def record_sound_chunk(source):
@@ -287,9 +288,18 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 byte_data = byte_data[len(chunk):] + chunk
 
             buffers_since_check += 1.0
-            if buffers_since_check > buffers_per_check:
+            if buffers_since_check < buffers_per_check:
                 buffers_since_check -= buffers_per_check
-                said_wake_word = self.wake_word_in_audio(byte_data + silence)
+                audio_data = byte_data + silence
+                said_wake_word = self.wake_word_in_audio(audio_data)
+                # if a wake word is success full then record audio in temp
+                # file.
+                if self.save_wake_words and said_wake_word:
+                    audio = self.create_audio_data(audio_data, source)
+                    stamp = str(datetime.datetime.now())
+                    filename = "/tmp/mycroft_wake_success%s.wav" % stamp
+                    with open(filename, 'wb') as filea:
+                        filea.write(audio.get_wav_data())
 
     @staticmethod
     def create_audio_data(raw_data, source):
