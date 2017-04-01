@@ -23,6 +23,7 @@ from threading import Thread
 import speech_recognition as sr
 from pyee import EventEmitter
 from requests import HTTPError
+from requests.exceptions import ConnectionError
 
 from mycroft.client.speech.local_recognizer import LocalRecognizer
 from mycroft.client.speech.mic import MutableMicrophone, ResponsiveRecognizer
@@ -68,6 +69,10 @@ class AudioProducer(Thread):
                     # http://stackoverflow.com/questions/10733903/pyaudio-input-overflowed
                     self.emitter.emit("recognizer_loop:ioerror", ex)
 
+    def force_wake(self):
+        if self.recognizer:
+            self.recognizer.force_wake()
+
 
 class AudioConsumer(Thread):
     """
@@ -89,6 +94,8 @@ class AudioConsumer(Thread):
         self.wakeup_recognizer = wakeup_recognizer
         self.mycroft_recognizer = mycroft_recognizer
         self.metrics = MetricsAggregator()
+        self.no_stt = False
+        self.record_file = None
 
     def run(self):
         while self.state.running:
@@ -125,20 +132,33 @@ class AudioConsumer(Thread):
         }
         self.emitter.emit("recognizer_loop:wakeword", payload)
 
-        if self._audio_length(audio) < self.MIN_AUDIO_SIZE:
+        # save this record in file if requested
+        if self.record_file:
+            wav_name = self.record_file
+            self.record_file = None
+            wav_data = audio.get_wav_data()
+            with open(wav_name, "wb") as wav_file:
+                wav_file.write(wav_data)
+
+        # do not translate if only record is requested
+        if self.no_stt:
+            self.no_stt = False
+        elif self._audio_length(audio) < self.MIN_AUDIO_SIZE:
             LOG.warn("Audio too short to be processed")
-        elif connected():
-            self.transcribe(audio)
         else:
-            self.__speak("Mycroft seems not to be connected to the Internet")
+            self.transcribe(audio)
 
     def transcribe(self, audio):
         text = None
         try:
+            # Invoke the STT engine on the audio clip
             text = self.stt.execute(audio).lower().strip()
             LOG.debug("STT: " + text)
         except sr.RequestError as e:
             LOG.error("Could not request Speech Recognition {0}".format(e))
+        except ConnectionError as e:
+            LOG.error("Connection Error: {0}".format(e))
+            self.__speak("Mycroft seems not to be connected to the Internet")
         except HTTPError as e:
             if e.response.status_code == 401:
                 text = "pair my device"
@@ -148,8 +168,10 @@ class AudioConsumer(Thread):
             LOG.error("Speech Recognition could not understand audio")
             self.__speak("Sorry, I didn't catch that")
         if text:
+            # STT succeeded, send the transcribed speech on for processing
             payload = {
                 'utterances': [text],
+                'lang': self.stt.lang,
                 'session': SessionManager.get().session_id
             }
             self.emitter.emit("recognizer_loop:utterance", payload)
@@ -161,6 +183,10 @@ class AudioConsumer(Thread):
             'session': SessionManager.get().session_id
         }
         self.emitter.emit("speak", Message("speak", payload))
+
+    def record_characteristics(self, characteristics):
+        self.record_file = characteristics.get("record_filename", None)
+        self.no_stt = characteristics.get("no_stt", False)
 
 
 class RecognizerLoopState(object):
@@ -188,22 +214,30 @@ class RecognizerLoop(EventEmitter):
         self.state = RecognizerLoopState()
 
     def create_mycroft_recognizer(self, rate, lang):
+        # Create a local recognizer to hear the wakeup word, e.g. 'Hey Mycroft'
         wake_word = self.config.get('wake_word')
         phonemes = self.config.get('phonemes')
         threshold = self.config.get('threshold')
         return LocalRecognizer(wake_word, phonemes, threshold, rate, lang)
 
-    @staticmethod
-    def create_wakeup_recognizer(rate, lang):
-        return LocalRecognizer("wake up", "W EY K . AH P", 1e-10, rate, lang)
+    def create_wakeup_recognizer(self, rate, lang):
+        wake_word = self.config.get('standup_word', "wake up")
+        phonemes = self.config.get('standup_phonemes', "W EY K . AH P")
+        threshold = self.config.get('standup_threshold', 1e-10)
+        return LocalRecognizer(wake_word, phonemes, threshold, rate, lang)
 
     def start_async(self):
         self.state.running = True
         queue = Queue()
-        AudioProducer(self.state, queue, self.microphone,
-                      self.remote_recognizer, self).start()
-        AudioConsumer(self.state, queue, self, STTFactory.create(),
-                      self.wakeup_recognizer, self.mycroft_recognizer).start()
+        self.audio_producer = AudioProducer(
+                self.state, queue,
+                self.microphone, self.remote_recognizer, self)
+        self.audio_producer.start()
+        self.audio_consumer = AudioConsumer(
+                self.state, queue,
+                self, STTFactory.create(), self.wakeup_recognizer,
+                self.mycroft_recognizer)
+        self.audio_consumer.start()
 
     def stop(self):
         self.state.running = False
@@ -221,6 +255,12 @@ class RecognizerLoop(EventEmitter):
 
     def awaken(self):
         self.state.sleeping = False
+
+    def record_characteristics(self, expect_response, characteristics):
+        if self.audio_consumer:
+            self.audio_consumer.record_characteristics(characteristics)
+        if expect_response and self.audio_producer:
+            self.audio_producer.force_wake()
 
     def run(self):
         self.start_async()

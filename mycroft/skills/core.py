@@ -344,9 +344,10 @@ class MycroftSkill(object):
                     Message(message_type, self.results[key]))
             self.results.clear()
 
-    def speak(self, utterance, expect_response=False):
+    def speak(self, utterance, expect_response=False, record_characteristics=None):
         data = {'utterance': utterance,
-                'expect_response': expect_response}
+                'expect_response': expect_response,
+                'record_characteristics': record_characteristics}
 
         self.emitter.emit(Message("speak", data))
 
