@@ -17,53 +17,27 @@
 
 
 import sys
-from threading import Thread, Lock
+from threading import Thread
 
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
-from mycroft.tts import TTSFactory
 from mycroft.util.log import getLogger
 
-tts = TTSFactory.create()
 ws = None
-mutex = Lock()
 logger = getLogger("CLIClient")
 
-disable_speak_flag = False
-
-def set_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = True
-
-def unset_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = False
 
 def handle_speak(event):
     utterance = event.data.get('utterance')
     logger.info("Speak: " + utterance)
-    global disable_speak_flag
-    if not disable_speak_flag:
-        mutex.acquire()
-        ws.emit(Message("recognizer_loop:audio_output_start"))
-        try:
-            tts.execute(utterance)
-        finally:
-            mutex.release()
-            ws.emit(Message("recognizer_loop:audio_output_end"))
 
 def connect():
     ws.run_forever()
 
-
 def main():
     global ws
     ws = WebsocketClient()
-    tts.init(ws)
-    if '--quiet' not in sys.argv:
-        ws.on('speak', handle_speak)
-        ws.on('do_not_speak_flag_enable', set_speak_flag)
-        ws.on('do_not_speak_flag_disable', unset_speak_flag)
+    ws.on('speak', handle_speak)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()

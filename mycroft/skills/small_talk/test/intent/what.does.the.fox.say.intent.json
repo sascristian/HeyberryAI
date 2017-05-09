@@ -1,7 +1,0 @@
-{
-  "utterance": "what does the fox say",
-  "intent_type": "WhatDoesTheFoxSayIntent",
-  "intent": {
-    "WhatDoesTheFoxSayKeyphrase": "what does the fox say"
-  }
-}

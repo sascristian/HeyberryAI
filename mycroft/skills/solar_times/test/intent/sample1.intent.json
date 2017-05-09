@@ -1,7 +1,0 @@
-{
-  "utterance": "When does the sun set",
-  "intent_type": "SunSetIntent",
-  "intent": {
-    "SunSetKeyword": "sun set"
-  }
-}

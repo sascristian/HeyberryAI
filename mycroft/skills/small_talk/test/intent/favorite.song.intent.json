@@ -1,7 +1,0 @@
-{
-  "utterance": "what is your favorite song",
-  "intent_type": "FavoriteSongIntent",
-  "intent": {
-    "FavoriteSongKeyphrase": "favorite song"
-  }
-}

@@ -1,8 +1,0 @@
-{
-    "utterance": "Whats my drive time to work",
-    "intent_type": "TrafficNowIntent",
-    "intent": {
-        "TrafficKeyword": "drive",
-        "Destination": "work"
-    }
-}

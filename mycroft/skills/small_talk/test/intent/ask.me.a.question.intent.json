@@ -1,7 +1,0 @@
-{
-  "utterance": "ask me a question",
-  "intent_type": "AskMeAQuestionIntent",
-  "intent": {
-    "AskMeAQuestionKeyphrase": "ask me a question"
-  }
-}

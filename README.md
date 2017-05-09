@@ -1,26 +1,95 @@
-# BROKEN STUFF
-
-- display backend service -> https://github.com/JarbasAI/jarbas-core/tree/patch-3/
-- facebook skill (havent used for a while, probably update on fb python package)
-- chatbot skill (cleverbot now paid)
-- open issues for anything you find!!!
-
-
-
 # Jarbas Core
 
 ![alt tag](https://github.com/JarbasAI/jarbas---pygtk---GUI/blob/master/screenshot.jpg)
 
-a fork of mycroft-core , the following things were added
+a fork of mycroft-core , the following things were changed
 
+# Centralized APIs
+
+Lots of APIs are used and sometimes more than once, they were centralized in a single section of the config file
+
+[PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
+
+# Converse method
+
+This allows any skill to handle an utterance before intent parsing, sets an internal id for each skill
+
+use cases: intent execution interception, passive utterance listening
+
+[PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
+
+# Intent Parsing and Intent Layers
+
+Intent Parser allows any skill to get a intent from an utterance, or the skill to which an intent belongs too
+
+Intent Layers makes it possible to give state to mycroft inside skills, we can switch layers to have different intents active at different times
+
+use cases: continuous dialog, converse method tools
+
+# Objectives
+
+[Objectives](https://github.com/JarbasAI/service_objectives) can be used instead / in additon to intents
+
+An objective is something that can be achieved by any of various goals, a goal is something that can be achieved by any of various ways, a way is an intent and it's parameters
+
+Goals and ways are weighted and the weights can be adjusted
+
+use cases: training mycroft to prefer some actions, randomization
+
+# Vision Service
+
+[Vision service](https://github.com/JarbasAI/service_vision) uses opencv to detect faces, eyes and smiles, can be queried by outside skills for info
+
+Controls webcam and allows to take pictures / apply filters
+
+In the future will handle face recognition / user id
+
+use cases: take pictures, give processed visual info to outside (security skill can warn on face detection if on alert mode)
+
+# Display Service
+
+[Display service](https://github.com/JarbasAI/service_display) allows any skill to display pictures, at the same time allowing user to choose how and where to display them
+
+use cases: dont require skill makers to code image display, allow vocal selection of backend
+
+# Audio Service
+
+Forslunds [audio service](https://github.com/forslund/mycroft-core/tree/audio-service/) was repackaged as a skill, allows user to control audio play and to choose how and where to play
+
+use cases: dont require skill makers to code audio play and control, allow vocal selection of backend
+
+# Freewill Service
+
+This is not to be taken very seriously, mimics an hormonal system to influence "mood" of mycroft, randomly executes an action depending on current mood
+
+use cases: make a cool toy, simulate user presence
+
+# LILACS
+
+Jarbas core uses [LILACS](https://github.com/ElliotTheRobot/LILACS-mycroft-core), a learning and comprehension subsystem, this replaces wolfram alpha fallback mechanism and attempts to implement learning capabilities and memory
+
+# Sentiment Analisys Service
+
+[Sentiment Analisys](https://github.com/JarbasAI/mycroft---sentiment-analisys---skill)  - Classifies sentences into positive and negative, can be queried by other skills
+
+
+# Other Changes
+
+- blacklisted skills now loaded from config instead of hard-coded
+- added priority skills loading, services should be loaded first (in order to not miss messages from other skills)
+- standard skills folder is now jarbas_skills, msm may need changes because skill_dir path is hardcoded
+- do not install default skills using msm
+- created a folder named database that is populated with created/scraped content during jarbas life-time (offline db)
+- implement disable speak flag for mute skill
+
+
+# Included skills by default
+
+Lots of skills are bundled by default with this fork, following list is a work in progress
 
 ### Basic Skills
 
         these skills are more or less passive, they are mostly helper skills to be used elsewhere
-
-[Mood Quotes Skill](https://github.com/JarbasAI/mycroft-mood-quotes) - Random stuff to say depending on mood
-
-[Sentiment Analisys Skill](https://github.com/JarbasAI/mycroft---sentiment-analisys---skill)  - Classifies sentences into positive and negative
 
 [Feedback Skill](https://github.com/JarbasAI/mycroft-feedback-skill) - Gives positive or negative feedback to last executed action
 
@@ -53,6 +122,9 @@ a fork of mycroft-core , the following things were added
 
 [Astronomy Picture of the Day](https://github.com/JarbasAI/mycroft---astronomy-picture-of-teh-day) - Downloads and display NASA astronomy picture of the day
 
+[EPIC Satellite Skill] - Satellite Imagery
+
+
 ### Control Skills
 
         skills that help you control stuff
@@ -79,7 +151,7 @@ a fork of mycroft-core , the following things were added
 
 [Picture Search Skill](https://github.com/JarbasAI/mycroft-pictureskill) - Search and download pictures
 
-[Facebook Skill](https://github.com/JarbasAI/mycroft-facebook-skill) - Generate Facebook Posts
+[Facebook Skill](https://github.com/JarbasAI/mycroft-facebook-skill) - Facebook Bot
 
 [Proxy Scrapping Skill](https://github.com/JarbasAI/mycroft--proxy-scrapping---skill) - Get https proxys
 
@@ -118,56 +190,24 @@ a fork of mycroft-core , the following things were added
 
 [Near Earth Object Tracking Skill](https://github.com/JarbasAI/mycroft---near-earth-object-tracker/) - tracks near earth objects
 
+[Fox News]
+
+[CNN News]
+
+[CBC News]
+
 ### New Clients
 
-- [Facebook Chat Client](https://github.com/JarbasAI/mycroft---facebookchat---client)
-- [Graphic User Interface](https://github.com/JarbasAI/jarbas---pygtk---GUI)
+these are old experiments half-working, should not be used until a refactor is done
 
-### New Services
-
-- [Dumpmon Service](https://github.com/JarbasAI/mycroft----dumped-leaks-finder----service)
-- [Vision Service](https://github.com/JarbasAI/mycroft-vision-service)
-- [Freewill Service](https://github.com/JarbasAI/mycroft---freewill---service)
-- [Audio Analisys Service](https://github.com/JarbasAI/mycroft-audio-analisys--service)
-- [Context Manager Service](https://github.com/JarbasAI/mycroft---context-manager---service)
-
-
-### Changed skills
-
-- desktop_launcher - added ability to open urls instead of google searching (non-vocal skill usecase)
-
-# Other Changes
-
-- created a folder named database that is populated with created/scraped content during jarbas life-time (offline backups)
-- added results property to skills, so they can emit more than utterances, [PR#281](https://github.com/MycroftAI/mycroft-core/pull/281)
-- added converse method to allow all skills to handle utterances [PR#539](https://github.com/MycroftAI/mycroft-core/pull/539)
-- added feedback method to allow skills to process feedback/reinforcement learning [Issue#554](https://github.com/MycroftAI/mycroft-core/issues/554)
-- added audioservice backend[PR#433](https://github.com/MycroftAI/mycroft-core/pull/433)
-- added screenservice backend[future PR](https://github.com/JarbasAI/mycroft---display-backend)
-- intent parser, abstracted away from intent skill [Issue#594](https://github.com/MycroftAI/mycroft-core/issues/594)
-- intent tree implementation was added [Issue#606](https://github.com/MycroftAI/mycroft-core/issues/606)
-- intent registering and de-registering is slightly different
-- centralized APIs in config file, all skills now have a self.config_apis with all keys [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
-- ip skill blacklisted, using the7erm diagnostics skill for this
-- configuration skill was blacklisted, reason is for more control and privacy, configuration no longer loads from mycroft servers
-
+- [Facebook Chat Client](https://github.com/JarbasAI/mycroft---facebookchat---client) <- WIP
+- [Graphic User Interface](https://github.com/JarbasAI/jarbas---pygtk---GUI) <- WIPO
 
 # Developing skills for Jarbas
 
+THIS INFO IS SLIGHTLY OUTDATED, check the readme inside each module folder for better docs
+
 A [template skill](https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skills/template_skill/__init__.py) is available as a guideline
-
-### Adding Results
-
-to add a result and emit a message of the format "register_result" : "resultname_result"
-
-        self.add_result("resultname", result)
-
-to emit a message of the format "resultname_result" with result data and clear added results list
-
-        self.emit_results()
-
-this allows other services/skills to process skill results, wikipedia skill could add a Wikipedia Link result to be consumed by a GUI for example
-
 
 ### Showing pictures
 
@@ -225,7 +265,8 @@ You can use objectives to have several ways of accomplishing something / randomn
                 # instead of name to trigger objective lets register a keyword from voc
                 # required keywords same as doing .require(keyword) in intent
                 keyword = "TestKeyword"
-                intent, self.handler = my_objective.get_objective_intent(keyword)
+                my_objective.require(keyword
+                intent, self.handler = my_objective.build()
 
                 # objective can still be executed without registering intent by saying
                 # objective objective_name , and directly using objective skill
@@ -242,22 +283,6 @@ You can use objectives to have several ways of accomplishing something / randomn
 
 in the above example saying "stupid test" , which is the sentence in TestKeyword.voc, will trigger one of the objective ways,
 in this case "speak" intent and say "this is test" or "testing alright"
-
-### Feedback
-
-on every skill you can add a feedback method, when reinforcement words (good work, dont do that) are heard the skill can adjust what it does
-
-objectives use feedback to adjust probabilities for last executed goal/way
-
-        def feedback(self, feedback, utterance):
-            if feedback == "positive":
-                # do stuff
-                self.speak("Glad i could help")
-            elif feedback == "negative":
-                # do stuff
-                self.speak("You are the one who coded me!")
-
-
 
 ### Continuous Dialog
 
@@ -404,6 +429,8 @@ on demand manipulation of tree layers may also open several unforeseen opportuni
 
 # Privacy Enhancements (requires network manager)
 
+removed from now, to be reworked without network manager being needed
+
 - wifi disable/enable
 
 allows you to connect/disconnect mycroft from the internet, starts off by default
@@ -519,9 +546,6 @@ Put the relevant key in between the quotes and Mycroft Core should begin to use 
 
 ### APIs and dependencies in this fork ###
 
-caffe must be installed for dream skill and path added to config file, dependencies for this skill are not all pre-installed install of this is hard
-dreamskill is blacklisted by default because of this, remove from skills/core.py blacklist to use
-
 requirements.txt / dev_setup.sh will be updated in the future, check skill links for dependencies and watch skills log for debug on missing dependencies
 
 ### API Key services
@@ -572,12 +596,6 @@ Mycroft provides `start.sh` to run a large number of common tasks. This script u
 - run `./start.sh service`
 - run `./start.sh skills`
 - run `./start.sh voice`
-- run `./start.sh vision`
-- run `./start.sh dumpmon`
-- run `./start.sh fbclient`
-- run `./start.sh context`
-- run `./start.sh audio`
-- run `./start.sh display`
 - run `./start.sh cli`
 
 *Note: The above scripts are blocking, so each will need to be run in a separate terminal session.*

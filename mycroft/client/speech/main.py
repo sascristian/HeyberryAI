@@ -19,6 +19,7 @@
 import re
 import sys
 from threading import Thread, Lock
+import time
 
 from mycroft.client.enclosure.api import EnclosureAPI
 from mycroft.client.speech.listener import RecognizerLoop
@@ -27,30 +28,22 @@ from mycroft.identity import IdentityManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.tts import TTSFactory
-from mycroft.util import kill, play_wav, resolve_resource_file, create_signal
+from mycroft.util import kill, create_signal
 from mycroft.util.log import getLogger
+from mycroft.lock import Lock as PIDLock  # Create/Support PID locking file
 
 logger = getLogger("SpeechClient")
 ws = None
 tts = TTSFactory.create()
 lock = Lock()
 loop = None
+_last_stop_signal = 0
 
 config = ConfigurationManager.get()
-
 disable_speak_flag = False
 
 def handle_record_begin():
     logger.info("Begin Recording...")
-
-    # If enabled, play a wave file with a short sound to audibly
-    # indicate recording has begun.
-    if config.get('confirm_listening'):
-        file = resolve_resource_file(
-            config.get('sounds').get('start_listening'))
-        if file:
-            play_wav(file)
-
     ws.emit(Message('recognizer_loop:record_begin'))
 
 
@@ -66,26 +59,26 @@ def handle_wakeword(event):
 
 def handle_utterance(event):
     logger.info("Utterance: " + str(event['utterances']))
-    ws.emit(
-        Message("recognizer_loop:utterance",
-                {'utterances': event, 'source': "speech"}))
-   # ws.emit(Message('recognizer_loop:utterance', event))
+    ws.emit(Message('recognizer_loop:utterance', event))
+
 
 def set_speak_flag(event):
     global disable_speak_flag
     disable_speak_flag = True
 
+
 def unset_speak_flag(event):
     global disable_speak_flag
     disable_speak_flag = False
 
+
 def mute_and_speak(utterance):
     lock.acquire()
     ws.emit(Message("recognizer_loop:audio_output_start"))
-    logger.info("Speak: " + utterance)
     global disable_speak_flag
     if not disable_speak_flag:
         try:
+            logger.info("Speak: " + utterance)
             loop.mute()
             tts.execute(utterance)
         finally:
@@ -101,9 +94,11 @@ def handle_multi_utterance_intent_failure(event):
 
 
 def handle_speak(event):
+    global _last_stop_signal
+
     utterance = event.data['utterance']
     expect_response = event.data.get('expect_response', False)
-    record_characteristics = event.data.get('record_characteristics', None)
+
     # This is a bit of a hack for Picroft.  The analog audio on a Pi blocks
     # for 30 seconds fairly often, so we don't want to break on periods
     # (decreasing the chance of encountering the block).  But we will
@@ -116,12 +111,18 @@ def handle_speak(event):
         chunks = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s',
                           utterance)
         for chunk in chunks:
-            mute_and_speak(chunk)
+            now = time.time()
+            try:
+                mute_and_speak(chunk)
+            except:
+                logger.error('Error in mute_and_speak', exc_info=True)
+            if _last_stop_signal > now:
+                break
     else:
         mute_and_speak(utterance)
 
-    if expect_response or record_characteristics:
-        loop.record_characteristics(expect_response, record_characteristics)
+    if expect_response:
+        create_signal('buttonPress')
 
 
 def handle_sleep(event):
@@ -133,6 +134,8 @@ def handle_wake_up(event):
 
 
 def handle_stop(event):
+    global _last_stop_signal
+    _last_stop_signal = time.time()
     kill([config.get('tts').get('module')])
     kill(["aplay"])
 
@@ -153,6 +156,7 @@ def connect():
 def main():
     global ws
     global loop
+    lock = PIDLock("voice")
     ws = WebsocketClient()
     tts.init(ws)
     ConfigurationManager.init(ws)

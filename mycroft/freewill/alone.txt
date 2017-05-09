@@ -1,5 +1,0 @@
-make poetry
-make new dream
-facebook content
-adquire knowledge
-music database

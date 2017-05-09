@@ -1,7 +1,0 @@
-{
-  "utterance": "what does Irene mean",
-  "intent_type": "WhatDoesIreneMeanIntent",
-  "intent": {
-    "WhatDoesIreneMeanKeyphrase": "what does Irene mean"
-  }
-}

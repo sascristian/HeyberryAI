@@ -22,8 +22,11 @@ import time
 
 import os.path
 import re
-from adapt.intent import Intent
+import signal
+import time
 from os.path import join, dirname, splitext, isdir
+
+from adapt.intent import Intent
 
 from mycroft.client.enclosure.api import EnclosureAPI
 from mycroft.configuration import ConfigurationManager
@@ -31,16 +34,19 @@ from mycroft.dialog import DialogLoader
 from mycroft.filesystem import FileSystemAccess
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-from adapt.context import ContextManager
+from mycroft import MYCROFT_ROOT_PATH
+from mycroft.skills.settings import SkillSettings
 
 __author__ = 'seanfitz'
 
-PRIMARY_SKILLS = ['intent', 'wake']
-BLACKLISTED_SKILLS = ["send_sms", "media", "adapt_test", "template_skill", "configuration", "ip_skill", "dial_call", "facebook", "deep_dream", "wifi", "leaks", "objectives_test", "context_manager_test"]
-SKILLS_BASEDIR = dirname(__file__)
-THIRD_PARTY_SKILLS_DIR = ["/opt/mycroft/third_party", "/opt/mycroft/skills"]
-# Note: /opt/mycroft/skills is recommended, /opt/mycroft/third_party
-# is for backwards compatibility
+try:
+    skills_config = ConfigurationManager.instance().get("skills")
+    BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
+except:
+    BLACKLISTED_SKILLS = ["template_skill", "service_context", "mycroft_media", "skill-ip", "skill-audio-record", "service_sound_analisys"]
+
+# TODO read from config
+SKILLS_DIR = MYCROFT_ROOT_PATH + "/mycroft/jarbas-skills"
 
 MainModule = '__init__'
 
@@ -106,12 +112,12 @@ def load_skill(skill_descriptor, emitter, skill_id):
                 callable(skill_module.create_skill)):
             # v2 skills framework
             skill = skill_module.create_skill()
-            skill.skill_id = skill_id  # register unique id
             skill.bind(emitter)
+            skill._dir = dirname(skill_descriptor['info'][1])
+            skill.skill_id = skill_id
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
             skill.initialize()
-            logger.info(
-                "Loaded " + skill_descriptor["name"] + " ID: " + str(skill_id))
+            logger.info("Loaded " + skill_descriptor["name"] + " with ID " + str(skill_id))
             return skill
         else:
             logger.warn(
@@ -151,21 +157,12 @@ def create_skill_descriptor(skill_folder):
     return {"name": os.path.basename(skill_folder), "info": info}
 
 
-def load_skills(emitter, skills_root=SKILLS_BASEDIR):
+def load_skills(emitter, skills_root=SKILLS_DIR):
     logger.info("Checking " + skills_root + " for new skills")
     skill_list = []
-    skills = get_skills(skills_root)
-    id = 0
-    for skill in skills:
-        if skill['name'] in PRIMARY_SKILLS:
-            skill_list.append(load_skill(skill, emitter, id))
-            id += 1
+    for skill in get_skills(skills_root):
+        skill_list.append(load_skill(skill, emitter))
 
-    for skill in skills:
-        if (skill['name'] not in PRIMARY_SKILLS and
-                skill['name'] not in BLACKLISTED_SKILLS):
-            skill_list.append(load_skill(skill, emitter, id))
-            id += 1
     return skill_list
 
 
@@ -190,14 +187,9 @@ class MycroftSkill(object):
         self.file_system = FileSystemAccess(join('skills', name))
         self.registered_intents = []
         self.log = getLogger(name)
-        self.skill_id = 0
         self.reload_skill = True
-        self.intent_parser = None
-        self.results = {}
-        ##### global context
-        self.manager = ContextManager()
-        self.context_flag = False  # results received flag
-
+        self.events = []
+        self.skill_id = 0
 
     @property
     def location(self):
@@ -226,12 +218,22 @@ class MycroftSkill(object):
     def lang(self):
         return self.config_core.get('lang')
 
+    @property
+    def settings(self):
+        """ Load settings if not already loaded. """
+        try:
+            return self._settings
+        except:
+            self._settings = SkillSettings(join(self._dir, 'settings.json'))
+            return self._settings
+
     def bind(self, emitter):
         if emitter:
             self.emitter = emitter
             self.enclosure = EnclosureAPI(emitter)
             self.__register_stop()
-
+            self.emitter.on('enable_intent', self.handle_enable_intent)
+            self.emitter.on('disable_intent', self.handle_disable_intent)
 
     def __register_stop(self):
         self.stop_time = time.time()
@@ -240,8 +242,9 @@ class MycroftSkill(object):
         self.emitter.on('mycroft.stop', self.__handle_stop)
 
     def detach(self):
-        for intent in self.registered_intents:
-            self.emitter.emit(Message("detach_intent", {"intent_name": intent}))
+        for (name, intent) in self.registered_intents:
+            name = str(self.skill_id) + ':' + name
+            self.emitter.emit(Message("detach_intent", {"intent_name": name}))
 
     def initialize(self):
         """
@@ -251,40 +254,14 @@ class MycroftSkill(object):
         """
         raise Exception("Initialize not implemented for skill: " + self.name)
 
-    # trying to get context into adapt - ignore for now, doesnt break code
-    # anyway
-    def handle_context_result(self, message):
-        dict = message.data["regex"]  # should i get all context or just regex?
-        for key in dict:
-            # adapt way
-            if dict[key] is not None:
-                entity = {'key': key, 'data': dict[key], 'confidence': 1.0}
-                # check for duplicates before injecting,  shouldnt this be
-                # auto-handled by adapt?
-                contexts = self.manager.get_context()
-                flag = False
-                for ctxt in contexts:
-                    if ctxt["key"] == key and ctxt["data"] == dict[key]:
-                        flag = True  # its duplicate!
-                if not flag:
-                    self.manager.inject_context(entity)
-                    print "injecting " + str(entity)
-
-        self.context_flag = True
-    ######################################################################
-
     def converse(self, transcript, lang="en-us"):
         return False
 
-    def register_intent(self, intent_parser, handler=None):
+    def register_intent(self, intent_parser, handler):
         name = intent_parser.name
         intent_parser.name = str(self.skill_id) + ':' + intent_parser.name
-        self.registered_intents.append((name, intent_parser))
-
-        if self.intent_parser is not None:
-            self.intent_parser.register_intent(intent_parser.__dict__)
-
         self.emitter.emit(Message("register_intent", intent_parser.__dict__))
+        self.registered_intents.append((name, intent_parser))
 
         def receive_handler(message):
             try:
@@ -298,9 +275,9 @@ class MycroftSkill(object):
                     "An error occurred while processing a request in " +
                     self.name, exc_info=True)
 
-        if handler is not None:
+        if handler:
             self.emitter.on(intent_parser.name, receive_handler)
-
+            self.events.append((intent_parser.name, receive_handler))
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
@@ -332,40 +309,14 @@ class MycroftSkill(object):
             'start': entity, 'end': entity_type
         }))
 
-
     def register_regex(self, regex_str):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
-
-    # results property -> mycroft team doesnt agree with this exact aproach
-    # https://github.com/MycroftAI/mycroft-core/pull/281
-
-    def add_result(self, key, value):
-        self.results[str(key)] = [value]
-        self.emitter.emit(Message("register_result", {"msg_type": key + "_result"}))
-
-    def emit_results(self):
-        if len(self.results) > 0:
-            for key in self.results:
-                message_type = key + "_result"
-                self.emitter.emit(
-                    Message(message_type, self.results[key]))
-            self.results.clear()
-
-    def speak(self, utterance, expect_response=False, record_characteristics=None):
+    def speak(self, utterance, expect_response=False):
         data = {'utterance': utterance,
-                'expect_response': expect_response,
-                'record_characteristics': record_characteristics}
-
+                'expect_response': expect_response}
         self.emitter.emit(Message("speak", data))
-
-    def feedback(self, feedback, utterance):
-        # get sentiment result utterance and confidences, do something
-        if feedback == "positive":
-            self.log.info("Positive feedback for skill " + self.name)
-        elif feedback == "negative":
-            self.log.info("Negative feedback for skill " + self.name)
 
     def speak_dialog(self, key, data={}, expect_response=False):
         data['expect_response'] = expect_response
@@ -412,4 +363,13 @@ class MycroftSkill(object):
         process termination. The skill implementation must
         shutdown all processes and operations in execution.
         """
+        # Store settings
+        self.settings.store()
+
+        # removing events
+        for e, f in self.events:
+            self.emitter.remove(e, f)
+
+        self.emitter.emit(
+            Message("detach_skill", {"skill_name": self.name + ":"}))
         self.stop()

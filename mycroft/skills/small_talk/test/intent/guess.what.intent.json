@@ -1,7 +1,0 @@
-{
-  "utterance": "guess what",
-  "intent_type": "GuessWhatIntent",
-  "intent": {
-    "GuessWhatKeyphrase": "guess what"
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "utterance": "tell me do you bleed",
-  "intent_type": "TellMeDoYouBleedIntent",
-  "intent": {
-    "TellMeDoYouBleedKeyphrase": "tell me do you bleed"
-  }
-}

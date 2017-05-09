@@ -12,6 +12,7 @@ sudo apt-get install -y \
     libffi-dev \
     libssl-dev \
     autoconf \
+    automake \
     bison \
     swig \
     libglib2.0-dev \
@@ -20,10 +21,8 @@ sudo apt-get install -y \
     mpg123 \
     screen \
     flac \
-    fortune \
-    libxml2-dev \
-    libxslt1-dev \
-    libopencv-dev \
-    python-opencv \
-    curl
+    curl \
+    libicu-dev \
+    pkg-config \
+    automake
 

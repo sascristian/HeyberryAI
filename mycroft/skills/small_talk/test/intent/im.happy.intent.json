@@ -1,7 +1,0 @@
-{
-  "utterance": "im happy",
-  "intent_type": "ImHappyIntent",
-  "intent": {
-    "ImHappyKeyphrase": "im happy"
-  }
-}

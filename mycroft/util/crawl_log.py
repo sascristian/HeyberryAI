@@ -14,33 +14,31 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
-import json
+
+
 import logging
 
-from os.path import isfile
-
-SYSTEM_CONFIG = '/etc/mycroft/mycroft.conf'
 
 __author__ = 'seanfitz'
 
-log_level = "DEBUG"
+#TODO read from config
+# for some reason log files are always empty, look at this later
 
-if isfile(SYSTEM_CONFIG):
-    with open(SYSTEM_CONFIG) as f:
-        config = json.load(f)
-        log_level = config.get("log_level", "DEBUG")
+path = "/home/user/mycroft-core/mycroft/skills/LILACS/crawl_logs"
 
-FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-logging.basicConfig(format=FORMAT, level=logging.getLevelName(log_level))
-logger = logging.getLogger("MYCROFT")
-
-
-def getLogger(name="MYCROFT"):
+def getLogger(name="Crawler", crawl_type="Drunk"):
     """
-    Get a python logger
+    Get a python crawler logger
 
     :param name: Module name for the logger
 
+    :param crawl_type: Type of crawling
+    
     :return: an instance of logging.Logger
     """
+
+    FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    crawler_name = path + "/" + crawl_type + "_" + name + ".log"
+    logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+    logging.FileHandler(filename=crawler_name, mode='a', encoding=None, delay=0)
     return logging.getLogger(name)

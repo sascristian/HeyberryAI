@@ -1,7 +1,0 @@
-{
-  "utterance": "what are your measurements",
-  "intent_type": "WhatAreYourMeasurementsIntent",
-  "intent": {
-    "WhatAreYourMeasurementsKeyphrase": "what are your measurements"
-  }
-}

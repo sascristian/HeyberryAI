@@ -85,11 +85,13 @@ class EnclosureReader(Thread):
 
         if "volume.up" in data:
             self.ws.emit(
-                Message("IncreaseVolumeIntent", {'play_sound': True}))
+                Message("VolumeSkill:IncreaseVolumeIntent",
+                        {'play_sound': True}))
 
         if "volume.down" in data:
             self.ws.emit(
-                Message("DecreaseVolumeIntent", {'play_sound': True}))
+                Message("VolumeSkill:DecreaseVolumeIntent",
+                        {'play_sound': True}))
 
         if "system.test.begin" in data:
             self.ws.emit(Message('recognizer_loop:sleep'))
@@ -129,12 +131,24 @@ class EnclosureReader(Thread):
             self.ws.emit(Message("mycroft.wifi.start"))
 
         if "unit.factory-reset" in data:
+            self.ws.emit(
+                Message("enclosure.eyes.spin"))
             subprocess.call(
                 'rm ~/.mycroft/identity/identity2.json',
                 shell=True)
-            self.ws.emit(
-                Message("enclosure.eyes.spin"))
+            self.ws.emit(Message("mycroft.wifi.reset"))
+            self.ws.emit(Message("speak", {
+                'utterance': "This unit has been reset"}))
+            time.sleep(4)
             self.ws.emit(Message("enclosure.mouth.reset"))
+            subprocess.call('systemctl reboot -i', shell=True)
+
+        if "unit.enable-ssh" in data:
+            # This is handled by the wifi client
+            self.ws.emit(Message("mycroft.enable.ssh"))
+            self.ws.emit(Message("speak", {
+                'utterance': "SSH will be enabled on next boot"}))
+            time.sleep(4)
             subprocess.call('systemctl reboot -i', shell=True)
 
     def stop(self):
@@ -207,7 +221,7 @@ class Enclosure(object):
         self.writer.write("system.version")
         self.ws.on("enclosure.start", self.start)
         self.started = False
-        Timer(5, self.stop).start()     # WHY? This at least
+        Timer(5, self.stop).start()  # WHY? This at least
         # needs an explanation, this is non-obvious behavior
 
     def start(self, event=None):

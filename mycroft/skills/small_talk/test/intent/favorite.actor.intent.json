@@ -1,7 +1,0 @@
-{
-  "utterance": "who is your favorite actor",
-  "intent_type": "FavoriteActorIntent",
-  "intent": {
-    "FavoriteActorKeyphrase": "favorite actor"
-  }
-}

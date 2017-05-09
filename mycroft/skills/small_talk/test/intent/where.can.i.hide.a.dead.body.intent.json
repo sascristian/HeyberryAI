@@ -1,7 +1,0 @@
-{
-  "utterance": "where can i hide a dead body",
-  "intent_type": "WhereCanIHideADeadBodyIntent",
-  "intent": {
-    "WhereCanIHideADeadBodyKeyphrase": "where can i hide a dead body"
-  }
-}

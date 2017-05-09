@@ -1,7 +1,0 @@
-{
-  "utterance": "am i ugly",
-  "intent_type": "AmIUglyIntent",
-  "intent": {
-    "AmIUglyKeyphrase": "am i ugly"
-  }
-}

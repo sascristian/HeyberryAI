@@ -14,8 +14,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
-import importlib
-
 from abc import ABCMeta, abstractmethod
 
 from speech_recognition import Recognizer
@@ -42,11 +40,8 @@ class STT(object):
 
     @staticmethod
     def init_language(config_core):
-        lang = config_core.get("lang", "en-US")
-        langs = lang.split("-")
-        if len(langs) == 2:
-            return langs[0].lower() + "-" + langs[1].upper()
-        return lang
+        langs = config_core.get("lang", "en-US").split("-")
+        return langs[0].lower() + "-" + langs[1].upper()
 
     @abstractmethod
     def execute(self, audio, language=None):
@@ -75,8 +70,8 @@ class GoogleSTT(TokenSTT):
         super(GoogleSTT, self).__init__()
 
     def execute(self, audio, language=None):
-        language = language or self.lang
-        return self.recognizer.recognize_google(audio, self.token, language)
+        self.lang = language or self.lang
+        return self.recognizer.recognize_google(audio, self.token, s)
 
 
 class WITSTT(TokenSTT):
@@ -93,9 +88,9 @@ class IBMSTT(BasicSTT):
         super(IBMSTT, self).__init__()
 
     def execute(self, audio, language=None):
-        language = language or self.lang
+        self.lang = language or self.lang
         return self.recognizer.recognize_ibm(audio, self.username,
-                                             self.password, language)
+                                             self.password, self.lang)
 
 
 class MycroftSTT(STT):
@@ -104,8 +99,8 @@ class MycroftSTT(STT):
         self.api = STTApi()
 
     def execute(self, audio, language=None):
-        language = language or self.lang
-        return self.api.stt(audio.get_flac_data(), language, 1)[0]
+        self.lang = language or self.lang
+        return self.api.stt(audio.get_flac_data(), self.lang, 1)[0]
 
 
 class STTFactory(object):
@@ -121,8 +116,4 @@ class STTFactory(object):
         config = ConfigurationManager.get().get("stt", {})
         module = config.get("module", "mycroft")
         clazz = STTFactory.CLASSES.get(module)
-        if not clazz:
-            p, c = module.rsplit('.', 1)
-            mod = importlib.import_module(p)
-            clazz = getattr(mod, c)
         return clazz()
