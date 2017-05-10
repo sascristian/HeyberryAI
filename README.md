@@ -126,7 +126,7 @@ Lots of skills are bundled by default with this fork, following list may be outd
 
 [LILACS Chatbot](https://github.com/ElliotTheRobot/LILACS-mycroft-core/tree/dev/mycroft/skills/LILACS_chatbot) - chatbot mode, intercepts utterances and answers with "crap"
 
-[Troll Objective]() - Attempts to troll user by showing a video or website randomly
+[Troll Objective](https://github.com/JarbasAI/JarbasAI/tree/dev/mycroft/jarbas-skills/objective-troll) - Attempts to troll user by showing a video or website randomly
 
 
 ### Control Skills
@@ -155,7 +155,7 @@ Lots of skills are bundled by default with this fork, following list may be outd
 
 [Facebook Skill](https://github.com/JarbasAI/mycroft-facebook-skill) - Facebook Interaction, warns about chat messages, gives info and simulates some user actions
 
-[Facebook content objective]() - Makes posts on facebook
+[Facebook content objective](https://github.com/JarbasAI/JarbasAI/tree/dev/mycroft/jarbas-skills/objective-facebook_content) - Makes posts on facebook
 
 [Proxy Scrapping Skill](https://github.com/JarbasAI/mycroft--proxy-scrapping---skill) - Get https proxys
 
