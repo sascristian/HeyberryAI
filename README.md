@@ -80,8 +80,6 @@ Jarbas core uses [LILACS](https://github.com/ElliotTheRobot/LILACS-mycroft-core)
 - standard skills folder is now jarbas_skills, msm may need changes because skill_dir path is hardcoded
 - do not install default skills using msm
 - created a folder named database that is populated with created/scraped content during jarbas life-time (offline db)
-- implement disable speak flag for mute skill
-
 
 # Included skills by default
 
