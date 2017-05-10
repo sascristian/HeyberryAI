@@ -1,0 +1,2 @@
+newspaper==0.0.9.8
+requests==2.6.0

@@ -1,0 +1,77 @@
+<?php 
+
+function seo_styled_map_shortcode($atts, $content =null){
+    
+     extract( shortcode_atts( array( 
+      'api_key' => 'AIzaSyCLMmF0QQh3PsjF5HRlg-3KZyA2FI1PNYM',
+        'lat' => '',
+        'lng' => '',
+        'title' => '',
+        'desc' => '',
+        'height' => '400',
+       'scroll' => 'false',
+        'zoom' => 14,
+         
+   ),$atts ) ); 
+    
+    
+   $seo_dynamic_map_id = rand(5000, 15000);     
+    
+    $seo_styled_map_markup = '
+    
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key= '.$api_key.' "></script>
+     <div style="width:100%;height:'.$height.'px"  id="seo-map-'.$seo_dynamic_map_id.'"></div>
+  <script>
+  jQuery(document).ready(function($) {
+  var map_option'.$seo_dynamic_map_id.' = {lat: '.$lat.', lng: '.$lng.'};
+  
+  $("#seo-map-'.$seo_dynamic_map_id.'")
+     .gmap3({
+       center: map_option'.$seo_dynamic_map_id.',
+       zoom: '.$zoom.',
+       scrollwheel: '.$scroll.',
+       mapTypeId: "shadeOfGrey",
+     })
+  
+  .marker({
+      position: map_option'.$seo_dynamic_map_id.',
+      icon: "http://maps.google.com/mapfiles/marker_green.png"
+  })
+  
+   .infowindow({
+       position: map_option'.$seo_dynamic_map_id.',
+       content: "<h4>'.$title.'</h4>'.$desc.'",
+       pixelOffset: new google.maps.Size(0,-20)
+   })
+   .then(function (infowindow) {
+       infowindow.open(this.get(0)); // this.get(0) return the map (see "get" feature)
+    })
+  
+      .styledmaptype(
+        "shadeOfGrey",
+        [
+          {"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#909090"},{"lightness":40}]},
+          {"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},
+          {"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#f7f7f7"},{"lightness":20}]},
+          {"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#f7f7f7"},{"lightness":17},{"weight":1.2}]},
+          {"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f7f7f7"},{"lightness":20}]},
+          {"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f7f7f7"},{"lightness":21}]},
+          {"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},
+          {"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},
+          {"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},
+          {"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},
+          {"featureType":"transit","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":19}]},
+          {"featureType":"water","elementType":"geometry","stylers":[{"color":"#ededed"},{"lightness":17}]}
+        ],
+        {name: "Shades of Grey"}
+      );
+  
+  });
+  
+  </script>
+     
+    ';
+    return $seo_styled_map_markup;
+}
+   
+add_shortcode('seo_styled_map','seo_styled_map_shortcode');

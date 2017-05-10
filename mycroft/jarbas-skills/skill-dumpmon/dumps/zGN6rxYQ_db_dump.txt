@@ -1,0 +1,117 @@
+#EXTM3U
+#EXTINF:-1,РОССИЯ 1
+http://hls.peers.tv/streaming/rossija/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ПЯТЫЙ
+http://hls.peers.tv/streaming/5kanal/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,РОССИЯ К
+http://hls.peers.tv/streaming/kultura/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,РОССИЯ 24
+http://hls.peers.tv/streaming/vesti/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,КАРУСЕЛЬ
+http://hls.peers.tv/streaming/karusel/16/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ОТР
+http://hls.peers.tv/streaming/otvrus/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ТВЦ
+http://hls.peers.tv/streaming/tvc/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,СТС МИР
+http://hls.peers.tv/streaming/sts/16/tvrec/playlist.m3u8
+#EXTINF:-1,ДОМАШНИЙ
+http://hls.peers.tv/streaming/domashny/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ЗВЕЗДА
+http://hls.peers.tv/streaming/zvezda/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ОТС
+http://hls.peers.tv/streaming/ots/16/tvrecw/playlist.m3u8
+#EXTINF:-1,МУЛЬТ
+http://hls.peers.tv/streaming/nickelodeon/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,LIFE
+http://hls.peers.tv/streaming/lifenews/126/variable.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,МУЖСКОЙ
+http://hls.peers.tv/streaming/muzhskoj/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ЧЕ
+http://hls.peers.tv/streaming/perec/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,З Ж
+http://hls.peers.tv/streaming/zagorod_zh/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,КРИК ТВ
+http://hls.peers.tv/streaming/krik_tv/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,49 КАНАЛ
+http://hls.peers.tv/streaming/49kanal/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,РБК
+http://hls.peers.tv/streaming/rbk/126/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ЮМОР ТВ
+http://hls.peers.tv/streaming/yumor_tv/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,МИР 24
+http://hls.peers.tv/streaming/mir24/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ЕВРОНОВОСТИ
+http://hls.peers.tv/streaming/euronews/126/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ТВ 21
+http://hls.peers.tv/streaming/tv21/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,kМУЗ БОКС
+http://hls.peers.tv/streaming/musboxru/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,МУЗ
+http://hls.peers.tv/streaming/irstmuz/16/hd/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,МУЛЬТ
+http://hls.peers.tv/streaming/cartoonnetwork/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ТВ ТРЕЙЛЕР
+http://hls.peers.tv/streaming/tvtrailer/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,kanal
+http://hls.peers.tv/streaming/utbol/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,АМЕДИЯ
+http://hls.peers.tv/streaming/amedia1/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ЕВРОКИНО
+http://hls.peers.tv/streaming/eurokino/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ИЛЛЮЗИОН
+http://hls.peers.tv/streaming/illyuzion/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,УСПЕХ
+http://hls.peers.tv/streaming/uspex/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,МУЛЬТ
+http://hls.peers.tv/streaming/orkids/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ОБРАЗ
+http://hls.peers.tv/streaming/1_obraz/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ЗООПАРК
+http://hls.peers.tv/streaming/zoopark/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ИЛЛЮЗИОН РУ
+http://hls.peers.tv/streaming/russian_illusion/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,kanal
+http://hls.peers.tv/streaming/jv/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,АВТО 24
+http://hls.peers.tv/streaming/avto_24/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ШОПИНГ
+http://hls.peers.tv/streaming/shopping_live/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,МУЗ
+http://hls.peers.tv/streaming/musboxtv/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,БОЕЦ
+http://hls.peers.tv/streaming/boets/16/tvrecw/playlist.m3u8
+#EXTINF:-1,ВМЕСТЕ РФ
+http://hls.peers.tv/streaming/vmeste_rf/126/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,kanal
+http://hls.peers.tv/streaming/balance/126/copy/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,СТРК
+http://hls.peers.tv/streaming/strk/126/copy/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,kanal
+http://hls.peers.tv/streaming/tvmchannel/126/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,НОВОЕ ТВ
+http://hls.peers.tv/streaming/novoe_televidenie/318/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ЛДПР
+http://hls.peers.tv/streaming/ldpr_tv/16/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,kanal
+http://hls.peers.tv/streaming/ya1pm/90/copy/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,КРАСНАЯ ЛИНИЯ
+http://hls.peers.tv/streaming/red_line/126/copy/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,РЫБАЛКА
+http://hls.peers.tv/streaming/hopetv/126/copy/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,kanal
+http://hls.peers.tv/streaming/wap/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,БОКС
+http://hls.peers.tv/streaming/boks_tv/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,КУБАНЬ
+http://hls.peers.tv/streaming/kuban24/126/tvrec/playlist.m3u8%3Ftoken%3Dec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,КУБАНЬ 24
+http://hls.peers.tv/streaming/kuban24/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,ГОРНАЯ СТРАНА
+http://hls.peers.tv/streaming/gornaya_strana/16/copy/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,СМАЙЛИК ТВ
+http://hls.peers.tv/streaming/smayliktv/126/vm2w/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,kanal РУ
+http://hls.peers.tv/streaming/tmb_ru/16/tvrecw/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9
+#EXTINF:-1,НЕБИСЕТ
+http://hls.peers.tv/streaming/nebiset/126/tvrec/playlist.m3u8?token=ec63725402c5f73e061edfbbfb0995c9

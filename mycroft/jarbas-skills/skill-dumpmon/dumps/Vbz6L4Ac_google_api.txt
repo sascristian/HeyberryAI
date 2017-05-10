@@ -1,0 +1,169 @@
+import React, { PropTypes, Component } from 'react';
+import Map, { Marker, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
+import InfoWindow from '../../../components/atom/InfoWindow';
+import _ from 'lodash';
+
+const KEY = 'AIzaSyBuv3zCPctmPzqDxh6jcCzXuKM01Lu6slI';
+
+const containerStyle = {
+    width: '100%',
+    height: '600px',
+    position: 'relative',
+    overflow: 'hidden'
+};
+
+class MapComponent extends Component {
+
+    constructor(props) {
+        super();
+        this.state = this.createStateObj(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let newLocation = nextProps.selectedLocation;
+        let state = {
+            selectedLocation: nextProps.selectedLocation,
+            showInfoWindow: false
+        };
+
+        if(!!newLocation  && (this.state.selectedLocation !== newLocation)) {
+            state.showInfoWindow = true;
+        }
+
+        this.setState(state);
+    }
+
+    render() {
+        let markers = this.getMarkers();
+
+        return (<Map
+            google={this.props.google}
+            onReady={(props, map) => { this.setState({ mapLoaded: true , mapProps: props, map: map}); }}
+            zoom={4}
+            initialCenter={this.props.position}
+            scrollwheel={false}
+            onClick={this.onMapClicked}
+            containerStyle={containerStyle}
+        >
+            {markers}
+            {this.getInfoWindow({state: this.state, closeInfoWindow: this.closeInfoWindow})}
+        </Map>);
+    }
+
+    createStateObj = (props) => {
+        return {
+            selectedLocation: props.selectedLocation,
+            activeMarker: {},
+            showInfoWindow: false
+        }
+    };
+
+    getInfoWindow = (props) => {
+        if ((!props.state.mapLoaded) || (!props.state.selectedLocation)) {
+            return <div />;
+        }
+        console.log((new Error()).stack);
+        console.log(this.state.activeMarker);
+        return (
+            <InfoWindow
+                marker={props.state.activeMarker}
+                visible={props.state.showInfoWindow}
+                onClose={props.closeInfoWindow}>
+                <div className="row search-result-container" >
+                    <div className="col-xs-3 distance" >
+                        <img className="marker-icon" src="/images/common/icons/ic_pin_brown.png" alt="" role="icon" />
+                        <h5>{props.state.selectedLocation.distance}</h5>
+                    </div>
+                    <div className="col-xs-7 col-sm-8 col-md-7 info-parent-container">
+                        <div className="row info">
+                            <div>
+                                <h4>{props.state.selectedLocation.title}</h4>
+                                <p>{props.state.selectedLocation.address1}</p>
+                                <p>{props.state.selectedLocation.address2}</p>
+                                <h5>Hours: {props.state.selectedLocation.hours}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </InfoWindow>
+
+        );
+    }
+    getPinUrl = (location, selectedLocation) => {
+        if (selectedLocation && location.id === selectedLocation.id) {
+            return '/images/common/icons/ic_pin_red.png';
+        }
+        return '/images/common/icons/ic_pin_brown.png';
+    }
+
+    getMarkers = () => {
+        let locations = this.props.locations;
+        if (!(locations && locations.length)) {
+            return [];
+        }
+
+        const markers = locations.map((location, index) => {
+            let locationId = location.id;
+            return (<Marker
+                key={location.id}
+                ref={(markerNode)=>{this[locationId] = markerNode}}
+                onClick={this.onMarkerClick}
+                name={location.address1}
+                position={{ lat: location.location.lat, lng: location.location.lon }}
+                location={location}
+                icon={{
+                    url: this.getPinUrl(location, this.state.selectedLocation),
+                    scaledSize: new google.maps.Size(27, 37),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(14, 37)
+                }}
+            />);
+        });
+
+        return markers
+    };
+
+    getActiveMarker = (location) => {
+        if (this.state.mapLoaded) {
+            const lat = parseFloat(location.location.lat);
+            const lng = parseFloat(location.location.lon);
+            const icon = {
+                url: '/images/common/icons/ic_pin_red.png',
+                scaledSize: new google.maps.Size(27, 37),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(14, 37)
+            };
+            let pref = {
+                map: this.state.map,
+                position: {lat, lng},
+                icon
+            };
+
+            return new google.maps.Marker(pref);
+        }
+    };
+
+    closeInfoWindow = () => {
+        this.setState({
+            showInfoWindow: false
+        });
+    };
+
+    onMapClicked = () => {
+        if (this.state.showInfoWindow) {
+            this.closeInfoWindow();
+        }
+    };
+
+    onMarkerClick = (props, marker, e) => {
+        this.setState({
+            showInfoWindow: true,
+            selectedLocation: props.location,
+            activeMarker: marker
+        }, () => { this.props.setSelectedLocation(props.location)});
+    }
+}
+
+export default GoogleApiWrapper({
+    apiKey: KEY
+})(MapComponent);

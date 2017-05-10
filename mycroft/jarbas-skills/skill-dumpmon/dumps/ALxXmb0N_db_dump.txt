@@ -1,0 +1,1894 @@
+[Feb  9 13:45:36] VERBOSE[2120] logger.c: [Feb  9 13:45:36] Asterisk Event Logger restarted
+[Feb  9 13:45:36] VERBOSE[2120] logger.c: [Feb  9 13:45:36] Asterisk Queue Logger restarted
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] 
+<--- SIP read from 192.168.10.252:5060 --->
+INVITE sip:10012@192.168.10.10 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-2r0oihu0a76t;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1
+To: <sip:10012@192.168.10.10>
+Call-ID: aa892b3c0d8c-tlj0ivmjsii1
+CSeq: 1 INVITE
+Max-Forwards: 70
+Contact: <sip:10013@192.168.10.252:5060>;reg-id=1
+X-Serialnumber: 0004134110AC
+P-Key-Flags: resolution="31x13", keys="4"
+User-Agent: snom870/8.3.6
+Accept: application/sdp
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO, UPDATE
+Allow-Events: talk, hold, refer, call-info
+Supported: timer, 100rel, replaces, from-change
+Session-Expires: 3600;refresher=uas
+Min-SE: 90
+Content-Type: application/sdp
+Content-Length: 374
+
+v=0
+o=root 1067432361 1067432361 IN IP4 192.168.10.252
+s=call
+c=IN IP4 192.168.10.252
+t=0 0
+m=audio 55668 RTP/AVP 0 8 9 99 3 18 4 101
+a=rtpmap:0 pcmu/8000
+a=rtpmap:8 pcma/8000
+a=rtpmap:9 g722/8000
+a=rtpmap:99 g726-32/8000
+a=rtpmap:3 gsm/8000
+a=rtpmap:18 g729/8000
+a=rtpmap:4 g723/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-16
+a=ptime:20
+a=sendrecv
+
+<------------->
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 0: INVITE sip:10012@192.168.10.10 SIP/2.0 (38)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-2r0oihu0a76t;rport (70)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1 (54)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.10> (29)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 4: Call-ID: aa892b3c0d8c-tlj0ivmjsii1 (34)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 5: CSeq: 1 INVITE (14)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 6: Max-Forwards: 70 (16)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 7: Contact: <sip:10013@192.168.10.252:5060>;reg-id=1 (49)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 8: X-Serialnumber: 0004134110AC (28)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 9: P-Key-Flags: resolution="31x13", keys="4" (41)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 10: User-Agent: snom870/8.3.6 (25)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 11: Accept: application/sdp (23)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 12: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO, UPDATE (96)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 13: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 14: Supported: timer, 100rel, replaces, from-change (47)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 15: Session-Expires: 3600;refresher=uas (35)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 16: Min-SE: 90 (10)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 17: Content-Type: application/sdp (29)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 18: Content-Length: 374 (19)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 19:  (0)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: v=0 (3)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: o=root 1067432361 1067432361 IN IP4 192.168.10.252 (50)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: s=call (6)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: c=IN IP4 192.168.10.252 (23)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: t=0 0 (5)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: m=audio 55668 RTP/AVP 0 8 9 99 3 18 4 101 (41)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:0 pcmu/8000 (20)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:8 pcma/8000 (20)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:9 g722/8000 (20)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:99 g726-32/8000 (24)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:3 gsm/8000 (19)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:18 g729/8000 (21)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:4 g723/8000 (20)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:101 telephone-event/8000 (33)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=fmtp:101 0-16 (15)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=ptime:20 (10)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=sendrecv (10)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] --- (19 headers 17 lines) ---
+[Feb  9 13:45:41] DEBUG[2093] acl.c: ##### Testing 192.168.10.252 with 192.168.10.0
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Setting NAT on RTP to On
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Allocating new SIP dialog for aa892b3c0d8c-tlj0ivmjsii1 - INVITE (With RTP)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: **** Received INVITE (5) - Command in SIP INVITE
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Begin: parsing SIP "Supported: timer, 100rel, replaces, from-change"
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Found SIP option: -timer-
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Matched SIP option: timer
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Found SIP option: -100rel-
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Matched SIP option: 100rel
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Found SIP option: -replaces-
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Matched SIP option: replaces
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Found SIP option: -from-change-
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Found no match for SIP option: from-change (Please file bug report!)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Sending to 192.168.10.252 : 5060 (NAT)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Using INVITE request as basis request - aa892b3c0d8c-tlj0ivmjsii1
+[Feb  9 13:45:41] DEBUG[2093] acl.c: ##### Testing 192.168.10.252 with 0.0.0.0
+[Feb  9 13:45:41] DEBUG[2093] acl.c: ##### Testing 192.168.10.252 with 0.0.0.0
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Setting NAT on RTP to On
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] 
+<--- Reliably Transmitting (NAT) to 192.168.10.252:5060 --->
+SIP/2.0 407 Proxy Authentication Required
+Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-2r0oihu0a76t;received=192.168.10.252;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1
+To: <sip:10012@192.168.10.10>;tag=as6d2ff904
+Call-ID: aa892b3c0d8c-tlj0ivmjsii1
+CSeq: 1 INVITE
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Proxy-Authenticate: Digest algorithm=MD5, realm="asterisk", nonce="3023ed31"
+Content-Length: 0
+
+
+<------------>
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Scheduling destruction of SIP dialog 'aa892b3c0d8c-tlj0ivmjsii1' in 32000 ms (Method: INVITE)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found user '10013'
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] 
+<--- SIP read from 192.168.10.252:5060 --->
+ACK sip:10012@192.168.10.10 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-2r0oihu0a76t;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1
+To: <sip:10012@192.168.10.10>;tag=as6d2ff904
+Call-ID: aa892b3c0d8c-tlj0ivmjsii1
+CSeq: 1 ACK
+Max-Forwards: 70
+Contact: <sip:10013@192.168.10.252:5060>;reg-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 0: ACK sip:10012@192.168.10.10 SIP/2.0 (35)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-2r0oihu0a76t;rport (70)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1 (54)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.10>;tag=as6d2ff904 (44)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 4: Call-ID: aa892b3c0d8c-tlj0ivmjsii1 (34)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 5: CSeq: 1 ACK (11)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 6: Max-Forwards: 70 (16)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 7: Contact: <sip:10013@192.168.10.252:5060>;reg-id=1 (49)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 8: Content-Length: 0 (17)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 9:  (0)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] --- (9 headers 0 lines) ---
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: **** Received ACK (6) - Command in SIP ACK
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #112
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Stopping retransmission on 'aa892b3c0d8c-tlj0ivmjsii1' of Response 1: Match Found
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] 
+<--- SIP read from 192.168.10.252:5060 --->
+INVITE sip:10012@192.168.10.10 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-oour0walx6pl;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1
+To: <sip:10012@192.168.10.10>
+Call-ID: aa892b3c0d8c-tlj0ivmjsii1
+CSeq: 2 INVITE
+Max-Forwards: 70
+Contact: <sip:10013@192.168.10.252:5060>;reg-id=1
+X-Serialnumber: 0004134110AC
+P-Key-Flags: resolution="31x13", keys="4"
+User-Agent: snom870/8.3.6
+Accept: application/sdp
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO, UPDATE
+Allow-Events: talk, hold, refer, call-info
+Supported: timer, 100rel, replaces, from-change
+Session-Expires: 3600;refresher=uas
+Min-SE: 90
+Proxy-Authorization: Digest username="10013",realm="asterisk",nonce="3023ed31",uri="sip:10012@192.168.10.10",response="454c73d90e42118f041a85e750541567",algorithm=MD5
+Content-Type: application/sdp
+Content-Length: 374
+
+v=0
+o=root 1067432361 1067432361 IN IP4 192.168.10.252
+s=call
+c=IN IP4 192.168.10.252
+t=0 0
+m=audio 55668 RTP/AVP 0 8 9 99 3 18 4 101
+a=rtpmap:0 pcmu/8000
+a=rtpmap:8 pcma/8000
+a=rtpmap:9 g722/8000
+a=rtpmap:99 g726-32/8000
+a=rtpmap:3 gsm/8000
+a=rtpmap:18 g729/8000
+a=rtpmap:4 g723/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-16
+a=ptime:20
+a=sendrecv
+
+<------------->
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 0: INVITE sip:10012@192.168.10.10 SIP/2.0 (38)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-oour0walx6pl;rport (70)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1 (54)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.10> (29)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 4: Call-ID: aa892b3c0d8c-tlj0ivmjsii1 (34)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 5: CSeq: 2 INVITE (14)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 6: Max-Forwards: 70 (16)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 7: Contact: <sip:10013@192.168.10.252:5060>;reg-id=1 (49)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 8: X-Serialnumber: 0004134110AC (28)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 9: P-Key-Flags: resolution="31x13", keys="4" (41)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 10: User-Agent: snom870/8.3.6 (25)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 11: Accept: application/sdp (23)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 12: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO, UPDATE (96)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 13: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 14: Supported: timer, 100rel, replaces, from-change (47)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 15: Session-Expires: 3600;refresher=uas (35)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 16: Min-SE: 90 (10)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 17: Proxy-Authorization: Digest username="10013",realm="asterisk",nonce="3023ed31",uri="sip:10012@192.168.10.10",response="454c73d90e42118f041a85e750541567",algorithm=MD5 (166)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 18: Content-Type: application/sdp (29)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 19: Content-Length: 374 (19)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 20:  (0)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: v=0 (3)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: o=root 1067432361 1067432361 IN IP4 192.168.10.252 (50)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: s=call (6)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: c=IN IP4 192.168.10.252 (23)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: t=0 0 (5)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: m=audio 55668 RTP/AVP 0 8 9 99 3 18 4 101 (41)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:0 pcmu/8000 (20)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:8 pcma/8000 (20)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:9 g722/8000 (20)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:99 g726-32/8000 (24)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:3 gsm/8000 (19)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:18 g729/8000 (21)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:4 g723/8000 (20)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=rtpmap:101 telephone-event/8000 (33)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=fmtp:101 0-16 (15)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=ptime:20 (10)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Line: a=sendrecv (10)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] --- (20 headers 17 lines) ---
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: **** Received INVITE (5) - Command in SIP INVITE
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Sending to 192.168.10.252 : 5060 (NAT)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Using INVITE request as basis request - aa892b3c0d8c-tlj0ivmjsii1
+[Feb  9 13:45:41] DEBUG[2093] acl.c: ##### Testing 192.168.10.252 with 0.0.0.0
+[Feb  9 13:45:41] DEBUG[2093] acl.c: ##### Testing 192.168.10.252 with 0.0.0.0
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Setting NAT on RTP to On
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found user '10013'
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing session-level SDP v=0... UNSUPPORTED.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing session-level SDP o=root 1067432361 1067432361 IN IP4 192.168.10.252... UNSUPPORTED.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing session-level SDP s=call... UNSUPPORTED.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing session-level SDP c=IN IP4 192.168.10.252... OK.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing session-level SDP t=0 0... UNSUPPORTED.
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found RTP audio format 0
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found RTP audio format 8
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found RTP audio format 9
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found RTP audio format 99
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found RTP audio format 3
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found RTP audio format 18
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found RTP audio format 4
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found RTP audio format 101
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found audio description format pcmu for ID 0
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:0 pcmu/8000... OK.
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found audio description format pcma for ID 8
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:8 pcma/8000... OK.
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found audio description format g722 for ID 9
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:9 g722/8000... OK.
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found audio description format g726-32 for ID 99
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:99 g726-32/8000... OK.
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found audio description format gsm for ID 3
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:3 gsm/8000... OK.
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found audio description format g729 for ID 18
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:18 g729/8000... OK.
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found audio description format g723 for ID 4
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:4 g723/8000... OK.
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Found audio description format telephone-event for ID 101
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:101 telephone-event/8000... OK.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=fmtp:101 0-16... UNSUPPORTED.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=ptime:20... OK.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=sendrecv... OK.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: T38 state changed to 0 on channel <none>
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Capabilities: us - 0x8 (alaw), peer - audio=0x190f (g723|gsm|ulaw|alaw|g726|g729|g722)/video=0x0 (nothing), combined - 0x8 (alaw)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Non-codec capabilities (dtmf): us - 0x1 (telephone-event), peer - 0x1 (telephone-event), combined - 0x1 (telephone-event)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Our T38 capability = (0), peer T38 capability (0), joint T38 capability (0)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Peer audio RTP is at port 192.168.10.252:55668
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: We're settling with these formats: 0x8 (alaw)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Checking SIP call limits for device 10013
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Updating call counter for incoming call
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Call from peer '10013' is 1 out of 50
+[Feb  9 13:45:41] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10013
+[Feb  9 13:45:41] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10013
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] Looking for 10012 in from-internal (domain 192.168.10.10)
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: Checking device state for peer 10013
+[Feb  9 13:45:41] DEBUG[2087] devicestate.c: Changing state for SIP/10013 - state 2 (In use)
+[Feb  9 13:45:41] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10013
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: Checking device state for peer 10013
+[Feb  9 13:45:41] DEBUG[2109] app_queue.c: Device 'SIP/10013' changed to state '2' (In use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: *** Our native formats are 0x8 (alaw) 
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: *** Joint capabilities are 0x8 (alaw) 
+[Feb  9 13:45:41] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10013
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: *** Our capabilities are 0x8 (alaw) 
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: Checking device state for peer 10013
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: *** AST_CODEC_CHOOSE formats are 0x8 (alaw) 
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: This channel will not be able to handle video.
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: Strict routing enforced for session 3c2d4558a3da-1ln7rpwpprqx
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: build_route: Contact hop: <sip:10013@192.168.10.252:5060>;reg-id=1
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] list_route: hop: <sip:10013@192.168.10.252:5060>
+[Feb  9 13:45:41] VERBOSE[2087] logger.c: [Feb  9 13:45:41] set_destination: Parsing <sip:10012@192.168.10.253:5060> for address/port to send to
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: SIP/10013-00000000: New call is still down.... Trying... 
+[Feb  9 13:45:41] VERBOSE[2087] logger.c: [Feb  9 13:45:41] set_destination: set destination to 192.168.10.253, port 5060
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] 
+<--- Transmitting (NAT) to 192.168.10.252:5060 --->
+SIP/2.0 100 Trying
+Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-oour0walx6pl;received=192.168.10.252;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1
+To: <sip:10012@192.168.10.10>
+Call-ID: aa892b3c0d8c-tlj0ivmjsii1
+CSeq: 2 INVITE
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Contact: <sip:10012@192.168.10.10>
+Content-Length: 0
+
+
+<------------>
+[Feb  9 13:45:41] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10013
+[Feb  9 13:45:41] VERBOSE[2087] logger.c: [Feb  9 13:45:41] Reliably Transmitting (NAT) to 192.168.10.253:5060:
+NOTIFY sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK3dc8b613;rport
+From: <sip:10013@192.168.10.10>;tag=as69f84bff
+To: <sip:10012@192.168.10.10>;tag=kpqcrxzcx7
+Contact: <sip:10013@192.168.10.10>
+Call-ID: 3c2d4558a3da-1ln7rpwpprqx
+CSeq: 103 NOTIFY
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Event: dialog
+Content-Type: application/dialog-info+xml
+Subscription-State: active
+Content-Length: 207
+
+<?xml version="1.0"?>
+<dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="1" state="full" entity="sip:10013@192.168.10.10">
+<dialog id="10013">
+<state>confirmed</state>
+</dialog>
+</dialog-info>
+
+---
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:41] VERBOSE[2087] logger.c: [Feb  9 13:45:41]  Extension Changed 10013[ext-local] new state InUse for Notify User 10012 
+[Feb  9 13:45:41] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10013
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: Checking device state for peer 10013
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: Strict routing enforced for session 3c27bcc7902a-rnf6dzm9lxio
+[Feb  9 13:45:41] VERBOSE[2087] logger.c: [Feb  9 13:45:41] set_destination: Parsing <sip:10014@192.168.10.251:5060> for address/port to send to
+[Feb  9 13:45:41] VERBOSE[2087] logger.c: [Feb  9 13:45:41] set_destination: set destination to 192.168.10.251, port 5060
+[Feb  9 13:45:41] VERBOSE[2087] logger.c: [Feb  9 13:45:41] Reliably Transmitting (NAT) to 192.168.10.251:5060:
+NOTIFY sip:10014@192.168.10.251:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK2c3b031f;rport
+From: <sip:10013@192.168.10.10>;tag=as2e085595
+To: <sip:10014@192.168.10.10>;tag=h8gxt5msdp
+Contact: <sip:10013@192.168.10.10>
+Call-ID: 3c27bcc7902a-rnf6dzm9lxio
+CSeq: 103 NOTIFY
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Event: dialog
+Content-Type: application/dialog-info+xml
+Subscription-State: active
+Content-Length: 207
+
+<?xml version="1.0"?>
+<dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="1" state="full" entity="sip:10013@192.168.10.10">
+<dialog id="10013">
+<state>confirmed</state>
+</dialog>
+</dialog-info>
+
+---
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Macro'
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [10012@from-internal:1] Macro("SIP/10013-00000000", "exten-vm|novm|10012") in new stack
+[Feb  9 13:45:41] VERBOSE[2087] logger.c: [Feb  9 13:45:41]  Extension Changed 10013[ext-local] new state InUse for Notify User 10014 
+[Feb  9 13:45:41] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10013
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: Checking device state for peer 10013
+[Feb  9 13:45:41] DEBUG[2087] devicestate.c: Changing state for SIP/10013 - state 2 (In use)
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Macro'
+[Feb  9 13:45:41] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10013
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:1] Macro("SIP/10013-00000000", "user-callerid") in new stack
+[Feb  9 13:45:41] DEBUG[2109] app_queue.c: Device 'SIP/10013' changed to state '2' (In use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:41] DEBUG[2087] chan_sip.c: Checking device state for peer 10013
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '10013'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '10013'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:1] Set("SIP/10013-00000000", "AMPUSER=10013") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '0'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'GotoIf'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:2] GotoIf("SIP/10013-00000000", "0?report") in new stack
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Not taking any branch
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: GotoIf
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '10013'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'ExecIf'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:3] ExecIf("SIP/10013-00000000", "1|Set|REALCALLERIDNUM=10013") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: ExecIf
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '0'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '10013'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '10013'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:4] Set("SIP/10013-00000000", "AMPUSER=10013") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is 'Test3'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:5] Set("SIP/10013-00000000", "AMPUSERCIDNAME=Test3") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '0'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'GotoIf'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:6] GotoIf("SIP/10013-00000000", "0?report") in new stack
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Not taking any branch
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: GotoIf
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '10013'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:7] Set("SIP/10013-00000000", "AMPUSERCID=10013") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:8] Set("SIP/10013-00000000", "CALLERID(all)="Test3" <10013>") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '0'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'GotoIf'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:9] GotoIf("SIP/10013-00000000", "0?continue") in new stack
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Not taking any branch
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: GotoIf
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '-1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '64'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:10] Set("SIP/10013-00000000", "__TTL=64") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'GotoIf'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:11] GotoIf("SIP/10013-00000000", "1?continue") in new stack
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Goto (macro-user-callerid,s,18)
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: GotoIf
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '"Test3" <10013>'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'NoOp'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-user-callerid:18] NoOp("SIP/10013-00000000", "Using CallerID "Test3" <10013>") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Noop
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Macro
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:2] Set("SIP/10013-00000000", "RingGroupMethod=none") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:3] Set("SIP/10013-00000000", "VMBOX=novm") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:4] Set("SIP/10013-00000000", "EXTTOCALL=10012") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] db.c: Unable to find key '10012' in family 'CFU'
+[Feb  9 13:45:41] DEBUG[2121] func_db.c: DB: CFU/10012 not found in database.
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is ''
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:5] Set("SIP/10013-00000000", "CFUEXT=") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] db.c: Unable to find key '10012' in family 'CFB'
+[Feb  9 13:45:41] DEBUG[2121] func_db.c: DB: CFB/10012 not found in database.
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is ''
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:6] Set("SIP/10013-00000000", "CFBEXT=") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '0'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '0'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '0'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '""'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Set'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:7] Set("SIP/10013-00000000", "RT=""") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Set
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Macro'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:8] Macro("SIP/10013-00000000", "record-enable|10012|IN") in new stack
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'GotoIf'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-record-enable:1] GotoIf("SIP/10013-00000000", "1?check") in new stack
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Goto (macro-record-enable,s,4)
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: GotoIf
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Function result is '20100209-134541'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'AGI'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-record-enable:4] AGI("SIP/10013-00000000", "recordingcheck|20100209-134541|1265719541.0") in new stack
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Launched AGI Script /var/lib/asterisk/agi-bin/recordingcheck
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] 
+<--- SIP read from 192.168.10.251:5060 --->
+SIP/2.0 200 Ok
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK2c3b031f;rport=5060
+From: <sip:10013@192.168.10.10>;tag=as2e085595
+To: <sip:10014@192.168.10.10>;tag=h8gxt5msdp
+Call-ID: 3c27bcc7902a-rnf6dzm9lxio
+CSeq: 103 NOTIFY
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 200 Ok (14)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK2c3b031f;rport=5060 (69)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 2: From: <sip:10013@192.168.10.10>;tag=as2e085595 (46)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10014@192.168.10.10>;tag=h8gxt5msdp (44)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c27bcc7902a-rnf6dzm9lxio (34)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 5: CSeq: 103 NOTIFY (16)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 6: Content-Length: 0 (17)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 7:  (0)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] --- (7 headers 0 lines) ---
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Acked pending invite 103
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #116
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Stopping retransmission on '3c27bcc7902a-rnf6dzm9lxio' of Request 103: Match Found
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] SIP Response message for INCOMING dialog NOTIFY arrived
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 200 Ok
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK3dc8b613;rport=5060
+From: <sip:10013@192.168.10.10>;tag=as69f84bff
+To: <sip:10012@192.168.10.10>;tag=kpqcrxzcx7
+Call-ID: 3c2d4558a3da-1ln7rpwpprqx
+CSeq: 103 NOTIFY
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 200 Ok (14)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK3dc8b613;rport=5060 (69)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 2: From: <sip:10013@192.168.10.10>;tag=as69f84bff (46)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.10>;tag=kpqcrxzcx7 (44)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c2d4558a3da-1ln7rpwpprqx (34)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 5: CSeq: 103 NOTIFY (16)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 6: Content-Length: 0 (17)
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Header 7:  (0)
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] --- (7 headers 0 lines) ---
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Acked pending invite 103
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #115
+[Feb  9 13:45:41] DEBUG[2093] chan_sip.c: Stopping retransmission on '3c2d4558a3da-1ln7rpwpprqx' of Request 103: Match Found
+[Feb  9 13:45:41] VERBOSE[2093] logger.c: [Feb  9 13:45:41] SIP Response message for INCOMING dialog NOTIFY arrived
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]   recordingcheck|20100209-134541|1265719541.0: Inbound recording not enabled
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- AGI Script recordingcheck completed, returning 0
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: AGI
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'MacroExit'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-record-enable:5] MacroExit("SIP/10013-00000000", "") in new stack
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: Macro
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'Macro'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-exten-vm:9] Macro("SIP/10013-00000000", "dial||tr|10012") in new stack
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Expression result is '1'
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'GotoIf'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-dial:1] GotoIf("SIP/10013-00000000", "1?dial") in new stack
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Goto (macro-dial,s,3)
+[Feb  9 13:45:41] DEBUG[2121] app_macro.c: Executed application: GotoIf
+[Feb  9 13:45:41] DEBUG[2121] pbx.c: Launching 'AGI'
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Executing [s@macro-dial:3] AGI("SIP/10013-00000000", "dialparties.agi") in new stack
+[Feb  9 13:45:41] VERBOSE[2121] logger.c: [Feb  9 13:45:41]     -- Launched AGI Script /var/lib/asterisk/agi-bin/dialparties.agi
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]   dialparties.agi: Starting New Dialparties.agi
+[Feb  9 13:45:42] DEBUG[2124] manager.c: Manager received command 'login'
+[Feb  9 13:45:42] VERBOSE[2124] logger.c: [Feb  9 13:45:42]   == Parsing '/etc/asterisk/manager.conf': [Feb  9 13:45:42] DEBUG[2124] config.c: Parsing /etc/asterisk/manager.conf
+[Feb  9 13:45:42] VERBOSE[2124] logger.c: [Feb  9 13:45:42] Found
+[Feb  9 13:45:42] VERBOSE[2124] logger.c: [Feb  9 13:45:42]   == Parsing '/etc/asterisk/manager_additional.conf': [Feb  9 13:45:42] DEBUG[2124] config.c: Parsing /etc/asterisk/manager_additional.conf
+[Feb  9 13:45:42] VERBOSE[2124] logger.c: [Feb  9 13:45:42] Found
+[Feb  9 13:45:42] VERBOSE[2124] logger.c: [Feb  9 13:45:42]   == Parsing '/etc/asterisk/manager_custom.conf': [Feb  9 13:45:42] DEBUG[2124] config.c: Parsing /etc/asterisk/manager_custom.conf
+[Feb  9 13:45:42] VERBOSE[2124] logger.c: [Feb  9 13:45:42] Found
+[Feb  9 13:45:42] DEBUG[2124] acl.c: 0.0.0.0/0.0.0.0/0.0.0.0 appended to acl for peer
+[Feb  9 13:45:42] DEBUG[2124] acl.c: 127.0.0.1/255.255.255.0/255.255.255.0 appended to acl for peer
+[Feb  9 13:45:42] DEBUG[2124] acl.c: ##### Testing 127.0.0.1 with 0.0.0.0
+[Feb  9 13:45:42] DEBUG[2124] acl.c: ##### Testing 127.0.0.1 with 127.0.0.0
+[Feb  9 13:45:42] VERBOSE[2124] logger.c: [Feb  9 13:45:42]   == Manager 'admin' logged on from 127.0.0.1
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]   dialparties.agi: Caller ID name is 'Test3' number is '10013'
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]   dialparties.agi: USE_CONFIRMATION:  'FALSE'
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]   dialparties.agi: RINGGROUP_INDEX:   ''
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]   dialparties.agi: Methodology of ring is  'none'
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     --  dialparties.agi: Added extension 10012 to extension map
+[Feb  9 13:45:42] DEBUG[2121] db.c: Unable to find key '10012' in family 'CF'
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     --  dialparties.agi: Extension 10012 cf is disabled
+[Feb  9 13:45:42] DEBUG[2121] db.c: Unable to find key '10012' in family 'DND'
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     --  dialparties.agi: Extension 10012 do not disturb is disabled
+[Feb  9 13:45:42] DEBUG[2121] db.c: Unable to find key '10012' in family 'CFB'
+[Feb  9 13:45:42] DEBUG[2121] db.c: Unable to find key '10012' in family 'CFU'
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]        >  dialparties.agi: extnum 10012 has:  cw: 1; hascfb: 0 [] hascfu: 0 []
+[Feb  9 13:45:42] DEBUG[2124] manager.c: Manager received command 'ExtensionState'
+[Feb  9 13:45:42] DEBUG[2124] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:42] DEBUG[2124] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]   dialparties.agi: ExtensionState: 0
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     --  dialparties.agi: dbset CALLTRACE/10012 to 10013
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     --  dialparties.agi: Filtered ARG3: 10012
+[Feb  9 13:45:42] DEBUG[2124] manager.c: Manager received command 'Logoff'
+[Feb  9 13:45:42] VERBOSE[2124] logger.c: [Feb  9 13:45:42]   == Manager 'admin' logged off from 127.0.0.1
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     -- AGI Script dialparties.agi completed, returning 0
+[Feb  9 13:45:42] DEBUG[2121] app_macro.c: Executed application: AGI
+[Feb  9 13:45:42] DEBUG[2121] pbx.c: Launching 'Dial'
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     -- Executing [s@macro-dial:7] Dial("SIP/10013-00000000", "SIP/10012||tr") in new stack
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Asked to create a SIP channel with formats: 0x8 (alaw)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Allocating new SIP dialog for (No Call-ID) - INVITE (With RTP)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Setting NAT on RTP to On
+[Feb  9 13:45:42] DEBUG[2121] acl.c: ##### Testing 192.168.10.253 with 192.168.10.0
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: *** Our native formats are 0x8 (alaw) 
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: *** Joint capabilities are 0x0 (nothing) 
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: *** Our capabilities are 0x8 (alaw) 
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: *** AST_CODEC_CHOOSE formats are 0x8 (alaw) 
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: *** Our preferred formats from the incoming channel are 0x8 (alaw) 
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: This channel will not be able to handle video.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable DIALEDTIME.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable ANSWEREDTIME.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable DIALEDPEERNAME.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable DIALEDPEERNUMBER.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable DIALSTATUS.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable MACRO_DEPTH.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable AGISTATUS.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable ds.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable FILTERED_DIAL.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable DIALSTATUS_CW.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Copying hard-transferable variable KEEPCID.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable ARG3.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable ARG2.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable ARG1.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable MACRO_PRIORITY.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable MACRO_CONTEXT.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable MACRO_EXTEN.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable RT.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable CFBEXT.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable CFUEXT.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable EXTTOCALL.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable VMBOX.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable RingGroupMethod.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Copying hard-transferable variable TTL.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable AMPUSERCID.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable DB_RESULT.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable AMPUSERCIDNAME.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable AMPUSER.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable REALCALLERIDNUM.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable SIPCALLID.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable SIPUSERAGENT.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable SIPDOMAIN.
+[Feb  9 13:45:42] DEBUG[2121] channel.c: Not copying variable SIPURI.
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Outgoing Call for 10012
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Updating call counter for outgoing call
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Call to peer '10012' is 1 out of 50
+[Feb  9 13:45:42] DEBUG[2121] devicestate.c: Notification of state change to be queued on device/channel SIP/10012
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Our T38 capability (0), joint T38 capability (0)
+[Feb  9 13:45:42] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:42] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: ** Our capability: 0x8 (alaw) Video flag: False
+[Feb  9 13:45:42] DEBUG[2087] devicestate.c: Changing state for SIP/10012 - state 6 (Ringing)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: ** Our prefcodec: 0x8 (alaw) 
+[Feb  9 13:45:42] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42] Audio is at 192.168.10.10 port 15936
+[Feb  9 13:45:42] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42] Adding codec 0x8 (alaw) to SDP
+[Feb  9 13:45:42] DEBUG[2109] app_queue.c: Device 'SIP/10012' changed to state '6' (Ringing) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42] Adding non-codec 0x1 (telephone-event) to SDP
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: -- Done with adding codecs to SDP
+[Feb  9 13:45:42] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:42] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Done building SDP. Settling with this capability: 0x8 (alaw)
+[Feb  9 13:45:42] DEBUG[2087] chan_sip.c: Strict routing enforced for session 3c27bcc78a9b-cmr8idkmilf3
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 0: INVITE sip:10012@192.168.10.253:5060 SIP/2.0 (44)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport (64)
+[Feb  9 13:45:42] VERBOSE[2087] logger.c: [Feb  9 13:45:42] set_destination: Parsing <sip:10014@192.168.10.251:5060> for address/port to send to
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060> (35)
+[Feb  9 13:45:42] VERBOSE[2087] logger.c: [Feb  9 13:45:42] set_destination: set destination to 192.168.10.251, port 5060
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 4: Contact: <sip:10013@192.168.10.10> (34)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 5: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:42] DEBUG[2087] channel.c: Avoiding initial deadlock for channel '0x9939c50'
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 6: CSeq: 102 INVITE (16)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 7: User-Agent: Asterisk PBX (24)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 8: Max-Forwards: 70 (16)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 9: Date: Tue, 09 Feb 2010 12:45:42 GMT (35)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 10: Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO (72)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 11: Supported: replaces (19)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 12: Content-Type: application/sdp (29)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 13: Content-Length: 240 (19)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Header 14:  (0)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: v=0 (3)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: o=root 2084 2084 IN IP4 192.168.10.10 (37)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: s=session (9)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: c=IN IP4 192.168.10.10 (22)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: t=0 0 (5)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: m=audio 15936 RTP/AVP 8 101 (27)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: a=rtpmap:8 PCMA/8000 (20)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: a=rtpmap:101 telephone-event/8000 (33)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: a=fmtp:101 0-16 (15)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: a=silenceSupp:off - - - - (25)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: a=ptime:20 (10)
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: Line: a=sendrecv (10)
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42] Reliably Transmitting (NAT) to 192.168.10.253:5060:
+INVITE sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>
+Contact: <sip:10013@192.168.10.10>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Date: Tue, 09 Feb 2010 12:45:42 GMT
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Content-Type: application/sdp
+Content-Length: 240
+
+v=0
+o=root 2084 2084 IN IP4 192.168.10.10
+s=session
+c=IN IP4 192.168.10.10
+t=0 0
+m=audio 15936 RTP/AVP 8 101
+a=rtpmap:8 PCMA/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-16
+a=silenceSupp:off - - - -
+a=ptime:20
+a=sendrecv
+
+---
+[Feb  9 13:45:42] DEBUG[2121] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     -- Called 10012
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42] 
+<--- Transmitting (NAT) to 192.168.10.252:5060 --->
+SIP/2.0 180 Ringing
+Via: SIP/2.0/UDP 192.168.10.252:5060;branch=z9hG4bK-oour0walx6pl;received=192.168.10.252;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=d08bmu92g1
+To: <sip:10012@192.168.10.10>;tag=as7d88afdf
+Call-ID: aa892b3c0d8c-tlj0ivmjsii1
+CSeq: 2 INVITE
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Contact: <sip:10012@192.168.10.10>
+Content-Length: 0
+
+
+<------------>
+[Feb  9 13:45:42] DEBUG[2087] chan_sip.c: Sent call-pickup info to peer 10014
+[Feb  9 13:45:42] VERBOSE[2087] logger.c: [Feb  9 13:45:42] Reliably Transmitting (NAT) to 192.168.10.251:5060:
+NOTIFY sip:10014@192.168.10.251:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK62d6fe66;rport
+From: <sip:10012@192.168.10.10>;tag=as686300c4
+To: <sip:10014@192.168.10.10>;tag=4rgbo82yqz
+Contact: <sip:10012@192.168.10.10>
+Call-ID: 3c27bcc78a9b-cmr8idkmilf3
+CSeq: 104 NOTIFY
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Event: dialog
+Content-Type: application/dialog-info+xml
+Subscription-State: active
+Content-Length: 496
+
+<?xml version="1.0"?>
+<dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="2" state="full" entity="sip:10012@192.168.10.10">
+<dialog id="10012" call-id="03d3687a07779f7019a1054b74c56ca6@192.168.10.10" direction="recipient">
+<local><identity display="10012">10012</identity><target uri="sip:10014@192.168.10.10"/></local>
+<remote><identity display="Test3">sip:10013@192.168.10.10</identity><target uri="sip:10012@192.168.10.10"/></remote>
+<state>early</state>
+</dialog>
+</dialog-info>
+
+---
+[Feb  9 13:45:42] DEBUG[2087] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:42] VERBOSE[2087] logger.c: [Feb  9 13:45:42]  Extension Changed 10012[ext-local] new state Ringing for Notify User 10014 
+[Feb  9 13:45:42] VERBOSE[2093] logger.c: [Feb  9 13:45:42] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 180 Ringing
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO
+Allow-Events: talk, hold, refer, call-info
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 180 Ringing (19)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 7: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO (88)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 8: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 9: Content-Length: 0 (17)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 10:  (0)
+[Feb  9 13:45:42] VERBOSE[2093] logger.c: [Feb  9 13:45:42] --- (10 headers 0 lines) ---
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: *** SIP TIMER: Cancelling retransmission #117 - INVITE (got response)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: (Provisional) Stopping retransmission (but retaining packet) on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' Request 102: Found
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: SIP response 180 to standard invite
+[Feb  9 13:45:42] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10012
+[Feb  9 13:45:42] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:42] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:42] DEBUG[2087] devicestate.c: Changing state for SIP/10012 - state 6 (Ringing)
+[Feb  9 13:45:42] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:42] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:42] DEBUG[2109] app_queue.c: Device 'SIP/10012' changed to state '6' (Ringing) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     -- SIP/10012-00000001 is ringing
+[Feb  9 13:45:42] VERBOSE[2093] logger.c: [Feb  9 13:45:42] 
+<--- SIP read from 192.168.10.251:5060 --->
+SIP/2.0 200 Ok
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK62d6fe66;rport=5060
+From: <sip:10012@192.168.10.10>;tag=as686300c4
+To: <sip:10014@192.168.10.10>;tag=4rgbo82yqz
+Call-ID: 3c27bcc78a9b-cmr8idkmilf3
+CSeq: 104 NOTIFY
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 200 Ok (14)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK62d6fe66;rport=5060 (69)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 2: From: <sip:10012@192.168.10.10>;tag=as686300c4 (46)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10014@192.168.10.10>;tag=4rgbo82yqz (44)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c27bcc78a9b-cmr8idkmilf3 (34)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 5: CSeq: 104 NOTIFY (16)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 6: Content-Length: 0 (17)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 7:  (0)
+[Feb  9 13:45:42] VERBOSE[2093] logger.c: [Feb  9 13:45:42] --- (7 headers 0 lines) ---
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Acked pending invite 104
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #120
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Stopping retransmission on '3c27bcc78a9b-cmr8idkmilf3' of Request 104: Match Found
+[Feb  9 13:45:42] VERBOSE[2093] logger.c: [Feb  9 13:45:42] SIP Response message for INCOMING dialog NOTIFY arrived
+[Feb  9 13:45:42] VERBOSE[2093] logger.c: [Feb  9 13:45:42] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 180 Ringing
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO
+Allow-Events: talk, hold, refer, call-info
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 180 Ringing (19)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 7: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO (88)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 8: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 9: Content-Length: 0 (17)
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: Header 10:  (0)
+[Feb  9 13:45:42] VERBOSE[2093] logger.c: [Feb  9 13:45:42] --- (10 headers 0 lines) ---
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: (Provisional) Stopping retransmission (but retaining packet) on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' Request 102: Found
+[Feb  9 13:45:42] DEBUG[2093] chan_sip.c: SIP response 180 to standard invite
+[Feb  9 13:45:42] VERBOSE[2121] logger.c: [Feb  9 13:45:42]     -- SIP/10012-00000001 is ringing
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 180 Ringing
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO
+Allow-Events: talk, hold, refer, call-info
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 180 Ringing (19)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 7: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO (88)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 8: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 9: Content-Length: 0 (17)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 10:  (0)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] --- (10 headers 0 lines) ---
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: (Provisional) Stopping retransmission (but retaining packet) on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' Request 102: Found
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: SIP response 180 to standard invite
+[Feb  9 13:45:43] VERBOSE[2121] logger.c: [Feb  9 13:45:43]     -- SIP/10012-00000001 is ringing
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] 
+<--- SIP read from 192.168.10.251:5060 --->
+INVITE sip:10012@192.168.10.10 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-jajfsduy29cn;rport
+From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a
+To: "Test3" <sip:10013@192.168.10.10>
+Call-ID: 3c27bd143019-fe1hck3lfwhk
+CSeq: 1 INVITE
+Max-Forwards: 70
+Contact: <sip:10014@192.168.10.251:5060>;reg-id=1
+Replaces: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+P-Key-Flags: resolution="31x13", keys="4"
+User-Agent: snom360/7.3.30
+Accept: application/sdp
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO
+Allow-Events: talk, hold, refer, call-info
+Supported: timer, 100rel, replaces, from-change
+Session-Expires: 3600;refresher=uas
+Min-SE: 90
+Content-Type: application/sdp
+Content-Length: 374
+
+v=0
+o=root 1295157105 1295157105 IN IP4 192.168.10.251
+s=call
+c=IN IP4 192.168.10.251
+t=0 0
+m=audio 62696 RTP/AVP 0 8 9 99 3 18 4 101
+a=rtpmap:0 pcmu/8000
+a=rtpmap:8 pcma/8000
+a=rtpmap:9 g722/8000
+a=rtpmap:99 g726-32/8000
+a=rtpmap:3 gsm/8000
+a=rtpmap:18 g729/8000
+a=rtpmap:4 g723/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-16
+a=ptime:20
+a=sendrecv
+
+<------------->
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 0: INVITE sip:10012@192.168.10.10 SIP/2.0 (38)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-jajfsduy29cn;rport (70)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 2: From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a (54)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 3: To: "Test3" <sip:10013@192.168.10.10> (37)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c27bd143019-fe1hck3lfwhk (34)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 5: CSeq: 1 INVITE (14)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 6: Max-Forwards: 70 (16)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 7: Contact: <sip:10014@192.168.10.251:5060>;reg-id=1 (49)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 8: Replaces: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (56)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 9: P-Key-Flags: resolution="31x13", keys="4" (41)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 10: User-Agent: snom360/7.3.30 (26)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 11: Accept: application/sdp (23)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 12: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO (88)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 13: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 14: Supported: timer, 100rel, replaces, from-change (47)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 15: Session-Expires: 3600;refresher=uas (35)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 16: Min-SE: 90 (10)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 17: Content-Type: application/sdp (29)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 18: Content-Length: 374 (19)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 19:  (0)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: v=0 (3)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: o=root 1295157105 1295157105 IN IP4 192.168.10.251 (50)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: s=call (6)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: c=IN IP4 192.168.10.251 (23)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: t=0 0 (5)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: m=audio 62696 RTP/AVP 0 8 9 99 3 18 4 101 (41)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:0 pcmu/8000 (20)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:8 pcma/8000 (20)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:9 g722/8000 (20)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:99 g726-32/8000 (24)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:3 gsm/8000 (19)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:18 g729/8000 (21)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:4 g723/8000 (20)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:101 telephone-event/8000 (33)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=fmtp:101 0-16 (15)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=ptime:20 (10)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=sendrecv (10)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] --- (19 headers 17 lines) ---
+[Feb  9 13:45:43] DEBUG[2093] acl.c: ##### Testing 192.168.10.251 with 192.168.10.0
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Setting NAT on RTP to On
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Allocating new SIP dialog for 3c27bd143019-fe1hck3lfwhk - INVITE (With RTP)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: **** Received INVITE (5) - Command in SIP INVITE
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Begin: parsing SIP "Supported: timer, 100rel, replaces, from-change"
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Found SIP option: -timer-
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Matched SIP option: timer
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Found SIP option: -100rel-
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Matched SIP option: 100rel
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Found SIP option: -replaces-
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Matched SIP option: replaces
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Found SIP option: -from-change-
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Found no match for SIP option: from-change (Please file bug report!)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: INVITE part of call transfer. Replaces [03d3687a07779f7019a1054b74c56ca6@192.168.10.10]
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Invite/replaces: Will use Replace-Call-ID : 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 Fromtag: <no from tag> Totag: <no to tag>
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Found call with callid 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (ourtag=as6c40f7c6, theirtag=xt8x6ttjch)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Sending to 192.168.10.251 : 5060 (NAT)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Using INVITE request as basis request - 3c27bd143019-fe1hck3lfwhk
+[Feb  9 13:45:43] DEBUG[2093] acl.c: ##### Testing 192.168.10.251 with 0.0.0.0
+[Feb  9 13:45:43] DEBUG[2093] acl.c: ##### Testing 192.168.10.251 with 0.0.0.0
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Setting NAT on RTP to On
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] 
+<--- Reliably Transmitting (NAT) to 192.168.10.251:5060 --->
+SIP/2.0 407 Proxy Authentication Required
+Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-jajfsduy29cn;received=192.168.10.251;rport=5060
+From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a
+To: "Test3" <sip:10013@192.168.10.10>;tag=as54ec964b
+Call-ID: 3c27bd143019-fe1hck3lfwhk
+CSeq: 1 INVITE
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Proxy-Authenticate: Digest algorithm=MD5, realm="asterisk", nonce="1e88f6c2"
+Content-Length: 0
+
+
+<------------>
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Scheduling destruction of SIP dialog '3c27bd143019-fe1hck3lfwhk' in 32000 ms (Method: INVITE)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found user '10014'
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] 
+<--- SIP read from 192.168.10.251:5060 --->
+ACK sip:10012@192.168.10.10 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-jajfsduy29cn;rport
+From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a
+To: "Test3" <sip:10013@192.168.10.10>;tag=as54ec964b
+Call-ID: 3c27bd143019-fe1hck3lfwhk
+CSeq: 1 ACK
+Max-Forwards: 70
+Contact: <sip:10014@192.168.10.251:5060>;reg-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 0: ACK sip:10012@192.168.10.10 SIP/2.0 (35)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-jajfsduy29cn;rport (70)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 2: From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a (54)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 3: To: "Test3" <sip:10013@192.168.10.10>;tag=as54ec964b (52)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c27bd143019-fe1hck3lfwhk (34)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 5: CSeq: 1 ACK (11)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 6: Max-Forwards: 70 (16)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 7: Contact: <sip:10014@192.168.10.251:5060>;reg-id=1 (49)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 8: Content-Length: 0 (17)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 9:  (0)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] --- (9 headers 0 lines) ---
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: **** Received ACK (6) - Command in SIP ACK
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #121
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Stopping retransmission on '3c27bd143019-fe1hck3lfwhk' of Response 1: Match Found
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] 
+<--- SIP read from 192.168.10.251:5060 --->
+INVITE sip:10012@192.168.10.10 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-87yu7ubbd4i3;rport
+From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a
+To: "Test3" <sip:10013@192.168.10.10>
+Call-ID: 3c27bd143019-fe1hck3lfwhk
+CSeq: 2 INVITE
+Max-Forwards: 70
+Contact: <sip:10014@192.168.10.251:5060>;reg-id=1
+Replaces: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+P-Key-Flags: resolution="31x13", keys="4"
+User-Agent: snom360/7.3.30
+Accept: application/sdp
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO
+Allow-Events: talk, hold, refer, call-info
+Supported: timer, 100rel, replaces, from-change
+Session-Expires: 3600;refresher=uas
+Min-SE: 90
+Proxy-Authorization: Digest username="10014",realm="asterisk",nonce="1e88f6c2",uri="sip:10012@192.168.10.10",response="04e113dee7eb55daa4e9b5fd21d00f50",algorithm=MD5
+Content-Type: application/sdp
+Content-Length: 374
+
+v=0
+o=root 1295157105 1295157105 IN IP4 192.168.10.251
+s=call
+c=IN IP4 192.168.10.251
+t=0 0
+m=audio 62696 RTP/AVP 0 8 9 99 3 18 4 101
+a=rtpmap:0 pcmu/8000
+a=rtpmap:8 pcma/8000
+a=rtpmap:9 g722/8000
+a=rtpmap:99 g726-32/8000
+a=rtpmap:3 gsm/8000
+a=rtpmap:18 g729/8000
+a=rtpmap:4 g723/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-16
+a=ptime:20
+a=sendrecv
+
+<------------->
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 0: INVITE sip:10012@192.168.10.10 SIP/2.0 (38)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-87yu7ubbd4i3;rport (70)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 2: From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a (54)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 3: To: "Test3" <sip:10013@192.168.10.10> (37)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c27bd143019-fe1hck3lfwhk (34)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 5: CSeq: 2 INVITE (14)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 6: Max-Forwards: 70 (16)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 7: Contact: <sip:10014@192.168.10.251:5060>;reg-id=1 (49)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 8: Replaces: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (56)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 9: P-Key-Flags: resolution="31x13", keys="4" (41)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 10: User-Agent: snom360/7.3.30 (26)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 11: Accept: application/sdp (23)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 12: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO (88)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 13: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 14: Supported: timer, 100rel, replaces, from-change (47)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 15: Session-Expires: 3600;refresher=uas (35)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 16: Min-SE: 90 (10)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 17: Proxy-Authorization: Digest username="10014",realm="asterisk",nonce="1e88f6c2",uri="sip:10012@192.168.10.10",response="04e113dee7eb55daa4e9b5fd21d00f50",algorithm=MD5 (166)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 18: Content-Type: application/sdp (29)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 19: Content-Length: 374 (19)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Header 20:  (0)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: v=0 (3)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: o=root 1295157105 1295157105 IN IP4 192.168.10.251 (50)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: s=call (6)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: c=IN IP4 192.168.10.251 (23)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: t=0 0 (5)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: m=audio 62696 RTP/AVP 0 8 9 99 3 18 4 101 (41)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:0 pcmu/8000 (20)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:8 pcma/8000 (20)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:9 g722/8000 (20)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:99 g726-32/8000 (24)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:3 gsm/8000 (19)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:18 g729/8000 (21)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:4 g723/8000 (20)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=rtpmap:101 telephone-event/8000 (33)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=fmtp:101 0-16 (15)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=ptime:20 (10)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Line: a=sendrecv (10)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] --- (20 headers 17 lines) ---
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: **** Received INVITE (5) - Command in SIP INVITE
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: INVITE part of call transfer. Replaces [03d3687a07779f7019a1054b74c56ca6@192.168.10.10]
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Invite/replaces: Will use Replace-Call-ID : 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 Fromtag: <no from tag> Totag: <no to tag>
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Found call with callid 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (ourtag=as6c40f7c6, theirtag=xt8x6ttjch)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Sending to 192.168.10.251 : 5060 (NAT)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Using INVITE request as basis request - 3c27bd143019-fe1hck3lfwhk
+[Feb  9 13:45:43] DEBUG[2093] acl.c: ##### Testing 192.168.10.251 with 0.0.0.0
+[Feb  9 13:45:43] DEBUG[2093] acl.c: ##### Testing 192.168.10.251 with 0.0.0.0
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Setting NAT on RTP to On
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found user '10014'
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing session-level SDP v=0... UNSUPPORTED.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing session-level SDP o=root 1295157105 1295157105 IN IP4 192.168.10.251... UNSUPPORTED.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing session-level SDP s=call... UNSUPPORTED.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing session-level SDP c=IN IP4 192.168.10.251... OK.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing session-level SDP t=0 0... UNSUPPORTED.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found RTP audio format 0
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found RTP audio format 8
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found RTP audio format 9
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found RTP audio format 99
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found RTP audio format 3
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found RTP audio format 18
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found RTP audio format 4
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found RTP audio format 101
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found audio description format pcmu for ID 0
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:0 pcmu/8000... OK.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found audio description format pcma for ID 8
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:8 pcma/8000... OK.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found audio description format g722 for ID 9
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:9 g722/8000... OK.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found audio description format g726-32 for ID 99
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:99 g726-32/8000... OK.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found audio description format gsm for ID 3
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:3 gsm/8000... OK.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found audio description format g729 for ID 18
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:18 g729/8000... OK.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found audio description format g723 for ID 4
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:4 g723/8000... OK.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Found audio description format telephone-event for ID 101
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=rtpmap:101 telephone-event/8000... OK.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=fmtp:101 0-16... UNSUPPORTED.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=ptime:20... OK.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Processing media-level (audio) SDP a=sendrecv... OK.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: T38 state changed to 0 on channel <none>
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Capabilities: us - 0x8 (alaw), peer - audio=0x190f (g723|gsm|ulaw|alaw|g726|g729|g722)/video=0x0 (nothing), combined - 0x8 (alaw)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Non-codec capabilities (dtmf): us - 0x1 (telephone-event), peer - 0x1 (telephone-event), combined - 0x1 (telephone-event)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Our T38 capability = (0), peer T38 capability (0), joint T38 capability (0)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Peer audio RTP is at port 192.168.10.251:62696
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: We're settling with these formats: 0x8 (alaw)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Checking SIP call limits for device 10014
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Updating call counter for incoming call
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Call from peer '10014' is 1 out of 50
+[Feb  9 13:45:43] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10014
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10014
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Looking for 10012 in from-internal (domain 192.168.10.10)
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10014
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: Changing state for SIP/10014 - state 2 (In use)
+[Feb  9 13:45:43] DEBUG[2109] app_queue.c: Device 'SIP/10014' changed to state '2' (In use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10014
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10014
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: *** Our native formats are 0x8 (alaw) 
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: *** Joint capabilities are 0x8 (alaw) 
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: *** Our capabilities are 0x8 (alaw) 
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: *** AST_CODEC_CHOOSE formats are 0x8 (alaw) 
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: This channel will not be able to handle video.
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10014
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: build_route: Contact hop: <sip:10014@192.168.10.251:5060>;reg-id=1
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10014
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] list_route: hop: <sip:10014@192.168.10.251:5060>
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Strict routing enforced for session 3c2d45589f0e-yfbgolinirne
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Sending this call to the invite/replcaes handler 3c27bd143019-fe1hck3lfwhk
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: 	Attended transfer attempted to replace call with no bridge (maybe ringing). Channel SIP/10012-00000001!
+[Feb  9 13:45:43] VERBOSE[2087] logger.c: [Feb  9 13:45:43] set_destination: Parsing <sip:10012@192.168.10.253:5060> for address/port to send to
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: SIP transfer: Invite Replace incoming channel should replace and hang up channel SIP/10012-00000001 (one call leg)
+[Feb  9 13:45:43] VERBOSE[2087] logger.c: [Feb  9 13:45:43] set_destination: set destination to 192.168.10.253, port 5060
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] 
+<--- Transmitting (NAT) to 192.168.10.251:5060 --->
+SIP/2.0 100 Trying
+Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-87yu7ubbd4i3;received=192.168.10.251;rport=5060
+From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a
+To: "Test3" <sip:10013@192.168.10.10>
+Call-ID: 3c27bd143019-fe1hck3lfwhk
+CSeq: 2 INVITE
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Contact: <sip:10012@192.168.10.10>
+Content-Length: 0
+
+
+<------------>
+[Feb  9 13:45:43] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10014
+[Feb  9 13:45:43] VERBOSE[2087] logger.c: [Feb  9 13:45:43] Reliably Transmitting (NAT) to 192.168.10.253:5060:
+NOTIFY sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK10a78437;rport
+From: <sip:10014@192.168.10.10>;tag=as03a436f6
+To: <sip:10012@192.168.10.10>;tag=nmharrs58s
+Contact: <sip:10014@192.168.10.10>
+Call-ID: 3c2d45589f0e-yfbgolinirne
+CSeq: 103 NOTIFY
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Event: dialog
+Content-Type: application/dialog-info+xml
+Subscription-State: active
+Content-Length: 207
+
+<?xml version="1.0"?>
+<dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="1" state="full" entity="sip:10014@192.168.10.10">
+<dialog id="10014">
+<state>confirmed</state>
+</dialog>
+</dialog-info>
+
+---
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Setting framing from config on incoming call
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: ** Our capability: 0x8 (alaw) Video flag: True
+[Feb  9 13:45:43] VERBOSE[2087] logger.c: [Feb  9 13:45:43]  Extension Changed 10014[ext-local] new state InUse for Notify User 10012 
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: ** Our prefcodec: 0x0 (nothing) 
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10014
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Audio is at 192.168.10.10 port 12368
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10014
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: Changing state for SIP/10014 - state 2 (In use)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Adding codec 0x8 (alaw) to SDP
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10014
+[Feb  9 13:45:43] DEBUG[2109] app_queue.c: Device 'SIP/10014' changed to state '2' (In use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Adding non-codec 0x1 (telephone-event) to SDP
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10014
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: -- Done with adding codecs to SDP
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Done building SDP. Settling with this capability: 0x8 (alaw)
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] 
+<--- Reliably Transmitting (NAT) to 192.168.10.251:5060 --->
+SIP/2.0 200 OK
+Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-87yu7ubbd4i3;received=192.168.10.251;rport=5060
+From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a
+To: "Test3" <sip:10013@192.168.10.10>;tag=as5ea7ab8d
+Call-ID: 3c27bd143019-fe1hck3lfwhk
+CSeq: 2 INVITE
+User-Agent: Asterisk PBX
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Contact: <sip:10012@192.168.10.10>
+Content-Type: application/sdp
+Content-Length: 240
+
+v=0
+o=root 2084 2084 IN IP4 192.168.10.10
+s=session
+c=IN IP4 192.168.10.10
+t=0 0
+m=audio 12368 RTP/AVP 8 101
+a=rtpmap:8 PCMA/8000
+a=rtpmap:101 telephone-event/8000
+a=fmtp:101 0-16
+a=silenceSupp:off - - - -
+a=ptime:20
+a=sendrecv
+
+<------------>
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:43] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10014
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10014
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10014
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Invite/Replaces: preparing to masquerade SIP/10014-00000002 into SIP/10012-00000001
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: Changing state for SIP/10014 - state 2 (In use)
+[Feb  9 13:45:43] DEBUG[2093] channel.c: Planning to masquerade channel SIP/10014-00000002 into the structure of SIP/10012-00000001
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10014
+[Feb  9 13:45:43] DEBUG[2093] channel.c: Done planning to masquerade channel SIP/10014-00000002 into the structure of SIP/10012-00000001
+[Feb  9 13:45:43] DEBUG[2109] app_queue.c: Device 'SIP/10014' changed to state '2' (In use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Invite/Replaces: Going to masquerade SIP/10014-00000002 into SIP/10012-00000001
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10014
+[Feb  9 13:45:43] DEBUG[2093] channel.c: Actually Masquerading SIP/10014-00000002(6) into the structure of SIP/10012-00000001(5)
+[Feb  9 13:45:43] DEBUG[2093] channel.c: Got clone lock for masquerade on 'SIP/10014-00000002' at 0x9938ae8
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: SIP Fixup: New owner for dialogue 03d3687a07779f7019a1054b74c56ca6@192.168.10.10: SIP/10014-00000002<MASQ> (Old parent: SIP/10014-00000002)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Hangup call SIP/10014-00000002<MASQ>, SIP callid 03d3687a07779f7019a1054b74c56ca6@192.168.10.10)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: update_call_counter(10012) - decrement call limit counter on hangup
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Updating call counter for outgoing call
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Call to peer '10012' removed from call limit 50
+[Feb  9 13:45:43] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10012
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: Hanging up channel in state Ringing (not UP)
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Scheduling destruction of SIP dialog '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' in 6400 ms (Method: INVITE)
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: Changing state for SIP/10012 - state 1 (Not in use)
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: (Provisional) Stopping retransmission (but retaining packet) on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' Request 102: Found
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Reliably Transmitting (NAT) to 192.168.10.253:5060:
+CANCEL sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 CANCEL
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:43] VERBOSE[2093] logger.c: [Feb  9 13:45:43] Scheduling destruction of SIP dialog '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' in 6400 ms (Method: INVITE)
+[Feb  9 13:45:43] DEBUG[2093] channel.c: Putting channel SIP/10014-00000002 in 8/8 formats
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: SIP Fixup: New owner for dialogue 3c27bd143019-fe1hck3lfwhk: SIP/10014-00000002 (Old parent: SIP/10012-00000001<ZOMBIE>)
+[Feb  9 13:45:43] DEBUG[2093] channel.c: Released clone lock on 'SIP/10012-00000001<ZOMBIE>'
+[Feb  9 13:45:43] DEBUG[2093] channel.c: Done Masquerading SIP/10014-00000002 (6)
+[Feb  9 13:45:43] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10012
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: After transfer:----------------------------
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c:  -- C:        SIP/10012-00000001<ZOMBIE> State Down
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c:  -- replacecall:        SIP/10014-00000002 State Up
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c:  -- P->owner: SIP/10014-00000002 State Up
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c:  -- No call bridged to C->owner 
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:43] DEBUG[2093] chan_sip.c: End After transfer:----------------------------
+[Feb  9 13:45:43] DEBUG[2093] channel.c: Hanging up zombie 'SIP/10012-00000001<ZOMBIE>'
+[Feb  9 13:45:43] DEBUG[2109] app_queue.c: Device 'SIP/10012' changed to state '1' (Not in use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:43] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10012
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Strict routing enforced for session 3c27bcc78a9b-cmr8idkmilf3
+[Feb  9 13:45:43] VERBOSE[2087] logger.c: [Feb  9 13:45:43] set_destination: Parsing <sip:10014@192.168.10.251:5060> for address/port to send to
+[Feb  9 13:45:43] VERBOSE[2087] logger.c: [Feb  9 13:45:43] set_destination: set destination to 192.168.10.251, port 5060
+[Feb  9 13:45:43] VERBOSE[2087] logger.c: [Feb  9 13:45:43] Reliably Transmitting (NAT) to 192.168.10.251:5060:
+NOTIFY sip:10014@192.168.10.251:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK59c90001;rport
+From: <sip:10012@192.168.10.10>;tag=as686300c4
+To: <sip:10014@192.168.10.10>;tag=4rgbo82yqz
+Contact: <sip:10012@192.168.10.10>
+Call-ID: 3c27bcc78a9b-cmr8idkmilf3
+CSeq: 105 NOTIFY
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Event: dialog
+Content-Type: application/dialog-info+xml
+Subscription-State: active
+Content-Length: 208
+
+<?xml version="1.0"?>
+<dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="3" state="full" entity="sip:10012@192.168.10.10">
+<dialog id="10012">
+<state>terminated</state>
+</dialog>
+</dialog-info>
+
+---
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:43] VERBOSE[2087] logger.c: [Feb  9 13:45:43]  Extension Changed 10012[ext-local] new state Idle for Notify User 10014 
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: Changing state for SIP/10012 - state 1 (Not in use)
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:43] DEBUG[2109] app_queue.c: Device 'SIP/10012' changed to state '1' (Not in use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: Changing state for SIP/10012 - state 1 (Not in use)
+[Feb  9 13:45:43] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:43] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:43] DEBUG[2109] app_queue.c: Device 'SIP/10012' changed to state '1' (Not in use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] 
+<--- SIP read from 192.168.10.251:5060 --->
+ACK sip:10012@192.168.10.10 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-3w95cb86fnyc;rport
+From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a
+To: "Test3" <sip:10013@192.168.10.10>;tag=as5ea7ab8d
+Call-ID: 3c27bd143019-fe1hck3lfwhk
+CSeq: 2 ACK
+Max-Forwards: 70
+Contact: <sip:10014@192.168.10.251:5060>;reg-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 0: ACK sip:10012@192.168.10.10 SIP/2.0 (35)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.251:5060;branch=z9hG4bK-3w95cb86fnyc;rport (70)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 2: From: "Test4" <sip:10014@192.168.10.10>;tag=3huqy6yu0a (54)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 3: To: "Test3" <sip:10013@192.168.10.10>;tag=as5ea7ab8d (52)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c27bd143019-fe1hck3lfwhk (34)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 5: CSeq: 2 ACK (11)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 6: Max-Forwards: 70 (16)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 7: Contact: <sip:10014@192.168.10.251:5060>;reg-id=1 (49)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 8: Content-Length: 0 (17)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 9:  (0)
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] --- (9 headers 0 lines) ---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: **** Received ACK (6) - Command in SIP ACK
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #124
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Stopping retransmission on '3c27bd143019-fe1hck3lfwhk' of Response 2: Match Found
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: SIP TIMER: Rescheduling retransmission #123 (1) NOTIFY - 4
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: ** SIP timers: Rescheduling retransmission 2 to 200 ms (t1 100 ms (Retrans id #123)) 
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] Retransmitting #1 (NAT) to 192.168.10.253:5060:
+NOTIFY sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK10a78437;rport
+From: <sip:10014@192.168.10.10>;tag=as03a436f6
+To: <sip:10012@192.168.10.10>;tag=nmharrs58s
+Contact: <sip:10014@192.168.10.10>
+Call-ID: 3c2d45589f0e-yfbgolinirne
+CSeq: 103 NOTIFY
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Event: dialog
+Content-Type: application/dialog-info+xml
+Subscription-State: active
+Content-Length: 207
+
+<?xml version="1.0"?>
+<dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="1" state="full" entity="sip:10014@192.168.10.10">
+<dialog id="10014">
+<state>confirmed</state>
+</dialog>
+</dialog-info>
+
+---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: SIP TIMER: Rescheduling retransmission #126 (1) CANCEL - 14
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: ** SIP timers: Rescheduling retransmission 2 to 200 ms (t1 100 ms (Retrans id #126)) 
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] Retransmitting #1 (NAT) to 192.168.10.253:5060:
+CANCEL sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 CANCEL
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] 
+<--- SIP read from 192.168.10.251:5060 --->
+SIP/2.0 200 Ok
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK59c90001;rport=5060
+From: <sip:10012@192.168.10.10>;tag=as686300c4
+To: <sip:10014@192.168.10.10>;tag=4rgbo82yqz
+Call-ID: 3c27bcc78a9b-cmr8idkmilf3
+CSeq: 105 NOTIFY
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 200 Ok (14)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK59c90001;rport=5060 (69)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 2: From: <sip:10012@192.168.10.10>;tag=as686300c4 (46)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10014@192.168.10.10>;tag=4rgbo82yqz (44)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c27bcc78a9b-cmr8idkmilf3 (34)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 5: CSeq: 105 NOTIFY (16)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 6: Content-Length: 0 (17)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 7:  (0)
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] --- (7 headers 0 lines) ---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Acked pending invite 105
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #128
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Stopping retransmission on '3c27bcc78a9b-cmr8idkmilf3' of Request 105: Match Found
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] SIP Response message for INCOMING dialog NOTIFY arrived
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 487 Request Terminated
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 487 Request Terminated (30)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 7: Content-Length: 0 (17)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 8:  (0)
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] --- (8 headers 0 lines) ---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Acked pending invite 102
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Stopping retransmission on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' of Request 102: Match Found
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: SIP response 487 to standard invite
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] Transmitting (NAT) to 192.168.10.253:5060:
+ACK sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Contact: <sip:10013@192.168.10.10>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 ACK
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Updating call counter for outgoing call
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Call to peer '10012' removed from call limit 50
+[Feb  9 13:45:44] DEBUG[2093] devicestate.c: Notification of state change to be queued on device/channel SIP/10012
+[Feb  9 13:45:44] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Setting SIP_ALREADYGONE on dialog 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+[Feb  9 13:45:44] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:44] DEBUG[2087] devicestate.c: Changing state for SIP/10012 - state 1 (Not in use)
+[Feb  9 13:45:44] DEBUG[2087] devicestate.c: No provider found, checking channel drivers for SIP - 10012
+[Feb  9 13:45:44] DEBUG[2109] app_queue.c: Device 'SIP/10012' changed to state '1' (Not in use) but we don't care because they're not a member of any queue.
+[Feb  9 13:45:44] DEBUG[2087] chan_sip.c: Checking device state for peer 10012
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: SIP TIMER: Rescheduling retransmission #123 (2) NOTIFY - 4
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: ** SIP timers: Rescheduling retransmission 3 to 400 ms (t1 100 ms (Retrans id #123)) 
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] Retransmitting #2 (NAT) to 192.168.10.253:5060:
+NOTIFY sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK10a78437;rport
+From: <sip:10014@192.168.10.10>;tag=as03a436f6
+To: <sip:10012@192.168.10.10>;tag=nmharrs58s
+Contact: <sip:10014@192.168.10.10>
+Call-ID: 3c2d45589f0e-yfbgolinirne
+CSeq: 103 NOTIFY
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Event: dialog
+Content-Type: application/dialog-info+xml
+Subscription-State: active
+Content-Length: 207
+
+<?xml version="1.0"?>
+<dialog-info xmlns="urn:ietf:params:xml:ns:dialog-info" version="1" state="full" entity="sip:10014@192.168.10.10">
+<dialog id="10014">
+<state>confirmed</state>
+</dialog>
+</dialog-info>
+
+---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: SIP TIMER: Rescheduling retransmission #126 (2) CANCEL - 14
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: ** SIP timers: Rescheduling retransmission 3 to 400 ms (t1 100 ms (Retrans id #126)) 
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] Retransmitting #2 (NAT) to 192.168.10.253:5060:
+CANCEL sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 CANCEL
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 200 Ok
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK10a78437;rport=5060
+From: <sip:10014@192.168.10.10>;tag=as03a436f6
+To: <sip:10012@192.168.10.10>;tag=nmharrs58s
+Call-ID: 3c2d45589f0e-yfbgolinirne
+CSeq: 103 NOTIFY
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 200 Ok (14)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK10a78437;rport=5060 (69)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 2: From: <sip:10014@192.168.10.10>;tag=as03a436f6 (46)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.10>;tag=nmharrs58s (44)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 3c2d45589f0e-yfbgolinirne (34)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 5: CSeq: 103 NOTIFY (16)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 6: Content-Length: 0 (17)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 7:  (0)
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] --- (7 headers 0 lines) ---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Acked pending invite 103
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #123
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Stopping retransmission on '3c2d45589f0e-yfbgolinirne' of Request 103: Match Found
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] SIP Response message for INCOMING dialog NOTIFY arrived
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 487 Request Terminated
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 487 Request Terminated (30)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 7: Content-Length: 0 (17)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 8:  (0)
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] --- (8 headers 0 lines) ---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Stopping retransmission on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' of Request 102: Match Not Found
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: SIP TIMER: Rescheduling retransmission #126 (3) CANCEL - 14
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: ** SIP timers: Rescheduling retransmission 4 to 800 ms (t1 100 ms (Retrans id #126)) 
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] Retransmitting #3 (NAT) to 192.168.10.253:5060:
+CANCEL sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 CANCEL
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 487 Request Terminated
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 487 Request Terminated (30)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 7: Content-Length: 0 (17)
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Header 8:  (0)
+[Feb  9 13:45:44] VERBOSE[2093] logger.c: [Feb  9 13:45:44] --- (8 headers 0 lines) ---
+[Feb  9 13:45:44] DEBUG[2093] chan_sip.c: Stopping retransmission on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' of Request 102: Match Not Found
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: SIP TIMER: Rescheduling retransmission #126 (4) CANCEL - 14
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: ** SIP timers: Rescheduling retransmission 5 to 1600 ms (t1 100 ms (Retrans id #126)) 
+[Feb  9 13:45:45] VERBOSE[2093] logger.c: [Feb  9 13:45:45] Retransmitting #4 (NAT) to 192.168.10.253:5060:
+CANCEL sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 CANCEL
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:45] VERBOSE[2093] logger.c: [Feb  9 13:45:45] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 487 Request Terminated
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 487 Request Terminated (30)
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 7: Content-Length: 0 (17)
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Header 8:  (0)
+[Feb  9 13:45:45] VERBOSE[2093] logger.c: [Feb  9 13:45:45] --- (8 headers 0 lines) ---
+[Feb  9 13:45:45] DEBUG[2093] chan_sip.c: Stopping retransmission on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' of Request 102: Match Not Found
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: SIP TIMER: Rescheduling retransmission #126 (5) CANCEL - 14
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: ** SIP timers: Rescheduling retransmission 6 to 3200 ms (t1 100 ms (Retrans id #126)) 
+[Feb  9 13:45:47] VERBOSE[2093] logger.c: [Feb  9 13:45:47] Retransmitting #5 (NAT) to 192.168.10.253:5060:
+CANCEL sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 CANCEL
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:47] VERBOSE[2093] logger.c: [Feb  9 13:45:47] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 487 Request Terminated
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 487 Request Terminated (30)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 7: Content-Length: 0 (17)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 8:  (0)
+[Feb  9 13:45:47] VERBOSE[2093] logger.c: [Feb  9 13:45:47] --- (8 headers 0 lines) ---
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Stopping retransmission on '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' of Request 102: Match Not Found
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Allocating new SIP dialog for (No Call-ID) - OPTIONS (No RTP)
+[Feb  9 13:45:47] DEBUG[2093] acl.c: ##### Testing 192.168.10.253 with 192.168.10.0
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 0: OPTIONS sip:10012@192.168.10.253:5060 SIP/2.0 (45)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK4305b788;rport (64)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 2: From: "Unknown" <sip:Unknown@192.168.10.10>;tag=as55d543aa (58)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060> (35)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 4: Contact: <sip:Unknown@192.168.10.10> (36)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 5: Call-ID: 1d99e7512d513ab20a924be9604fcb2a@192.168.10.10 (55)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 6: CSeq: 102 OPTIONS (17)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 7: User-Agent: Asterisk PBX (24)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 8: Max-Forwards: 70 (16)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 9: Date: Tue, 09 Feb 2010 12:45:47 GMT (35)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 10: Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO (72)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 11: Supported: replaces (19)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 12: Content-Length: 0 (17)
+[Feb  9 13:45:47] VERBOSE[2093] logger.c: [Feb  9 13:45:47] Reliably Transmitting (NAT) to 192.168.10.253:5060:
+OPTIONS sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK4305b788;rport
+From: "Unknown" <sip:Unknown@192.168.10.10>;tag=as55d543aa
+To: <sip:10012@192.168.10.253:5060>
+Contact: <sip:Unknown@192.168.10.10>
+Call-ID: 1d99e7512d513ab20a924be9604fcb2a@192.168.10.10
+CSeq: 102 OPTIONS
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Date: Tue, 09 Feb 2010 12:45:47 GMT
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:47] VERBOSE[2093] logger.c: [Feb  9 13:45:47] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 200 OK
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK4305b788;rport=5060
+From: "Unknown" <sip:Unknown@192.168.10.10>;tag=as55d543aa
+To: <sip:10012@192.168.10.253:5060>
+Call-ID: 1d99e7512d513ab20a924be9604fcb2a@192.168.10.10
+CSeq: 102 OPTIONS
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+User-Agent: snom370/7.1.39
+Accept-Language: en
+Accept: application/sdp
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO
+Allow-Events: talk, hold, refer, call-info
+Supported: timer, 100rel, replaces, from-change
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 200 OK (14)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK4305b788;rport=5060 (69)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 2: From: "Unknown" <sip:Unknown@192.168.10.10>;tag=as55d543aa (58)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060> (35)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 1d99e7512d513ab20a924be9604fcb2a@192.168.10.10 (55)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 OPTIONS (17)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 7: User-Agent: snom370/7.1.39 (26)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 8: Accept-Language: en (19)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 9: Accept: application/sdp (23)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 10: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO (88)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 11: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 12: Supported: timer, 100rel, replaces, from-change (47)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 13: Content-Length: 0 (17)
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Header 14:  (0)
+[Feb  9 13:45:47] VERBOSE[2093] logger.c: [Feb  9 13:45:47] --- (14 headers 0 lines) ---
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #129
+[Feb  9 13:45:47] DEBUG[2093] chan_sip.c: Stopping retransmission on '1d99e7512d513ab20a924be9604fcb2a@192.168.10.10' of Request 102: Match Found
+[Feb  9 13:45:47] VERBOSE[2093] logger.c: [Feb  9 13:45:47] Really destroying SIP dialog '1d99e7512d513ab20a924be9604fcb2a@192.168.10.10' Method: OPTIONS
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: SIP TIMER: Rescheduling retransmission #126 (6) CANCEL - 14
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: ** SIP timers: Rescheduling retransmission 7 to 4000 ms (t1 100 ms (Retrans id #126)) 
+[Feb  9 13:45:50] VERBOSE[2093] logger.c: [Feb  9 13:45:50] Retransmitting #6 (NAT) to 192.168.10.253:5060:
+CANCEL sip:10012@192.168.10.253:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 CANCEL
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Auto destroying SIP dialog '03d3687a07779f7019a1054b74c56ca6@192.168.10.10'
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Destroying SIP dialog 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+[Feb  9 13:45:50] VERBOSE[2093] logger.c: [Feb  9 13:45:50] Really destroying SIP dialog '03d3687a07779f7019a1054b74c56ca6@192.168.10.10' Method: INVITE
+[Feb  9 13:45:50] VERBOSE[2093] logger.c: [Feb  9 13:45:50] 
+<--- SIP read from 192.168.10.253:5060 --->
+SIP/2.0 487 Request Terminated
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060
+From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6
+To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch
+Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10
+CSeq: 102 INVITE
+Contact: <sip:10012@192.168.10.253:5060>;flow-id=1
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 487 Request Terminated (30)
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK12c75e53;rport=5060 (69)
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 2: From: "Test3" <sip:10013@192.168.10.10>;tag=as6c40f7c6 (54)
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10012@192.168.10.253:5060>;tag=xt8x6ttjch (50)
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 03d3687a07779f7019a1054b74c56ca6@192.168.10.10 (55)
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 INVITE (16)
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10012@192.168.10.253:5060>;flow-id=1 (50)
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 7: Content-Length: 0 (17)
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Header 8:  (0)
+[Feb  9 13:45:50] VERBOSE[2093] logger.c: [Feb  9 13:45:50] --- (8 headers 0 lines) ---
+[Feb  9 13:45:50] DEBUG[2093] chan_sip.c: Invalid SIP message - rejected , no callid, len 359
+[Feb  9 13:45:53] VERBOSE[2120] logger.c: [Feb  9 13:45:53]     -- Remote UNIX connection disconnected
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Allocating new SIP dialog for (No Call-ID) - OPTIONS (No RTP)
+[Feb  9 13:45:57] DEBUG[2093] acl.c: ##### Testing 192.168.10.252 with 192.168.10.0
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 0: OPTIONS sip:10013@192.168.10.252:5060 SIP/2.0 (45)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK48f20791;rport (64)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 2: From: "Unknown" <sip:Unknown@192.168.10.10>;tag=as310b6f97 (58)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10013@192.168.10.252:5060> (35)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 4: Contact: <sip:Unknown@192.168.10.10> (36)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 5: Call-ID: 7aa5e29b1c19e951640496cc502514e1@192.168.10.10 (55)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 6: CSeq: 102 OPTIONS (17)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 7: User-Agent: Asterisk PBX (24)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 8: Max-Forwards: 70 (16)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 9: Date: Tue, 09 Feb 2010 12:45:57 GMT (35)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 10: Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO (72)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 11: Supported: replaces (19)
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: Header 12: Content-Length: 0 (17)
+[Feb  9 13:45:57] VERBOSE[2093] logger.c: [Feb  9 13:45:57] Reliably Transmitting (NAT) to 192.168.10.252:5060:
+OPTIONS sip:10013@192.168.10.252:5060 SIP/2.0
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK48f20791;rport
+From: "Unknown" <sip:Unknown@192.168.10.10>;tag=as310b6f97
+To: <sip:10013@192.168.10.252:5060>
+Contact: <sip:Unknown@192.168.10.10>
+Call-ID: 7aa5e29b1c19e951640496cc502514e1@192.168.10.10
+CSeq: 102 OPTIONS
+User-Agent: Asterisk PBX
+Max-Forwards: 70
+Date: Tue, 09 Feb 2010 12:45:57 GMT
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO
+Supported: replaces
+Content-Length: 0
+
+
+---
+[Feb  9 13:45:57] DEBUG[2093] chan_sip.c: *** SIP TIMER: Initializing retransmit timer on packet: Id  #-1
+[Feb  9 13:45:58] VERBOSE[2093] logger.c: [Feb  9 13:45:58] 
+<--- SIP read from 192.168.10.252:5060 --->
+SIP/2.0 200 OK
+Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK48f20791;rport=5060
+From: "Unknown" <sip:Unknown@192.168.10.10>;tag=as310b6f97
+To: <sip:10013@192.168.10.252:5060>
+Call-ID: 7aa5e29b1c19e951640496cc502514e1@192.168.10.10
+CSeq: 102 OPTIONS
+Contact: <sip:10013@192.168.10.252:5060>;reg-id=1
+User-Agent: snom870/8.3.6
+Accept-Language: en
+Accept: application/sdp
+Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO, UPDATE
+Allow-Events: talk, hold, refer, call-info
+Supported: timer, 100rel, replaces, from-change
+Content-Length: 0
+
+
+<------------->
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 0: SIP/2.0 200 OK (14)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 1: Via: SIP/2.0/UDP 192.168.10.10:5060;branch=z9hG4bK48f20791;rport=5060 (69)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 2: From: "Unknown" <sip:Unknown@192.168.10.10>;tag=as310b6f97 (58)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 3: To: <sip:10013@192.168.10.252:5060> (35)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 4: Call-ID: 7aa5e29b1c19e951640496cc502514e1@192.168.10.10 (55)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 5: CSeq: 102 OPTIONS (17)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 6: Contact: <sip:10013@192.168.10.252:5060>;reg-id=1 (49)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 7: User-Agent: snom870/8.3.6 (25)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 8: Accept-Language: en (19)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 9: Accept: application/sdp (23)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 10: Allow: INVITE, ACK, CANCEL, BYE, REFER, OPTIONS, NOTIFY, SUBSCRIBE, PRACK, MESSAGE, INFO, UPDATE (96)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 11: Allow-Events: talk, hold, refer, call-info (42)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 12: Supported: timer, 100rel, replaces, from-change (47)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 13: Content-Length: 0 (17)
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Header 14:  (0)
+[Feb  9 13:45:58] VERBOSE[2093] logger.c: [Feb  9 13:45:58] --- (14 headers 0 lines) ---
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: ** SIP TIMER: Cancelling retransmit of packet (reply received) Retransid #132
+[Feb  9 13:45:58] DEBUG[2093] chan_sip.c: Stopping retransmission on '7aa5e29b1c19e951640496cc502514e1@192.168.10.10' of Request 102: Match Found
+[Feb  9 13:45:58] VERBOSE[2093] logger.c: [Feb  9 13:45:58] Really destroying SIP dialog '7aa5e29b1c19e951640496cc502514e1@192.168.10.10' Method: OPTIONS

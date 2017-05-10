@@ -1,0 +1,7 @@
+{
+  "utterance": "who is the coolest person in the world",
+  "intent_type": "WhoIsTheCoolestPersonInTheWorldIntent",
+  "intent": {
+    "WhoIsTheCoolestPersonInTheWorldKeyphrase": "who is the coolest person in the world"
+  }
+}

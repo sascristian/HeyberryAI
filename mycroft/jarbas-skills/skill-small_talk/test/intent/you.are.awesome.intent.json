@@ -1,0 +1,7 @@
+{
+  "utterance": "you are awesome",
+  "intent_type": "YouAreAwesomeIntent",
+  "intent": {
+    "YouAreAwesomeKeyphrase": "you are awesome"
+  }
+}

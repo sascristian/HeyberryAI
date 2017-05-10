@@ -1,0 +1,7 @@
+{
+  "utterance": "what's the cbc news",
+  "intent_type": "CBCNewsIntent",
+  "intent": {
+    "CBCNewsKeyword": "cbc news"
+  }
+}

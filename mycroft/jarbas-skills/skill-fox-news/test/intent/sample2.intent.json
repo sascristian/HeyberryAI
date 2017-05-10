@@ -1,0 +1,7 @@
+{
+  "utterance": "is there any news",
+  "intent_type": "FoxNewsIntent",
+  "intent": {
+    "FoxNewsKeyword": "fox news"
+  }
+}

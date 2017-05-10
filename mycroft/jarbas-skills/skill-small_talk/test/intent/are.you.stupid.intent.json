@@ -1,0 +1,7 @@
+{
+  "utterance": "are you stupid",
+  "intent_type": "AreYouStupidIntent",
+  "intent": {
+    "AreYouStupidlKeyphrase": "are you stupid"
+  }
+}

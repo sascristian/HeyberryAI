@@ -1,0 +1,7 @@
+{
+  "utterance": "can you dance",
+  "intent_type": "CanYouDanceIntent",
+  "intent": {
+    "CanYouDanceKeyphrase": "can you dance"
+  }
+}

@@ -1,0 +1,1 @@
+Next neo is called {{ name }} and will pass at {{ distance }} kilometers from earth in {{ date }} and has a diameter between {{ min_d }} and {{ max_d }} meters and a velocity off {{ velocity }} kilometers per second

@@ -1,0 +1,162 @@
+5/4/2017 5:22:11 PM: DEBUG - 
+
+5/4/2017 5:22:11 PM: DEBUG - Program started! Hooray! \o/
+5/4/2017 5:22:11 PM: DEBUG - Reading settings...
+5/4/2017 5:22:11 PM: DEBUG - Checking if the PSO2 Tweaker is running
+5/4/2017 5:22:12 PM: DEBUG - It seems that PSO2 Tweaker is already running. Would you like to close it? [Yes]
+5/4/2017 5:22:12 PM: DEBUG - 
+
+5/4/2017 5:22:12 PM: DEBUG - Program started! Hooray! \o/
+5/4/2017 5:22:12 PM: DEBUG - Reading settings...
+5/4/2017 5:22:12 PM: DEBUG - Checking if the PSO2 Tweaker is running
+5/4/2017 5:22:12 PM: DEBUG - Loaded pso2_bin directory from settings
+5/4/2017 5:22:12 PM: DEBUG - Reading remote config...
+5/4/2017 5:22:13 PM: DEBUG - Checking for patch info...
+5/4/2017 5:22:13 PM: DEBUG - Loading settings...
+5/4/2017 5:22:13 PM: DEBUG - ----------------------------------------
+5/4/2017 5:22:13 PM: DEBUG - Program opening, running diagnostics...
+5/4/2017 5:22:14 PM: DEBUG - Current OS/Version: Microsoft Windows 7 Ultimate  (6.1.7601.65536) [32-bit]
+5/4/2017 5:22:14 PM: DEBUG - Directory program is running in: X:\Arks-Layer\PSO2 Tweaker
+5/4/2017 5:22:14 PM: DEBUG - Selected PSO2 Directory: X:\PHANTASYSTARONLINE2\pso2_bin
+5/4/2017 5:22:14 PM: DEBUG - .NET Framework Version: 4.6.1
+5/4/2017 5:22:14 PM: DEBUG - Enabled Plugins: PSO2ItemTranslator.dll, PSO2RAISERSystem.dll, PSO2TitleTranslator.dll, TelepipeProxy.dll
+5/4/2017 5:22:14 PM: DEBUG - Disabled Plugins: PSO2BlockRename.dll
+5/4/2017 5:22:14 PM: DEBUG - ProxyJSONURL is: http://telepipe.io/config.json
+5/4/2017 5:22:14 PM: DEBUG - System has been on for: 9.959 hours
+5/4/2017 5:22:14 PM: DEBUG - ----------------------------------------
+
+4.5.2017 17:22:14: DEBUG - User location according to IP: Slovenia
+5/4/2017 5:22:14 PM: Program opened successfully! Version 4.0.3.8 [OK!]
+5/4/2017 5:22:14 PM: Checking for PSO2 Updates...
+5/4/2017 5:22:16 PM: Checking for a new English patch...
+5/4/2017 5:22:16 PM: You have the latest English patch! [OK!]
+5/4/2017 5:22:16 PM: Checking for plugin updates...
+5/4/2017 5:22:16 PM: DEBUG - PSO2BlockRename.dll should be: 7A572FF2B9DFFD9DAB74E09CA37D66CB. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\disabled\PSO2BlockRename.dll) is: 7A572FF2B9DFFD9DAB74E09CA37D66CB
+5/4/2017 5:22:16 PM: DEBUG - PSO2DamageDump.dll should NOT be updated/checked. The local file is: nowhere.
+5/4/2017 5:22:16 PM: DEBUG - PSO2ItemTranslator.dll should be: 931A5FAB2E7E7B1B0E2DDE5374E33EB3. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2ItemTranslator.dll) is: 931A5FAB2E7E7B1B0E2DDE5374E33EB3
+5/4/2017 5:22:17 PM: DEBUG - PSO2RAISERSystem.dll should be: 61B24EFC138BBC9ABF63883D9D1EE9EA. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2RAISERSystem.dll) is: 61B24EFC138BBC9ABF63883D9D1EE9EA
+5/4/2017 5:22:17 PM: DEBUG - PSO2TitleTranslator.dll should be: FEFBDD8279A5E7AFFAC4ED16481F2700. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2TitleTranslator.dll) is: FEFBDD8279A5E7AFFAC4ED16481F2700
+5/4/2017 5:22:17 PM: DEBUG - TelepipeProxy.dll should be: 57BE7060ED638451389B4FB2D98E796C. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\TelepipeProxy.dll) is: 57BE7060ED638451389B4FB2D98E796C
+5/4/2017 5:22:17 PM: DEBUG - pso2h.dll should be: 0FA38E3E70F064909C4870B988DEE3C9. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\pso2h.dll) is: 0FA38E3E70F064909C4870B988DEE3C9
+5/4/2017 5:22:17 PM: DEBUG - translation_blocks.bin should be: E976983B9B94556776340B824AD0BF88. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_blocks.bin) is: E976983B9B94556776340B824AD0BF88
+5/4/2017 5:22:17 PM: DEBUG - translation_items.bin should be: 41F81A5B61DEEFC405169F922716A276. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_items.bin) is: 41F81A5B61DEEFC405169F922716A276
+5/4/2017 5:22:17 PM: DEBUG - translation_titles.bin should be: 280C0085D1B14E8311BBDD4E5A47D69A. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_titles.bin) is: 280C0085D1B14E8311BBDD4E5A47D69A
+5/4/2017 5:22:17 PM: (0 plugin files updated)
+5/4/2017 5:22:17 PM: All done - System ready!
+5/4/2017 5:22:23 PM: Removing Gameguard Directory...
+5/4/2017 5:22:23 PM: Done!
+5/4/2017 5:22:23 PM: Removing Gameguard File...
+5/4/2017 5:22:23 PM: Done!
+5/4/2017 5:22:23 PM: Downloading Latest Gameguard file...
+5/4/2017 5:22:23 PM: Downloading Latest Gameguard config...
+5/4/2017 5:22:23 PM: Done!
+5/4/2017 5:22:23 PM: No registry keys to delete. This is OK, they should be created the next time Gameguard launches.
+5/4/2017 5:22:23 PM: GameGuard reset to defaults! Now try running Phantasy Star Online 2 - It should update Gameguard when the PSO2 logo comes up. [OK!]
+5/4/2017 5:22:26 PM: DEBUG - Check if PSO2 is running
+5/4/2017 5:22:26 PM: Launching Phantasy Star Online 2...
+5/4/2017 5:22:26 PM: DEBUG - DEBUG - ProxyJSONURL is: http://telepipe.io/config.json
+5/4/2017 5:22:26 PM: DEBUG - Checking for extra GN Fields...
+5/4/2017 5:22:26 PM: DEBUG - Spinning GN Drives...
+5/4/2017 5:22:26 PM: DEBUG - Start PSO2!
+5/4/2017 5:23:10 PM: DEBUG - 
+
+5/4/2017 5:23:10 PM: DEBUG - Program started! Hooray! \o/
+5/4/2017 5:23:10 PM: DEBUG - Reading settings...
+5/4/2017 5:23:11 PM: DEBUG - Checking if the PSO2 Tweaker is running
+5/4/2017 5:23:11 PM: DEBUG - Loaded pso2_bin directory from settings
+5/4/2017 5:23:11 PM: DEBUG - Reading remote config...
+5/4/2017 5:23:11 PM: DEBUG - Checking for patch info...
+5/4/2017 5:23:11 PM: DEBUG - Loading settings...
+5/4/2017 5:23:11 PM: DEBUG - ----------------------------------------
+5/4/2017 5:23:11 PM: DEBUG - Program opening, running diagnostics...
+5/4/2017 5:23:11 PM: DEBUG - Current OS/Version: Microsoft Windows 7 Ultimate  (6.1.7601.65536) [32-bit]
+5/4/2017 5:23:11 PM: DEBUG - Directory program is running in: X:\Arks-Layer\PSO2 Tweaker
+5/4/2017 5:23:11 PM: DEBUG - Selected PSO2 Directory: X:\PHANTASYSTARONLINE2\pso2_bin
+5/4/2017 5:23:11 PM: DEBUG - .NET Framework Version: 4.6.1
+5/4/2017 5:23:11 PM: DEBUG - Enabled Plugins: PSO2ItemTranslator.dll, PSO2RAISERSystem.dll, PSO2TitleTranslator.dll, TelepipeProxy.dll
+5/4/2017 5:23:11 PM: DEBUG - Disabled Plugins: PSO2BlockRename.dll
+5/4/2017 5:23:11 PM: DEBUG - ProxyJSONURL is: http://telepipe.io/config.json
+5/4/2017 5:23:11 PM: DEBUG - System has been on for: 9.975 hours
+5/4/2017 5:23:11 PM: DEBUG - ----------------------------------------
+
+5/4/2017 5:23:12 PM: Program opened successfully! Version 4.0.3.8 [OK!]
+5/4/2017 5:23:12 PM: Checking for PSO2 Updates...
+4.5.2017 17:23:12: DEBUG - User location according to IP: Slovenia
+5/4/2017 5:23:14 PM: Checking for a new English patch...
+5/4/2017 5:23:14 PM: You have the latest English patch! [OK!]
+5/4/2017 5:23:14 PM: Checking for plugin updates...
+5/4/2017 5:23:14 PM: DEBUG - PSO2BlockRename.dll should be: 7A572FF2B9DFFD9DAB74E09CA37D66CB. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\disabled\PSO2BlockRename.dll) is: 7A572FF2B9DFFD9DAB74E09CA37D66CB
+5/4/2017 5:23:14 PM: DEBUG - PSO2DamageDump.dll should NOT be updated/checked. The local file is: nowhere.
+5/4/2017 5:23:14 PM: DEBUG - PSO2ItemTranslator.dll should be: 931A5FAB2E7E7B1B0E2DDE5374E33EB3. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2ItemTranslator.dll) is: 931A5FAB2E7E7B1B0E2DDE5374E33EB3
+5/4/2017 5:23:15 PM: DEBUG - PSO2RAISERSystem.dll should be: 61B24EFC138BBC9ABF63883D9D1EE9EA. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2RAISERSystem.dll) is: 61B24EFC138BBC9ABF63883D9D1EE9EA
+5/4/2017 5:23:15 PM: DEBUG - PSO2TitleTranslator.dll should be: FEFBDD8279A5E7AFFAC4ED16481F2700. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2TitleTranslator.dll) is: FEFBDD8279A5E7AFFAC4ED16481F2700
+5/4/2017 5:23:15 PM: DEBUG - TelepipeProxy.dll should be: 57BE7060ED638451389B4FB2D98E796C. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\TelepipeProxy.dll) is: 57BE7060ED638451389B4FB2D98E796C
+5/4/2017 5:23:15 PM: DEBUG - pso2h.dll should be: 0FA38E3E70F064909C4870B988DEE3C9. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\pso2h.dll) is: 0FA38E3E70F064909C4870B988DEE3C9
+5/4/2017 5:23:15 PM: DEBUG - translation_blocks.bin should be: E976983B9B94556776340B824AD0BF88. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_blocks.bin) is: E976983B9B94556776340B824AD0BF88
+5/4/2017 5:23:15 PM: DEBUG - translation_items.bin should be: 41F81A5B61DEEFC405169F922716A276. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_items.bin) is: 41F81A5B61DEEFC405169F922716A276
+5/4/2017 5:23:15 PM: DEBUG - translation_titles.bin should be: 280C0085D1B14E8311BBDD4E5A47D69A. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_titles.bin) is: 280C0085D1B14E8311BBDD4E5A47D69A
+5/4/2017 5:23:15 PM: (0 plugin files updated)
+5/4/2017 5:23:15 PM: All done - System ready!
+5/4/2017 5:23:34 PM: Removing Gameguard Directory...
+5/4/2017 5:23:34 PM: Done!
+5/4/2017 5:23:34 PM: Removing Gameguard File...
+5/4/2017 5:23:34 PM: Done!
+5/4/2017 5:23:34 PM: Downloading Latest Gameguard file...
+5/4/2017 5:23:34 PM: Downloading Latest Gameguard config...
+5/4/2017 5:23:34 PM: Done!
+5/4/2017 5:23:34 PM: No registry keys to delete. This is OK, they should be created the next time Gameguard launches.
+5/4/2017 5:23:34 PM: GameGuard reset to defaults! Now try running Phantasy Star Online 2 - It should update Gameguard when the PSO2 logo comes up. [OK!]
+5/4/2017 5:23:40 PM: DEBUG - Check if PSO2 is running
+5/4/2017 5:23:40 PM: Launching Phantasy Star Online 2...
+5/4/2017 5:23:40 PM: DEBUG - DEBUG - ProxyJSONURL is: http://telepipe.io/config.json
+5/4/2017 5:23:40 PM: DEBUG - Checking for extra GN Fields...
+5/4/2017 5:23:40 PM: DEBUG - Spinning GN Drives...
+5/4/2017 5:23:40 PM: DEBUG - Start PSO2!
+5/4/2017 5:24:20 PM: DEBUG - 
+
+5/4/2017 5:24:20 PM: DEBUG - Program started! Hooray! \o/
+5/4/2017 5:24:20 PM: DEBUG - Reading settings...
+5/4/2017 5:24:20 PM: DEBUG - Checking if the PSO2 Tweaker is running
+5/4/2017 5:24:20 PM: DEBUG - Loaded pso2_bin directory from settings
+5/4/2017 5:24:20 PM: DEBUG - Reading remote config...
+5/4/2017 5:24:20 PM: DEBUG - Checking for patch info...
+5/4/2017 5:24:21 PM: DEBUG - Loading settings...
+5/4/2017 5:24:21 PM: DEBUG - ----------------------------------------
+5/4/2017 5:24:21 PM: DEBUG - Program opening, running diagnostics...
+4.5.2017 17:24:22: DEBUG - User location according to IP: Slovenia
+5/4/2017 5:24:22 PM: DEBUG - Current OS/Version: Microsoft Windows 7 Ultimate  (6.1.7601.65536) [32-bit]
+5/4/2017 5:24:22 PM: DEBUG - Directory program is running in: X:\Arks-Layer\PSO2 Tweaker
+5/4/2017 5:24:22 PM: DEBUG - Selected PSO2 Directory: X:\PHANTASYSTARONLINE2\pso2_bin
+5/4/2017 5:24:22 PM: DEBUG - .NET Framework Version: 4.6.1
+5/4/2017 5:24:22 PM: DEBUG - Enabled Plugins: PSO2ItemTranslator.dll, PSO2RAISERSystem.dll, PSO2TitleTranslator.dll, TelepipeProxy.dll
+5/4/2017 5:24:22 PM: DEBUG - Disabled Plugins: PSO2BlockRename.dll
+5/4/2017 5:24:22 PM: DEBUG - ProxyJSONURL is: http://telepipe.io/config.json
+5/4/2017 5:24:22 PM: DEBUG - System has been on for: 9.994 hours
+5/4/2017 5:24:22 PM: DEBUG - ----------------------------------------
+
+5/4/2017 5:24:23 PM: Program opened successfully! Version 4.0.3.8 [OK!]
+5/4/2017 5:24:23 PM: Checking for PSO2 Updates...
+5/4/2017 5:24:25 PM: Checking for a new English patch...
+5/4/2017 5:24:25 PM: You have the latest English patch! [OK!]
+5/4/2017 5:24:25 PM: Checking for plugin updates...
+5/4/2017 5:24:25 PM: DEBUG - PSO2BlockRename.dll should be: 7A572FF2B9DFFD9DAB74E09CA37D66CB. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\disabled\PSO2BlockRename.dll) is: 7A572FF2B9DFFD9DAB74E09CA37D66CB
+5/4/2017 5:24:25 PM: DEBUG - PSO2DamageDump.dll should NOT be updated/checked. The local file is: nowhere.
+5/4/2017 5:24:25 PM: DEBUG - PSO2ItemTranslator.dll should be: 931A5FAB2E7E7B1B0E2DDE5374E33EB3. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2ItemTranslator.dll) is: 931A5FAB2E7E7B1B0E2DDE5374E33EB3
+5/4/2017 5:24:25 PM: DEBUG - PSO2RAISERSystem.dll should be: 61B24EFC138BBC9ABF63883D9D1EE9EA. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2RAISERSystem.dll) is: 61B24EFC138BBC9ABF63883D9D1EE9EA
+5/4/2017 5:24:26 PM: DEBUG - PSO2TitleTranslator.dll should be: FEFBDD8279A5E7AFFAC4ED16481F2700. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\PSO2TitleTranslator.dll) is: FEFBDD8279A5E7AFFAC4ED16481F2700
+5/4/2017 5:24:26 PM: DEBUG - TelepipeProxy.dll should be: 57BE7060ED638451389B4FB2D98E796C. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\plugins\TelepipeProxy.dll) is: 57BE7060ED638451389B4FB2D98E796C
+5/4/2017 5:24:26 PM: DEBUG - pso2h.dll should be: 0FA38E3E70F064909C4870B988DEE3C9. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\pso2h.dll) is: 0FA38E3E70F064909C4870B988DEE3C9
+5/4/2017 5:24:26 PM: DEBUG - translation_blocks.bin should be: E976983B9B94556776340B824AD0BF88. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_blocks.bin) is: E976983B9B94556776340B824AD0BF88
+5/4/2017 5:24:26 PM: DEBUG - translation_items.bin should be: 41F81A5B61DEEFC405169F922716A276. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_items.bin) is: 41F81A5B61DEEFC405169F922716A276
+5/4/2017 5:24:26 PM: DEBUG - translation_titles.bin should be: 280C0085D1B14E8311BBDD4E5A47D69A. The local file (X:\PHANTASYSTARONLINE2\pso2_bin\translation_titles.bin) is: 280C0085D1B14E8311BBDD4E5A47D69A
+5/4/2017 5:24:26 PM: (0 plugin files updated)
+5/4/2017 5:24:26 PM: All done - System ready!
+5/4/2017 5:24:46 PM: DEBUG - User clicked 'Check for old or missing files files' (QUANTUM)
+5/4/2017 5:24:46 PM: DEBUG - Deleting the JSONs (if they exists) just in case.
+5/4/2017 5:24:46 PM: DEBUG - Downloading the list of files to skip...
+5/4/2017 5:24:46 PM: Update started.
+5/4/2017 5:24:46 PM: DEBUG - Fetching the patchlists...
+5/4/2017 5:26:11 PM: Download aborted for http://download.pso2.jp/patch_prod/patches_old/patchlist.txt! [WARNING!]
+5/4/2017 5:26:11 PM: Download aborted for patchlist.txt! [WARNING!]
+5/4/2017 5:26:11 PM: Download aborted for launcherlist.txt! [WARNING!]
+5/4/2017 5:26:27 PM: DEBUG - Exception: Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs/ Message: ArksLayer.Tweaker.UpdateEngine

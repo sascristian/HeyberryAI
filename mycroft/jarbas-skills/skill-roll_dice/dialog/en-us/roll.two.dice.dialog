@@ -1,0 +1,1 @@
+First dice is {{ roll1 }}. Second dice is {{ roll1 }}. {{ roll1 }} and {{ roll2 }}.

@@ -1,0 +1,7 @@
+{
+  "utterance": "who is your boss",
+  "intent_type": "WhoIsYourBossIntent",
+  "intent": {
+    "WhoIsYourBossKeyphrase": "who is your boss"
+  }
+}

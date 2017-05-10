@@ -1,0 +1,7 @@
+{
+  "utterance": "tell me a story",
+  "intent_type": "TellMeAStoryIntent",
+  "intent": {
+    "TellMeAStoryKeyphrase": "tell me a story"
+  }
+}

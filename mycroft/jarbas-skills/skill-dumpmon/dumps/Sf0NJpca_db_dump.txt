@@ -1,0 +1,313 @@
+[producao]
+
+; Frete Gratis
+frete.gratis.ativo = "1"
+frete.gratis.valor = "99999"
+
+; Desabilita Erros
+phpSettings.display_startup_errors = 0
+phpSettings.display_errors = 0
+
+resources.locale.default = "pt_BR"
+
+resources.db.adapter = "PDO_MYSQL"
+; resources.db.params.driver_options.1002 = "SET time_zone = 'America/Sao_Paulo'"
+resources.db.params.host = DB_HOST
+resources.db.params.dbname = DB_NAME
+resources.db.params.username = DB_USERNAME
+resources.db.params.password = DB_PASSWORD
+resources.db.params.port = DB_PORT
+resources.db.params.profiler.enabled = false
+resources.db.isDefaultTableAdapter = true
+
+; Cache
+cache.destaque = 0
+cache.menu = 0
+cache.produtos = 0
+cache.detalhe = 0
+cache.metodopagamento = 0
+cache.ultimopedido = 0
+
+; Biblioteca
+includePaths.library = APPLICATION_PATH "/library"
+
+; Models
+includePaths.models = APPLICATION_PATH "/models"
+
+; Bootstrap
+bootstrap.path = APPLICATION_PATH "/Bootstrap.php"
+bootstrap.class = "Bootstrap"
+
+; Front Controller
+resources.frontController.controllerDirectory = APPLICATION_PATH "/modulos/frontend/controllers"
+resources.frontController.env = APPLICATION_ENV
+resources.frontController.moduleDirectory = APPLICATION_PATH "/modulos"
+resources.frontController.defaultModule = "frontend"
+
+; Layout
+resources.layout.layoutPath = APPLICATION_PATH "/modulos/frontend/layouts/scripts"
+
+; Configuracaoo das views
+resources.view.basePath = APPLICATION_PATH "/modules/default/views"
+
+; Session
+;resources.session.save_path = "var/session/"
+
+; File System
+filesystem.themes = "/public/themes"
+filesystem.skinAdm = "/public/themes/decoder/adm"
+filesystem.skinFrontend = "/public/themes/decoder/frontend"
+filesystem.scripts = "/js"
+filesystem.styles = "/css"
+filesystem.images = "/images"
+filesystem.arquivos = "/public/arquivos"
+filesystem.repositorio = "/public/files"
+filesystem.var.dir = DOCUMENT_ROOT_PATH "/var"
+filesystem.var.cache = "/cache"
+filesystem.var.session = "/session"
+filesystem.var.log = "/log"
+filesystem.var.tmp = "/tmp"
+filesystem.version = 1
+
+; Rota: /pesquisa
+resources.router.routes.pesquisa.type = "Zend_Controller_Router_Route"
+resources.router.routes.pesquisa.route = "/pesquisa"
+resources.router.routes.pesquisa.defaults.controller = "index"
+resources.router.routes.pesquisa.defaults.action = "pesquisa"
+
+; Rota: /parceiro/index
+resources.router.routes.parceiro.type = "Zend_Controller_Router_Route"
+resources.router.routes.parceiro.route = "/parceiro.html"
+resources.router.routes.parceiro.defaults.controller = "parceiro"
+resources.router.routes.parceiro.defaults.action = "index"
+resources.router.routes.parceiro.defaults.c = ""
+
+; Rota: /parceiro/cadastro
+resources.router.routes.cadastrar.type = "Zend_Controller_Router_Route"
+resources.router.routes.cadastrar.route = "/cadastrar-parceiro.html"
+resources.router.routes.cadastrar.defaults.controller = "parceiro"
+resources.router.routes.cadastrar.defaults.action = "cadastro"  
+resources.router.routes.cadastrar.defaults.c = ""
+
+; Rota: /parceiro/termos-e-condicoes-de-uso
+resources.router.routes.termos.type = "Zend_Controller_Router_Route"
+resources.router.routes.termos.route = "/termos-e-condicoes-de-uso.html"
+resources.router.routes.termos.defaults.controller = "parceiro"
+resources.router.routes.termos.defaults.action = "termos-e-condicoes-de-uso"  
+resources.router.routes.termos.defaults.c = ""
+
+; Rota: /parceiro/editar
+resources.router.routes.atualizar.type = "Zend_Controller_Router_Route"
+resources.router.routes.atualizar.route = "/atualizar-parceiro.html"
+resources.router.routes.atualizar.defaults.controller = "parceiro"
+resources.router.routes.atualizar.defaults.action = "editar"  
+resources.router.routes.atualizar.defaults.c = ""
+
+; Rota: /auth/index
+resources.router.routes.login.type = "Zend_Controller_Router_Route"
+resources.router.routes.login.route = "/login.html"
+resources.router.routes.login.defaults.controller = "auth"
+resources.router.routes.login.defaults.action = "login"  
+
+; Rota: /auth/logout
+resources.router.routes.deslogar.type = "Zend_Controller_Router_Route"
+resources.router.routes.deslogar.route = "/deslogar.html"
+resources.router.routes.deslogar.defaults.controller = "auth"
+resources.router.routes.deslogar.defaults.action = "logout"  
+resources.router.routes.deslogar.defaults.c = ""
+
+; Rota: /auth/recuperar
+resources.router.routes.recuperar.type = "Zend_Controller_Router_Route"
+resources.router.routes.recuperar.route = "/recuperar-senha.html"
+resources.router.routes.recuperar.defaults.controller = "auth"
+resources.router.routes.recuperar.defaults.action = "recuperar"  
+resources.router.routes.recuperar.defaults.c = ""
+
+; Rota: /pedido
+resources.router.routes.pedido.type = "Zend_Controller_Router_Route"
+resources.router.routes.pedido.route = "/meus-pedidos/:pagina"
+resources.router.routes.pedido.defaults.controller = "pedido"
+resources.router.routes.pedido.defaults.action = "index"  
+resources.router.routes.pedido.defaults.pagina = 0
+resources.router.routes.pedido.defaults.c = ""
+
+; Rota: /pedido/detalhe
+resources.router.routes.detalhe.type = "Zend_Controller_Router_Route"
+resources.router.routes.detalhe.route = "/meu-pedido/:id"
+resources.router.routes.detalhe.defaults.controller = "pedido"
+resources.router.routes.detalhe.defaults.action = "detalhe" 
+resources.router.routes.detalhe.defaults.id=> 0
+resources.router.routes.detalhe.defaults.c = ""
+
+; Rota: /index/duvidas
+resources.router.routes.duvidas.type = "Zend_Controller_Router_Route"
+resources.router.routes.duvidas.route = "/duvidas-frequentes.html"
+resources.router.routes.duvidas.defaults.controller = "atendimento"
+resources.router.routes.duvidas.defaults.action = "index"  
+resources.router.routes.duvidas.defaults.c = ""
+
+; Rota: /index/balcoes
+resources.router.routes.balcoes.type = "Zend_Controller_Router_Route"
+resources.router.routes.balcoes.route = "/balcoes-de-retirada.html"
+resources.router.routes.balcoes.defaults.controller = "balcao"
+resources.router.routes.balcoes.defaults.action = "index"  
+resources.router.routes.balcoes.defaults.c = ""
+
+; Rota: /mensagem
+resources.router.routes.mensagem.type = "Zend_Controller_Router_Route"
+resources.router.routes.mensagem.route = "/atendimento.html"
+resources.router.routes.mensagem.defaults.controller = "mensagem"
+resources.router.routes.mensagem.defaults.action = "index"  
+resources.router.routes.mensagem.defaults.c = ""
+
+; Rota: /index/contato
+resources.router.routes.contato.type = "Zend_Controller_Router_Route"
+resources.router.routes.contato.route = "/contato.html"
+resources.router.routes.contato.defaults.controller = "index"
+resources.router.routes.contato.defaults.action = "contato"  
+resources.router.routes.contato.defaults.c = ""
+
+; Rota: /produto/favoritos
+resources.router.routes.favoritos.type = "Zend_Controller_Router_Route"
+resources.router.routes.favoritos.route = "/favoritos.html"
+resources.router.routes.favoritos.defaults.controller = "produto"
+resources.router.routes.favoritos.defaults.action = "favoritos"
+resources.router.routes.favoritos.defaults.c = ""
+
+; Rota: /index/cortesia
+resources.router.routes.cortesia.type = "Zend_Controller_Router_Route"
+resources.router.routes.cortesia.route = "/criacao-de-arte.html"
+resources.router.routes.cortesia.defaults.controller = "index"
+resources.router.routes.cortesia.defaults.action = "cortesia" 
+resources.router.routes.cortesia.defaults.c = ""
+
+; Rota: /produto/precos
+resources.router.routes.precos.type = "Zend_Controller_Router_Route"
+resources.router.routes.precos.route = "/tabela-de-precos.html"
+resources.router.routes.precos.defaults.controller = "produto"
+resources.router.routes.precos.defaults.action = "precos"  
+resources.router.routes.precos.defaults.c = ""
+
+; Rota: /produto/download-lista-de-precos
+resources.router.routes.download.type = "Zend_Controller_Router_Route"
+resources.router.routes.download.route = "/lista-de-precos.xls"
+resources.router.routes.download.defaults.controller = "produto"
+resources.router.routes.download.defaults.action = "download-lista-de-precos"
+
+; Rota: /carrinho/index
+resources.router.routes.carrinho.type = "Zend_Controller_Router_Route"
+resources.router.routes.carrinho.route = "/carrinho-de-compras.html"
+resources.router.routes.carrinho.defaults.controller = "carrinho"
+resources.router.routes.carrinho.defaults.action = "index"  
+
+; Rota: /atendimento/detalhe/id/X
+resources.router.routes.atendimento.type = "Zend_Controller_Router_Route"
+resources.router.routes.atendimento.route = "/ajuda/:descricao/:id"
+resources.router.routes.atendimento.defaults.controller = "atendimento"
+resources.router.routes.atendimento.defaults.action = "detalhe"
+resources.router.routes.atendimento.defaults.tipo=> 0
+resources.router.routes.atendimento.defaults.c = ""
+
+; Rota: /index/index
+resources.router.routes.index.type = "Zend_Controller_Router_Route"
+resources.router.routes.index.route = "categorias.html"
+resources.router.routes.index.defaults.controller = "index"
+resources.router.routes.index.defaults.action = "index"
+resources.router.routes.index.defaults.c = ""
+
+; Rota: Cartão do meu jeito!
+resources.router.routes.meu-jeito.type = "Zend_Controller_Router_Route"
+resources.router.routes.meu-jeito.route = "meu-jeito"
+resources.router.routes.meu-jeito.defaults.controller = "produto"
+resources.router.routes.meu-jeito.defaults.action = "index" 
+resources.router.routes.meu-jeito.defaults.id = 205
+resources.router.routes.meu-jeito.defaults.c = ""
+
+; Rotas - produto/index
+resources.router.routes.categoria.type = "Zend_Controller_Router_Route"
+resources.router.routes.categoria.route = "/:c/:id"
+resources.router.routes.categoria.defaults.controller = "produto"
+resources.router.routes.categoria.defaults.action = "index" 
+resources.router.routes.categoria.defaults.id = 0
+resources.router.routes.categoria.defaults.c = ""
+
+; Rotas - produto/detalhe
+resources.router.routes.produto.type = "Zend_Controller_Router_Route"
+resources.router.routes.produto.route = "/detalhe/:c/:id"
+resources.router.routes.produto.defaults.controller = "produto"
+resources.router.routes.produto.defaults.action = "detalhe"
+resources.router.routes.produto.defaults.id = 0
+resources.router.routes.produto.defaults.c = ""
+
+; Rotas - Carrinho Adicionar
+resources.router.routes.comprar.type = "Zend_Controller_Router_Route"
+resources.router.routes.comprar.route = "/adicionar/:c/:id"
+resources.router.routes.comprar.defaults.controller = "carrinho"
+resources.router.routes.comprar.defaults.action = "adicionar"  
+resources.router.routes.comprar.defaults.id = 0
+resources.router.routes.comprar.defaults.c = ""
+
+; Rotas - Carrinho Promocao
+resources.router.routes.promocao.type = "Zend_Controller_Router_Route"
+resources.router.routes.promocao.route = "/promocao/:c/:id"
+resources.router.routes.promocao.defaults.controller = "carrinho"
+resources.router.routes.promocao.defaults.action = "promocao"  
+resources.router.routes.promocao.defaults.id = 0
+resources.router.routes.promocao.defaults.c = ""
+
+; Rotas - Contas Bancarias
+resources.router.routes.promocao.type = "Zend_Controller_Router_Route"
+resources.router.routes.promocao.route = "/contas-bancarias.html"
+resources.router.routes.promocao.defaults.controller = "pagamento"
+resources.router.routes.promocao.defaults.action = "contas-deposito"  
+
+; Sitemap
+resources.router.routes.robots.type = "Zend_Controller_Router_Route"
+resources.router.routes.robots.route = "/robots.txt"
+resources.router.routes.robots.defaults.controller = "sitemap"
+resources.router.routes.robots.defaults.action = "robots"
+
+resources.router.routes.sitemap.type = "Zend_Controller_Router_Route"
+resources.router.routes.sitemap.route = "/sitemap.xml"
+resources.router.routes.sitemap.defaults.controller = "sitemap"
+resources.router.routes.sitemap.defaults.action = "sitemap"
+
+; MEU CARRINHO - Novo Sistema de Carrinho
+resources.router.routes.meucarrinho_add.type = "Zend_Controller_Router_Route"
+resources.router.routes.meucarrinho_add.route = "/meu-carrinho/adicionar-item/:id"
+resources.router.routes.meucarrinho_add.defaults.controller = "meu-carrinho"
+resources.router.routes.meucarrinho_add.defaults.action = "adicionar-item"
+resources.router.routes.meucarrinho_add.defaults.id = 0
+
+resources.router.routes.meucarrinho_rem.type = "Zend_Controller_Router_Route"
+resources.router.routes.meucarrinho_rem.route = "/meu-carrinho/remover-item/:i"
+resources.router.routes.meucarrinho_rem.defaults.controller = "meu-carrinho"
+resources.router.routes.meucarrinho_rem.defaults.action = "remover-item"
+resources.router.routes.meucarrinho_rem.defaults.i = 0
+
+[desenvolvimento : producao]
+
+; Habilita erros
+phpSettings.display_startup_errors = 1
+phpSettings.display_errors = 1
+
+resources.db.adapter = "PDO_MYSQL"
+; resources.db.params.driver_options.1002 = "SET time_zone = 'America/Sao_Paulo'"
+resources.db.params.host = DB_HOST
+resources.db.params.dbname = DB_NAME
+resources.db.params.username = DB_USERNAME
+resources.db.params.password = DB_PASSWORD
+resources.db.params.port = DB_PORT
+resources.db.params.profiler.enabled = false
+resources.db.isDefaultTableAdapter = true
+
+; Cache
+cache.destaque = 0
+cache.menu = 0
+cache.produtos = 0
+cache.detalhe = 0
+cache.metodopagamento = 0
+cache.ultimopedido = 0
+
+; File System
+filesystem.scripts = "/js"

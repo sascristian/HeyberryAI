@@ -1,0 +1,7 @@
+{
+  "utterance": "are you female",
+  "intent_type": "AreYouFemaleIntent",
+  "intent": {
+    "AreYouFemaleKeyphrase": "are you female"
+  }
+}

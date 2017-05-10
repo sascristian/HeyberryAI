@@ -1,0 +1,7 @@
+{
+  "utterance": "what are the latest news",
+  "intent_type": "FoxNewsIntent",
+  "intent": {
+    "FoxNewsKeyword": "fox news"
+  }
+}

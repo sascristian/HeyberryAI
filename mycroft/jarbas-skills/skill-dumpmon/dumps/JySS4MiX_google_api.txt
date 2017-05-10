@@ -1,0 +1,35 @@
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2y0ZfGaG2CgdMkAY5rTI39ltHACXkqUY"
+  type="text/javascript"></script>
+    <script>
+
+/**
+ * Sets all our panos to point in a particular direction.
+ */
+function initializeAllPanos() {
+  panoId = 'c-gVtMnL7j0AAAQfCYqW4A'
+  setStreetViewPanorama('panoBig', panoId, 0, -90);
+}
+
+/**
+ * Sets up the given div as a StreetView Panorama, with the given view angles.
+ * @param {string} panoId The panorama id. Eg: 'RJd2HuqmShMAAAQfCa3ulg'.
+ * @param {number} headingAngle The degree angle offset from North (clockwise?).
+ * @param {number} pitchAngle The degree angle upset up/down.
+ */
+function setStreetViewPanorama(divId, panoId, headingAngle, pitchAngle) {
+  var panoramaOptions = {
+    // pano: panoId,  // Wanted to demonstrate 'setPano' instead.
+    pov: {
+      heading: 90,
+      pitch: 90,
+      zoom: 1,
+          }
+  };
+  var panorama = new google.maps.StreetViewPanorama(document.getElementById(divId), panoramaOptions);
+  panorama.setPano(panoId);
+}
+
+google.maps.event.addDomListener(window, 'load', initializeAllPanos);
+    </script>
+    <div id="panoBig" style=""></div>

@@ -1,0 +1,871 @@
+23:09:23 BattlEye Server: (Side) alex: que municion gasta el LINX?
+23:09:32 BattlEye Server: (Side) Acid: la de lynx
+23:09:37 BattlEye Server: (Side) Acid: pero cuanto respeto tienes
+23:09:44 BattlEye Server: (Side) alex: 50k
+23:09:50 BattlEye Server: (Side) Acid: no puedes comprarla
+23:10:14 BattlEye Server: (Side) alex: jo
+23:10:23 BattlEye Server: (Side) alex: pero el calibre como se llama q no la veo
+23:10:28 Player flabio tronatets disconnected.
+23:10:28 BattlEye Server: Player #14 flabio tronatets disconnected
+23:10:34 BattlEye Server: (Side) Acid: si picas al lao del menu desplegable
+23:10:35 BattlEye Server: (Side) Mr. Teletubbies: 12.7 crep
+23:10:37 BattlEye Server: (Side) Acid: arriba
+23:10:44 BattlEye Server: (Side) Mr. Teletubbies: creo
+23:10:45 BattlEye Server: (Side) Acid: sale el dibujo de un arma y de una pistola
+23:10:49 BattlEye Server: (Side) Acid: si le das al del rifle
+23:10:52 BattlEye Server: (Side) alex: esk no la llevo encima
+23:10:55 BattlEye Server: (Side) Acid: te salen las cosas compatibles
+23:10:57 BattlEye Server: (Side) Acid: aaa vale
+23:10:59 BattlEye Server: (Side) Acid: xDD
+23:11:01 BattlEye Server: (Side) Acid: son 12,7
+23:11:02 BattlEye Server: (Side) alex: sino no preguntaria
+23:11:07 flabio tronatets uses modified data file
+23:11:07 BattlEye Server: Player #14 flabio tronatets (167.57.151.136:2304) connected
+23:11:07 Player flabio tronatets connecting.
+23:11:07 BattlEye Server: (Side) alex: vale gracias
+23:11:09 BattlEye Server: Player #14 flabio tronatets - GUID: 17b87261ee5731bd670c3452815a19af
+23:11:09 BattlEye Server: (Side) Dan: creo que el lynx gasta el .50 bw
+23:11:09 Player flabio tronatets connected (id=76561198291311974).
+23:11:09 BattlEye Server: Verified GUID (17b87261ee5731bd670c3452815a19af) of player #14 flabio tronatets
+23:11:18 BattlEye Server: (Side) Acid: no, 12,7
+23:11:24 BattlEye Server: (Side) Acid: el dibujo son tres balas doradas
+23:11:25 Wilmer Macondo uses modified data file
+23:11:25 BattlEye Server: Player #26 Wilmer Macondo (148.3.2.44:2304) connected
+23:11:25 Player Wilmer Macondo connecting.
+23:11:27 BattlEye Server: Player #26 Wilmer Macondo - GUID: c2902911a2651e687b52202d27b56f90
+23:11:28 Player Wilmer Macondo connected (id=76561197969862803).
+23:11:28 BattlEye Server: Verified GUID (c2902911a2651e687b52202d27b56f90) of player #26 Wilmer Macondo
+23:11:29 BattlEye Server: (Side) Mr. Teletubbies: yep
+23:11:40 BattlEye Server: (Direct) Dani: doinde?
+23:11:48 BattlEye Server: (Direct) Dani: rpg si
+23:11:58 BattlEye Server: (Side) alex: alguien que este en zona segura me compraria unas pocas_
+23:12:02 BattlEye Server: (Direct) Dani: queva solo mate 1
+23:12:05 BattlEye Server: (Side) alex: yo las pago obvio
+23:12:59 Narion uses modified data file
+23:12:59 BattlEye Server: Player #27 Narion (81.184.112.84:2304) connected
+23:12:59 Player Narion connecting.
+23:13:01 BattlEye Server: Player #27 Narion - GUID: 090cb8cdfea1847e6961dfb5dc5e4d3e
+23:13:01 Player Narion connected (id=76561198016409723).
+23:13:01 BattlEye Server: Verified GUID (090cb8cdfea1847e6961dfb5dc5e4d3e) of player #27 Narion
+23:14:56 Player Pablo: Wrong signature for file a3\structures_f_exp\industrial\surfacemine_01\sm_01_reservoirtower_f.p3d
+23:14:56 Player Pablo disconnected.
+23:14:56 BattlEye Server: Player #12 Pablo disconnected
+23:15:27 Player alex: Wrong signature for file a3\structures_f_exp\industrial\surfacemine_01\sm_01_reservoirtower_f.p3d
+23:15:28 Player alex disconnected.
+23:15:28 BattlEye Server: Player #21 alex disconnected
+23:15:48 John Wick Smith uses modified data file
+23:15:48 BattlEye Server: Player #12 John Wick Smith (81.34.250.93:2304) connected
+23:15:48 Player John Wick Smith connecting.
+23:15:50 BattlEye Server: Player #12 John Wick Smith - GUID: d53758e4bcac8069c747af3ef4d93c5a
+23:15:51 Player John Wick Smith connected (id=76561198034824622).
+23:15:51 BattlEye Server: Verified GUID (d53758e4bcac8069c747af3ef4d93c5a) of player #12 John Wick Smith
+23:16:18 BattlEye Server: (Side) yeray: Que aproveche el cafe flare
+23:16:22 Player DeadEagleOps disconnected.
+23:16:22 BattlEye Server: Player #16 DeadEagleOps disconnected
+23:16:29 Garza uses modified data file
+23:16:29 BattlEye Server: Player #16 Garza (77.225.180.127:2304) connected
+23:16:29 Player Garza connecting.
+23:16:31 BattlEye Server: Player #16 Garza - GUID: 657d83650cb83cb3223c001eb0d299eb
+23:16:32 Player Garza connected (id=76561198097721318).
+23:16:32 BattlEye Server: Verified GUID (657d83650cb83cb3223c001eb0d299eb) of player #16 Garza
+23:16:59 Pablo uses modified data file
+23:16:59 BattlEye Server: Player #21 Pablo (92.186.97.146:2304) connected
+23:16:59 Player Pablo connecting.
+23:17:01 BattlEye Server: Player #21 Pablo - GUID: 110103dad4b762688984437794e48e19
+23:17:01 Player Pablo connected (id=76561198002210531).
+23:17:02 BattlEye Server: Verified GUID (110103dad4b762688984437794e48e19) of player #21 Pablo
+23:17:57 Successfull attempt to execute serverCommand '#kick 76561198034824622' by server.
+23:17:57 Player John Wick Smith disconnected.
+23:17:57 BattlEye Server: Player #12 John Wick Smith disconnected
+23:18:00 BattlEye Server: SelectPlayer Log: #16 Garza (657d83650cb83cb3223c001eb0d299eb) - #0 2:16136 730442376 [5169,13524,343]
+23:18:00 Player Garza kicked off by BattlEye: SelectPlayer Restriction #0
+23:18:00 Player Garza disconnected.
+23:18:11 Garza uses modified data file
+23:18:11 BattlEye Server: Player #12 Garza (77.225.180.127:2304) connected
+23:18:11 Player Garza connecting.
+23:18:13 BattlEye Server: Player #12 Garza - GUID: 657d83650cb83cb3223c001eb0d299eb
+23:18:13 Player Garza connected (id=76561198097721318).
+23:18:13 BattlEye Server: Verified GUID (657d83650cb83cb3223c001eb0d299eb) of player #12 Garza
+23:18:26 John Wick Smith uses modified data file
+23:18:26 BattlEye Server: Player #16 John Wick Smith (81.34.250.93:2304) connected
+23:18:26 Player John Wick Smith connecting.
+23:18:28 BattlEye Server: Player #16 John Wick Smith - GUID: d53758e4bcac8069c747af3ef4d93c5a
+23:18:35 Player John Wick Smith connected (id=76561198034824622).
+23:18:35 BattlEye Server: Verified GUID (d53758e4bcac8069c747af3ef4d93c5a) of player #16 John Wick Smith
+23:19:00 rSk.-Legia uses modified data file
+23:19:00 BattlEye Server: Player #28 rSk.-Legia (88.0.0.165:2304) connected
+23:19:00 Player rSk.-Legia connecting.
+23:19:02 BattlEye Server: Player #28 rSk.-Legia - GUID: 28efce10899702531bb48b3e8ee18942
+23:19:02 Player rSk.-Legia connected (id=76561197990729745).
+23:19:02 BattlEye Server: Verified GUID (28efce10899702531bb48b3e8ee18942) of player #28 rSk.-Legia
+23:21:10 elbola uses modified data file
+23:21:10 BattlEye Server: Player #29 elbola (85.61.139.252:2304) connected
+23:21:10 Player elbola connecting.
+23:21:12 BattlEye Server: Player #29 elbola - GUID: e7ec247398000f30e1b4637202664b93
+23:21:12 Player elbola connected (id=76561198095773970).
+23:21:12 BattlEye Server: Verified GUID (e7ec247398000f30e1b4637202664b93) of player #29 elbola
+23:22:52 Pipe uses modified data file
+23:22:52 BattlEye Server: Player #30 Pipe (91.126.240.214:2304) connected
+23:22:52 Player Pipe connecting.
+23:22:54 BattlEye Server: Player #30 Pipe - GUID: 8d09efcb48ce1b365ce4f275c746da49
+23:22:55 Player Pipe connected (id=76561197979262222).
+23:22:55 BattlEye Server: Verified GUID (8d09efcb48ce1b365ce4f275c746da49) of player #30 Pipe
+23:24:01 Player DRaKKeN disconnected.
+23:24:01 BattlEye Server: Player #15 DRaKKeN disconnected
+23:24:38 Bullnes uses modified data file
+23:24:38 BattlEye Server: Player #15 Bullnes (83.33.129.58:2304) connected
+23:24:38 Player Bullnes connecting.
+23:24:44 BattlEye Server: Player #15 Bullnes - GUID: 0e1e7f6aa8da4f6b9219680d00bf4d3b
+23:24:44 Player Bullnes connected (id=76561198013638551).
+23:24:44 BattlEye Server: Verified GUID (0e1e7f6aa8da4f6b9219680d00bf4d3b) of player #15 Bullnes
+23:26:17 Metraka uses modified data file
+23:26:17 BattlEye Server: Player #31 Metraka (89.131.160.96:2304) connected
+23:26:17 Player Metraka connecting.
+23:26:19 BattlEye Server: Player #31 Metraka - GUID: 28f5fb43357509cfa6c7a23ebc8e4695
+23:26:36 Player Metraka connected (id=76561198131830707).
+23:26:36 BattlEye Server: Verified GUID (28f5fb43357509cfa6c7a23ebc8e4695) of player #31 Metraka
+23:28:01 Player yeray disconnected.
+23:28:01 BattlEye Server: Player #8 yeray disconnected
+23:28:41 BattlEye Server: (Side) Mr. Teletubbies: ADIOOOOOOOOOS
+**23:28:52 BattlEye Server: (Side) Acid: a la mierda!
+23:29:08 onLy mind uses modified data file
+23:29:08 BattlEye Server: Player #8 onLy mind (79.145.8.179:2304) connected
+23:29:08 Player onLy mind connecting.
+23:29:10 BattlEye Server: Player #8 onLy mind - GUID: 328ad0b9644e85ef52096727c7a25027
+23:29:11 Player onLy mind connected (id=76561197997018951).
+23:29:11 BattlEye Server: Verified GUID (328ad0b9644e85ef52096727c7a25027) of player #8 onLy mind
+23:29:12 BattlEye Server: (Side) Mr. Teletubbies: locos de las bicis
+23:29:19 BattlEye Server: (Side) Acid: 31 y entrando gente
+23:29:25 BattlEye Server: (Side) Acid: va a estar entretenido
+23:29:28 BattlEye Server: (Side) Acid: jajajaja
+23:30:06 BattlEye Server: (Side) Acid: alguien sabe donde esta la base del draken?
+23:30:07 Player talibanGTI is losing connection
+23:30:38 BattlEye Server: (Side) ASTRO: NI ZORRITA
+23:30:53 BattlEye Server: (Side) Mr. Teletubbies: ?
+23:30:58 BattlEye Server: (Side) Acid: esque estaba siguiendo a un tio, se ha metido en una base y lleva ahi 10 minutos xDDD
+23:31:01 Player talibanGTI kicked off by BattlEye: Client not responding
+23:31:01 Player talibanGTI disconnected.
+23:31:06 BattlEye Server: (Side) Acid: y el unico en salir fue el draken
+23:31:15 BattlEye Server: (Side) Acid: igual estoy haciendo el subnormal esperando sabes xDD
+23:31:29 BattlEye Server: (Group) Mr. Teletubbies: metraka hacemos algo?
+23:31:52 BattlEye Server: (Group) Metraka: entra en ts
+23:31:58 BattlEye Server: (Group) Mr. Teletubbies: pasamelo
+23:32:32 BattlEye Server: (Group) Metraka: en el de siempre
+23:32:44 BattlEye Server: (Group) Mr. Teletubbies: el que eran muchos numeros?
+23:32:56 BattlEye Server: (Group) Metraka: si
+23:33:06 Player Pablo is losing connection
+23:33:41 IVANCRAC22 uses modified data file
+23:33:41 BattlEye Server: Player #23 IVANCRAC22 (81.184.175.136:5804) connected
+23:33:41 Player IVANCRAC22 connecting.
+23:33:43 BattlEye Server: Player #23 IVANCRAC22 - GUID: 98d4c95865a3c54f50c94892e0ad3dde
+23:33:56 Player Pablo kicked off by BattlEye: Client not responding
+23:33:56 Player Pablo disconnected.
+23:33:56 Player IVANCRAC22 connected (id=76561198065674278).
+23:33:56 BattlEye Server: Verified GUID (98d4c95865a3c54f50c94892e0ad3dde) of player #23 IVANCRAC22
+23:33:57 Player IVANCRAC22 disconnected.
+23:33:57 BattlEye Server: Player #23 IVANCRAC22 disconnected
+23:34:13 talibanGTI uses modified data file
+23:34:13 BattlEye Server: Player #21 talibanGTI (84.232.126.191:27520) connected
+23:34:13 Player talibanGTI connecting.
+23:34:15 BattlEye Server: Player #21 talibanGTI - GUID: 6b2d7d8a1cc171868c84957c55499d9a
+23:34:16 Player talibanGTI connected (id=76561198135021436).
+23:34:16 BattlEye Server: Verified GUID (6b2d7d8a1cc171868c84957c55499d9a) of player #21 talibanGTI
+23:35:40 jm uses modified data file
+23:35:40 BattlEye Server: Player #23 jm (83.34.183.63:2304) connected
+23:35:40 Player jm connecting.
+23:35:42 BattlEye Server: Player #23 jm - GUID: b272d31143fb38676b5045ac6e65288e
+23:35:43 Player jm connected (id=76561198123195704).
+23:35:43 BattlEye Server: Verified GUID (b272d31143fb38676b5045ac6e65288e) of player #23 jm
+23:37:34 BattlEye Server: (Side) elbola: CLARO
+23:37:48 BattlEye Server: (Side) Mr. Teletubbies: el de la ambulancia tiene que estar mas aburrio que na xd
+23:38:01 BattlEye Server: (Side) talibanGTI: lo dejamos eske antes abia dos bolando
+23:38:03 BattlEye Server: (Direct) Don Patch: ojala calle ya esa sirena
+23:38:18 Player Genís disconnected.
+23:38:18 BattlEye Server: Player #11 Genís disconnected
+23:38:30 BattlEye Server: (Side) Mr. Teletubbies: /vote day
+23:38:39 Player talibanGTI is losing connection
+23:39:20 BattlEye Server: (Side) Garza: prefiero morir de pie que vivir arrodillado
+23:39:25 BattlEye Server: (Side) rSk.-Legia: jajaajaja
+23:39:31 BattlEye Server: (Side) rSk.-Legia: valla ruina
+23:39:32 Player talibanGTI kicked off by BattlEye: Client not responding
+23:39:32 Player talibanGTI disconnected.
+23:39:46 BattlEye Server: (Side) John Wick Smith: no se puede conducir y mirar el mapa jajaj
+23:40:19 Player jm kicked off by BattlEye: Client not responding
+23:40:19 Player jm disconnected.
+23:40:33 BattlEye Server: (Side) Mr. Teletubbies: GRACIAS
+23:40:39 BattlEye Server: (Side) Mr. Teletubbies: :(
+23:42:08 Player Mr. Teletubbies disconnected.
+23:42:08 BattlEye Server: Player #2 Mr. Teletubbies disconnected
+23:42:22 Pedro Hurtado uses modified data file
+23:42:22 BattlEye Server: Player #2 Pedro Hurtado (85.49.138.17:2304) connected
+23:42:22 Player Pedro Hurtado connecting.
+23:42:27 BattlEye Server: Player #2 Pedro Hurtado - GUID: 91d3ab265bb19cce1ff84288486db980
+23:42:29 Player Pedro Hurtado connected (id=76561197976799665).
+23:42:29 BattlEye Server: Verified GUID (91d3ab265bb19cce1ff84288486db980) of player #2 Pedro Hurtado
+23:42:56 Player Metraka disconnected.
+23:42:56 BattlEye Server: Player #31 Metraka disconnected
+23:43:20 talibanGTI uses modified data file
+23:43:20 BattlEye Server: Player #11 talibanGTI (84.232.126.191:27520) connected
+23:43:20 Player talibanGTI connecting.
+23:43:22 BattlEye Server: Player #11 talibanGTI - GUID: 6b2d7d8a1cc171868c84957c55499d9a
+23:44:03 Player Wilmer Macondo kicked off by BattlEye: Client not responding
+23:44:03 Player Wilmer Macondo disconnected.
+23:44:37 Wilmer Macondo uses modified data file
+23:44:37 BattlEye Server: Player #21 Wilmer Macondo (148.3.2.44:2304) connected
+23:44:38 Player Wilmer Macondo connecting.
+23:44:40 BattlEye Server: Player #21 Wilmer Macondo - GUID: c2902911a2651e687b52202d27b56f90
+23:44:41 Player Wilmer Macondo connected (id=76561197969862803).
+23:44:41 BattlEye Server: Verified GUID (c2902911a2651e687b52202d27b56f90) of player #21 Wilmer Macondo
+23:45:25 Player Pedro Hurtado disconnected.
+23:45:25 BattlEye Server: Player #2 Pedro Hurtado disconnected
+23:45:25 Player talibanGTI connected (id=76561198135021436).
+23:45:25 BattlEye Server: Verified GUID (6b2d7d8a1cc171868c84957c55499d9a) of player #11 talibanGTI
+23:45:33 Player talibanGTI disconnected.
+23:45:33 BattlEye Server: Player #11 talibanGTI disconnected
+23:46:08 Pedro Hurtado uses modified data file
+23:46:08 BattlEye Server: Player #2 Pedro Hurtado (85.49.138.17:2304) connected
+23:46:08 Player Pedro Hurtado connecting.
+23:46:10 BattlEye Server: Player #2 Pedro Hurtado - GUID: 91d3ab265bb19cce1ff84288486db980
+23:46:15 Player Pedro Hurtado connected (id=76561197976799665).
+23:46:15 BattlEye Server: Verified GUID (91d3ab265bb19cce1ff84288486db980) of player #2 Pedro Hurtado
+23:46:35 BattlEye Server: (Side) Acid: este es el hijo de jordi hurtado?
+23:46:38 BattlEye Server: (Side) Acid: o el abuelo
+23:46:41 BattlEye Server: (Side) Acid: igual tiene 200 años
+23:47:47 BattlEye Server: (Side) Acid: coje las cosas anda
+23:47:53 BattlEye Server: (Side) Acid: la proxima no vengas a chocarte contra mi
+23:50:41 BattlEye Server: (Group) Narion: 5886
+23:51:01 Player Pedro Hurtado disconnected.
+23:51:01 BattlEye Server: Player #2 Pedro Hurtado disconnected
+23:51:44 BattlEye Server: (Group) Narion: me zangran los hogozz
+23:53:11 BattlEye Server: (Group) Narion: necesito equipo nomàs
+23:53:58 Player Ofrece disconnected.
+23:53:58 BattlEye Server: Player #24 Ofrece disconnected
+23:54:15 BattlEye Server: (Group) Narion: si
+23:54:23 BattlEye Server: (Group) Narion: trnki
+23:54:35 BattlEye Server: SelectPlayer Log: #14 flabio tronatets (17b87261ee5731bd670c3452815a19af) - #0 2:19160 1664716723 [10260,5470,1132]
+23:54:35 Player flabio tronatets kicked off by BattlEye: SelectPlayer Restriction #0
+23:54:35 Player flabio tronatets disconnected.
+23:55:08 BattlEye Server: (Group) Narion: no hay ni 1 puta mira?
+23:55:08 BattlEye Server: RCon admin #1: (To Narion) Watch your language. Warnings left:2 ['puta']
+23:55:13 BattlEye Server: (Group) Narion: si
+23:55:40 flabio tronatets uses modified data file
+23:55:40 BattlEye Server: Player #2 flabio tronatets (167.57.151.136:2304) connected
+23:55:40 Player flabio tronatets connecting.
+23:55:42 BattlEye Server: Player #2 flabio tronatets - GUID: 17b87261ee5731bd670c3452815a19af
+23:55:43 Player flabio tronatets connected (id=76561198291311974).
+23:55:43 BattlEye Server: Verified GUID (17b87261ee5731bd670c3452815a19af) of player #2 flabio tronatets
+23:55:52 BattlEye Server: (Group) Narion: reaparo la pick up
+23:56:08 Player Flare disconnected.
+23:56:08 BattlEye Server: Player #25 Flare disconnected
+23:57:06 BattlEye Server: (Side) rSk.-Legia: sacado dos veces me cago en la ma
+23:57:10 Dora uses modified data file
+23:57:10 BattlEye Server: Player #11 Dora (88.6.139.191:2304) connected
+23:57:10 Player Dora connecting.
+23:57:12 BattlEye Server: Player #11 Dora - GUID: 25c39c8e471e2fbac946c6446323e1e3
+23:57:12 Player Dora connected (id=76561198148369352).
+23:57:12 BattlEye Server: Verified GUID (25c39c8e471e2fbac946c6446323e1e3) of player #11 Dora
+23:57:16 BattlEye Server: (Side) Acid: da igual xD
+23:57:24 BattlEye Server: (Side) rSk.-Legia: esta claro
+23:58:08 BattlEye Server: (Group) Narion: pa empalmarse la polla
+23:58:08 BattlEye Server: RCon admin #1: (To Narion) Watch your language. Warnings left:1 ['polla']
+23:58:11 BattlEye Server: (Side) John Wick Smith: Como tardais jajajaj
+23:58:24 BattlEye Server: (Side) Acid: que tardamos en k
+23:58:31 BattlEye Server: (Side) John Wick Smith: en matar XD
+23:58:37 BattlEye Server: (Side) Acid: te dabamos tiempo
+23:59:00 BattlEye Server: (Side) John Wick Smith: siguiendo al elbola pobre ni una bala me dao y yo siguiendole XD
+23:59:17 BattlEye Server: (Side) John Wick Smith: lo estaba buscando para dar un palazo ahora jaj
+23:59:25 BattlEye Server: (Side) Acid: xDD
+ 0:03:28 BattlEye Server: (Side) onLy mind: voy a llamar a los primos y te van a meter con la faca
+ 0:04:50 Pedro Hurtado uses modified data file
+ 0:04:50 BattlEye Server: Player #14 Pedro Hurtado (90.169.192.80:2304) connected
+ 0:04:50 Player Pedro Hurtado connecting.
+ 0:04:52 BattlEye Server: Player #14 Pedro Hurtado - GUID: 91d3ab265bb19cce1ff84288486db980
+ 0:05:08 Player Pedro Hurtado connected (id=76561197976799665).
+ 0:05:08 BattlEye Server: Verified GUID (91d3ab265bb19cce1ff84288486db980) of player #14 Pedro Hurtado
+ 0:05:16 Rct.Viktor Kozlov uses modified data file
+ 0:05:16 BattlEye Server: Player #23 Rct.Viktor Kozlov (37.133.183.128:2304) connected
+ 0:05:16 Player Rct.Viktor Kozlov connecting.
+ 0:05:18 BattlEye Server: Player #23 Rct.Viktor Kozlov - GUID: 2bd3c7bbcfffad4f96705eef4c8f7cd5
+ 0:05:18 Player Rct.Viktor Kozlov connected (id=76561198119709963).
+ 0:05:18 BattlEye Server: Verified GUID (2bd3c7bbcfffad4f96705eef4c8f7cd5) of player #23 Rct.Viktor Kozlov
+ 0:05:50 Yerbas uses modified data file
+ 0:05:50 BattlEye Server: Player #24 Yerbas (188.77.69.55:2304) connected
+ 0:05:50 Player Yerbas connecting.
+ 0:05:53 BattlEye Server: Player #24 Yerbas - GUID: 60a588ab073e819c30ba00183b348881
+ 0:05:53 Player Yerbas connected (id=76561198041832540).
+ 0:05:53 BattlEye Server: Verified GUID (60a588ab073e819c30ba00183b348881) of player #24 Yerbas
+ 0:06:38 Titu uses modified data file
+ 0:06:38 BattlEye Server: Player #25 Titu (85.57.232.1:2304) connected
+ 0:06:38 Player Titu connecting.
+ 0:06:42 BattlEye Server: Player #25 Titu - GUID: 3c209cc088a79dfe37bfa927daaa2ace
+ 0:06:43 Player Titu connected (id=76561198023421497).
+ 0:06:43 BattlEye Server: Verified GUID (3c209cc088a79dfe37bfa927daaa2ace) of player #25 Titu
+ 0:08:43 Kaiz3r uses modified data file
+ 0:08:43 BattlEye Server: Player #26 Kaiz3r (188.77.208.38:2304) connected
+ 0:08:43 Player Kaiz3r connecting.
+ 0:08:44 BattlEye Server: Player #26 Kaiz3r - GUID: 1ba5e3b4799957ff072c6fe82e661988
+ 0:08:45 Player Kaiz3r connected (id=76561198044254898).
+ 0:08:45 BattlEye Server: Verified GUID (1ba5e3b4799957ff072c6fe82e661988) of player #26 Kaiz3r
+ 0:08:50 Successfull attempt to execute serverCommand '#kick 76561198085793976' by server.
+ 0:08:50 Player Acid disconnected.
+ 0:08:50 BattlEye Server: Player #6 Acid disconnected
+ 0:08:50 Sdar uses modified data file
+ 0:08:50 BattlEye Server: Player #31 Sdar (81.61.53.123:2304) connected
+ 0:08:50 Player Sdar connecting.
+ 0:08:53 BattlEye Server: Player #31 Sdar - GUID: cb30d7243fa34782b52e352c928c5193
+ 0:08:54 Player Sdar connected (id=76561197989906387).
+ 0:08:54 BattlEye Server: Verified GUID (cb30d7243fa34782b52e352c928c5193) of player #31 Sdar
+ 0:08:54 Acid uses modified data file
+ 0:08:54 BattlEye Server: Player #6 Acid (192.168.1.34:2304) connected
+ 0:08:54 Player Acid connecting.
+ 0:08:56 BattlEye Server: Player #6 Acid - GUID: c9eadc933991f558729061c99e19d831
+ 0:08:57 Player Acid connected (id=76561198085793976).
+ 0:08:57 BattlEye Server: Verified GUID (c9eadc933991f558729061c99e19d831) of player #6 Acid
+ 0:08:57 Player Pedro Hurtado disconnected.
+ 0:08:57 BattlEye Server: Player #14 Pedro Hurtado disconnected
+ 0:11:01 BattlEye Server: (Side) Acid: legia ven, que estos no cunden
+ 0:11:14 BattlEye Server: (Side) rSk.-Legia: xd
+ 0:11:26 BattlEye Server: (Side) rSk.-Legia: vente q te voy dar calor
+ 0:11:29 BattlEye Server: (Side) Acid: que me gano 3k de respeto y me joden 1k
+ 0:11:34 BattlEye Server: (Side) Acid: 15k
+ 0:11:47 KENTO uses modified data file
+ 0:11:47 BattlEye Server: Player #14 KENTO (94.194.21.96:2304) connected
+ 0:11:47 Player KENTO connecting.
+ 0:11:48 BattlEye Server: Player #14 KENTO - GUID: 3451a100dd5a12d1679489f6f688dab1
+ 0:11:49 Player KENTO connected (id=76561197989919709).
+ 0:11:49 BattlEye Server: Verified GUID (3451a100dd5a12d1679489f6f688dab1) of player #14 KENTO
+ 0:12:14 BattlEye Server: (Side) Garza: legia matalo un par de veces y que se vaya a dormir sin despedirse plis
+ 0:12:21 BattlEye Server: (Side) Garza: xD
+ 0:12:28 Player Don Patch: Wrong signature for file a3\structures_f_exp\industrial\surfacemine_01\sm_01_reservoirtower_f.p3d
+ 0:12:28 Player Don Patch disconnected.
+ 0:12:28 BattlEye Server: Player #17 Don Patch disconnected
+ 0:12:36 BattlEye Server: (Side) Acid: no te extrañe
+ 0:12:41 BattlEye Server: (Side) Acid: he dormido 4h solo
+ 0:12:58 BattlEye Server: (Side) Garza: xd
+ 0:13:03 BattlEye Server: (Side) Acid: puedo lijar madera con los ojos
+ 0:13:04 BattlEye Server: (Side) Garza: yo voy ya
+ 0:13:12 Player Bolgo: Wrong signature for file a3\structures_f_exp\industrial\surfacemine_01\data\metal_plates5_dirty_nohq.paa
+ 0:13:12 Player Bolgo disconnected.
+ 0:13:12 BattlEye Server: Player #20 Bolgo disconnected
+ 0:13:36 BattlEye Server: (Side) Dani: que diseee
+ 0:13:41 Bolgo uses modified data file
+ 0:13:41 BattlEye Server: Player #17 Bolgo (188.171.32.15:2304) connected
+ 0:13:41 Player Bolgo connecting.
+ 0:13:42 BattlEye Server: (Side) Garza:  
+ 0:13:42 BattlEye Server: (Direct) Dani: que dise infer
+ 0:13:43 BattlEye Server: Player #17 Bolgo - GUID: 15aab091a6c15ed3085fef0b1ef1dd45
+ 0:13:44 Joe uses modified data file
+ 0:13:44 BattlEye Server: Player #20 Joe (80.7.187.140:2304) connected
+ 0:13:44 Player Joe connecting.
+ 0:13:44 Player Bolgo connected (id=76561197985871952).
+ 0:13:44 BattlEye Server: Verified GUID (15aab091a6c15ed3085fef0b1ef1dd45) of player #17 Bolgo
+ 0:13:48 BattlEye Server: (Direct) Dani: aqi qe vamos a hacer una mision ahora ya 
+ 0:13:48 Player Joe disconnected.
+ 0:13:48 BattlEye Server: Player #20 Joe disconnected
+ 0:13:55 BattlEye Server: (Direct) Dani: haha yeah
+ 0:14:38 Joe uses modified data file
+ 0:14:38 BattlEye Server: Player #20 Joe (80.7.187.140:2304) connected
+ 0:14:38 Player Joe connecting.
+ 0:14:41 BattlEye Server: Player #20 Joe - GUID: 873c5ea344b05bdbc0c60ec56c02f79b
+ 0:14:41 Player Joe connected (id=76561198282895781).
+ 0:14:41 BattlEye Server: Verified GUID (873c5ea344b05bdbc0c60ec56c02f79b) of player #20 Joe
+ 0:14:56 Player Joe disconnected.
+ 0:14:56 BattlEye Server: Player #20 Joe disconnected
+ 0:15:28 Player Bolgo disconnected.
+ 0:15:28 BattlEye Server: Player #17 Bolgo disconnected
+ 0:15:32 Player DeMpTy: Wrong signature for file a3\structures_f_exp\infrastructure\watersupply\watertower_01_f.p3d
+ 0:15:32 Player DeMpTy disconnected.
+ 0:15:32 BattlEye Server: Player #9 DeMpTy disconnected
+ 0:16:00 Player R1DD1K disconnected.
+ 0:16:00 BattlEye Server: Player #22 R1DD1K disconnected
+ 0:16:02 Player 1nF3R disconnected.
+ 0:16:02 BattlEye Server: Player #4 1nF3R disconnected
+ 0:16:12 BattlEye Server: (Side) Acid: ahora no lloran
+ 0:16:15 BattlEye Server: (Side) Garza: bale chula xd
+ 0:16:17 BattlEye Server: (Side) Acid: ahora cuando los pelabamos ayer si eee
+ 0:16:35 BattlEye Server: (Side) Acid: llora garza llora
+ 0:17:21 BattlEye Server: (Side) Garza: cree el ladron...
+ 0:17:27 Metraka uses modified data file
+ 0:17:27 BattlEye Server: Player #4 Metraka (89.131.160.96:2304) connected
+ 0:17:27 Player Metraka connecting.
+ 0:17:32 BattlEye Server: Player #4 Metraka - GUID: 28f5fb43357509cfa6c7a23ebc8e4695
+ 0:17:33 Player Metraka connected (id=76561198131830707).
+ 0:17:33 BattlEye Server: Verified GUID (28f5fb43357509cfa6c7a23ebc8e4695) of player #4 Metraka
+ 0:18:31 talibanGTI uses modified data file
+ 0:18:31 BattlEye Server: Player #9 talibanGTI (84.232.126.191:27520) connected
+ 0:18:31 Player talibanGTI connecting.
+ 0:18:33 BattlEye Server: Player #9 talibanGTI - GUID: 6b2d7d8a1cc171868c84957c55499d9a
+ 0:18:34 Player talibanGTI connected (id=76561198135021436).
+ 0:18:34 BattlEye Server: Verified GUID (6b2d7d8a1cc171868c84957c55499d9a) of player #9 talibanGTI
+ 0:18:53 Player Bullnes disconnected.
+ 0:18:53 BattlEye Server: Player #15 Bullnes disconnected
+ 0:19:21 Player Jochem disconnected.
+ 0:19:21 BattlEye Server: Player #1 Jochem disconnected
+ 0:19:25 Player Oscar disconnected.
+ 0:19:25 BattlEye Server: Player #7 Oscar disconnected
+ 0:19:45 Don Patch uses modified data file
+ 0:19:45 BattlEye Server: Player #1 Don Patch (193.153.77.25:2304) connected
+ 0:19:45 Player Don Patch connecting.
+ 0:19:50 BattlEye Server: Player #1 Don Patch - GUID: 3f4eeac82b55d8724774f27f806138ea
+ 0:19:51 Player Don Patch connected (id=76561198124278220).
+ 0:19:51 BattlEye Server: Verified GUID (3f4eeac82b55d8724774f27f806138ea) of player #1 Don Patch
+ 0:20:15 Player Garza disconnected.
+ 0:20:15 BattlEye Server: Player #12 Garza disconnected
+ 0:20:56 BattlEye Server: (Side) rSk.-Legia: rica
+ 0:21:01 BattlEye Server: (Side) Acid: pero que coño xD
+ 0:21:03 Player STEEGEL25 disconnected.
+ 0:21:03 BattlEye Server: Player #13 STEEGEL25 disconnected
+ 0:21:06 BattlEye Server: (Side) rSk.-Legia: mmmmm
+ 0:21:15 Player flabio tronatets disconnected.
+ 0:21:15 BattlEye Server: Player #2 flabio tronatets disconnected
+ 0:21:24 BattlEye Server: (Side) rSk.-Legia: ven respeto a mi jaja
+ 0:21:26 BattlEye Server: (Side) Acid: pero como puedes poner minas en todo lo que ves tio xD
+ 0:21:28 Player Don Patch disconnected.
+ 0:21:28 BattlEye Server: Player #1 Don Patch disconnected
+ 0:21:39 armas uses modified data file
+ 0:21:39 BattlEye Server: Player #1 armas (188.77.163.30:2304) connected
+ 0:21:39 Player armas connecting.
+ 0:21:40 BattlEye Server: (Side) rSk.-Legia: -xd
+ 0:21:41 BattlEye Server: Player #1 armas - GUID: 30a7ae72b036d4be5661a65fe94e6e72
+ 0:21:41 Player armas connected (id=76561198042374427).
+ 0:21:41 BattlEye Server: Verified GUID (30a7ae72b036d4be5661a65fe94e6e72) of player #1 armas
+ 0:21:49 BattlEye Server: (Side) rSk.-Legia: ofroad rojo tio
+ 0:21:54 BattlEye Server: (Side) rSk.-Legia: esta claro
+ 0:22:26 BattlEye Server: (Side) Acid: ni k lo lelvara siempre xD
+ 0:22:40 BattlEye Server: (Side) rSk.-Legia: hoy si
+ 0:22:49 BattlEye Server: (Side) rSk.-Legia: me pillaste con el 
+ 0:22:52 BattlEye Server: (Side) rSk.-Legia: xd
+ 0:22:56 Don Patch uses modified data file
+ 0:22:56 BattlEye Server: Player #2 Don Patch (193.153.77.25:2304) connected
+ 0:22:56 Player Don Patch connecting.
+ 0:22:57 BattlEye Server: Player #2 Don Patch - GUID: 3f4eeac82b55d8724774f27f806138ea
+ 0:22:58 Player Don Patch connected (id=76561198124278220).
+ 0:22:58 BattlEye Server: Verified GUID (3f4eeac82b55d8724774f27f806138ea) of player #2 Don Patch
+ 0:29:44 Player elbola disconnected.
+ 0:29:44 BattlEye Server: Player #29 elbola disconnected
+ 0:30:27 BattlEye Server: (Group) Narion: espawnee en lopatino
+ 0:30:33 BattlEye Server: (Group) Narion: solo te quedan las m2
+ 0:33:13 Player Narion disconnected.
+ 0:33:13 BattlEye Server: Player #27 Narion disconnected
+ 0:33:18 Narion uses modified data file
+ 0:33:18 BattlEye Server: Player #7 Narion (81.184.112.84:2304) connected
+ 0:33:18 Player Narion connecting.
+ 0:33:19 BattlEye Server: Player #7 Narion - GUID: 090cb8cdfea1847e6961dfb5dc5e4d3e
+ 0:33:20 Player Narion connected (id=76561198016409723).
+ 0:33:20 BattlEye Server: Verified GUID (090cb8cdfea1847e6961dfb5dc5e4d3e) of player #7 Narion
+ 0:39:48 Player Yuriram disconnected.
+ 0:39:48 BattlEye Server: Player #19 Yuriram disconnected
+ **0:40:31 BattlEye Server: (Side) Acid: madre mia como hius macho**
+ **0:40:41 BattlEye Server: (Side) Acid: si, se lo digo al del ghilie full**
+ **0:41:26 BattlEye Server: (Side) Pipe: No es mi culpa que seais tan malos :D**
+ **0:41:32 BattlEye Server: (Side) Acid: malos? xDDD**
+ **0:41:36 BattlEye Server: (Side) Acid: madre mia**
+ **0:41:47 BattlEye Server: (Side) Pipe: El guilli full llevaba mx contra 4 tios "full" y 26 cargadores pa campear**
+ **0:41:53 BattlEye Server: (Side) Acid: el que coje las cosas y se va por patas xDD**
+ **0:41:58 BattlEye Server: (Side) Pipe: Si revisaras los cuerpos al menos verias que llevaba 40k :D**
+ **0:42:11 BattlEye Server: (Side) Pipe: Malisimos :D**
+ **0:42:15 BattlEye Server: (Side) Acid: tengo 100k en el banco y mas de 1 millon en bases**
+ **0:42:21 BattlEye Server: (Side) Acid: fijate mi preocupacion xD**
+ 0:42:23 Tom uses modified data file
+ 0:42:23 BattlEye Server: Player #12 Tom (82.30.202.221:2304) connected
+ 0:42:23 Player Tom connecting.
+ 0:42:25 BattlEye Server: Player #12 Tom - GUID: ee14187124e0f4c92d39390efa66dabf
+ 0:42:25 Player Tom connected (id=76561198070844444).
+ 0:42:25 BattlEye Server: Verified GUID (ee14187124e0f4c92d39390efa66dabf) of player #12 Tom
+ 0:42:32 Player Tom disconnected.
+ 0:42:32 BattlEye Server: Player #12 Tom disconnected
+ 0:42:37 BattlEye Server: (Side) Pipe: Enhorabuena, entre hoy al server y al arma y te he pelao junto con tus amigos lammers
+ **0:42:48 BattlEye Server: (Side) Acid: venga hombre mamon**
+ **0:42:52 BattlEye Server: (Side) Acid: que estaba escribiendo xD**
+ **0:43:05 BattlEye Server: (Side) rSk.-Legia: dame eso q es mio jeje**
+ **0:43:09 BattlEye Server: (Side) Acid: xDD**
+ **0:43:21 BattlEye Server: (Side) Pipe: Eso pasa por Niño rata :D**
+ **0:43:27 BattlEye Server: (Side) Acid: aprende a no insultar**
+ **0:43:33 BattlEye Server: (Side) Acid: pipe otro insulto y te vas**
+ **0:43:51 BattlEye Server: (Side) Pipe: No es insulto, y no sabia que eras admin xD**
+ 0:43:53 BattlEye Server: (Side) onLy mind: callaaa
+ **0:43:58 BattlEye Server: (Side) Pipe: Eso ya explica jajaja** 
+ **0:44:09 BattlEye Server: (Side) Acid: no es insulto niño rata, anda hombre**
+ **0:44:29 BattlEye Server: (Side) Pipe: Hay va! Que eres moderador xDDDD JAJAJAJAJAJJAJA**
+ **0:44:30 BattlEye Server: (Side) Wilmer Macondo: niño rata no es un insulto**
+ **0:44:33 BattlEye Server: (Side) Wilmer Macondo: eres tu XD**
+ 0:44:48 BattlEye Server: (Side) Acid: en fin
+ **0:44:58 BattlEye Server: (Side) Wilmer Macondo: cryer..** 
+ **0:45:06 BattlEye Server: (Side) Wilmer Macondo: no hay q llorar es un juego ^^**
+ **0:45:21 BattlEye Server: (Side) Wilmer Macondo: cuando tengas mas de 20 años ves los juegos diferente XD**
+ **0:45:50 BattlEye Server: (Side) Acid: al final me hacen minimizar el juego**
+ **0:46:04 BattlEye Server: (Side) Wilmer Macondo: para¿**
+ **0:46:28 BattlEye Server: (Side) Wilmer Macondo: captura de pantalla para mami?**
+ **0:47:24 BattlEye Server: (Side) Wilmer Macondo: ale hasta mañana q un servidor tiene q trabajar XD**
+ 0:47:57 BattlEye Server: RCon admin #2 (176.86.220.195:50170) logged in
+ **0:47:59 Player Wilmer Macondo kicked off by BattlEye: Admin Ban ([Admin] Banned for 1 minute(s).)**
+ 0:47:59 Player Wilmer Macondo disconnected.
+ 0:48:18 Tom uses modified data file
+ 0:48:18 BattlEye Server: Player #12 Tom (82.30.202.221:2304) connected
+ 0:48:18 Player Tom connecting.
+ 0:48:20 BattlEye Server: Player #12 Tom - GUID: ee14187124e0f4c92d39390efa66dabf
+ 0:48:21 Player Tom connected (id=76561198070844444).
+ 0:48:21 BattlEye Server: Verified GUID (ee14187124e0f4c92d39390efa66dabf) of player #12 Tom
+ 0:48:22 BattlEye Server: (Side) Pipe: The kids revenge, habeis visto esa pelicula en netflix?
+ 0:48:25 Player Tom disconnected.
+ 0:48:25 BattlEye Server: Player #12 Tom disconnected
+ 0:48:26 Wilmer Macondo uses modified data file
+ 0:48:26 BattlEye Server: Player #12 Wilmer Macondo (148.3.2.44:2304) connected
+ 0:48:26 Player Wilmer Macondo connecting.
+ 0:48:28 BattlEye Server: Player #12 Wilmer Macondo - GUID: c2902911a2651e687b52202d27b56f90
+ 0:48:28 Player  kicked off by BattlEye: Admin Ban ([Admin] Banned for 1 minute(s).)
+ 0:48:28 Player Wilmer Macondo disconnected.
+ **0:48:40 Player Pipe kicked off by BattlEye: Admin Ban ([Admin] Banned for 1 minute(s).)**
+ 0:48:40 Player Pipe disconnected.
+ 0:48:59 Pipe uses modified data file
+ 0:48:59 BattlEye Server: Player #12 Pipe (91.126.240.214:2304) connected
+ 0:48:59 Player Pipe connecting.
+ 0:49:00 BattlEye Server: Player #12 Pipe - GUID: 8d09efcb48ce1b365ce4f275c746da49
+ 0:49:00 Player  kicked off by BattlEye: Admin Ban ([Admin] Banned for 1 minute(s).)
+ 0:49:01 Player Pipe disconnected.
+ 0:49:02 BattlEye Server: (Side) onLy mind: que, te sientes mejor?
+ 0:49:08 BattlEye Server: (Side) onLy mind: por banear 1 min?
+ 0:49:19 BattlEye Server: RCon admin #2 (176.86.220.195:62252) logged in
+ 0:49:21 BattlEye Server: RCon admin #0: (Global) [Admin] lo banee yo
+ 0:49:25 BattlEye Server: RCon admin #0: (Global) [Admin] NRZ7
+ 0:49:25 Pipe uses modified data file
+ 0:49:25 BattlEye Server: Player #12 Pipe (91.126.240.214:2304) connected
+ 0:49:25 Player Pipe connecting.
+ 0:49:27 BattlEye Server: Player #12 Pipe - GUID: 8d09efcb48ce1b365ce4f275c746da49
+ 0:49:27 Player  kicked off by BattlEye: Admin Ban ([Admin] Banned for 1 minute(s).)
+ 0:49:27 Player Pipe disconnected.
+ **0:49:34 BattlEye Server: (Side) onLy mind: motivo?**
+ **0:49:44 BattlEye Server: RCon admin #0: (Global) [Admin] faltar el respeto**
+ **0:49:45 BattlEye Server: RCon admin #2: (Global) [Admin] Falta de respeto hacia un jugador?**
+ 0:49:46 BattlEye Server: (Side) Acid: motivos subes el chat parriba y lo ves
+ **0:49:54 BattlEye Server: RCon admin #0: (Global) [Admin] creo que es de sobras visto que un minuto de ban es un toke**
+ **0:49:57 BattlEye Server: (Side) onLy mind: pero que te dijo pipe?**
+ 0:50:00 Wilmer Macondo uses modified data file
+ 0:50:00 BattlEye Server: Player #12 Wilmer Macondo (148.3.2.44:2304) connected
+ 0:50:00 Player Wilmer Macondo connecting.
+ 0:50:02 BattlEye Server: Player #12 Wilmer Macondo - GUID: c2902911a2651e687b52202d27b56f90
+ 0:50:02 Player Wilmer Macondo connected (id=76561197969862803).
+ 0:50:02 BattlEye Server: Verified GUID (c2902911a2651e687b52202d27b56f90) of player #12 Wilmer Macondo
+ **0:50:26 BattlEye Server: (Side) Acid: niño rata**
+ **0:50:51 BattlEye Server: (Side) Rct.Viktor Kozlov: baneais por falta de respeto y insultais tambien...**
+ **0:50:52 BattlEye Server: (Side) onLy mind: eso lo consideras un insulto?**
+ 0:51:02 Pipe uses modified data file
+ 0:51:02 BattlEye Server: Player #13 Pipe (91.126.240.214:2304) connected
+ 0:51:02 Player Pipe connecting.
+ 0:51:03 BattlEye Server: Player #13 Pipe - GUID: 8d09efcb48ce1b365ce4f275c746da49
+ 0:51:04 Player Pipe connected (id=76561197979262222).
+ 0:51:04 BattlEye Server: Verified GUID (8d09efcb48ce1b365ce4f275c746da49) of player #13 Pipe
+ **0:51:11 BattlEye Server: (Side) Acid: niño rata es una falta de respeto de aqui a lima**
+ **0:51:12 BattlEye Server: (Side) Acid: pero vaya**
+ **0:51:19 BattlEye Server: (Side) Acid: si a ti te gusta que te llamen niño rata...**
+ **0:51:20 BattlEye Server: RCon admin #2: (Global) [Admin] Quien te ha insultado Kozlov?**
+ **0:51:31 BattlEye Server: (Side) onLy mind: si te consideras uno, si no no creo que te afecte**
+ **0:51:37 BattlEye Server: (Side) Narion: ami con mis 27... no me afectaria mucho...**
+
+0:51:42 BattlEye Server: (Side) Wilmer Macondo: Ha quedado confirmado que eres un NIÑO RATA y encima LLORON... XDDDDDDDD dile a tu madre que te insultamos¡¡¡¡ jajajajajajajajajajaja LLORON NIÑ
+------------------------------------------------------------------------
+
+ 0:51:42 BattlEye Server: RCon admin #1: (To Wilmer Macondo) Only use Ascii on chat. Warnings left:2
+
+0:51:51 BattlEye Server: (Side) Wilmer Macondo: Ale Baneame otro minuto jajjajajajajaj XD
+------------------------------------------------------------------------
+
+ **0:51:51 BattlEye Server: (Side) Acid: y si te llaman subnormal tampoco es un insulto si no te consideras subnormal verdad xD**
+ 0:52:03 BattlEye Server: (Side) onLy mind: pues no
+
+0:52:06 BattlEye Server: (Side) Wilmer Macondo: Niño rata :D
+------------------------------------------------------------
+
+ 0:52:06 BattlEye Server: (Side) onLy mind: madura
+ **0:52:13 BattlEye Server: RCon admin #2: (Global) [Admin] Wilmer te parece mejor que te banee un dia o dos?**
+ 0:52:23 BattlEye Server: (Side) Acid: leeros las normas
+ 0:52:25 BattlEye Server: (Side) onLy mind: eso si por aqui es facil insultar
+ 0:52:29 BattlEye Server: RCon admin #0: (Global) [NRZ7] no tolero esta actitud en el servidor
+ 0:52:30 BattlEye Server: (Side) onLy mind: o decir niño rata
+
+0:52:31 BattlEye Server: (Side) Wilmer Macondo: 1 AÑO
+-----------------------------------------------------
+
+ 0:52:31 BattlEye Server: RCon admin #1: (To Wilmer Macondo) Only use Ascii on chat. Warnings left:1
+
+0:52:33 BattlEye Server: (Side) Wilmer Macondo: BANEAME
+-------------------------------------------------------
+
+0:52:36 BattlEye Server: (Side) Wilmer Macondo: ME LA PELA
+----------------------------------------------------------
+
+0:52:36 BattlEye Server: RCon admin #0: (Global) [NRZ7] dejad los insultos o te vas a otro server
+========================================================================
+
+0:52:42 BattlEye Server: (Side) Wilmer Macondo: CRIO Q ERES UN PUTO CRIO
+------------------------------------------------------------------------
+
+0:52:48 BattlEye Server: (Side) Wilmer Macondo: IMBECIL
+-------------------------------------------------------
+
+0:52:48 BattlEye Server: RCon admin #1: (To Wilmer Macondo) Watch your language. No Warnings left. Next badword will result in kick
+========================================================================
+
+ 0:52:51 BattlEye Server: (Side) Acid: si no sabes aguantar y hablar como las personas normales tienes mil servidores guiris donde decir fuck
+ 0:52:53 BattlEye Server: (Side) Rct.Viktor Kozlov: ahi te has pasado
+
+0:52:53 BattlEye Server: (Side) Wilmer Macondo: NIÑO RATA DE MIERDA
+-------------------------------------------------------------------
+
+ 0:52:53 Player Wilmer Macondo kicked off by BattlEye: Admin Kick (BEC : Usage of wrong chars on the chat)
+ 0:52:53 Player Wilmer Macondo disconnected.
+ 0:53:34 BattlEye Server: (Side) Acid: en fin
+ 0:53:42 Alejandro uses modified data file
+ 0:53:42 BattlEye Server: Player #12 Alejandro (83.53.150.19:2304) connected
+ 0:53:42 Player Alejandro connecting.
+ 0:53:44 BattlEye Server: Player #12 Alejandro - GUID: 05aa40a6cedbcc08407f0ae4953280c0
+ 0:53:45 Player Alejandro connected (id=76561198009736897).
+ 0:53:45 BattlEye Server: Verified GUID (05aa40a6cedbcc08407f0ae4953280c0) of player #12 Alejandro
+ 0:53:46 BattlEye Server: (Side) talibanGTI: tio martin
+ **0:54:03 BattlEye Server: (Side) onLy mind: aver acid los 2 sabemos que la forma de jugar que tienes tu y tu gente es un poco lammer**
+ **0:54:08 BattlEye Server: (Side) Narion: abriendo la bolsa de palomitas xD**
+ **0:54:10 BattlEye Server: (Side) onLy mind: admitelo**
+ **0:54:15 BattlEye Server: (Side) Pipe: Pues es verdad, estabamos en otro que ha hecho wipe hoy. Hemos decidido venir a uno español y ya se porque nos fuimos xDDDD**
+ **0:54:19 BattlEye Server: (Side) Acid: lamer que significa**
+ 0:54:26 Player Alejandro kicked off by BattlEye: Admin Ban ([Admin] Admin Ban)
+
+// AQUI NOS DISCUTIMOS PK LOGANCIO SE EQUIVOCO AL BANEAR Y BANEO A ALEJANDRO SIN QUIERER, SORRY //
+
+ 0:54:26 Player Alejandro disconnected.
+ **0:54:46 BattlEye Server: (Side) onLy mind: pfff nada tio vete a dormir ya**
+ **0:54:56 BattlEye Server: (Side) Acid: a ver cada uno juega como le sale de los huevos no?**
+ **0:54:57 BattlEye Server: (Side) Pipe: No problem he chaval que pa aguantar a moderadores como tu prefiero irme yo :D**
+ **0:55:09 BattlEye Server: (Side) Rct.Viktor Kozlov: bueeno calma**
+ **0:55:19 BattlEye Server: (Side) Acid: y para aguantar todos a judaroes como tu**
+ **0:55:21 BattlEye Server: (Side) onLy mind: weno pero si te matan no llores**
+ **0:55:31 BattlEye Server: (Side) Acid: porque cuando no es a mi, sera a otro jugador**
+ **0:55:37 BattlEye Server: (Side) Acid: que yo he llorado?**
+ **0:55:39 BattlEye Server: (Side) Acid: perdona?**
+ 0:55:41 BattlEye Server: RCon admin #3 (95.23.21.114:63760) logged in
+ 0:55:51 BattlEye Server: RCon admin #4 (95.23.21.114:63761) logged in
+ 0:55:53 BattlEye Server: (Side) Acid: estaba hablando con legia y tengo bastante mas confianza
+ 0:56:00 BattlEye Server: (Side) Acid: como pa decirle lo que le he dicho
+ **0:56:09 BattlEye Server: (Side) onLy mind: sisi tu que por matarte 2 veces y salir con las cosas te pusiste a decir cosas de "niño rata"**
+ **0:56:13 BattlEye Server: (Side) Acid: o acaso le has visto kejarse de alguien**
+ **0:56:14 BattlEye Server: (Side) Pipe: Hay alguna manera de ignorar a alguien? No leer su chat o algo?**
+
+**0:56:27 BattlEye Server: (Side) Pipe: Me das cancer**
+-------------------------------------------------------
+
+ **0:56:28 BattlEye Server: (Side) Acid: solo dije que quien era el del ghilie que se iba por patas**
+ **0:56:29 BattlEye Server: (Side) rSk.-Legia: bueno señores hasta mañana ,no mosqueies q solo es un juego ,esto se arrgla cherno 1 vs 1**
+ **0:56:34 BattlEye Server: (Side) Rct.Viktor Kozlov: señores calma**
+ 0:56:40 BattlEye Server: (Side) onLy mind: era yo
+ 0:56:48 BattlEye Server: (Side) rSk.-Legia: dew
+ **0:56:51 BattlEye Server: (Side) onLy mind: el que se fue con el equipo de elbola**
+ **0:57:00 BattlEye Server: (Side) Acid: y eso ves algun problema en ello?**
+ 0:57:03 BattlEye Server: (Side) John Wick Smith: yo vi a dos fumandose unos porros alli en un matorral XD
+ 0:57:08 BattlEye Server: (Side) onLy mind: por que como siempre campea debajo de un arbol
+ 0:57:21 BattlEye Server: (Side) Acid: luego salto tu amigo con l ode niño rata que han matado a 4 fulll con una mk200
+ 0:57:52 Player rSk.-Legia disconnected.
+ 0:57:52 BattlEye Server: Player #28 rSk.-Legia disconnected
+ 0:57:53 BattlEye Server: (Side) onLy mind: weno y que la mk200 no usa balas de verdad o que?
+ 0:58:01 BattlEye Server: (Side) Acid: lo que esta fuera de lugar es lo que ha dicho el, insultando
+ 0:58:13 BattlEye Server: (Side) Acid: pero si lo ha dicho tu amigo lo de niño rata que te han matao con la mk200
+ 0:58:17 BattlEye Server: (Side) Acid: a mi que me preguntas
+ 0:58:25 Player Dora disconnected.
+ 0:58:25 BattlEye Server: Player #11 Dora disconnected
+ **0:58:33 BattlEye Server: (Side) onLy mind: estamos en ts y escuche todo y vi todo lo que dijo**
+ **0:58:42 BattlEye Server: (Side) onLy mind: lo que pasa es que como siempre si os matan os picais**
+ **0:58:54 BattlEye Server: (Side) Acid: vale, lo que tu digas**
+ **0:59:06 BattlEye Server: (Side) Pipe: Esta vez, le jodio que volvi a por mi cuerpo con 40k y como es un campero me escape xd**
+ **0:59:08 BattlEye Server: (Side) Acid: luego te miras mi streaming si quieres**
+ **0:59:09 BattlEye Server: (Side) onLy mind: y siempre andais haciendo guarradas como chocar con las bicis en el trader o hacer bases cerca de el**
+ **0:59:16 BattlEye Server: (Side) Acid: que veras el chat**
+ **0:59:22 BattlEye Server: (Side) Acid: las normas son las normas**
+ **0:59:28 BattlEye Server: (Side) Acid: -2km alejado del trader**
+ **0:59:33 BattlEye Server: (Side) onLy mind: pero bn que te las pasas por el forro**
+ **0:59:35 BattlEye Server: (Side) Acid: y nunca han estado a menos**
+ **0:59:40 BattlEye Server: (Side) onLy mind: JA**
+ **0:59:51 BattlEye Server: (Side) Acid: si? que base estaba mas cerca dices?**
+ 0:59:51 Player Rct.Viktor Kozlov disconnected.
+ 0:59:51 BattlEye Server: Player #23 Rct.Viktor Kozlov disconnected
+ 1:00:04 BattlEye Server: (Side) onLy mind: lo sabes bn cerca de stary
+ **1:00:05 BattlEye Server: (Side) Acid: ademas oye que ya sabes si ves esas cosas tan claras que dices tienes dos opciones**
+ 1:00:10 BattlEye Server: (Side) onLy mind: novi
+ **1:00:12 BattlEye Server: (Side) Acid: si a 2km exactos**
+ 1:00:13 Player Narion disconnected.
+ 1:00:13 BattlEye Server: Player #7 Narion disconnected
+ 1:00:18 BattlEye Server: (Side) Acid: entre stary y novi
+ 1:00:20 BattlEye Server: (Side) onLy mind: los uevos a 2k
+ 1:00:36 Player John Wick Smith disconnected.
+ 1:00:36 BattlEye Server: Player #16 John Wick Smith disconnected
+ 1:00:40 BattlEye Server: (Side) Pipe: Dejadlo ya he, me da cancer leer xD
+ 1:00:42 BattlEye Server: (Side) onLy mind: es de la base a la savezone y la savezone empieza donde empieza el circulo no en el centro
+ 1:00:45 BattlEye Server: (Side) Acid: te marcas el centro del trader
+ 1:00:49 Player David disconnected.
+ 1:00:49 BattlEye Server: Player #10 David disconnected
+ 1:00:49 BattlEye Server: (Side) Acid: y te vas donde estaba mi base
+ 1:01:00 BattlEye Server: (Side) Acid: perdona, es desde el centro
+ 1:01:02 BattlEye Server: (Side) onLy mind: pone a 2km de la savezone
+ 1:01:04 BattlEye Server: (Side) Acid: y siempre se ha dicho asi
+ 1:02:05 BattlEye Server: (Side) onLy mind: y por cierto vale que fuera a 2k exactos pero estaba en medio de la carretera
+ 1:02:08 BattlEye Server: (Side) Acid: y siempre que alguien ha preguntado, la respuesta a sido la misma
+ 1:02:13 BattlEye Server: (Side) Acid: aja
+ 1:02:15 BattlEye Server: (Side) Acid: y?
+ 1:02:24 BattlEye Server: (Side) onLy mind: eso es una norma
+ 1:02:36 BattlEye Server: (Side) Acid: buscala y escribe lo que pone en la norma
+ 1:02:48 Alejandro uses modified data file
+ 1:02:48 BattlEye Server: Player #7 Alejandro (83.53.150.19:2304) connected
+ 1:02:48 Player Alejandro connecting.
+ 1:02:50 BattlEye Server: Player #7 Alejandro - GUID: 05aa40a6cedbcc08407f0ae4953280c0
+ 1:02:51 Player Alejandro connected (id=76561198009736897).
+ 1:02:51 BattlEye Server: Verified GUID (05aa40a6cedbcc08407f0ae4953280c0) of player #7 Alejandro
+ 1:03:04 BattlEye Server: (Side) Pipe: Aburrido ya, ahi os quedais XD 
+ 1:03:13 BattlEye Server: (Side) Acid: ala ya sabes pipe
+ 1:03:18 BattlEye Server: (Side) Acid: escape, salir
+ 1:03:19 Player Pipe disconnected.
+ 1:03:19 BattlEye Server: Player #13 Pipe disconnected
+ 1:03:40 BattlEye Server: (Side) Dani: vaya quemao
+ 1:03:55 BattlEye Server: (Side) onLy mind: es lo que pasa cuando te cruzas con gente de malperder
+ 1:04:17 BattlEye Server: (Side) Dani: xDD
+ 1:04:18 BattlEye Server: (Side) onLy mind: acostubrados a ir en su artillado blindado y matando a mas de 1 km
+ 1:04:33 BattlEye Server: (Side) onLy mind: cuando les das palpelo se cabrean
+ 1:04:44 BattlEye Server: (Side) Acid: y dale y sigue
+ 1:04:51 Successfull attempt to execute serverCommand '#lock' by server.
+ 1:04:54 BattlEye Server: (Side) Acid: ya has mirado la norma que incumplia la base¿?
+ 1:04:55 BattlEye Server: (Side) onLy mind: si no te gusta esc y salir
+ 1:05:01 Player KENTO disconnected.
+ 1:05:01 BattlEye Server: Player #14 KENTO disconnected
+ 1:05:07 Player samue disconnected.
+ 1:05:07 BattlEye Server: Player #3 samue disconnected
+ 1:05:07 BattlEye Server: (Side) onLy mind: si que estaba en medio de la carretera
+ 1:05:09 Player Dan disconnected.
+ 1:05:09 BattlEye Server: Player #5 Dan disconnected
+ 1:05:15 BattlEye Server: (Side) onLy mind: y eso es bloquear
+ 1:05:17 BattlEye Server: (Side) Acid: puedes buscarla y escribirla
+ 1:05:21 BattlEye Server: (Side) Acid: no no perdona
+ 1:05:25 BattlEye Server: (Side) Acid: pone claramente bloquear
+ 1:05:26 BattlEye Server: (Side) Dani: no hace falta que me cuentes na 
+ 1:05:29 BattlEye Server: (Side) Acid: la bloqueaba?
+ 1:05:30 Player Sdar disconnected.
+ 1:05:30 BattlEye Server: Player #31 Sdar disconnected
+ 1:05:31 BattlEye Server: (Side) Dani: xD
+ 1:05:34 Player Don Patch disconnected.
+ 1:05:34 BattlEye Server: Player #2 Don Patch disconnected
+ 1:05:40 BattlEye Server: (Side) onLy mind: si iba con un camion igual chocaba
+ 1:05:42 Player ASTRO disconnected.
+ 1:05:42 BattlEye Server: Player #0 ASTRO disconnected
+ 1:05:46 BattlEye Server: (Side) Acid: si los que no sabeis perder sois bosotros
+ 1:05:51 BattlEye Server: (Side) Acid: no, estaba en un 3er piso
+ 1:05:52 BattlEye Server: (Side) onLy mind: por alguna razon la base ya no esta alli
+ 1:05:56 BattlEye Server: (Side) Acid: no tocaba ninguno
+ 1:05:59 Successfull attempt to execute serverCommand '#kick 0' by server.
+ 1:05:59 Successfull attempt to execute serverCommand '#kick 1' by server.
+ 1:05:59 Successfull attempt to execute serverCommand '#kick 2' by server.
+ 1:05:59 Successfull attempt to execute serverCommand '#kick 3' by server.
+ 1:05:59 Successfull attempt to execute serverCommand '#kick 4' by server.
+ 1:06:00 BattlEye Server: (Side) Acid: porque no pague
+ 1:06:00 Successfull attempt to execute serverCommand '#kick 5' by server.
+ 1:06:00 Successfull attempt to execute serverCommand '#kick 6' by server.
+ 1:06:00 Successfull attempt to execute serverCommand '#kick 7' by server.
+ 1:06:00 Successfull attempt to execute serverCommand '#kick 8' by server.
+ 1:06:01 Successfull attempt to execute serverCommand '#kick 9' by server.
+ 1:06:01 Successfull attempt to execute serverCommand '#kick 10' by server.
+ 1:06:01 Successfull attempt to execute serverCommand '#kick 11' by server.
+ 1:06:01 Successfull attempt to execute serverCommand '#kick 12' by server.
+ 1:06:01 Successfull attempt to execute serverCommand '#kick 13' by server.
+ 1:06:02 Successfull attempt to execute serverCommand '#kick 14' by server.
+ 1:06:02 Successfull attempt to execute serverCommand '#kick 15' by server.
+ 1:06:02 Successfull attempt to execute serverCommand '#kick 16' by server.
+ 1:06:02 Successfull attempt to execute serverCommand '#kick 17' by server.
+ 1:06:02 Successfull attempt to execute serverCommand '#kick 18' by server.
+ 1:06:03 Successfull attempt to execute serverCommand '#kick 19' by server.
+ 1:06:03 Successfull attempt to execute serverCommand '#kick 20' by server.
+ 1:06:03 Successfull attempt to execute serverCommand '#kick 21' by server.
+ 1:06:03 Successfull attempt to execute serverCommand '#kick 22' by server.
+ 1:06:04 Successfull attempt to execute serverCommand '#kick 23' by server.
+ 1:06:04 Successfull attempt to execute serverCommand '#kick 24' by server.
+ 1:06:04 Successfull attempt to execute serverCommand '#kick 25' by server.
+ 1:06:04 Successfull attempt to execute serverCommand '#kick 26' by server.
+ 1:06:04 Successfull attempt to execute serverCommand '#kick 27' by server.
+ 1:06:05 Successfull attempt to execute serverCommand '#kick 28' by server.
+ 1:06:05 Successfull attempt to execute serverCommand '#kick 29' by server.
+ 1:06:05 Successfull attempt to execute serverCommand '#kick 30' by server.
+ 1:06:05 Successfull attempt to execute serverCommand '#kick 31' by server.
+ 1:06:06 Successfull attempt to execute serverCommand '#kick 32' by server.
+ 1:06:06 Successfull attempt to execute serverCommand '#kick 33' by server.
+ 1:06:06 Successfull attempt to execute serverCommand '#kick 34' by server.
+ 1:06:06 Successfull attempt to execute serverCommand '#kick 35' by server.
+ 1:06:06 Successfull attempt to execute serverCommand '#kick 36' by server.
+ 1:06:07 Successfull attempt to execute serverCommand '#kick 37' by server.
+ 1:06:07 Player Dani disconnected.
+ 1:06:07 BattlEye Server: Player #18 Dani disconnected
+ 1:06:07 Successfull attempt to execute serverCommand '#kick 38' by server.
+ 1:06:07 Successfull attempt to execute serverCommand '#kick 39' by server.
+ 1:06:07 Successfull attempt to execute serverCommand '#kick 40' by server.
+ 1:06:07 Successfull attempt to execute serverCommand '#kick 41' by server.
+ 1:06:08 Successfull attempt to execute serverCommand '#kick 42' by server.
+ 1:06:08 Successfull attempt to execute serverCommand '#kick 43' by server.
+ 1:06:08 Successfull attempt to execute serverCommand '#kick 44' by server.
+ 1:06:08 Successfull attempt to execute serverCommand '#kick 45' by server.
+ 1:06:09 Successfull attempt to execute serverCommand '#kick 46' by server.
+ 1:06:09 Successfull attempt to execute serverCommand '#kick 47' by server.
+ 1:06:09 Successfull attempt to execute serverCommand '#kick 48' by server.
+ 1:06:09 Successfull attempt to execute serverCommand '#kick 49' by server.
+ 1:06:09 Successfull attempt to execute serverCommand '#kick 50' by server.
+ 1:06:10 Successfull attempt to execute serverCommand '#kick 51' by server.
+ 1:06:10 Successfull attempt to execute serverCommand '#kick 52' by server.
+ 1:06:10 Successfull attempt to execute serverCommand '#kick 53' by server.
+ 1:06:10 Successfull attempt to execute serverCommand '#kick 54' by server.
+ 1:06:10 Successfull attempt to execute serverCommand '#kick 55' by server.
+ 1:06:11 Successfull attempt to execute serverCommand '#kick 56' by server.
+ 1:06:11 Successfull attempt to execute serverCommand '#kick 57' by server.
+ 1:06:11 Successfull attempt to execute serverCommand '#kick 58' by server.
+ 1:06:11 Successfull attempt to execute serverCommand '#kick 59' by server.
+ 1:06:11 Successfull attempt to execute serverCommand '#kick 60' by server.
+ 1:06:12 Successfull attempt to execute serverCommand '#kick 61' by server.
+ 1:06:12 Successfull attempt to execute serverCommand '#kick 62' by server.
+ 1:06:12 Successfull attempt to execute serverCommand '#kick 63' by server.
+ 1:06:12 Successfull attempt to execute serverCommand '#kick 64' by server.
+ 1:06:13 Successfull attempt to execute serverCommand '#kick 65' by server.
+ 1:06:13 Successfull attempt to execute serverCommand '#kick 66' by server.
+ 1:06:13 Successfull attempt to execute serverCommand '#kick 67' by server.
+ 1:06:13 Successfull attempt to execute serverCommand '#kick 68' by server.
+ 1:06:13 Successfull attempt to execute serverCommand '#kick 69' by server.
+ 1:06:14 Successfull attempt to execute serverCommand '#kick 70' by server.
+ 1:06:14 Successfull attempt to execute serverCommand '#kick 71' by server.
+ 1:06:14 Successfull attempt to execute serverCommand '#kick 72' by server.
+ 1:06:14 Successfull attempt to execute serverCommand '#kick 73' by server.
+ 1:06:14 Successfull attempt to execute serverCommand '#kick 74' by server.
+ 1:06:15 Successfull attempt to execute serverCommand '#kick 75' by server.
+ 1:06:15 Successfull attempt to execute serverCommand '#kick 76' by server.
+ 1:06:15 Successfull attempt to execute serverCommand '#kick 77' by server.
+ 1:06:15 Successfull attempt to execute serverCommand '#kick 78' by server.
+ 1:06:15 Successfull attempt to execute serverCommand '#kick 79' by server.
+ 1:06:16 Successfull attempt to execute serverCommand '#kick 80' by server.
+ 1:06:16 Successfull attempt to execute serverCommand '#kick 81' by server.
+ 1:06:16 Successfull attempt to execute serverCommand '#kick 82' by server.
+ 1:06:16 Successfull attempt to execute serverCommand '#kick 83' by server.
+ 1:06:16 Player onLy mind disconnected.
+ 1:06:16 BattlEye Server: Player #8 onLy mind disconnected
+ 1:06:17 Successfull attempt to execute serverCommand '#kick 84' by server.
+ 1:06:17 Successfull attempt to execute serverCommand '#kick 85' by server.
+ 1:06:17 Successfull attempt to execute serverCommand '#kick 86' by server.
+ 1:06:17 Successfull attempt to execute serverCommand '#kick 87' by server.
+ 1:06:17 Successfull attempt to execute serverCommand '#kick 88' by server.
+ 1:06:18 Successfull attempt to execute serverCommand '#kick 89' by server.
+ 1:06:18 Successfull attempt to execute serverCommand '#kick 90' by server.
+ 1:06:18 Successfull attempt to execute serverCommand '#kick 91' by server.
+ 1:06:18 Successfull attempt to execute serverCommand '#kick 92' by server.
+ 1:06:18 Successfull attempt to execute serverCommand '#kick 93' by server.
+ 1:06:19 Successfull attempt to execute serverCommand '#kick 94' by server.
+ 1:06:19 Successfull attempt to execute serverCommand '#kick 95' by server.
+ 1:06:19 Player Yerbas disconnected.
+ 1:06:19 BattlEye Server: Player #24 Yerbas disconnected
+ 1:06:19 Successfull attempt to execute serverCommand '#kick 96' by server.
+ 1:06:19 Player Titu disconnected.
+ 1:06:19 BattlEye Server: Player #25 Titu disconnected
+ 1:06:19 Successfull attempt to execute serverCommand '#kick 97' by server.
+ 1:06:19 Player Kaiz3r disconnected.
+ 1:06:19 BattlEye Server: Player #26 Kaiz3r disconnected
+ 1:06:20 Successfull attempt to execute serverCommand '#kick 98' by server.
+ 1:06:20 Successfull attempt to execute serverCommand '#kick 99' by server.
+ 1:06:20 Player Acid disconnected.
+ 1:06:20 BattlEye Server: Player #6 Acid disconnected
+ 1:06:20 Successfull attempt to execute serverCommand '#shutdown' by server.

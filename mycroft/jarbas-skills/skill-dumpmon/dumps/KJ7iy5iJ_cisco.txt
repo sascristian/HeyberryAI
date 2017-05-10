@@ -1,0 +1,75 @@
+#show running-config
+Building configuration...
+
+Current configuration : 2429 bytes
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname xxx.xxx.xxx
+!
+enable secret 5 $x$xxxxxxxxxxxxxxxxxxxxxxx
+enable password 7 xxxxxxxxxxxxxxxxxxxxxxxx
+!
+no aaa new-model
+ip subnet-zero
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+[clipped]
+!
+interface FastEthernet0/24
+ switchport mode dynamic desirable
+!
+interface GigabitEthernet0/1
+ switchport mode dynamic desirable
+!
+interface GigabitEthernet0/2
+ switchport mode dynamic desirable
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan101
+ ip address x.x.x.x 255.255.255.0
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+snmp-server community xxxxx RO
+!
+control-plane
+!
+!
+line con 0
+line vty 0 4
+ password 7 xxxxxxxxxxxxxxxxxxxxxxxxx
+ login
+line vty 5 15
+ password 7 xxxxxxxxxxxxxxxxxxxxxxxxx
+ login
+!
+end

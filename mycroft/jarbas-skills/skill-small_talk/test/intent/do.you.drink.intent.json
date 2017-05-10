@@ -1,0 +1,7 @@
+{
+  "utterance": "do you drink",
+  "intent_type": "DoYouDrinkIntent",
+  "intent": {
+    "DoYouDrinkKeyphrase": "do you drink"
+  }
+}

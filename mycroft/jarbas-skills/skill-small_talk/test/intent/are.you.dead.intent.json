@@ -1,0 +1,7 @@
+{
+  "utterance": "are you dead",
+  "intent_type": "AreYouDeadIntent",
+  "intent": {
+    "AreYouDeadKeyphrase": "are you dead"
+  }
+}

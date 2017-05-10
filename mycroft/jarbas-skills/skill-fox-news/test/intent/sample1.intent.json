@@ -1,0 +1,7 @@
+{
+  "utterance": "what's the fox news",
+  "intent_type": "FoxNewsIntent",
+  "intent": {
+    "FoxNewsKeyword": "fox news"
+  }
+}

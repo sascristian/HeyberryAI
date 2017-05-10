@@ -1,0 +1,2311 @@
+[23:59:18.849] [Info] Root: Preparing Root...
+[23:59:18.850] [Info] Root: Done preparing Root.
+[23:59:18.850] [Info] Client Version 1.2.3b (windows x86_64) Source ID: 69bc1c906122a1c61453c6cff15aa088b613db78 Protocol: 729
+[23:59:18.850] [Info] Root: Scanning for asset sources in directory '..\assets\'
+[23:59:19.493] [Info] Root: Scanning for asset sources in directory '..\mods\'
+[23:59:29.442] [Warn] Root: Unrecognized file in asset directory 'mods_go_here', skipping
+[23:59:29.442] [Info] Root: Detected asset source named 'base' at '..\assets\packed.pak'
+[23:59:29.442] [Info] Root: Detected asset source named 'FrackinUniverse' at '..\mods\FrackinUniverse'
+[23:59:29.442] [Info] Root: Detected asset source named 'FrackinMusic' at '..\mods\FrackinMusic'
+[23:59:29.442] [Info] Root: Detected unnamed asset source at '..\assets\user'
+[23:59:29.442] [Info] Loading assets from: '..\assets\packed.pak'
+[23:59:30.132] [Info] Loading assets from: '..\mods\FrackinUniverse'
+[23:59:32.767] [Info] Loading assets from: '..\mods\FrackinMusic'
+[23:59:32.790] [Info] Loading assets from: '..\assets\user'
+[23:59:40.336] [Info] Assets digest is a02e71218995fd7f59572b3e0f5acfc01172b455a7b6502ac6b4f97c3772dddc
+[23:59:40.337] [Info] Root: Loaded Assets in 21.4865 seconds
+[23:59:40.345] [Info] Application: Initializing SDL Video
+[23:59:40.379] [Info] Application: Initializing SDL Joystick
+[23:59:40.437] [Info] Application: Initializing SDL Sound
+[23:59:41.307] [Info] Initialized Steam services
+[23:59:41.380] [Info] Application: Creating SDL Window
+[23:59:44.818] [Info] Application: Enabling VSync with late swap tearing
+[23:59:44.911] [Info] Application: Opened default audio device with 44.1khz / 16 bit stereo audio, 2048 sample size buffer
+[23:59:45.115] [Info] OpenGL version: '4.5.0 NVIDIA 381.65' vendor: 'NVIDIA Corporation' renderer: 'GeForce GT 635M/PCIe/SSE2' shader: '4.50 NVIDIA'
+[23:59:45.548] [Info] Application: initialization...
+[23:59:45.550] [Info] Root: Loaded Configuration in 0.00163642 seconds
+[23:59:45.905] [Info] Application: renderer initialization...
+[23:59:45.976] [Info] detected supported OpenGL texture size 16384, using atlasNumCells 128
+[23:59:45.991] [Info] detected supported OpenGL texture size 16384, using atlasNumCells 64
+[23:59:45.994] [Info] Root: Loaded ImageMetadataDatabase in 9.69307e-06 seconds
+[23:59:46.097] [Info] Application: main update loop...
+[23:59:46.110] [Info] Loading mods from user generated content with id '729427264' from directory 'X:\Steam\steamapps\workshop\content\211820\729427264'
+[23:59:46.110] [Info] Loading mods from user generated content with id '739151610' from directory 'X:\Steam\steamapps\workshop\content\211820\739151610'
+[23:59:46.111] [Info] Loading mods from user generated content with id '731220462' from directory 'X:\Steam\steamapps\workshop\content\211820\731220462'
+[23:59:46.111] [Info] Loading mods from user generated content with id '729428037' from directory 'X:\Steam\steamapps\workshop\content\211820\729428037'
+[23:59:46.111] [Info] Loading mods from user generated content with id '764888606' from directory 'X:\Steam\steamapps\workshop\content\211820\764888606'
+[23:59:46.111] [Info] Loading mods from user generated content with id '764887546' from directory 'X:\Steam\steamapps\workshop\content\211820\764887546'
+[23:59:46.111] [Info] Loading mods from user generated content with id '729524482' from directory 'X:\Steam\steamapps\workshop\content\211820\729524482'
+[23:59:46.112] [Info] Loading mods from user generated content with id '760881689' from directory 'X:\Steam\steamapps\workshop\content\211820\760881689'
+[23:59:46.112] [Info] Loading mods from user generated content with id '796877993' from directory 'X:\Steam\steamapps\workshop\content\211820\796877993'
+[23:59:46.112] [Info] Loading mods from user generated content with id '821455287' from directory 'X:\Steam\steamapps\workshop\content\211820\821455287'
+[23:59:46.112] [Info] Loading mods from user generated content with id '883901189' from directory 'X:\Steam\steamapps\workshop\content\211820\883901189'
+[23:59:46.112] [Info] Loading mods from user generated content with id '743604545' from directory 'X:\Steam\steamapps\workshop\content\211820\743604545'
+[23:59:46.112] [Info] Loading mods from user generated content with id '885877773' from directory 'X:\Steam\steamapps\workshop\content\211820\885877773'
+[23:59:46.113] [Info] Loading mods from user generated content with id '731836919' from directory 'X:\Steam\steamapps\workshop\content\211820\731836919'
+[23:59:46.113] [Info] Loading mods from user generated content with id '733987732' from directory 'X:\Steam\steamapps\workshop\content\211820\733987732'
+[23:59:46.113] [Info] Loading mods from user generated content with id '734859295' from directory 'X:\Steam\steamapps\workshop\content\211820\734859295'
+[23:59:46.113] [Info] Loading mods from user generated content with id '734627889' from directory 'X:\Steam\steamapps\workshop\content\211820\734627889'
+[23:59:46.113] [Info] Loading mods from user generated content with id '729427900' from directory 'X:\Steam\steamapps\workshop\content\211820\729427900'
+[23:59:46.113] [Info] Loading mods from user generated content with id '856469472' from directory 'X:\Steam\steamapps\workshop\content\211820\856469472'
+[23:59:46.114] [Info] Loading mods from user generated content with id '855971334' from directory 'X:\Steam\steamapps\workshop\content\211820\855971334'
+[23:59:46.114] [Info] Loading mods from user generated content with id '729460427' from directory 'X:\Steam\steamapps\workshop\content\211820\729460427'
+[23:59:46.114] [Info] Loading mods from user generated content with id '729427744' from directory 'X:\Steam\steamapps\workshop\content\211820\729427744'
+[23:59:46.114] [Info] Loading mods from user generated content with id '737621724' from directory 'X:\Steam\steamapps\workshop\content\211820\737621724'
+[23:59:46.114] [Info] Loading mods from user generated content with id '743828258' from directory 'X:\Steam\steamapps\workshop\content\211820\743828258'
+[23:59:46.115] [Info] Loading mods from user generated content with id '729640289' from directory 'X:\Steam\steamapps\workshop\content\211820\729640289'
+[23:59:46.115] [Info] Loading mods from user generated content with id '729456260' from directory 'X:\Steam\steamapps\workshop\content\211820\729456260'
+[23:59:46.115] [Info] Loading mods from user generated content with id '731016710' from directory 'X:\Steam\steamapps\workshop\content\211820\731016710'
+[23:59:46.115] [Info] Loading mods from user generated content with id '816649310' from directory 'X:\Steam\steamapps\workshop\content\211820\816649310'
+[23:59:46.115] [Info] Loading mods from user generated content with id '729426722' from directory 'X:\Steam\steamapps\workshop\content\211820\729426722'
+[23:59:46.115] [Info] Loading mods from user generated content with id '729512636' from directory 'X:\Steam\steamapps\workshop\content\211820\729512636'
+[23:59:46.116] [Info] Loading mods from user generated content with id '729532886' from directory 'X:\Steam\steamapps\workshop\content\211820\729532886'
+[23:59:46.116] [Info] Loading mods from user generated content with id '896717183' from directory 'X:\Steam\steamapps\workshop\content\211820\896717183'
+[23:59:46.116] [Info] Loading mods from user generated content with id '902555153' from directory 'X:\Steam\steamapps\workshop\content\211820\902555153'
+[23:59:46.116] [Info] Loading mods from user generated content with id '736593129' from directory 'X:\Steam\steamapps\workshop\content\211820\736593129'
+[23:59:46.116] [Info] Loading mods from user generated content with id '729466018' from directory 'X:\Steam\steamapps\workshop\content\211820\729466018'
+[23:59:46.116] [Info] Loading mods from user generated content with id '749386227' from directory 'X:\Steam\steamapps\workshop\content\211820\749386227'
+[23:59:46.117] [Info] Loading mods from user generated content with id '729428991' from directory 'X:\Steam\steamapps\workshop\content\211820\729428991'
+[23:59:46.117] [Info] Loading mods from user generated content with id '729791646' from directory 'X:\Steam\steamapps\workshop\content\211820\729791646'
+[23:59:46.117] [Info] Loading mods from user generated content with id '763259329' from directory 'X:\Steam\steamapps\workshop\content\211820\763259329'
+[23:59:46.117] [Info] Reloading to include all user generated content
+[23:59:46.117] [Info] Root: Reloading from disk
+[23:59:46.117] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[23:59:46.228] [Info] Root: Loaded Configuration in 0.00170313 seconds
+[23:59:46.228] [Info] Root: Scanning for asset sources in directory '..\assets\'
+[23:59:46.785] [Info] Root: Scanning for asset sources in directory '..\mods\'
+[23:59:47.659] [Warn] Root: Unrecognized file in asset directory 'mods_go_here', skipping
+[23:59:47.679] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729427264'
+[23:59:47.695] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\739151610'
+[23:59:47.756] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\731220462'
+[23:59:47.803] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729428037'
+[23:59:47.811] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\764888606'
+[23:59:47.818] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\764887546'
+[23:59:47.835] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729524482'
+[23:59:47.869] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\760881689'
+[23:59:47.922] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\796877993'
+[23:59:47.923] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\821455287'
+[23:59:47.923] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\883901189'
+[23:59:47.936] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\743604545'
+[23:59:47.965] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\885877773'
+[23:59:48.022] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\731836919'
+[23:59:48.240] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\733987732'
+[23:59:48.305] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\734859295'
+[23:59:48.361] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\734627889'
+[23:59:48.380] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729427900'
+[23:59:48.381] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\856469472'
+[23:59:48.402] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\855971334'
+[23:59:48.419] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729460427'
+[23:59:48.461] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729427744'
+[23:59:48.506] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\737621724'
+[23:59:48.516] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\743828258'
+[23:59:48.517] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729640289'
+[23:59:48.552] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729456260'
+[23:59:48.562] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\731016710'
+[23:59:48.632] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\816649310'
+[23:59:48.658] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729426722'
+[23:59:48.673] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729512636'
+[23:59:48.685] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729532886'
+[23:59:48.701] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\896717183'
+[23:59:48.715] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\902555153'
+[23:59:48.987] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\736593129'
+[23:59:49.015] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729466018'
+[23:59:49.049] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\749386227'
+[23:59:49.058] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729428991'
+[23:59:49.092] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\729791646'
+[23:59:49.109] [Info] Root: Scanning for asset sources in directory 'X:\Steam\steamapps\workshop\content\211820\763259329'
+[23:59:49.189] [Info] Root: Detected asset source named 'base' at '..\assets\packed.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'Optimizebound (Performance Improvement)' at 'X:\Steam\steamapps\workshop\content\211820\902555153\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'xbawks' at 'X:\Steam\steamapps\workshop\content\211820\729426722\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'Manipulated UI' at 'X:\Steam\steamapps\workshop\content\211820\734627889\ManipulatedUI.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'ExtraZoomLevels' at 'X:\Steam\steamapps\workshop\content\211820\729791646\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'CustomCollectionsUI' at 'X:\Steam\steamapps\workshop\content\211820\760881689\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'FrackinUniverse' at '..\mods\FrackinUniverse'
+[23:59:49.189] [Info] Root: Detected asset source named 'FrackinMusic' at '..\mods\FrackinMusic'
+[23:59:49.189] [Info] Root: Detected asset source named 'Extended Songbook' at 'X:\Steam\steamapps\workshop\content\211820\729427264\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'Combinable Augments' at 'X:\Steam\steamapps\workshop\content\211820\739151610\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'MadTulips Spaceship Mod' at 'X:\Steam\steamapps\workshop\content\211820\729640289\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'Enhanced Storage' at 'X:\Steam\steamapps\workshop\content\211820\731220462\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'Skippable Cinematics' at 'X:\Steam\steamapps\workshop\content\211820\729428037\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'StardustLib' at 'X:\Steam\steamapps\workshop\content\211820\764887546\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'StarTech' at 'X:\Steam\steamapps\workshop\content\211820\764888606\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'ContainerUITweak' at 'X:\Steam\steamapps\workshop\content\211820\729524482\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'FrackinActionBars' at 'X:\Steam\steamapps\workshop\content\211820\821455287\contents.pak'
+[23:59:49.189] [Info] Root: Detected asset source named 'HoloRuler' at 'X:\Steam\steamapps\workshop\content\211820\743604545\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'HoloRulertemporarypatch' at 'X:\Steam\steamapps\workshop\content\211820\883901189\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Parallax Compression' at 'X:\Steam\steamapps\workshop\content\211820\885877773\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Super Song Pack' at 'X:\Steam\steamapps\workshop\content\211820\731836919\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Mighty Music Song Pack' at 'X:\Steam\steamapps\workshop\content\211820\733987732\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'MMM' at 'X:\Steam\steamapps\workshop\content\211820\729427900\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'difficultyPlus' at 'X:\Steam\steamapps\workshop\content\211820\855971334\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'alternativeArmorScale' at 'X:\Steam\steamapps\workshop\content\211820\856469472\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'pilch_sciencestation' at 'X:\Steam\steamapps\workshop\content\211820\729460427\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Ursa Miner Upgrade: Ore' at 'X:\Steam\steamapps\workshop\content\211820\737621724\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'MadTulips Spaceship Mod Configuration - No Life Support System' at 'X:\Steam\steamapps\workshop\content\211820\743828258\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'modules-in-a-box' at 'X:\Steam\steamapps\workshop\content\211820\729456260\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Blood Mod' at 'X:\Steam\steamapps\workshop\content\211820\731016710\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'dramadeath' at 'X:\Steam\steamapps\workshop\content\211820\816649310\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'GPR Mapper v1.45' at 'X:\Steam\steamapps\workshop\content\211820\729512636\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Universal Uncrafter v1.46' at 'X:\Steam\steamapps\workshop\content\211820\729532886\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Parallax Removal' at 'X:\Steam\steamapps\workshop\content\211820\896717183\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'No Shadows (RAM's version)' at 'X:\Steam\steamapps\workshop\content\211820\736593129\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Item Frame v1.3' at 'X:\Steam\steamapps\workshop\content\211820\729466018\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'EverLana' at 'X:\Steam\steamapps\workshop\content\211820\749386227\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'Instant Crafting' at 'X:\Steam\steamapps\workshop\content\211820\729427744\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'XS_Mechs' at 'X:\Steam\steamapps\workshop\content\211820\729428991\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'StarTechFU' at 'X:\Steam\steamapps\workshop\content\211820\796877993\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'FrackinRaces' at 'X:\Steam\steamapps\workshop\content\211820\763259329\contents.pak'
+[23:59:49.190] [Info] Root: Detected asset source named 'WEdit' at 'X:\Steam\steamapps\workshop\content\211820\734859295\WEdit'
+[23:59:49.190] [Info] Root: Detected unnamed asset source at '..\assets\user'
+[23:59:49.191] [Info] Loading assets from: '..\assets\packed.pak'
+[23:59:49.873] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\902555153\contents.pak'
+[23:59:50.220] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729426722\contents.pak'
+[23:59:50.221] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\734627889\ManipulatedUI.pak'
+[23:59:50.221] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729791646\contents.pak'
+[23:59:50.221] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\760881689\contents.pak'
+[23:59:50.222] [Info] Loading assets from: '..\mods\FrackinUniverse'
+[23:59:52.864] [Info] Loading assets from: '..\mods\FrackinMusic'
+[23:59:52.886] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729427264\contents.pak'
+[23:59:52.886] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\739151610\contents.pak'
+[23:59:52.887] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729640289\contents.pak'
+[23:59:52.914] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\731220462\contents.pak'
+[23:59:52.933] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729428037\contents.pak'
+[23:59:52.934] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\764887546\contents.pak'
+[23:59:52.935] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\764888606\contents.pak'
+[23:59:52.937] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729524482\contents.pak'
+[23:59:52.938] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\821455287\contents.pak'
+[23:59:52.938] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\743604545\contents.pak'
+[23:59:52.939] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\883901189\contents.pak'
+[23:59:52.939] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\885877773\contents.pak'
+[23:59:52.945] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\731836919\contents.pak'
+[23:59:53.073] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\733987732\contents.pak'
+[23:59:53.108] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729427900\contents.pak'
+[23:59:53.108] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\855971334\contents.pak'
+[23:59:53.108] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\856469472\contents.pak'
+[23:59:53.109] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729460427\contents.pak'
+[23:59:53.111] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\737621724\contents.pak'
+[23:59:53.111] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\743828258\contents.pak'
+[23:59:53.111] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729456260\contents.pak'
+[23:59:53.112] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\731016710\contents.pak'
+[23:59:53.115] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\816649310\contents.pak'
+[23:59:53.115] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729512636\contents.pak'
+[23:59:53.116] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729532886\contents.pak'
+[23:59:53.116] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\896717183\contents.pak'
+[23:59:53.123] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\736593129\contents.pak'
+[23:59:53.123] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729466018\contents.pak'
+[23:59:53.124] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\749386227\contents.pak'
+[23:59:53.124] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729427744\contents.pak'
+[23:59:53.148] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\729428991\contents.pak'
+[23:59:53.154] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\796877993\contents.pak'
+[23:59:53.155] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\763259329\contents.pak'
+[23:59:53.213] [Info] Loading assets from: 'X:\Steam\steamapps\workshop\content\211820\734859295\WEdit'
+[23:59:53.220] [Info] Loading assets from: '..\assets\user'
+[00:00:00.015] [Info] Assets digest is 4e4abc2653b90fe633f4886e3ae99343065ca8fdf8e55d989c69be040b3d9b5d
+[00:00:00.015] [Info] Root: Loaded Assets in 13.7864 seconds
+[00:00:00.222] [Info] Root: Loaded NameGenerator in 0.168469 seconds
+[00:00:00.842] [Info] Root: Loaded ImageMetadataDatabase in 5.7018e-06 seconds
+[00:00:00.963] [Error] OpenGL errors this frame:  GL_INVALID_VALUE
+[00:00:05.952] [Info] Root: Loaded PlantDatabase in 5.72938 seconds
+[00:00:13.210] [Info] Root: Loaded ObjectDatabase in 13.1564 seconds
+[00:00:14.478] [Info] Root: Loaded ProjectileDatabase in 8.52652 seconds
+[00:00:18.722] [Info] Root: Loaded NpcDatabase in 4.22938 seconds
+[00:00:18.801] [Info] Root: Loaded StagehandDatabase in 0.0789107 seconds
+[00:00:19.138] [Info] Root: Loaded VehicleDatabase in 0.337288 seconds
+[00:00:19.200] [Info] Root: Loaded PlayerFactory in 0.0622238 seconds
+[00:00:19.602] [Info] Root: Loaded MonsterDatabase in 6.39152 seconds
+[00:00:19.608] [Info] Root: Loaded VersioningDatabase in 0.00648352 seconds
+[00:00:19.609] [Info] Root: Loaded EntityFactory in 0.397612 seconds
+[00:00:19.834] [Info] Root: Loaded ParticleDatabase in 0.225032 seconds
+[00:00:25.647] [Info] Root: Loaded MaterialDatabase in 6.03891 seconds
+[00:00:25.857] [Info] Root: Loaded TerrainDatabase in 0.209001 seconds
+[00:00:31.711] [Info] Root: Loaded BiomeDatabase in 5.85497 seconds
+[00:00:31.735] [Info] Root: Loaded LiquidsDatabase in 0.0237908 seconds
+[00:00:32.011] [Info] Root: Loaded StatusEffectDatabase in 0.275596 seconds
+[00:00:34.611] [Info] Root: Loaded DamageDatabase in 2.59984 seconds
+[00:00:34.692] [Info] Root: Loaded EffectSourceDatabase in 0.0815033 seconds
+[00:00:34.810] [Info] Root: Loaded FunctionDatabase in 0.11711 seconds
+[00:00:34.970] [Error] Could not apply patch from file /treasure/monster.treasurepools.patch in source: X:\Steam\steamapps\workshop\content\211820\729640289\contents.pak.  Caused by: (JsonPatchException) Could not apply patch to base. (JsonPatchException) Could not apply operation to base. (TraversalException) No such key 'scorchionTreasure' in pathApply("/scorchionTreasure/0/1/fill")
+[00:00:35.181] [Info] Root: Loaded TreasureDatabase in 0.371039 seconds
+[00:00:40.316] [Info] Root: Loaded DungeonDefinitions in 5.13532 seconds
+[00:00:40.316] [Info] Root: Loaded TilesetDatabase in 8.60972e-05 seconds
+[00:00:40.321] [Info] Root: Loaded StatisticsDatabase in 0.00444855 seconds
+[00:00:40.337] [Info] Root: Loaded EmoteProcessor in 0.015213 seconds
+[00:00:40.410] [Info] Root: Loaded SpeciesDatabase in 0.0735424 seconds
+[00:00:42.197] [Info] Root: Loaded QuestTemplateDatabase in 1.78749 seconds
+[00:00:42.206] [Info] Root: Loaded AiDatabase in 0.00787761 seconds
+[00:00:42.254] [Info] Root: Loaded TechDatabase in 0.0483895 seconds
+[00:00:42.411] [Info] Root: Loaded CodexDatabase in 0.15709 seconds
+[00:00:43.400] [Info] Root: Loaded BehaviorDatabase in 0.988253 seconds
+[00:00:43.438] [Info] Root: Loaded DanceDatabase in 0.0381719 seconds
+[00:00:43.604] [Info] Root: Loaded SpawnTypeDatabase in 0.165298 seconds
+[00:00:43.855] [Info] Root: Loaded RadioMessageDatabase in 0.25176 seconds
+[00:00:52.876] [Error] Could not load recipe /recipes/roboticcraftingtable/xsm_rhomechcontroller.recipe: (ItemException) No such item 'feroziumcompound'
+[00:00:52.883] [Error] Could not load recipe /recipes/roboticcraftingtable/xsm_elitesigmamechcontroller.recipe: (ItemException) No such item 'imperviumcompound'
+[00:00:52.888] [Error] Could not load recipe /recipes/roboticcraftingtable/xsm_piraterhomechcontroller.recipe: (ItemException) No such item 'imperviumcompound'
+[00:00:52.893] [Error] Could not load recipe /recipes/roboticcraftingtable/xsm_roninrhomechcontroller.recipe: (ItemException) No such item 'imperviumcompound'
+[00:00:52.897] [Error] Could not load recipe /recipes/roboticcraftingtable/xsm_thetamechcontroller.recipe: (ItemException) No such item 'refinedrubium'
+[00:00:55.610] [Info] Root: Loaded ItemDatabase in 36.0079 seconds
+[00:00:56.383] [Info] Root: Loaded CollectionDatabase in 12.5272 seconds
+[00:00:59.767] [Info] detected supported OpenGL texture size 16384, using atlasNumCells 256
+[00:01:12.485] [Info] UniverseServer: Acquiring universe lock file
+[00:01:12.521] [Info] UniverseServer: Loading settings
+[00:01:12.539] [Info] UniverseServer: Starting UniverseServer with UUID: 718608bd3ea56bb3fcb0baf450388407
+[00:01:12.618] [Info] UniverseServer: Logged in player 'Vincent Omega' locally
+[00:01:12.618] [Info] UniverseServer: Logged in account '<anonymous>' as player 'Vincent Omega' from address local
+[00:01:12.680] [Info] UniverseServer: Reviving player at CelestialWorld:511271943:-686905286:34746391:8
+[00:01:12.680] [Info] UniverseServer: Client 'Vincent Omega' <1> (local) connected
+[00:01:12.686] [Info] UniverseClient: Joined server as client 1
+[00:01:12.731] [Info] UniverseServer: Loading celestial world 511271943:-686905286:34746391:8
+[00:01:12.734] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:01:13.841] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271943:-686905286:34746391:8=9182.65.3982
+[00:02:05.464] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5d4c5 Star::WorldStorage::generateSectorToLevel
+[14] 7ff7dcb5c5e4 Star::WorldStorage::activateSector
+[15] 7ff7dcb40769 Star::WorldServer::generateRegion
+[16] 7ff7dcb3742f Star::WorldServer::addClient
+[17] 7ff7dcb536d1 Star::WorldServerThread::addClient
+[18] 7ff7dca7dfe0 Star::UniverseServer::warpPlayers
+[19] 7ff7dca7a1ce Star::UniverseServer::run
+[20] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[21] 7ffcba968364 BaseThreadInitThunk
+[22] 7ffcbb9170d1 RtlUserThreadStart
+[00:02:05.512] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5d4c5 Star::WorldStorage::generateSectorToLevel
+[14] 7ff7dcb5c5e4 Star::WorldStorage::activateSector
+[15] 7ff7dcb40769 Star::WorldServer::generateRegion
+[16] 7ff7dcb3742f Star::WorldServer::addClient
+[17] 7ff7dcb536d1 Star::WorldServerThread::addClient
+[18] 7ff7dca7dfe0 Star::UniverseServer::warpPlayers
+[19] 7ff7dca7a1ce Star::UniverseServer::run
+[20] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[21] 7ffcba968364 BaseThreadInitThunk
+[22] 7ffcbb9170d1 RtlUserThreadStart
+[00:02:05.663] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5d4c5 Star::WorldStorage::generateSectorToLevel
+[14] 7ff7dcb5c5e4 Star::WorldStorage::activateSector
+[15] 7ff7dcb40769 Star::WorldServer::generateRegion
+[16] 7ff7dcb3742f Star::WorldServer::addClient
+[17] 7ff7dcb536d1 Star::WorldServerThread::addClient
+[18] 7ff7dca7dfe0 Star::UniverseServer::warpPlayers
+[19] 7ff7dca7a1ce Star::UniverseServer::run
+[20] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[21] 7ffcba968364 BaseThreadInitThunk
+[22] 7ffcbb9170d1 RtlUserThreadStart
+[00:02:05.690] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5d4c5 Star::WorldStorage::generateSectorToLevel
+[14] 7ff7dcb5c5e4 Star::WorldStorage::activateSector
+[15] 7ff7dcb40769 Star::WorldServer::generateRegion
+[16] 7ff7dcb3742f Star::WorldServer::addClient
+[17] 7ff7dcb536d1 Star::WorldServerThread::addClient
+[18] 7ff7dca7dfe0 Star::UniverseServer::warpPlayers
+[19] 7ff7dca7a1ce Star::UniverseServer::run
+[20] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[21] 7ffcba968364 BaseThreadInitThunk
+[22] 7ffcbb9170d1 RtlUserThreadStart
+[00:02:06.204] [Info] detected supported OpenGL texture size 16384, using atlasNumCells 64
+[00:02:06.204] [Info] detected supported OpenGL texture size 16384, using atlasNumCells 128
+[00:02:06.307] [Info] detected supported OpenGL texture size 16384, using atlasNumCells 256
+[00:02:06.307] [Info] detected supported OpenGL texture size 16384, using atlasNumCells 256
+[00:02:06.360] [Error] Cannot set Steam achievement kill10poptops
+[00:02:07.400] [Info] UniverseServer: Flying player 1 ship to starter world 511271970:-686903443:-113695104:10
+[00:02:07.401] [Info] UniverseServer: Loading celestial world 511271970:-686903443:-113695104:10
+[00:02:08.189] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:02:10.599] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:02:11.956] [Info] UniverseServer: Arriving ship for player 1 at 511271970:-686903443:-113695104:10
+[00:02:12.196] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:10
+[00:02:12.854] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:02:16.778] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:02:17.973] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:02:17.988] [Info] Client received world stop packet, leaving: Removed
+[00:02:17.992] [Info] missing field uninit accessed
+[00:02:18.002] [Info] UniverseServer: Stopping idle world CelestialWorld:511271943:-686905286:34746391:8
+[00:02:24.651] [Info] UniverseServer: Loading celestial world 511271970:-686903443:-113695104:10
+[00:02:26.031] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271970:-686903443:-113695104:10
+[00:02:26.098] [Info] Client received world stop packet, leaving: Removed
+[00:02:26.102] [Info] missing field uninit accessed
+[00:02:26.134] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:04:15.636] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:05:05.699] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:05:10.740] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:08:15.930] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:08:41.016] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:09:06.069] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:10:21.161] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:10:26.211] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:12:26.359] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:12:28.540] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:12:29.916] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:12:29.925] [Info] Client received world stop packet, leaving: Removed
+[00:12:29.932] [Info] missing field uninit accessed
+[00:12:29.954] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:10
+[00:12:31.405] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:12:40.239] [Info] UniverseServer: Loading celestial world 511271943:-686905286:34746391:8
+[00:12:41.154] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271943:-686905286:34746391:8=30c68a43ea377f6d0a3da9238fd212a0
+[00:12:41.254] [Info] Client received world stop packet, leaving: Removed
+[00:12:41.260] [Info] missing field uninit accessed
+[00:12:42.328] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:12:42.972] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[00:12:43.010] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[00:12:43.059] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[00:12:43.094] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[00:13:11.702] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:13:13.051] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:13:13.070] [Info] Client received world stop packet, leaving: Removed
+[00:13:13.074] [Info] missing field uninit accessed
+[00:13:13.089] [Info] UniverseServer: Stopping idle world CelestialWorld:511271943:-686905286:34746391:8
+[00:13:20.019] [Info] UniverseServer: Loading celestial world 511271943:-686905286:34746391:8
+[00:13:20.925] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271943:-686905286:34746391:8=30c68a43ea377f6d0a3da9238fd212a0
+[00:13:20.999] [Info] Client received world stop packet, leaving: Removed
+[00:13:21.005] [Info] missing field uninit accessed
+[00:13:21.951] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:13:22.125] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[00:13:22.177] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[00:13:22.230] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[00:13:22.276] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[00:13:38.890] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[00:13:38.898] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[00:16:42.576] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:16:43.986] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:16:44.004] [Info] Client received world stop packet, leaving: Removed
+[00:16:44.009] [Info] missing field uninit accessed
+[00:16:44.025] [Info] UniverseServer: Stopping idle world CelestialWorld:511271943:-686905286:34746391:8
+[00:16:48.685] [Info] UniverseServer: Loading celestial world 511271970:-686903443:-113695104:10
+[00:16:50.098] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271970:-686903443:-113695104:10
+[00:16:50.176] [Info] Client received world stop packet, leaving: Removed
+[00:16:50.181] [Info] missing field uninit accessed
+[00:16:50.219] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:19:35.012] [Error] Exception while invoking lua function 'onInteraction'. (LuaException) Error code 2, [string "/objects/basestorage/miab_basestore_scanner/m..."]:76: (LuaConversionException) Error converting LuaValue to type 'int'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5bf0cb Star::LuaConversionException::LuaConversionException
+[3] 7ff7dc5ba8d6 Star::LuaConversionException::format<char const * __ptr64>
+[4] 7ff7dc79bec9 Star::luaTo<int>
+[5] 7ff7dc7c2ea6 Star::LuaDetail::ArgGet<int>::get
+[6] 7ff7dcc6185e <lambda_918ed3836ff3808e760461f3bf3ae7ac>::operator()
+[7] 7ff7dcc30bbf std::_Invoker_functor::_Call<<lambda_918ed3836ff3808e760461f3bf3ae7ac> & __ptr64,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>
+[8] 7ff7dcc45d20 std::invoke<<lambda_918ed3836ff3808e760461f3bf3ae7ac> & __ptr64,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>
+[9] 7ff7dcc38d29 std::_Invoke_ret<Star::Variant<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData>,Star::LuaVariadic<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> > >,<lambda_918ed3836ff3808e760461f3bf3ae7ac> & __ptr64,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>
+[10] 7ff7dcc69c5b std::_Func_impl<<lambda_918ed3836ff3808e760461f3bf3ae7ac>,std::allocator<int>,Star::Variant<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData>,Star::LuaVariadic<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> > >,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>::_Do_call
+[11] 7ff7dc5c1e8d std::_Func_class<Star::Variant<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData>,Star::LuaVariadic<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> > >,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>::operator()
+[12] 7ff7dc5c0f24 <lambda_a03bcae4599b53751a446949639a4d5e>::operator()
+[13] 7ff7dc54b6a8 luaD_precall
+[14] 7ff7dc564451 luaV_execute
+[15] 7ff7dc54b1b3 luaD_call
+[16] 7ff7dc54b98b luaD_rawrunprotected
+[17] 7ff7dc54b3c0 luaD_pcall
+[18] 7ff7dc5418d4 lua_pcallk
+[19] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[20] 7ff7dc79706e Star::LuaEngine::callFunction<Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[21] 7ff7dc79ac84 Star::LuaFunction::invoke<Star::Json,Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[22] 7ff7dc79ab6e Star::LuaBaseComponent::invoke<Star::Json,Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[23] 7ff7dc86c0e7 Star::Object::interact
+[24] 7ff7dcb44081 Star::WorldServer::interact
+[25] 7ff7dcb418d8 Star::WorldServer::handleIncomingPackets
+[26] 7ff7dcb55b2b Star::WorldServerThread::update
+[27] 7ff7dcb556a8 Star::WorldServerThread::run
+[28] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[29] 7ffcba968364 BaseThreadInitThunk
+[30] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in field 'entityPosition'
+	[string "/objects/basestorage/miab_basestore_scanner/m..."]:76: in global 'defineAreaToScan'
+	[string "/objects/basestorage/miab_basestore_scanner/m..."]:36: in global 'onActivation'
+	[string "/objects/basestorage/miab_basestore_scanner/m..."]:20: in function <[string "/objects/basestorage/miab_basestore_scanner/m..."]:15>
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc797087 Star::LuaEngine::callFunction<Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[4] 7ff7dc79ac84 Star::LuaFunction::invoke<Star::Json,Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[5] 7ff7dc79ab6e Star::LuaBaseComponent::invoke<Star::Json,Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[6] 7ff7dc86c0e7 Star::Object::interact
+[7] 7ff7dcb44081 Star::WorldServer::interact
+[8] 7ff7dcb418d8 Star::WorldServer::handleIncomingPackets
+[9] 7ff7dcb55b2b Star::WorldServerThread::update
+[10] 7ff7dcb556a8 Star::WorldServerThread::run
+[11] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[12] 7ffcba968364 BaseThreadInitThunk
+[13] 7ffcbb9170d1 RtlUserThreadStart
+[00:20:09.547] [Error] Could not load image asset '/projectiles/weather/gravityrain/gravityrain.png:0', using placeholder default.
+(ImageException) (0, 4294967295) out of range in Image::get
+[00:20:21.244] [Error] Exception while invoking lua function 'onInteraction'. (LuaException) Error code 2, [string "/objects/basestorage/miab_basestore_scanner/m..."]:76: (LuaConversionException) Error converting LuaValue to type 'int'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5bf0cb Star::LuaConversionException::LuaConversionException
+[3] 7ff7dc5ba8d6 Star::LuaConversionException::format<char const * __ptr64>
+[4] 7ff7dc79bec9 Star::luaTo<int>
+[5] 7ff7dc7c2ea6 Star::LuaDetail::ArgGet<int>::get
+[6] 7ff7dcc6185e <lambda_918ed3836ff3808e760461f3bf3ae7ac>::operator()
+[7] 7ff7dcc30bbf std::_Invoker_functor::_Call<<lambda_918ed3836ff3808e760461f3bf3ae7ac> & __ptr64,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>
+[8] 7ff7dcc45d20 std::invoke<<lambda_918ed3836ff3808e760461f3bf3ae7ac> & __ptr64,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>
+[9] 7ff7dcc38d29 std::_Invoke_ret<Star::Variant<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData>,Star::LuaVariadic<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> > >,<lambda_918ed3836ff3808e760461f3bf3ae7ac> & __ptr64,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>
+[10] 7ff7dcc69c5b std::_Func_impl<<lambda_918ed3836ff3808e760461f3bf3ae7ac>,std::allocator<int>,Star::Variant<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData>,Star::LuaVariadic<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> > >,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>::_Do_call
+[11] 7ff7dc5c1e8d std::_Func_class<Star::Variant<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData>,Star::LuaVariadic<Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> > >,Star::LuaEngine & __ptr64,unsigned __int64,Star::Variant<Star::Empty,bool,__int64,double,Star::String,Star::LuaTable,Star::LuaFunction,Star::LuaThread,Star::LuaUserData> * __ptr64>::operator()
+[12] 7ff7dc5c0f24 <lambda_a03bcae4599b53751a446949639a4d5e>::operator()
+[13] 7ff7dc54b6a8 luaD_precall
+[14] 7ff7dc564451 luaV_execute
+[15] 7ff7dc54b1b3 luaD_call
+[16] 7ff7dc54b98b luaD_rawrunprotected
+[17] 7ff7dc54b3c0 luaD_pcall
+[18] 7ff7dc5418d4 lua_pcallk
+[19] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[20] 7ff7dc79706e Star::LuaEngine::callFunction<Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[21] 7ff7dc79ac84 Star::LuaFunction::invoke<Star::Json,Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[22] 7ff7dc79ab6e Star::LuaBaseComponent::invoke<Star::Json,Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[23] 7ff7dc86c0e7 Star::Object::interact
+[24] 7ff7dcb44081 Star::WorldServer::interact
+[25] 7ff7dcb418d8 Star::WorldServer::handleIncomingPackets
+[26] 7ff7dcb55b2b Star::WorldServerThread::update
+[27] 7ff7dcb556a8 Star::WorldServerThread::run
+[28] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[29] 7ffcba968364 BaseThreadInitThunk
+[30] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in field 'entityPosition'
+	[string "/objects/basestorage/miab_basestore_scanner/m..."]:76: in global 'defineAreaToScan'
+	[string "/objects/basestorage/miab_basestore_scanner/m..."]:36: in global 'onActivation'
+	[string "/objects/basestorage/miab_basestore_scanner/m..."]:20: in function <[string "/objects/basestorage/miab_basestore_scanner/m..."]:15>
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc797087 Star::LuaEngine::callFunction<Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[4] 7ff7dc79ac84 Star::LuaFunction::invoke<Star::Json,Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[5] 7ff7dc79ab6e Star::LuaBaseComponent::invoke<Star::Json,Star::MapMixin<std::unordered_map<Star::String,Star::Json,Star::hash<Star::String,void>,std::equal_to<Star::String>,std::allocator<std::pair<Star::String const ,Star::Json> > > > >
+[6] 7ff7dc86c0e7 Star::Object::interact
+[7] 7ff7dcb44081 Star::WorldServer::interact
+[8] 7ff7dcb418d8 Star::WorldServer::handleIncomingPackets
+[9] 7ff7dcb55b2b Star::WorldServerThread::update
+[10] 7ff7dcb556a8 Star::WorldServerThread::run
+[11] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[12] 7ffcba968364 BaseThreadInitThunk
+[13] 7ffcbb9170d1 RtlUserThreadStart
+[00:22:58.540] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:22:59.965] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:22:59.978] [Info] Client received world stop packet, leaving: Removed
+[00:22:59.983] [Info] missing field uninit accessed
+[00:23:00.031] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:10
+[00:23:16.670] [Info] UniverseServer: Loading celestial world 511271970:-686903443:-113695104:10
+[00:23:18.329] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271970:-686903443:-113695104:10
+[00:23:18.345] [Info] Client received world stop packet, leaving: Removed
+[00:23:18.351] [Info] missing field uninit accessed
+[00:23:18.395] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:24:00.396] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:24:01.780] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:24:01.803] [Info] Client received world stop packet, leaving: Removed
+[00:24:01.809] [Info] missing field uninit accessed
+[00:24:01.826] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:10
+[00:24:38.474] [Info] UniverseServer: Loading celestial world 511271970:-686903443:-113695104:10
+[00:24:39.883] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271970:-686903443:-113695104:10
+[00:24:39.909] [Info] Client received world stop packet, leaving: Removed
+[00:24:39.914] [Info] missing field uninit accessed
+[00:24:40.116] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:24:47.440] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:24:48.812] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:24:48.829] [Info] Client received world stop packet, leaving: Removed
+[00:24:48.835] [Info] missing field uninit accessed
+[00:24:48.869] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:10
+[00:25:20.804] [Info] UniverseServer: Flying player 1 ship to starter world 511271970:-686903443:-113695104:7:3
+[00:25:20.805] [Info] UniverseServer: Creating celestial world 511271970:-686903443:-113695104:7:3
+[00:25:21.684] [Info] Placing dungeon ship1
+[00:25:21.684] [Info] Generating dungeon ship1
+[00:25:21.702] [Info] Placing dungeon at (2590, 1000)
+[00:25:22.959] [Warn] Failed to place dungeon object: bunkercrate direction: 1 position: (2805, 1039)
+[00:25:22.972] [Warn] Failed to place dungeon object: bunkercrate direction: 1 position: (2805, 1041)
+[00:25:23.509] [Warn] Failed to place dungeon object: chemlab direction: 1 position: (2805, 1070)
+[00:25:23.596] [Warn] Failed to place dungeon object: apexceilingtv direction: 0 position: (2777, 1077)
+[00:25:23.693] [Warn] Failed to place dungeon object: labtv1 direction: 1 position: (2794, 1083)
+[00:25:23.828] [Warn] Failed to place dungeon object: lunarbasebunk direction: 1 position: (2771, 1091)
+[00:25:23.848] [Warn] Failed to place dungeon object: lunarbasebunk direction: 1 position: (2771, 1094)
+[00:25:25.464] [Warn] Dungeon wire endpoint not found. (2778, 1075)
+[00:25:25.464] [Warn] Dungeon wires did not make a circuit.
+[00:25:25.471] [Warn] Dungeon wire endpoint not found. (2928, 1060)
+[00:25:25.471] [Warn] Dungeon wires did not make a circuit.
+[00:25:25.471] [Warn] Dungeon wire endpoint not found. (2922, 1060)
+[00:25:25.471] [Warn] Dungeon wires did not make a circuit.
+[00:25:25.682] [Info] Protected dungeonIds for world set to (0)
+[00:25:25.691] [Info] Placing dungeon fuscifidungeon
+[00:25:25.776] [Info] Generating dungeon fuscifidungeon
+[00:25:25.788] [Info] Placing dungeon at (700, 1000)
+[00:25:35.312] [Info] UniverseServer: Arriving ship for player 1 at 511271970:-686903443:-113695104:7:3
+[00:25:35.312] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:7:3
+[00:26:00.728] [Info] UniverseServer: Loading celestial world 511271970:-686903443:-113695104:7:3
+[00:26:01.590] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271970:-686903443:-113695104:7:3
+[00:26:01.614] [Info] Client received world stop packet, leaving: Removed
+[00:26:01.618] [Info] missing field uninit accessed
+[00:26:01.636] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:26:35.677] [Warn] Failed to place dungeon object: woodenchest direction: 1 position: (114, 849)
+[00:27:47.711] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:28:44.500] [Info] Chat: <SAIL> WARNING: ELECTRICAL STORM ! The climate here is currently affected by a nasty Electric Storm! Watch your energy supply, as nearby static charge can affect it negatively. Head underground for shelter!
+[00:28:53.175] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:29:49.706] [Info] Chat: <SAIL> Lightning storms are significantly stronger when you are outside. Perhaps head underground where you are grounded and cannot be struck by lightning.
+[00:35:10.676] [Error] Could not load image asset '/projectiles/weather/gravityrain/gravityrain.png:0', using placeholder default.
+(ImageException) (0, 4294967295) out of range in Image::get
+[00:35:25.531] [Info] Chat: <server> Admin privileges now given to player Vincent Omega
+[00:35:31.984] [Info] Chat: <server> It's just a jump to the left...
+[00:35:35.300] [Info] Chat: <server> Admin privileges taken away from Vincent Omega
+[00:46:14.175] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:46:29.239] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:47:59.339] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:48:54.432] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:48:59.473] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:50:19.610] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:50:39.685] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[00:51:17.709] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:51:19.124] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:51:19.144] [Info] Client received world stop packet, leaving: Removed
+[00:51:19.151] [Info] missing field uninit accessed
+[00:51:19.207] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:7:3
+[00:51:24.393] [Info] UniverseServer: Loading celestial world 511271943:-686905286:34746391:8
+[00:51:25.322] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271943:-686905286:34746391:8=30c68a43ea377f6d0a3da9238fd212a0
+[00:51:25.454] [Info] Client received world stop packet, leaving: Removed
+[00:51:25.459] [Info] missing field uninit accessed
+[00:51:26.508] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[00:51:26.556] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[17] 7ff7dcaa78dd Star::WireProcessor::process
+[18] 7ff7dcb4de8a Star::WorldServer::update
+[19] 7ff7dcb55c42 Star::WorldServerThread::update
+[20] 7ff7dcb556a8 Star::WorldServerThread::run
+[21] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[22] 7ffcba968364 BaseThreadInitThunk
+[23] 7ffcbb9170d1 RtlUserThreadStart
+[00:51:26.593] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[17] 7ff7dcaa78dd Star::WireProcessor::process
+[18] 7ff7dcb4de8a Star::WorldServer::update
+[19] 7ff7dcb55c42 Star::WorldServerThread::update
+[20] 7ff7dcb556a8 Star::WorldServerThread::run
+[21] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[22] 7ffcba968364 BaseThreadInitThunk
+[23] 7ffcbb9170d1 RtlUserThreadStart
+[00:51:26.647] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[20] 7ff7dcaa78dd Star::WireProcessor::process
+[21] 7ff7dcb4de8a Star::WorldServer::update
+[22] 7ff7dcb55c42 Star::WorldServerThread::update
+[23] 7ff7dcb556a8 Star::WorldServerThread::run
+[24] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[25] 7ffcba968364 BaseThreadInitThunk
+[26] 7ffcbb9170d1 RtlUserThreadStart
+[00:51:26.694] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[20] 7ff7dcaa78dd Star::WireProcessor::process
+[21] 7ff7dcb4de8a Star::WorldServer::update
+[22] 7ff7dcb55c42 Star::WorldServerThread::update
+[23] 7ff7dcb556a8 Star::WorldServerThread::run
+[24] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[25] 7ffcba968364 BaseThreadInitThunk
+[26] 7ffcbb9170d1 RtlUserThreadStart
+[00:51:57.553] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[00:51:57.561] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[00:53:52.207] [Error] Exception while creating lua context for scripts '('/interface/scripted/fu_craftinfo/fu_craftinfo.lua')': (LuaException) Error code 2, [string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf1b17 <lambda_fb8838ade6ed10d5c0c700b1f5d039e6>::operator()
+[8] 7ff7dc5c0cba <lambda_9f7cb7f1bc41258b0d92ddc783067f53>::operator()
+[9] 7ff7dc54b6a8 luaD_precall
+[10] 7ff7dc564451 luaV_execute
+[11] 7ff7dc54b1b3 luaD_call
+[12] 7ff7dc54b98b luaD_rawrunprotected
+[13] 7ff7dc54b3c0 luaD_pcall
+[14] 7ff7dc5418d4 lua_pcallk
+[15] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[16] 7ff7dc5c4be7 Star::LuaEngine::contextLoad
+[17] 7ff7dc5c87fa Star::LuaContext::load
+[18] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[19] 7ff7dcbf26ee Star::LuaRoot::createContext
+[20] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[21] 7ff7dcde8b2d Star::ScriptPane::displayed
+[22] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[23] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[24] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[25] 7ff7dc53cd9f Star::ClientApplication::update
+[26] 7ff7dccad891 Star::SdlPlatform::run
+[27] 7ff7dccada4d Star::runMainApplication
+[28] 7ff7dc53fef6 WinMain
+[29] 7ff7dce945b3 __scrt_common_main_seh
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in global 'require'
+	[string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: in main chunk
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c87fa Star::LuaContext::load
+[4] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[5] 7ff7dcbf26ee Star::LuaRoot::createContext
+[6] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[7] 7ff7dcde8b2d Star::ScriptPane::displayed
+[8] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[9] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[10] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[11] 7ff7dc53cd9f Star::ClientApplication::update
+[12] 7ff7dccad891 Star::SdlPlatform::run
+[13] 7ff7dccada4d Star::runMainApplication
+[14] 7ff7dc53fef6 WinMain
+[15] 7ff7dce945b3 __scrt_common_main_seh
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[00:53:56.976] [Error] Exception while creating lua context for scripts '('/interface/scripted/fu_craftinfo/fu_craftinfo.lua')': (LuaException) Error code 2, [string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf1b17 <lambda_fb8838ade6ed10d5c0c700b1f5d039e6>::operator()
+[8] 7ff7dc5c0cba <lambda_9f7cb7f1bc41258b0d92ddc783067f53>::operator()
+[9] 7ff7dc54b6a8 luaD_precall
+[10] 7ff7dc564451 luaV_execute
+[11] 7ff7dc54b1b3 luaD_call
+[12] 7ff7dc54b98b luaD_rawrunprotected
+[13] 7ff7dc54b3c0 luaD_pcall
+[14] 7ff7dc5418d4 lua_pcallk
+[15] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[16] 7ff7dc5c4be7 Star::LuaEngine::contextLoad
+[17] 7ff7dc5c87fa Star::LuaContext::load
+[18] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[19] 7ff7dcbf26ee Star::LuaRoot::createContext
+[20] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[21] 7ff7dcde8b2d Star::ScriptPane::displayed
+[22] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[23] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[24] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[25] 7ff7dc53cd9f Star::ClientApplication::update
+[26] 7ff7dccad891 Star::SdlPlatform::run
+[27] 7ff7dccada4d Star::runMainApplication
+[28] 7ff7dc53fef6 WinMain
+[29] 7ff7dce945b3 __scrt_common_main_seh
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in global 'require'
+	[string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: in main chunk
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c87fa Star::LuaContext::load
+[4] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[5] 7ff7dcbf26ee Star::LuaRoot::createContext
+[6] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[7] 7ff7dcde8b2d Star::ScriptPane::displayed
+[8] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[9] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[10] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[11] 7ff7dc53cd9f Star::ClientApplication::update
+[12] 7ff7dccad891 Star::SdlPlatform::run
+[13] 7ff7dccada4d Star::runMainApplication
+[14] 7ff7dc53fef6 WinMain
+[15] 7ff7dce945b3 __scrt_common_main_seh
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[00:54:03.876] [Error] Exception while creating lua context for scripts '('/interface/scripted/fu_craftinfo/fu_craftinfo.lua')': (LuaException) Error code 2, [string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf1b17 <lambda_fb8838ade6ed10d5c0c700b1f5d039e6>::operator()
+[8] 7ff7dc5c0cba <lambda_9f7cb7f1bc41258b0d92ddc783067f53>::operator()
+[9] 7ff7dc54b6a8 luaD_precall
+[10] 7ff7dc564451 luaV_execute
+[11] 7ff7dc54b1b3 luaD_call
+[12] 7ff7dc54b98b luaD_rawrunprotected
+[13] 7ff7dc54b3c0 luaD_pcall
+[14] 7ff7dc5418d4 lua_pcallk
+[15] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[16] 7ff7dc5c4be7 Star::LuaEngine::contextLoad
+[17] 7ff7dc5c87fa Star::LuaContext::load
+[18] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[19] 7ff7dcbf26ee Star::LuaRoot::createContext
+[20] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[21] 7ff7dcde8b2d Star::ScriptPane::displayed
+[22] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[23] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[24] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[25] 7ff7dc53cd9f Star::ClientApplication::update
+[26] 7ff7dccad891 Star::SdlPlatform::run
+[27] 7ff7dccada4d Star::runMainApplication
+[28] 7ff7dc53fef6 WinMain
+[29] 7ff7dce945b3 __scrt_common_main_seh
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in global 'require'
+	[string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: in main chunk
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c87fa Star::LuaContext::load
+[4] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[5] 7ff7dcbf26ee Star::LuaRoot::createContext
+[6] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[7] 7ff7dcde8b2d Star::ScriptPane::displayed
+[8] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[9] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[10] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[11] 7ff7dc53cd9f Star::ClientApplication::update
+[12] 7ff7dccad891 Star::SdlPlatform::run
+[13] 7ff7dccada4d Star::runMainApplication
+[14] 7ff7dc53fef6 WinMain
+[15] 7ff7dce945b3 __scrt_common_main_seh
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[00:54:14.053] [Error] Exception while creating lua context for scripts '('/interface/scripted/fu_craftinfo/fu_craftinfo.lua')': (LuaException) Error code 2, [string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf1b17 <lambda_fb8838ade6ed10d5c0c700b1f5d039e6>::operator()
+[8] 7ff7dc5c0cba <lambda_9f7cb7f1bc41258b0d92ddc783067f53>::operator()
+[9] 7ff7dc54b6a8 luaD_precall
+[10] 7ff7dc564451 luaV_execute
+[11] 7ff7dc54b1b3 luaD_call
+[12] 7ff7dc54b98b luaD_rawrunprotected
+[13] 7ff7dc54b3c0 luaD_pcall
+[14] 7ff7dc5418d4 lua_pcallk
+[15] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[16] 7ff7dc5c4be7 Star::LuaEngine::contextLoad
+[17] 7ff7dc5c87fa Star::LuaContext::load
+[18] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[19] 7ff7dcbf26ee Star::LuaRoot::createContext
+[20] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[21] 7ff7dcde8b2d Star::ScriptPane::displayed
+[22] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[23] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[24] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[25] 7ff7dc53cd9f Star::ClientApplication::update
+[26] 7ff7dccad891 Star::SdlPlatform::run
+[27] 7ff7dccada4d Star::runMainApplication
+[28] 7ff7dc53fef6 WinMain
+[29] 7ff7dce945b3 __scrt_common_main_seh
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in global 'require'
+	[string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: in main chunk
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c87fa Star::LuaContext::load
+[4] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[5] 7ff7dcbf26ee Star::LuaRoot::createContext
+[6] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[7] 7ff7dcde8b2d Star::ScriptPane::displayed
+[8] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[9] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[10] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[11] 7ff7dc53cd9f Star::ClientApplication::update
+[12] 7ff7dccad891 Star::SdlPlatform::run
+[13] 7ff7dccada4d Star::runMainApplication
+[14] 7ff7dc53fef6 WinMain
+[15] 7ff7dce945b3 __scrt_common_main_seh
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[00:54:21.741] [Error] Exception while creating lua context for scripts '('/interface/scripted/fu_craftinfo/fu_craftinfo.lua')': (LuaException) Error code 2, [string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf1b17 <lambda_fb8838ade6ed10d5c0c700b1f5d039e6>::operator()
+[8] 7ff7dc5c0cba <lambda_9f7cb7f1bc41258b0d92ddc783067f53>::operator()
+[9] 7ff7dc54b6a8 luaD_precall
+[10] 7ff7dc564451 luaV_execute
+[11] 7ff7dc54b1b3 luaD_call
+[12] 7ff7dc54b98b luaD_rawrunprotected
+[13] 7ff7dc54b3c0 luaD_pcall
+[14] 7ff7dc5418d4 lua_pcallk
+[15] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[16] 7ff7dc5c4be7 Star::LuaEngine::contextLoad
+[17] 7ff7dc5c87fa Star::LuaContext::load
+[18] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[19] 7ff7dcbf26ee Star::LuaRoot::createContext
+[20] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[21] 7ff7dcde8b2d Star::ScriptPane::displayed
+[22] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[23] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[24] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[25] 7ff7dc53cd9f Star::ClientApplication::update
+[26] 7ff7dccad891 Star::SdlPlatform::run
+[27] 7ff7dccada4d Star::runMainApplication
+[28] 7ff7dc53fef6 WinMain
+[29] 7ff7dce945b3 __scrt_common_main_seh
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in global 'require'
+	[string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: in main chunk
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c87fa Star::LuaContext::load
+[4] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[5] 7ff7dcbf26ee Star::LuaRoot::createContext
+[6] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[7] 7ff7dcde8b2d Star::ScriptPane::displayed
+[8] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[9] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[10] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[11] 7ff7dc53cd9f Star::ClientApplication::update
+[12] 7ff7dccad891 Star::SdlPlatform::run
+[13] 7ff7dccada4d Star::runMainApplication
+[14] 7ff7dc53fef6 WinMain
+[15] 7ff7dce945b3 __scrt_common_main_seh
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[00:54:24.833] [Error] Exception while creating lua context for scripts '('/interface/scripted/fu_craftinfo/fu_craftinfo.lua')': (LuaException) Error code 2, [string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf1b17 <lambda_fb8838ade6ed10d5c0c700b1f5d039e6>::operator()
+[8] 7ff7dc5c0cba <lambda_9f7cb7f1bc41258b0d92ddc783067f53>::operator()
+[9] 7ff7dc54b6a8 luaD_precall
+[10] 7ff7dc564451 luaV_execute
+[11] 7ff7dc54b1b3 luaD_call
+[12] 7ff7dc54b98b luaD_rawrunprotected
+[13] 7ff7dc54b3c0 luaD_pcall
+[14] 7ff7dc5418d4 lua_pcallk
+[15] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[16] 7ff7dc5c4be7 Star::LuaEngine::contextLoad
+[17] 7ff7dc5c87fa Star::LuaContext::load
+[18] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[19] 7ff7dcbf26ee Star::LuaRoot::createContext
+[20] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[21] 7ff7dcde8b2d Star::ScriptPane::displayed
+[22] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[23] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[24] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[25] 7ff7dc53cd9f Star::ClientApplication::update
+[26] 7ff7dccad891 Star::SdlPlatform::run
+[27] 7ff7dccada4d Star::runMainApplication
+[28] 7ff7dc53fef6 WinMain
+[29] 7ff7dce945b3 __scrt_common_main_seh
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in global 'require'
+	[string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: in main chunk
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c87fa Star::LuaContext::load
+[4] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[5] 7ff7dcbf26ee Star::LuaRoot::createContext
+[6] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[7] 7ff7dcde8b2d Star::ScriptPane::displayed
+[8] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[9] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[10] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[11] 7ff7dc53cd9f Star::ClientApplication::update
+[12] 7ff7dccad891 Star::SdlPlatform::run
+[13] 7ff7dccada4d Star::runMainApplication
+[14] 7ff7dc53fef6 WinMain
+[15] 7ff7dce945b3 __scrt_common_main_seh
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[00:54:30.673] [Error] Exception while creating lua context for scripts '('/interface/scripted/fu_craftinfo/fu_craftinfo.lua')': (LuaException) Error code 2, [string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf1b17 <lambda_fb8838ade6ed10d5c0c700b1f5d039e6>::operator()
+[8] 7ff7dc5c0cba <lambda_9f7cb7f1bc41258b0d92ddc783067f53>::operator()
+[9] 7ff7dc54b6a8 luaD_precall
+[10] 7ff7dc564451 luaV_execute
+[11] 7ff7dc54b1b3 luaD_call
+[12] 7ff7dc54b98b luaD_rawrunprotected
+[13] 7ff7dc54b3c0 luaD_pcall
+[14] 7ff7dc5418d4 lua_pcallk
+[15] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[16] 7ff7dc5c4be7 Star::LuaEngine::contextLoad
+[17] 7ff7dc5c87fa Star::LuaContext::load
+[18] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[19] 7ff7dcbf26ee Star::LuaRoot::createContext
+[20] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[21] 7ff7dcde8b2d Star::ScriptPane::displayed
+[22] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[23] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[24] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[25] 7ff7dc53cd9f Star::ClientApplication::update
+[26] 7ff7dccad891 Star::SdlPlatform::run
+[27] 7ff7dccada4d Star::runMainApplication
+[28] 7ff7dc53fef6 WinMain
+[29] 7ff7dce945b3 __scrt_common_main_seh
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in global 'require'
+	[string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: in main chunk
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c87fa Star::LuaContext::load
+[4] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[5] 7ff7dcbf26ee Star::LuaRoot::createContext
+[6] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[7] 7ff7dcde8b2d Star::ScriptPane::displayed
+[8] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[9] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[10] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[11] 7ff7dc53cd9f Star::ClientApplication::update
+[12] 7ff7dccad891 Star::SdlPlatform::run
+[13] 7ff7dccada4d Star::runMainApplication
+[14] 7ff7dc53fef6 WinMain
+[15] 7ff7dce945b3 __scrt_common_main_seh
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[00:54:36.112] [Error] Exception while creating lua context for scripts '('/interface/scripted/fu_craftinfo/fu_craftinfo.lua')': (LuaException) Error code 2, [string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf1b17 <lambda_fb8838ade6ed10d5c0c700b1f5d039e6>::operator()
+[8] 7ff7dc5c0cba <lambda_9f7cb7f1bc41258b0d92ddc783067f53>::operator()
+[9] 7ff7dc54b6a8 luaD_precall
+[10] 7ff7dc564451 luaV_execute
+[11] 7ff7dc54b1b3 luaD_call
+[12] 7ff7dc54b98b luaD_rawrunprotected
+[13] 7ff7dc54b3c0 luaD_pcall
+[14] 7ff7dc5418d4 lua_pcallk
+[15] 7ff7dc5c8ed0 Star::LuaEngine::pcallWithTraceback
+[16] 7ff7dc5c4be7 Star::LuaEngine::contextLoad
+[17] 7ff7dc5c87fa Star::LuaContext::load
+[18] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[19] 7ff7dcbf26ee Star::LuaRoot::createContext
+[20] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[21] 7ff7dcde8b2d Star::ScriptPane::displayed
+[22] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[23] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[24] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[25] 7ff7dc53cd9f Star::ClientApplication::update
+[26] 7ff7dccad891 Star::SdlPlatform::run
+[27] 7ff7dccada4d Star::runMainApplication
+[28] 7ff7dc53fef6 WinMain
+[29] 7ff7dce945b3 __scrt_common_main_seh
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+stack traceback:
+	[C]: in ?
+	[C]: in global 'require'
+	[string "/interface/scripted/fu_craftinfo/fu_craftinfo..."]:9: in main chunk
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c87fa Star::LuaContext::load
+[4] 7ff7dcbf29cc Star::LuaRoot::ScriptCache::loadContextScript
+[5] 7ff7dcbf26ee Star::LuaRoot::createContext
+[6] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[7] 7ff7dcde8b2d Star::ScriptPane::displayed
+[8] 7ff7dcd0abc9 Star::PaneManager::displayPane
+[9] 7ff7dcdaa3b9 Star::MainInterface::handleInteractAction
+[10] 7ff7dc53e5f6 Star::ClientApplication::updateRunning
+[11] 7ff7dc53cd9f Star::ClientApplication::update
+[12] 7ff7dccad891 Star::SdlPlatform::run
+[13] 7ff7dccada4d Star::runMainApplication
+[14] 7ff7dc53fef6 WinMain
+[15] 7ff7dce945b3 __scrt_common_main_seh
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[00:57:41.434] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[00:57:41.444] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[00:58:16.009] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5d4c5 Star::WorldStorage::generateSectorToLevel
+[14] 7ff7dcb5d203 Star::WorldStorage::generateQueue
+[15] 7ff7dcb4e4ea Star::WorldServer::update
+[16] 7ff7dcb55c42 Star::WorldServerThread::update
+[17] 7ff7dcb556a8 Star::WorldServerThread::run
+[18] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[19] 7ffcba968364 BaseThreadInitThunk
+[20] 7ffcbb9170d1 RtlUserThreadStart
+[00:58:16.042] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5d4c5 Star::WorldStorage::generateSectorToLevel
+[14] 7ff7dcb5d203 Star::WorldStorage::generateQueue
+[15] 7ff7dcb4e4ea Star::WorldServer::update
+[16] 7ff7dcb55c42 Star::WorldServerThread::update
+[17] 7ff7dcb556a8 Star::WorldServerThread::run
+[18] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[19] 7ffcba968364 BaseThreadInitThunk
+[20] 7ffcbb9170d1 RtlUserThreadStart
+[00:58:16.090] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5d4c5 Star::WorldStorage::generateSectorToLevel
+[14] 7ff7dcb5d203 Star::WorldStorage::generateQueue
+[15] 7ff7dcb4e4ea Star::WorldServer::update
+[16] 7ff7dcb55c42 Star::WorldServerThread::update
+[17] 7ff7dcb556a8 Star::WorldServerThread::run
+[18] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[19] 7ffcba968364 BaseThreadInitThunk
+[20] 7ffcbb9170d1 RtlUserThreadStart
+[00:58:16.119] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5d4c5 Star::WorldStorage::generateSectorToLevel
+[14] 7ff7dcb5d203 Star::WorldStorage::generateQueue
+[15] 7ff7dcb4e4ea Star::WorldServer::update
+[16] 7ff7dcb55c42 Star::WorldServerThread::update
+[17] 7ff7dcb556a8 Star::WorldServerThread::run
+[18] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[19] 7ffcba968364 BaseThreadInitThunk
+[20] 7ffcbb9170d1 RtlUserThreadStart
+[00:58:37.082] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[00:58:37.094] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:01:16.838] [Info] UniverseServer: Creating temporary world file for world InstanceWorld:outpost:-:-
+[01:01:16.840] [Info] UniverseServer: Creating temporary instance world 'InstanceWorld:outpost:-:-'
+[01:01:16.974] [Info] Placing dungeon outpost
+[01:01:17.206] [Info] Forcing generation of dungeon outpost
+[01:01:17.228] [Info] Placing dungeon at (0, 750)
+[01:01:26.838] [Info] Protected dungeonIds for world set to (0)
+[01:01:29.257] [Info] Forcing generation of dungeon outpost_techscientist1
+[01:01:29.257] [Info] Placing dungeon at (355, 636)
+[01:01:29.271] [Warn] Failed to place dungeon object: drip1 direction: 1 position: (372, 634)
+[01:01:29.296] [Info] Forcing generation of dungeon outpost_lana
+[01:01:29.296] [Info] Placing dungeon at (964, 608)
+[01:01:29.385] [Info] Forcing generation of dungeon outpost_techscientist2
+[01:01:29.385] [Info] Placing dungeon at (355, 636)
+[01:01:29.401] [Warn] Failed to place dungeon object: drip1 direction: 1 position: (372, 634)
+[01:01:29.405] [Info] Forcing generation of dungeon outpost_ursaminer
+[01:01:29.405] [Info] Placing dungeon at (406, 651)
+[01:01:29.417] [Info] Forcing generation of dungeon outpost_terramart
+[01:01:29.417] [Info] Placing dungeon at (332, 621)
+[01:01:29.430] [Info] Forcing generation of dungeon outpost_frogfurnishing
+[01:01:29.430] [Info] Placing dungeon at (332, 655)
+[01:01:29.445] [Info] Forcing generation of dungeon outpost_2stopshop
+[01:01:29.445] [Info] Placing dungeon at (427, 618)
+[01:01:29.479] [Info] Forcing generation of dungeon outpost_containercraftingstation2
+[01:01:29.479] [Info] Placing dungeon at (401, 637)
+[01:01:29.510] [Info] Forcing generation of dungeon outpost_koichi
+[01:01:29.510] [Info] Placing dungeon at (931, 608)
+[01:01:29.564] [Info] Forcing generation of dungeon outpost_weaponshop
+[01:01:29.564] [Info] Placing dungeon at (364, 588)
+[01:01:29.574] [Info] Forcing generation of dungeon outpost_treasuredtrophies
+[01:01:29.574] [Info] Placing dungeon at (611, 645)
+[01:01:29.585] [Info] Forcing generation of dungeon outpost_beakeasy1
+[01:01:29.585] [Info] Placing dungeon at (447, 567)
+[01:01:29.618] [Info] Forcing generation of dungeon outpost_beakeasy2
+[01:01:29.618] [Info] Placing dungeon at (429, 567)
+[01:01:29.632] [Info] Forcing generation of dungeon outpost_nuru
+[01:01:29.632] [Info] Placing dungeon at (838, 608)
+[01:01:29.700] [Info] Forcing generation of dungeon outpost_penguinbay
+[01:01:29.700] [Info] Placing dungeon at (452, 627)
+[01:01:29.715] [Warn] Failed to place dungeon object: outpostkeypad direction: 1 position: (461, 611)
+[01:01:29.719] [Info] Forcing generation of dungeon outpost_signstore
+[01:01:29.719] [Info] Placing dungeon at (308, 640)
+[01:01:29.730] [Info] Forcing generation of dungeon outpost_tonauac
+[01:01:29.730] [Info] Placing dungeon at (805, 608)
+[01:01:29.781] [Info] Forcing generation of dungeon outpost_mazebound
+[01:01:29.781] [Info] Placing dungeon at (444, 561)
+[01:01:29.787] [Info] Forcing generation of dungeon outpost_baron
+[01:01:29.787] [Info] Placing dungeon at (757, 597)
+[01:01:29.881] [Info] UniverseServer: Warping player 1 to InstanceWorld:outpost:-:-=outpost
+[01:01:29.893] [Info] UniverseServer: Stopping idle world CelestialWorld:511271943:-686905286:34746391:8
+[01:01:29.894] [Info] Client received world stop packet, leaving: Removed
+[01:01:29.900] [Info] missing field uninit accessed
+[01:01:50.515] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:01:52.028] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:01:52.070] [Info] Client received world stop packet, leaving: Removed
+[01:01:52.076] [Info] missing field uninit accessed
+[01:01:52.109] [Info] UniverseServer: Stopping idle world InstanceWorld:outpost:-:-
+[01:01:53.473] [Info] world shutdown time 35691710, current time 35693098, deleteTime 0
+[01:01:53.473] [Info] UniverseServer: Expiring temporary world InstanceWorld:outpost:-:-
+[01:01:59.111] [Info] UniverseServer: Loading celestial world 511271943:-686905286:34746391:8
+[01:02:00.023] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271943:-686905286:34746391:8=30c68a43ea377f6d0a3da9238fd212a0
+[01:02:00.110] [Info] Client received world stop packet, leaving: Removed
+[01:02:00.115] [Info] missing field uninit accessed
+[01:02:01.102] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:02:01.272] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[01:02:01.326] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[01:02:01.378] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[01:02:01.418] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[01:02:41.406] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:02:42.747] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:02:42.781] [Info] Client received world stop packet, leaving: Removed
+[01:02:42.786] [Info] missing field uninit accessed
+[01:02:42.809] [Info] UniverseServer: Stopping idle world CelestialWorld:511271943:-686905286:34746391:8
+[01:03:42.821] [Info] UniverseServer: Loading celestial world 511271943:-686905286:34746391:8
+[01:03:43.674] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271943:-686905286:34746391:8=30c68a43ea377f6d0a3da9238fd212a0
+[01:03:43.773] [Info] Client received world stop packet, leaving: Removed
+[01:03:43.778] [Info] missing field uninit accessed
+[01:03:45.020] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:03:45.292] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[01:03:45.347] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[01:03:45.395] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[01:03:45.451] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[01:04:41.067] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:04:41.077] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:04:50.546] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:04:51.929] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:04:51.974] [Info] Client received world stop packet, leaving: Removed
+[01:04:51.979] [Info] missing field uninit accessed
+[01:04:51.980] [Info] UniverseServer: Stopping idle world CelestialWorld:511271943:-686905286:34746391:8
+[01:05:29.655] [Info] UniverseServer: Loading celestial world 511271943:-686905286:34746391:8
+[01:05:30.561] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271943:-686905286:34746391:8=30c68a43ea377f6d0a3da9238fd212a0
+[01:05:30.676] [Info] Client received world stop packet, leaving: Removed
+[01:05:30.681] [Info] missing field uninit accessed
+[01:05:31.910] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:05:32.181] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[01:05:32.229] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[01:05:32.289] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[01:05:32.336] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[26] 7ff7dcaa78dd Star::WireProcessor::process
+[27] 7ff7dcb4de8a Star::WorldServer::update
+[28] 7ff7dcb55c42 Star::WorldServerThread::update
+[29] 7ff7dcb556a8 Star::WorldServerThread::run
+[30] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[31] 7ffcba968364 BaseThreadInitThunk
+[32] 7ffcbb9170d1 RtlUserThreadStart
+[01:08:53.685] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:08:53.692] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:09:47.648] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:11:01.791] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:12:38.907] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:12:38.915] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:13:41.448] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:13:41.460] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:15:47.327] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:15:47.334] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:23:11.626] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcb379fe Star::WorldServer::addEntity
+[12] 7ff7dcb414fc Star::WorldServer::handleIncomingPackets
+[13] 7ff7dcb55b2b Star::WorldServerThread::update
+[14] 7ff7dcb556a8 Star::WorldServerThread::run
+[15] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[01:23:12.460] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcb379fe Star::WorldServer::addEntity
+[12] 7ff7dcb414fc Star::WorldServer::handleIncomingPackets
+[13] 7ff7dcb55b2b Star::WorldServerThread::update
+[14] 7ff7dcb556a8 Star::WorldServerThread::run
+[15] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[01:23:13.030] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcb379fe Star::WorldServer::addEntity
+[12] 7ff7dcb414fc Star::WorldServer::handleIncomingPackets
+[13] 7ff7dcb55b2b Star::WorldServerThread::update
+[14] 7ff7dcb556a8 Star::WorldServerThread::run
+[15] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[01:23:13.237] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcb379fe Star::WorldServer::addEntity
+[12] 7ff7dcb414fc Star::WorldServer::handleIncomingPackets
+[13] 7ff7dcb55b2b Star::WorldServerThread::update
+[14] 7ff7dcb556a8 Star::WorldServerThread::run
+[15] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[16] 7ffcba968364 BaseThreadInitThunk
+[17] 7ffcbb9170d1 RtlUserThreadStart
+[01:25:17.915] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:29:53.275] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:30:28.349] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:34:08.587] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:34:52.877] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:34:52.889] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:35:23.821] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:35:53.915] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:36:07.588] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:36:07.599] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:36:42.959] [Info] Chat: <server> Admin privileges now given to player Vincent Omega
+[01:37:23.671] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:37:24.971] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:37:24.985] [Info] Client received world stop packet, leaving: Removed
+[01:37:24.990] [Info] missing field uninit accessed
+[01:37:25.037] [Info] UniverseServer: Stopping idle world CelestialWorld:511271943:-686905286:34746391:8
+[01:37:33.644] [Info] UniverseServer: Loading celestial world 511271970:-686903443:-113695104:10
+[01:37:35.151] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271970:-686903443:-113695104:10=fd6a02a8bb44ecaff3bd9bb4fcd84224
+[01:37:35.174] [Info] Client received world stop packet, leaving: Removed
+[01:37:35.179] [Info] missing field uninit accessed
+[01:37:35.249] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:38:17.632] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:38:18.992] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:38:19.034] [Info] Client received world stop packet, leaving: Removed
+[01:38:19.040] [Info] missing field uninit accessed
+[01:38:19.051] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:10
+[01:38:23.185] [Info] UniverseServer: Loading celestial world 511271970:-686903443:-113695104:7:3
+[01:38:24.309] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271970:-686903443:-113695104:7:3
+[01:38:24.400] [Info] Client received world stop packet, leaving: Removed
+[01:38:24.406] [Info] missing field uninit accessed
+[01:38:24.527] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:39:49.325] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:39:50.253] [Warn] Failed to place dungeon object: sewergear direction: 0 position: (223, 1002)
+[01:40:39.435] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:42:14.527] [Info] UniverseServer: Loading client ship world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:42:15.954] [Info] UniverseServer: Warping player 1 to ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:42:15.974] [Info] Client received world stop packet, leaving: Removed
+[01:42:15.979] [Info] missing field uninit accessed
+[01:42:15.984] [Info] UniverseServer: Stopping idle world CelestialWorld:511271970:-686903443:-113695104:7:3
+[01:42:20.896] [Info] UniverseServer: Loading celestial world 511271943:-686905286:34746391:8
+[01:42:21.801] [Info] UniverseServer: Warping player 1 to CelestialWorld:511271943:-686905286:34746391:8=30c68a43ea377f6d0a3da9238fd212a0
+[01:42:21.924] [Info] Client received world stop packet, leaving: Removed
+[01:42:21.929] [Info] missing field uninit accessed
+[01:42:23.015] [Info] UniverseServer: Stopping idle world ClientShipWorld:98026da4c496af4d0170e00544bd00dd
+[01:42:23.232] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[01:42:23.280] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[25] 7ff7dcaa78dd Star::WireProcessor::process
+[26] 7ff7dcb4de8a Star::WorldServer::update
+[27] 7ff7dcb55c42 Star::WorldServerThread::update
+[28] 7ff7dcb556a8 Star::WorldServerThread::run
+[29] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[30] 7ffcba968364 BaseThreadInitThunk
+[31] 7ffcbb9170d1 RtlUserThreadStart
+[01:42:23.332] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[26] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[27] 7ff7dcaa78dd Star::WireProcessor::process
+[28] 7ff7dcb4de8a Star::WorldServer::update
+[29] 7ff7dcb55c42 Star::WorldServerThread::update
+[30] 7ff7dcb556a8 Star::WorldServerThread::run
+[31] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[32] 7ffcba968364 BaseThreadInitThunk
+[33] 7ffcbb9170d1 RtlUserThreadStart
+[01:42:23.381] [Error] Exception while creating lua context for scripts '('/objects/power/isn_sharedpowerscripts.lua', '/objects/isn_sharedobjectscripts.lua', '/objects/generic/extractionlab_common.lua')': (LuaException) Error code 3, [string "/objects/generic/extractionlab_common.lua"]:1037: '}' expected (to close '{' at line 767) near 'end'
+[0] 7ff7dc5f4403 Star::captureStack
+[1] 7ff7dc5f318e Star::StarException::StarException
+[2] 7ff7dc5c7a91 Star::LuaEngine::handleError
+[3] 7ff7dc5c4292 Star::LuaEngine::compile
+[4] 7ff7dc5c420a Star::LuaEngine::compile
+[5] 7ff7dcbf2a6f Star::LuaRoot::ScriptCache::loadScript
+[6] 7ff7dcbf29a5 Star::LuaRoot::ScriptCache::loadContextScript
+[7] 7ff7dcbf26ee Star::LuaRoot::createContext
+[8] 7ff7dcbe0cf3 Star::LuaBaseComponent::init
+[9] 7ff7dc86b4be Star::Object::init
+[10] 7ff7dcbc6e7c Star::ContainerObject::init
+[11] 7ff7dcae188a Star::WorldGenerator::initEntity
+[12] 7ff7dcb5e94c Star::WorldStorage::loadSectorToLevel
+[13] 7ff7dcb5e1a3 Star::WorldStorage::loadSector
+[14] 7ff7dcaa5ce7 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[15] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[16] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[17] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[18] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[19] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[20] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[21] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[22] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[23] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[24] 7ff7dcaa5ec4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[25] 7ff7dcaa5fb4 <lambda_cb1d062c3d3843942fecf4e958af384b>::operator()
+[26] 7ff7dcaa757d Star::WireProcessor::loadNetwork
+[27] 7ff7dcaa78dd Star::WireProcessor::process
+[28] 7ff7dcb4de8a Star::WorldServer::update
+[29] 7ff7dcb55c42 Star::WorldServerThread::update
+[30] 7ff7dcb556a8 Star::WorldServerThread::run
+[31] 7ff7dc5f0f2e Star::ThreadImpl::runThread
+[32] 7ffcba968364 BaseThreadInitThunk
+[33] 7ffcbb9170d1 RtlUserThreadStart
+[01:43:09.524] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:43:09.536] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:43:34.689] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:45:29.922] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:46:05.021] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:46:15.100] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:46:20.147] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:47:05.259] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'
+[01:48:22.362] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:48:22.371] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:48:58.645] [Error] Could not load image asset '/interface/inventory/x.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/x.png'
+[01:48:58.653] [Error] Could not load image asset '/interface/inventory/xhover.png', using placeholder default.
+(AssetException) No such asset '/interface/inventory/xhover.png'
+[01:50:10.596] [Info] Root: Writing runtime configuration to '..\storage\starbound.config'

@@ -1,0 +1,7 @@
+{
+  "utterance": "why did the chicken cross the road",
+  "intent_type": "WhyDidTheChickenCrossTheRoadIntent",
+  "intent": {
+    "WhyDidTheChickenCrossTheRoadKeyphrase": "why did the chicken cross the road"
+  }
+}

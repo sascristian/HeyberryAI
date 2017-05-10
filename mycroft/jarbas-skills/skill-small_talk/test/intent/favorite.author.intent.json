@@ -1,0 +1,7 @@
+{
+  "utterance": "who is your favorite author",
+  "intent_type": "FavoriteAuthorIntent",
+  "intent": {
+    "FavoriteAuthorKeyphrase": "favorite author"
+  }
+}

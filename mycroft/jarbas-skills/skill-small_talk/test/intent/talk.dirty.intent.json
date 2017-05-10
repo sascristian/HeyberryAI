@@ -1,0 +1,7 @@
+{
+  "utterance": "talk dirty",
+  "intent_type": "TalkDirtyIntent",
+  "intent": {
+    "TalkDirtyKeyphrase": "talk dirty"
+  }
+}

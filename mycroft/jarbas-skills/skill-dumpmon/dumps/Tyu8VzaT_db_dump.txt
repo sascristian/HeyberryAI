@@ -1,0 +1,331 @@
+{
+	"success": true,
+	"error": null,
+	"response": [{
+		"time_series_5m": [{
+			"2017-04-27T17:35:00.000Z": {
+				"count": 646,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 236
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 109
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 104
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 99
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 98
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T17:40:00.000Z": {
+				"count": 972,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 355
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 166
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 158
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 158
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 135
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T17:45:00.000Z": {
+				"count": 169,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 60
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 35
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 33
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 26
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 15
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T17:50:00.000Z": {
+				"count": 760,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 253
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 147
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 129
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 123
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 108
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T17:55:00.000Z": {
+				"count": 729,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 245
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 136
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 129
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 112
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 107
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T18:00:00.000Z": {
+				"count": 160,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 51
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 36
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 29
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 22
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 22
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T18:05:00.000Z": {
+				"count": 761,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 251
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 131
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 130
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 126
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 123
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T18:10:00.000Z": {
+				"count": 762,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 242
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 156
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 138
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 121
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 105
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T18:15:00.000Z": {
+				"count": 172,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 57
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 31
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 31
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 30
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 23
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T18:20:00.000Z": {
+				"count": 768,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 242
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 152
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 137
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 131
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 106
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T18:25:00.000Z": {
+				"count": 694,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 244
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 120
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 115
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 111
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 104
+						}
+					}]
+				}]
+			}
+		}, {
+			"2017-04-27T18:30:00.000Z": {
+				"count": 151,
+				"aggregations": [{
+					"client_id": [{
+						"b8f558c52c11466dbbe8d231b3dee5d5": {
+							"count": 50
+						}
+					}, {
+						"68230758d0a64c3ca6e4a644e5667a76": {
+							"count": 30
+						}
+					}, {
+						"626bdb0b62a449789c7b6afe898b7401": {
+							"count": 25
+						}
+					}, {
+						"8b4844a73d8c4a8ba7650213a12e25a2": {
+							"count": 25
+						}
+					}, {
+						"6f36e6f970a34bada817e64538ff28e3": {
+							"count": 21
+						}
+					}]
+				}]
+			}
+		}]
+	}]
+}

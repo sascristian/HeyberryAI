@@ -1,0 +1,7 @@
+{
+  "utterance": "tell me the news",
+  "intent_type": "FoxNewsIntent",
+  "intent": {
+    "FoxNewsKeyword": "tell me the fox news"
+  }
+}

@@ -1,0 +1,503 @@
+#EXTM3U8
+#EXTINF:-1,1 Music Channel
+http://x1-music-channelx.api.channel.livestream.com/3.0/playlist.m3u8
+#EXTINF:-1,1 Classic
+http://89.38.8.131:39496
+#EXTINF:-1,ACASA HD
+http://89.38.8.131:39534
+#EXTINF:-1,Acasa TV
+http://89.38.8.130:39417
+#EXTINF:-1,ACASA GOLD
+http://89.38.8.131:39508
+#EXTINF:0,ACASA TV MD
+http://hls.protv.md/acasatv/acasatv.m3u8
+#EXTINF:0,ANIMAL PLANET
+http://89.38.8.130:39424
+#EXTINF:0,Antena 1
+http://89.38.8.130:39412
+#EXTINF:0,ANTENA STARS
+http://89.38.8.130:39431
+#EXTINF:0,ANTENA 3
+http://89.38.8.130:39421
+#EXTINF:0,ANIMAL PLANET
+http://89.38.8.130:39424
+#EXTINF:0 type=”stream” ,Atomic Tv
+http://5.154.185.153/hls/live.m3u8
+#EXTINF:-1,AMC RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1203.m3u8
+#EXTINF:-1,AXN Romania
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/442.m3u8
+#EXTINF:-1,AXN White Ro
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/469.m3u8
+#EXTINF:-1,AXN Black Ro
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/468.m3u8
+#EXTINF:0 type=”stream” , Bollywood Classic
+http://telekomtv.ro.edgesuite.net/shls/LIVE$BollywoodClassic/6.m3u8/Level(545259)?start=LIVE&end=END
+#EXTINF:0 type=”stream” , Bollywood TV
+http://telekomtv.ro.edgesuite.net/shls/LIVE$BollywoodTVFilm/6.m3u8/Level(545259)?start=LIVE&end=END
+#EXTINF:0 type=”stream” , B1 Tv
+http://dgf.icx.ro/digiedge2/b1tvehq/index.m3u8?is=29&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,BOOMERANG
+http://89.38.8.131:39517
+#EXTINF:0,CARTOON NETWORK
+http://89.38.8.131:39516
+#EXTINF:0 type=”stream” , Cinethronix
+http://webmobile.xdev.ro:81/tv25/playlist.m3u8
+#EXTINF:-1,Cinemax Ro
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/476.m3u8
+#EXTINF:-1,Cinemax 2 HD
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1749.m3u8
+#EXTINF:0 type=”stream” , Digi Sport 1
+http://dgf.icx.ro/digiedge/digisport1ehq/index.m3u8?is=1&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi Sport 2
+http://dgf.icx.ro/digiedge/digisport2ehq/index.m3u8?is=2&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi Sport 3
+http://dgf.icx.ro/digiedge/digisport3ehq/index.m3u8?is=3&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi Sport 4
+http://dgf.icx.ro/digiedge/digisport4ehq/index.m3u8?is=49&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,DOLCE SPORT 1
+http://89.38.8.130:39441
+#EXTINF:0,DOLCE SPORT 2
+http://89.38.8.130:39442
+#EXTINF:-1,DOLCE SPORT 3
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1946.m3u8
+#EXTINF:-1,DOLCE SPORT 4
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/2104.m3u8
+#EXTINF:0,DOLCE SPORT 5
+http://89.38.8.130:39422
+#EXTINF:0,DOLCE SPORT 6
+http://89.38.8.130:39446
+#EXTINF:0 type=”stream” , Digi Life
+http://dgf.icx.ro/digiedge2/digilifeehq/index.m3u8?is=6&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi World
+http://dgf.icx.ro/digiedge2/digiworldehq/index.m3u8?is=5&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi Animal World
+http://dgf.icx.ro/digiedge2/digianimalworldehq/index.m3u8?is=16&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1,Discovery HD Showcase RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1764.m3u8
+#EXTINF:0,DISCOVERY CHANNEL
+http://89.38.8.130:39423
+#EXTINF:0,DISCOVERY SCIENCE
+http://89.38.8.130:39481
+#EXTINF:0 type=”stream” , Disney Junior
+http://dgf.icx.ro/digiedge2/disneyjuniorehq/index.m3u8?is=18&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Disney Channel
+http://dgf.icx.ro/digiedge2/disneychannelehq/index.m3u8?is=17&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi 24
+http://81.196.0.126/digi24edge/smil:digi24.smil/chunklist_w298768590_b1213681_sleng.m3u8
+#EXTINF:-1,Digi Film
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/201.m3u8
+#EXTINF:0,Diva
+http://89.38.8.131:39507
+#EXTINF:-1,DOQ
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/550.m3u8
+#EXTINF:-1,Disc ID Xtra HD RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/2055.m3u8
+#EXTINF:-1,DTX HD RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/2054.m3u8
+#EXTINF:0,ETNO TV
+http://89.38.8.130:39451
+#EXTINF:0,EURONEWS
+http://89.38.8.130:39468
+#EXTINF:0 type=”stream” , Eurosport 1
+http://dgf.icx.ro/digiedge2/eurosportehq/index.m3u8?is=31&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Eurosport 2
+http://dgf.icx.ro/digiedge2/eurosport2ehq/index.m3u8?is=32&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1,ExtremeSport-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1093.m3u8
+#EXTINF:-1,Film Cafe
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/510.m3u8
+#EXTINF:-1,FilmBox-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1099.m3u8
+#EXTINF:-1,FilmBox Extra HD RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1747.m3u8
+#EXTINF:0,FASHION
+http://89.38.8.130:39474
+#EXTINF:-1,Fishing and Hunting
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/549.m3u8
+#EXTINF:0,FAVORIT
+http://89.38.8.130:39454
+#EXTINF:-1,History-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1108.m3u8
+#EXTINF:0,HBO
+http://89.38.8.130:39476
+#EXTINF:-1,HBO 2
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1746.m3u8
+#EXTINF:-1,HBO 3
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/203.m3u8
+#EXTINF:0,HAPPY TV
+http://89.38.8.130:39432
+#EXTINF:0 type=”stream” , Hit Music Channel
+http://dgf.icx.ro/digiedge2/hitmusicchannelehq/index.m3u8?is=35&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , History Channel
+http://dgf.icx.ro/digiedge2/historychannelehq/index.m3u8?is=20&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0, Ibiza Global TV
+http://server10.streaming-pro.com:1937/live/ibgtvlive/playlist.m3u8
+#EXTINF:-1,ID Xtra
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/511.m3u8
+#EXTINF:-1,Impact Tv MANELE
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1765.m3u8
+#EXTINF:-1,Jim Jam RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1090.m3u8
+#EXTINF:0,KANAL D
+http://89.38.8.130:39418
+#EXTINF:0 type=”stream” , Kiss Tv
+http://dgf.icx.ro/digiedge2/kisstvehq/index.m3u8?is=34&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,LOOK TV
+http://89.38.8.130:39485
+#EXTINF:-1,Look Plus RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/504.m3u8
+#EXTINF:0 type=”stream” , Music Channel
+http://dgf.icx.ro/digiedge2/musicchannelehq/index.m3u8?is=25&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,MTV
+http://89.38.8.130:39439
+#EXTINF:0,MTV LIVE HD
+http://89.38.8.131:39541
+#EXTINF:-1,MusicChannel-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1092.m3u8
+#EXTINF:-1,MTV Dance RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1766.m3u8
+#EXTINF:0,MOOZ HD
+http://89.38.8.131:39535
+#EXTINF:0,MOOZ RO!
+http://89.38.8.131:39550
+#EXTINF:0 type=”stream” , Minimax
+http://dgf.icx.ro/digiedge2/minimaxehq/index.m3u8?is=37&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Megamax
+http://dgf.icx.ro/digiedge2/megamaxehq/index.m3u8?is=47&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Nickelodeon
+http://dgf.icx.ro/digiedge2/nickelodeonehq/index.m3u8?is=28&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,NASU TV
+http://89.38.8.130:39436
+#EXTINF:0,NATIONAL 24 PLUS
+http://89.38.8.130:39438
+#EXTINF:0,NATIONAL GEOGRAPHIC
+http://89.38.8.131:39518
+#EXTINF:0,Nat Geo Wild
+http://89.35.222.169:8082/play/a01r
+#EXTINF:0,NATIONAL TV
+http://89.38.8.130:39414
+#EXTINF:-1,National24 RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1202.m3u8
+#EXTINF:0,NICK JR
+http://89.38.8.131:39506
+#EXTINF:0 type=”stream” , Nat Geo Wild
+http://dgf.icx.ro/digiedge2/nationalgeographicwildehq/index.m3u8?is=33&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , National Geographic
+http://dgf.icx.ro/digiedge2/nationalgeographicehq/index.m3u8?is=19&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,PRIMA TV
+http://89.38.8.130:39413
+#EXTINF:-1,Paramount Channel-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1110.m3u8
+#EXTINF:0,PRO CINEMA
+http://89.38.8.130:39416
+#EXTINF:0,PRO TV
+http://89.38.8.130:39415
+#EXTINF:0,PUBLIKA
+http://89.38.8.130:39460
+#EXTINF:0 type=”stream” , Realitatea Tv
+http://dgf.icx.ro/digiedge2/realitateatvehq/index.m3u8?is=26&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Romania Tv
+http://dgf.icx.ro/digiedge2/romaniatvehq/index.m3u8?is=27&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,Show Time Iq Movie Television
+http://mediafilmcenter.ro:1935/live/myStream/chunklist_w1594518285.m3u8
+#EXTINF:0,SPORT RO
+http://89.38.8.130:39430
+#EXTINF:-1,Sundance HD RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1748.m3u8
+#EXTINF:0,TARAF HD
+http://89.38.8.130:39450
+#EXTINF:0,TNT
+http://89.38.8.131:39512
+#EXTINF:-1,TLC-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1096.m3u8
+#EXTINF:0,Trinitas
+http://89.35.222.169:8082/play/a00z
+#EXTINF:0,TRAVEL MIX
+http://89.38.8.131:39520
+#EXTINF:0,TvH
+http://89.35.222.169:8082/play/a01e
+#EXTINF:0,TVR HD
+http://89.38.8.131:39525
+#EXTINF:0,TVR INTERNATIONAL
+http://89.38.8.130:39458
+#EXTINF:-1 $ExtFilter=”Romania”,TVR 1
+http://89.38.8.130:39410
+#EXTINF:0 type=”stream” , Tvr 2
+http://dgf.icx.ro/digiedge2/tvr2ehq/index.m3u8?is=38&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1,TVR 3
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/505.m3u8
+#EXTINF:0 type=”stream” , Tv 1000
+http://dgf.icx.ro/digiedge2/tv1000ehq/index.m3u8?is=43&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Travel Channel
+http://dgf.icx.ro/digiedge2/travelchannelehq/index.m3u8?is=21&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Tv Paprika
+http://dgf.icx.ro/digiedge2/tvpaprikaehq/index.m3u8?is=39&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,UTV music
+http://89.38.8.130:39447
+#EXTINF:0,VH1 music
+http://89.38.8.130:39455
+#EXTINF:-1,VH1 Classic
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1117.m3u8
+#EXTINF:0 type=”stream” , Viasat History
+http://dgf.icx.ro/digiedge2/viasathistoryehq/index.m3u8?is=41&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Viasat Nature
+http://dgf.icx.ro/digiedge2/viasatnatureehq/index.m3u8?is=42&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Viasat Explore
+http://dgf.icx.ro/digiedge2/viasatexplorerehq/index.m3u8?is=40&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1,Zu TV
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/506.m3u8
+#EXTINF:0, Hustler HD
+http://89.38.8.131:39527
+
+#EXTM3U8
+#EXTINF:-1,1 Music Channel
+http://x1-music-channelx.api.channel.livestream.com/3.0/playlist.m3u8
+#EXTINF:-1,1 Classic
+http://89.38.8.131:39496
+#EXTINF:-1,ACASA HD
+http://89.38.8.131:39534
+#EXTINF:-1,Acasa TV
+http://89.38.8.130:39417
+#EXTINF:-1,ACASA GOLD
+http://89.38.8.131:39508
+#EXTINF:0,ACASA TV MD
+http://hls.protv.md/acasatv/acasatv.m3u8
+#EXTINF:0,ANIMAL PLANET
+http://89.38.8.130:39424
+#EXTINF:0,Antena 1
+http://89.38.8.130:39412
+#EXTINF:0,ANTENA STARS
+http://89.38.8.130:39431
+#EXTINF:0,ANTENA 3
+http://89.38.8.130:39421
+#EXTINF:0,ANIMAL PLANET
+http://89.38.8.130:39424
+#EXTINF:0 type=”stream” ,Atomic Tv
+http://5.154.185.153/hls/live.m3u8
+#EXTINF:-1,AMC RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1203.m3u8
+#EXTINF:-1,AXN Romania
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/442.m3u8
+#EXTINF:-1,AXN White Ro
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/469.m3u8
+#EXTINF:-1,AXN Black Ro
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/468.m3u8
+#EXTINF:0 type=”stream” , Bollywood Classic
+http://telekomtv.ro.edgesuite.net/shls/LIVE$BollywoodClassic/6.m3u8/Level(545259)?start=LIVE&end=END
+#EXTINF:0 type=”stream” , Bollywood TV
+http://telekomtv.ro.edgesuite.net/shls/LIVE$BollywoodTVFilm/6.m3u8/Level(545259)?start=LIVE&end=END
+#EXTINF:0 type=”stream” , B1 Tv
+http://dgf.icx.ro/digiedge2/b1tvehq/index.m3u8?is=29&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,BOOMERANG
+http://89.38.8.131:39517
+#EXTINF:0,CARTOON NETWORK
+http://89.38.8.131:39516
+#EXTINF:0 type=”stream” , Cinethronix
+http://webmobile.xdev.ro:81/tv25/playlist.m3u8
+#EXTINF:-1,Cinemax Ro
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/476.m3u8
+#EXTINF:-1,Cinemax 2 HD
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1749.m3u8
+#EXTINF:0 type=”stream” , Digi Sport 1
+http://dgf.icx.ro/digiedge/digisport1ehq/index.m3u8?is=1&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi Sport 2
+http://dgf.icx.ro/digiedge/digisport2ehq/index.m3u8?is=2&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi Sport 3
+http://dgf.icx.ro/digiedge/digisport3ehq/index.m3u8?is=3&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi Sport 4
+http://dgf.icx.ro/digiedge/digisport4ehq/index.m3u8?is=49&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,DOLCE SPORT 1
+http://89.38.8.130:39441
+#EXTINF:0,DOLCE SPORT 2
+http://89.38.8.130:39442
+#EXTINF:-1,DOLCE SPORT 3
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1946.m3u8
+#EXTINF:-1,DOLCE SPORT 4
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/2104.m3u8
+#EXTINF:0,DOLCE SPORT 5
+http://89.38.8.130:39422
+#EXTINF:0,DOLCE SPORT 6
+http://89.38.8.130:39446
+#EXTINF:0 type=”stream” , Digi Life
+http://dgf.icx.ro/digiedge2/digilifeehq/index.m3u8?is=6&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi World
+http://dgf.icx.ro/digiedge2/digiworldehq/index.m3u8?is=5&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi Animal World
+http://dgf.icx.ro/digiedge2/digianimalworldehq/index.m3u8?is=16&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1,Discovery HD Showcase RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1764.m3u8
+#EXTINF:0,DISCOVERY CHANNEL
+http://89.38.8.130:39423
+#EXTINF:0,DISCOVERY SCIENCE
+http://89.38.8.130:39481
+#EXTINF:0 type=”stream” , Disney Junior
+http://dgf.icx.ro/digiedge2/disneyjuniorehq/index.m3u8?is=18&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Disney Channel
+http://dgf.icx.ro/digiedge2/disneychannelehq/index.m3u8?is=17&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Digi 24
+http://81.196.0.126/digi24edge/smil:digi24.smil/chunklist_w298768590_b1213681_sleng.m3u8
+#EXTINF:-1,Digi Film
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/201.m3u8
+#EXTINF:0,Diva
+http://89.38.8.131:39507
+#EXTINF:-1,DOQ
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/550.m3u8
+#EXTINF:-1,Disc ID Xtra HD RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/2055.m3u8
+#EXTINF:-1,DTX HD RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/2054.m3u8
+#EXTINF:0,ETNO TV
+http://89.38.8.130:39451
+#EXTINF:0,EURONEWS
+http://89.38.8.130:39468
+#EXTINF:0 type=”stream” , Eurosport 1
+http://dgf.icx.ro/digiedge2/eurosportehq/index.m3u8?is=31&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Eurosport 2
+http://dgf.icx.ro/digiedge2/eurosport2ehq/index.m3u8?is=32&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1,ExtremeSport-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1093.m3u8
+#EXTINF:-1,Film Cafe
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/510.m3u8
+#EXTINF:-1,FilmBox-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1099.m3u8
+#EXTINF:-1,FilmBox Extra HD RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1747.m3u8
+#EXTINF:0,FASHION
+http://89.38.8.130:39474
+#EXTINF:-1,Fishing and Hunting
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/549.m3u8
+#EXTINF:0,FAVORIT
+http://89.38.8.130:39454
+#EXTINF:-1,History-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1108.m3u8
+#EXTINF:0,HBO
+http://89.38.8.130:39476
+#EXTINF:-1,HBO 2
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1746.m3u8
+#EXTINF:-1,HBO 3
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/203.m3u8
+#EXTINF:0,HAPPY TV
+http://89.38.8.130:39432
+#EXTINF:0 type=”stream” , Hit Music Channel
+http://dgf.icx.ro/digiedge2/hitmusicchannelehq/index.m3u8?is=35&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , History Channel
+http://dgf.icx.ro/digiedge2/historychannelehq/index.m3u8?is=20&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0, Ibiza Global TV
+http://server10.streaming-pro.com:1937/live/ibgtvlive/playlist.m3u8
+#EXTINF:-1,ID Xtra
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/511.m3u8
+#EXTINF:-1,Impact Tv MANELE
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1765.m3u8
+#EXTINF:-1,Jim Jam RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1090.m3u8
+#EXTINF:0,KANAL D
+http://89.38.8.130:39418
+#EXTINF:0 type=”stream” , Kiss Tv
+http://dgf.icx.ro/digiedge2/kisstvehq/index.m3u8?is=34&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,LOOK TV
+http://89.38.8.130:39485
+#EXTINF:-1,Look Plus RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/504.m3u8
+#EXTINF:0 type=”stream” , Music Channel
+http://dgf.icx.ro/digiedge2/musicchannelehq/index.m3u8?is=25&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,MTV
+http://89.38.8.130:39439
+#EXTINF:0,MTV LIVE HD
+http://89.38.8.131:39541
+#EXTINF:-1,MusicChannel-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1092.m3u8
+#EXTINF:-1,MTV Dance RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1766.m3u8
+#EXTINF:0,MOOZ HD
+http://89.38.8.131:39535
+#EXTINF:0,MOOZ RO!
+http://89.38.8.131:39550
+#EXTINF:0 type=”stream” , Minimax
+http://dgf.icx.ro/digiedge2/minimaxehq/index.m3u8?is=37&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Megamax
+http://dgf.icx.ro/digiedge2/megamaxehq/index.m3u8?is=47&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Nickelodeon
+http://dgf.icx.ro/digiedge2/nickelodeonehq/index.m3u8?is=28&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,NASU TV
+http://89.38.8.130:39436
+#EXTINF:0,NATIONAL 24 PLUS
+http://89.38.8.130:39438
+#EXTINF:0,NATIONAL GEOGRAPHIC
+http://89.38.8.131:39518
+#EXTINF:0,Nat Geo Wild
+http://89.35.222.169:8082/play/a01r
+#EXTINF:0,NATIONAL TV
+http://89.38.8.130:39414
+#EXTINF:-1,National24 RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1202.m3u8
+#EXTINF:0,NICK JR
+http://89.38.8.131:39506
+#EXTINF:0 type=”stream” , Nat Geo Wild
+http://dgf.icx.ro/digiedge2/nationalgeographicwildehq/index.m3u8?is=33&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , National Geographic
+http://dgf.icx.ro/digiedge2/nationalgeographicehq/index.m3u8?is=19&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,PRIMA TV
+http://89.38.8.130:39413
+#EXTINF:-1,Paramount Channel-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1110.m3u8
+#EXTINF:0,PRO CINEMA
+http://89.38.8.130:39416
+#EXTINF:0,PRO TV
+http://89.38.8.130:39415
+#EXTINF:0,PUBLIKA
+http://89.38.8.130:39460
+#EXTINF:0 type=”stream” , Realitatea Tv
+http://dgf.icx.ro/digiedge2/realitateatvehq/index.m3u8?is=26&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Romania Tv
+http://dgf.icx.ro/digiedge2/romaniatvehq/index.m3u8?is=27&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,Show Time Iq Movie Television
+http://mediafilmcenter.ro:1935/live/myStream/chunklist_w1594518285.m3u8
+#EXTINF:0,SPORT RO
+http://89.38.8.130:39430
+#EXTINF:-1,Sundance HD RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1748.m3u8
+#EXTINF:0,TARAF HD
+http://89.38.8.130:39450
+#EXTINF:0,TNT
+http://89.38.8.131:39512
+#EXTINF:-1,TLC-RO
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1096.m3u8
+#EXTINF:0,Trinitas
+http://89.35.222.169:8082/play/a00z
+#EXTINF:0,TRAVEL MIX
+http://89.38.8.131:39520
+#EXTINF:0,TvH
+http://89.35.222.169:8082/play/a01e
+#EXTINF:0,TVR HD
+http://89.38.8.131:39525
+#EXTINF:0,TVR INTERNATIONAL
+http://89.38.8.130:39458
+#EXTINF:-1 $ExtFilter=”Romania”,TVR 1
+http://89.38.8.130:39410
+#EXTINF:0 type=”stream” , Tvr 2
+http://dgf.icx.ro/digiedge2/tvr2ehq/index.m3u8?is=38&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1,TVR 3
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/505.m3u8
+#EXTINF:0 type=”stream” , Tv 1000
+http://dgf.icx.ro/digiedge2/tv1000ehq/index.m3u8?is=43&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Travel Channel
+http://dgf.icx.ro/digiedge2/travelchannelehq/index.m3u8?is=21&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Tv Paprika
+http://dgf.icx.ro/digiedge2/tvpaprikaehq/index.m3u8?is=39&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0,UTV music
+http://89.38.8.130:39447
+#EXTINF:0,VH1 music
+http://89.38.8.130:39455
+#EXTINF:-1,VH1 Classic
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/1117.m3u8
+#EXTINF:0 type=”stream” , Viasat History
+http://dgf.icx.ro/digiedge2/viasathistoryehq/index.m3u8?is=41&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Viasat Nature
+http://dgf.icx.ro/digiedge2/viasatnatureehq/index.m3u8?is=42&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:0 type=”stream” , Viasat Explore
+http://dgf.icx.ro/digiedge2/viasatexplorerehq/index.m3u8?is=40&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1,Zu TV
+http://iptvserver.noip.me:8000/live/raduplatica@gmail.com/ThfOkwe1fq/506.m3u8
+#EXTINF:0, Hustler HD
+http://89.38.8.131:39527

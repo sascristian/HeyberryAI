@@ -1,0 +1,41 @@
+					#   eliminar variable "resulte" cuando este completo
+					#   añadir linea entre cada enlace de imagen
+					#   consume la misma cantidad de net que el yt no debe dar exp
+					#   usar htmlencoding para que pueda usar acentos eñes y demas :p
+					elif cmd.lower()== "gis":
+						try:
+							imagenes=""
+							resulte="Inicio 0%"
+							search = str(urllib.request.quote(args))
+							print("Solicitando url")
+							resulte="Solicitud 5%"
+							#cx=Codigo del custom search engine, se usa 
+							url = urlreq.urlopen("https://www.googleapis.com/customsearch/v1?q="+search+"&cx=015216130410766087942%3A_drhwyvq380&fileType=bmp%2Cgif%2Cpng%2Cjpg&num=3&key=AIzaSyDWrC2gwkdMEUZEwfXYq9j4KKf45C2Ifsg")
+							resulte="Decodificacion 10%"
+							udict = url.read().decode('utf-8')  #El utf-8 soporta acentos (creo) n_n
+							resulte="Decodificacion 20%"
+							data = json.loads(udict)                        #carga base de datos en json
+							resulte="Decodificacion 30%"
+							rest = []
+							resulte="Decodificacion 50%"
+							if int(data["searchInformation"]["totalResults"])==0:
+								room.message("No he encontrado resultados para "+args)
+								return
+							for f in data["items"]:                      #cada objeto es un atributo del video :v
+								rest.append(f)
+							resulte="Obtencion de enlaces 80%"
+							try:
+								for i,v in enumerate(rest):
+									try:
+										imagenes+=(str(i+1)+". "+str(v["pagemap"]["cse_image"][0]["src"])+"\r")
+									except:
+										pass
+							except:
+								print("error encontrado")
+								print(rest)
+							resulte="Enlace obtenido 90%"
+							room.message(imagenes)
+						except:
+							resultado="Me encontre un problema, sorry "+resulte+" "+imagenes
+						finally:
+							room.message(resultado)#fin del metodo no regresa nada, pero igual me gusta dejar esto
