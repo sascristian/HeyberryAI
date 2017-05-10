@@ -18,4 +18,4 @@ display service
 
 # examples
 
-![alt tag](https://github.com/JarbasAI/jarbas---pygtk---GUI/blob/master/screenshot.jpg)
+![alt tag](https://github.com/JarbasAI/JarbasAI/blob/dev/mycroft/jarbas-skills/skill_art/psy/0.png)

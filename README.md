@@ -161,6 +161,8 @@ Lots of skills are bundled by default with this fork, following list may be outd
 
 [Rhymes Skill](https://github.com/JarbasAI/JarbasAI/tree/dev/mycroft/jarbas-skills/LILACS_rhymes) - Get word rhymes on demand
 
+[Art Skill](https://github.com/JarbasAI/JarbasAI/tree/dev/mycroft/jarbas-skills/skill_art) - Generates psychedelic pictures or geometric patterns
+
 ### Informational Skills
 
         skills that give you information
