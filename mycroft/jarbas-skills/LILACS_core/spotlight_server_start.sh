@@ -1,0 +1,1 @@
+java -jar dbpedia-spotlight-latest.jar en http://localhost:2222/rest
