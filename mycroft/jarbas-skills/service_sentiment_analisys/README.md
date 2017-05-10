@@ -1,0 +1,1 @@
+# mycroft---sentiment-analisys---skill

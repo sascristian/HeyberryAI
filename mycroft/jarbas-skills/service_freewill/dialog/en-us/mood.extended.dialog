@@ -1,0 +1,3 @@
+I am feeling {{ mood1 }} and {{ mood2 }}
+My mood is {{ mood1 }} and {{ mood2 }}
+Feel {{ mood1 }} and {{ mood2 }}
