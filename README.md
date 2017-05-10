@@ -128,7 +128,7 @@ Lots of skills are bundled by default with this fork, following list may be outd
 
 [Troll Objective](https://github.com/JarbasAI/JarbasAI/tree/dev/mycroft/jarbas-skills/objective-troll) - Attempts to troll user by showing a video or website randomly
 
-
+[Names Skill](https://github.com/JarbasAI/JarbasAI/tree/dev/mycroft/jarbas-skills/skill-names) - Says random names, helpfull to name your baby
 ### Control Skills
 
         skills that help you control stuff
