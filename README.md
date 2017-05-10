@@ -20,6 +20,8 @@ use cases: intent execution interception, passive utterance listening
 
 # Intent Parsing and Intent Layers
 
+[Intent Parser and Intent Layers](https://github.com/JarbasAI/service_intent_layer) are tools for continuous dialog
+
 Intent Parser allows any skill to get a intent from an utterance, or the skill to which an intent belongs too
 
 Intent Layers makes it possible to give state to mycroft inside skills, we can switch layers to have different intents active at different times
@@ -80,18 +82,18 @@ Jarbas core uses [LILACS](https://github.com/ElliotTheRobot/LILACS-mycroft-core)
 - standard skills folder is now jarbas_skills, msm may need changes because skill_dir path is hardcoded
 - do not install default skills using msm
 - created a folder named database that is populated with created/scraped content during jarbas life-time (offline db)
+- implement disable speak flag for mute skill
+
 
 # Included skills by default
 
-Lots of skills are bundled by default with this fork, following list is a work in progress
+Lots of skills are bundled by default with this fork, following list may be outdated
 
 ### Basic Skills
 
         these skills are more or less passive, they are mostly helper skills to be used elsewhere
 
 [Feedback Skill](https://github.com/JarbasAI/mycroft-feedback-skill) - Gives positive or negative feedback to last executed action
-
-[Objectives Skill](https://github.com/JarbasAI/mycroft---objectives-skill) - Programmable objectives with several ways of being executed
 
 [Event Skill](https://github.com/forslund/event_skill) - chains of events , programmable times
 
@@ -120,7 +122,11 @@ Lots of skills are bundled by default with this fork, following list is a work i
 
 [Astronomy Picture of the Day](https://github.com/JarbasAI/mycroft---astronomy-picture-of-teh-day) - Downloads and display NASA astronomy picture of the day
 
-[EPIC Satellite Skill] - Satellite Imagery
+[EPIC Satellite Skill](https://github.com/JarbasAI/mycroft---EPIC-skill) - Near real time Earth satellite imagery
+
+[LILACS Chatbot](https://github.com/ElliotTheRobot/LILACS-mycroft-core/tree/dev/mycroft/skills/LILACS_chatbot) - chatbot mode, intercepts utterances and answers with "crap"
+
+[Troll Objective]() - Attempts to troll user by showing a video or website randomly
 
 
 ### Control Skills
@@ -130,8 +136,6 @@ Lots of skills are bundled by default with this fork, following list is a work i
 [Mute Skill](https://github.com/JarbasAI/mycroft---mute-skill) - Disables and enables speech on demand
 
 [Wallpaper Skill](https://github.com/JarbasAI/mycroft---wallpaper---skill) - download and change wallpapers
-
-[Wifi Skill](https://github.com/JarbasAI/mycroft-wifi-skill) - manage wifi (network-manager)
 
 [Diagnostics Skill](https://github.com/the7erm/mycroft-skill-diagnostics) - System Info
 
@@ -149,22 +153,28 @@ Lots of skills are bundled by default with this fork, following list is a work i
 
 [Picture Search Skill](https://github.com/JarbasAI/mycroft-pictureskill) - Search and download pictures
 
-[Facebook Skill](https://github.com/JarbasAI/mycroft-facebook-skill) - Facebook Bot
+[Facebook Skill](https://github.com/JarbasAI/mycroft-facebook-skill) - Facebook Interaction, warns about chat messages, gives info and simulates some user actions
+
+[Facebook content objective]() - Makes posts on facebook
 
 [Proxy Scrapping Skill](https://github.com/JarbasAI/mycroft--proxy-scrapping---skill) - Get https proxys
-
-[Leaks Skill](https://github.com/JarbasAI/leaks-skill) - warn user about leaked info online
 
 
 ### Informational Skills
 
         skills that give you information
 
+[LILACS Knowledge](https://github.com/ElliotTheRobot/LILACS-mycroft-core/tree/dev/mycroft/skills/LILACS_knowledge) - searches several web sources for answers to different kinds of questions
+
+[Random wikipedia objective]() - Tells you a wikipedia entry about a random subject
+
+[Dumpmon Skill](https://github.com/JarbasAI/mycroft---dumpmon-skill) - Monitors dumpmon twitter for leaks and gives some stats
+
 [Translate Skill](https://github.com/jcasoft/TranslateSkill) - Translate and speak sentences into other languages
 
 [PhotoLocation Skill](https://github.com/JarbasAI/mycroft-photolocation-skill) - photos from locations
 
-[Bitcoin Price Skill](https://github.com/JarbasAI/jarbas-core/tree/dev/mycroft/skills/bitcoin) - current bitcoin price
+[Bitcoin Price Skill](https://github.com/chrison999/mycroft-skill-bitcoin-enhanced) - current bitcoin price
 
 [Articles Skill](https://github.com/JarbasAI/mycroft-articles-skill) - read/open articles from websites
 
@@ -173,8 +183,6 @@ Lots of skills are bundled by default with this fork, following list is a work i
 [Metal Recomendation Skill](https://github.com/JarbasAI/mycroft---metal-recomend---skill) - Recommends metal bands
 
 [Euromillions Skill](https://github.com/JarbasAI/mycroft---euromillions-skill) - last lottery numbers
-
-[Knowledge Skill](https://github.com/JarbasAI/mycroft---knowledge-skill) - saves/teachs you random things from wikipedia
 
 [Space Launch Skill](https://github.com/marksev1/Mycroft-SpaceLaunch-Skill) - Next rocket launch
 
@@ -188,11 +196,9 @@ Lots of skills are bundled by default with this fork, following list is a work i
 
 [Near Earth Object Tracking Skill](https://github.com/JarbasAI/mycroft---near-earth-object-tracker/) - tracks near earth objects
 
-[Fox News]
+[Fox News](https://github.com/chrison999/mycroft-skill-fox-news) - play fox news
 
-[CNN News]
-
-[CBC News]
+[CBC News](https://github.com/chrison999/mycroft-skill-cbc-news) - play CBC news
 
 ### New Clients
 
@@ -203,13 +209,15 @@ these are old experiments half-working, should not be used until a refactor is d
 
 # Developing skills for Jarbas
 
-THIS INFO IS SLIGHTLY OUTDATED, check the readme inside each module folder for better docs
-
 A [template skill](https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skills/template_skill/__init__.py) is available as a guideline
 
 ### Showing pictures
 
-        from mycroft.skills.displayservice import DisplayService
+        import sys
+        from os.path import dirname
+        # add skills folder to imports
+        sys.path.append(dirname(dirname(__file__)))
+        from service_display.displayservice import DisplayService
 
         in initialize -> self.display_service = DisplayService(self.emitter)
 
@@ -217,7 +225,11 @@ A [template skill](https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skil
 
 ### Playing Sound
 
-        from mycroft.skills.audioservice import AudioService
+        import sys
+        from os.path import dirname
+        # add skills folder to imports
+        sys.path.append(dirname(dirname(__file__)))
+        from service_audio.audioservice import AudioService
 
         in initialize -> self.audio_service = AudioService(self.emitter)
 
@@ -228,7 +240,11 @@ A [template skill](https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skil
 You can use objectives to have several ways of accomplishing something / randomness in intents
 
         from mycroft.skills.core import MycroftSkill
-        from mycroft.skills.objective_skill import ObjectiveBuilder
+        import sys
+        from os.path import dirname
+        # add skills folder to imports
+        sys.path.append(dirname(dirname(__file__)))
+        from service_objectives import ObjectiveBuilder
 
         __author__ = 'jarbas'
 
@@ -255,20 +271,15 @@ You can use objectives to have several ways of accomplishing something / randomn
                 intent_params = {"utterance": "testing alright"}
                 my_objective.add_way(goal, intent, intent_params)
 
-                # get objective intent and handler
-
-                # get an intent to execute this objective by its name
-                # intent , self.handler = my_objective.get_objective_intent()
-
-                # instead of name to trigger objective lets register a keyword from voc
-                # required keywords same as doing .require(keyword) in intent
+                # require keywords
                 keyword = "TestKeyword"
-                my_objective.require(keyword
+                my_objective.require(keyword)
+
+                # get objective intent and handler
                 intent, self.handler = my_objective.build()
 
                 # objective can still be executed without registering intent by saying
-                # objective objective_name , and directly using objective skill
-
+                # "objective " objective_name , and directly using objective skill
                 self.register_intent(intent, self.handler)
 
             def stop(self):
@@ -286,7 +297,7 @@ in this case "speak" intent and say "this is test" or "testing alright"
 
 on every skill there is a converse method, this can be used to allow last executed skill to process next utterance
 
-returning True will stop the utterance from triggering an intent and allow it to be processed by the skill
+returning True will stop the utterance from triggering an intent and allow it to be processed by the skill instead of IntentService
 
 If you expect a response right away in order to make the dialog more realistic you can do
 
@@ -308,13 +319,13 @@ Here is an example of parrot skill, that will talk back everything to user
                 else:
                     return False
 
-### Sequential Events - Registering and de-registering intents
+### Sequential Events - Registering and de-registering intents, passive utterance interception
 
 It is also possible to require a few steps in order to achieve some action
 
-We can use converse method to (de)register intents in case correct utterance is heard and always return false so the utterance is processed in intent skill
+We can use converse method to passively intercept utterance and (de)register intents in case (in)correct utterance is heard
 
-So you dont need to parse the utterance to determine intent, just determine if it is expected/valid somehow
+May be useful if you dont need to parse the utterance to determine intent, just determine if it is expected/valid somehow
 
             def initialize(self):
                 ....
@@ -344,37 +355,39 @@ So you dont need to parse the utterance to determine intent, just determine if i
 
 # Intent Parsing inside skills
 
- with intent parser abstracted we can also do the parsing by registering intents inside the skill
+ with some changes to IntentService class we can now determine intents inside a skill and know which skill they belong to
 
-            from mycroft.skills.intent_parser import IntentParser
+
+            import sys
+            from os.path import dirname
+            # add skills folder to imports
+            sys.path.append(dirname(dirname(__file__)))
+            from service_intent_layer import IntentParser
 
             in initialize -> self.intent_parser = IntentParser(self.emitter)
 
-            registering intents -> intent = IntentBuilder('NameofIntent')
-                                -> self.register_intent(intent, self.handle_intent)
-
             on converse method -> get intent instead of manually parsing utterance
                 def converse(self, transcript, lang="en-us"):
-                    determined, intent = self.intent_parser.determine_intent(transcript)
-                    if determined:
-                        # intent was registered and detected on own parser
-                        # no need to parse utterance
-                        # return false to handle in intent skill
-                        return False
-                    else:
-                        handled = False
-                        # Handle utterance manually
-                        if handled:
+                     # check if some of the intents will be handled
+                    intent, id = self.intent_parser.determine_intent(transcript[0])
+                    if id == 0:
+                        # no intent will be triggered
+                        pass
+                    elif id != self.skill_id:
+                        # no longer inside this conversation
+                        skill_id = self.intent_parser.get_skill_id(intent)
+                        # utterance will trigger skill_id
+                        if self.intercept_flag:
+                            # dont let intent class handle this if you dont want to
                             return True
                     return False
 
 
-# Coding States - Intent Trees
+# Coding States - Intent Layers
 
-In this example konami code was made in a way that each letter is a state, each state has different intents available to be executed
+Each layer has different intents available to be executed, this allows for much easier sequential event programming
 
-
-            from mycroft.skills.intent_parser import IntentTree
+[Konami Code Example](https://github.com/JarbasAI/jarbas-core/blob/dev/mycroft/skills/konami_code/__init__.py) - layers with a single intent
 
             in initialize
 
@@ -383,51 +396,49 @@ In this example konami code was made in a way that each letter is a state, each 
                     ["KonamiBIntent"], ["KonamiAIntent"]]
 
             # 60 is the number of seconds for the layer timer
-            self.tree = IntentTree(self.emitter, layers, 60)
-            # this should be on initialize of every skill
-            self.emitter.on('enable_intent', self.handle_enable_intent)
-            self.emitter.on('disable_intent', self.handle_disable_intent)
+            self.layers = IntentLayer(self.emitter, layers, 60)
 
-            to activate next layer/state -> self.tree.next()
-            to activate previous layer/state -> self.tree.previous()
-            to activate layer/state 0 -> self.tree.reset()
-            to get current layer/state -> state = self.tree.current_layer
+            to activate next layer/state -> self.layers.next()
+            to activate previous layer/state -> self.layers.previous()
+            to activate layer/state 0 -> self.layers.reset()
+            to get current layer/state -> state = self.layers.current_layer
 
             each tree has a timer, after changing state this timer starts and at the end resets the tree
-            to disable timer, after doing next/previous -> self.tree.stop_timer()
+            to disable timer, after doing next/previous -> self.layers.stop_timer()
 
             to go directly to a layer do -> self.tree.activate_layer(layer_num)
-            in this case no timer is started so you should also do - > self.tree.start_timer()
+            in this case no timer is started so you should also do - > self.layers.start_timer()
 
-            on converse -> parse intent/utterance and manipulate tree if needed (bad sequence)
+            on converse -> parse intent/utterance and manipulate layers if needed (bad sequence)
 
-check parrot , dictation skill and konami code for state/sequential/continuous events examples
 
-# Multiple Intent Trees
+# Multiple Intent Layers
 
-Actual trees can be made by making a IntentTree for each intent, we can always do
+"Trees" can be made by making a IntentLayer for each intent, we can use layers as branches and do
 
-            self.tree_1.disable()
+            self.branch = IntentLayer(self.emitter, layers, 60)
+            self.branch.disable()
 
-and have an inactive tree to activate later when needed
+and to activate later when needed
 
-            self.tree_1.reset()
+            self.branch.reset()
 
-intent parsing in converse method can manipulate correct tree if needed
+intent parsing in converse method can manipulate correct tree branch if needed
 
 this allows for much more complex skills with each intent triggering their own sub-intents / sub - trees
 
 on demand manipulation of tree layers may also open several unforeseen opportunities for intent data structures
 
-            self.tree.add_layer([intent_list])
-            self.tree.remove_layer(layer_num)
-            self.tree.replace_layer(self, layer_num, intent_list)
-            list = self.tree.find_layer_num(self, intent_list)
+            self.branch.add_layer([intent_list])
+            self.branch.remove_layer(layer_num)
+            self.branch.replace_layer(self, layer_num, intent_list)
+            list_of_layers_with_this_intent_on_it = self.branch.find_layer(self, intent_list)
+
 
 
 # Privacy Enhancements (requires network manager)
 
-removed from now, to be reworked without network manager being needed
+removed from now, to be reworked without network manager
 
 - wifi disable/enable
 
@@ -575,8 +586,6 @@ When the configuration loader starts, it looks in those locations in that order,
 # Running Mycroft Quick Start
 To start the essential tasks run `./mycroft.sh start`. Which will start the service, skills, voice and cli (using --quiet mode) in a detched screen and log the output of the screens to the their respective log files (e.g. ./log/mycroft-service.log).
 Optionally you can run `./mycroft.sh start -v` Which will start the service, skills and voice. Or `./mycroft.sh start -c` Which will start the service, skills and cli.
-
-in this fork all new services are also started, if you want to run in basic mode `./mycroft.sh start -b` can be used for skills, service and cli --quiet only
 
 To stop Mycroft run `./mycroft.sh stop`. This will quit all of the detached screens.
 To restart Mycroft run './mycroft.sh restart`.
