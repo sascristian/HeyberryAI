@@ -1,4 +1,4 @@
-# LILACS chatbot skill
+# LILACS  rhymes skill
 
 simple skill that gets rhymes of words using lilacs backend
 

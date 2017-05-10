@@ -83,7 +83,7 @@ Jarbas core uses [LILACS](https://github.com/ElliotTheRobot/LILACS-mycroft-core)
 - do not install default skills using msm
 - created a folder named database that is populated with created/scraped content during jarbas life-time (offline db)
 - implement disable speak flag for mute skill
-
+- [Morse Code TTS engine](https://github.com/JarbasAI/mycoft---morse-code-tts)
 
 # Included skills by default
 
@@ -159,6 +159,7 @@ Lots of skills are bundled by default with this fork, following list may be outd
 
 [Proxy Scrapping Skill](https://github.com/JarbasAI/mycroft--proxy-scrapping---skill) - Get https proxys
 
+[Rhymes Skill](https://github.com/JarbasAI/JarbasAI/tree/dev/mycroft/jarbas-skills/LILACS_rhymes) - Get word rhymes on demand
 
 ### Informational Skills
 
