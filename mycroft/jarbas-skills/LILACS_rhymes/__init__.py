@@ -58,8 +58,11 @@ class LILACSRhymesSkill(MycroftSkill):
                 node = node.replace(u, "")
             nodes = {node: 2}
         self.log.info("nodes: " + str(nodes))
-        rhymes = self.service.adquire(nodes.keys()[0], "wordnik")["wordnik"]["relations"]["rhyme"]
-        self.speak_dialog("rhyme", {"subject":nodes.keys()[0], "word": random.choice(rhymes)})
+        try:
+            rhymes = self.service.adquire(nodes.keys()[0], "wordnik")["wordnik"]["relations"]["rhyme"]
+            self.speak_dialog("rhyme", {"subject":nodes.keys()[0], "word": random.choice(rhymes)})
+        except:
+            self.speak("i dont know...")
 
     def stop(self):
         pass
