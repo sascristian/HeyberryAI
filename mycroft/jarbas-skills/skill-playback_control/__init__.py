@@ -2,7 +2,7 @@
 from os.path import abspath, dirname
 import sys
 sys.path.append(dirname(dirname(__file__)))
-from mycroft_media import MediaSkill
+from mycroft.skills.media import MediaSkill
 from mycroft.messagebus.message import Message
 from mycroft.configuration import ConfigurationManager
 from mycroft.util.log import getLogger

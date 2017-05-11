@@ -1,5 +1,5 @@
 from os.path import abspath
-
+from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.message import Message
 import sys
 from os.path import dirname
@@ -21,8 +21,13 @@ class Wordnik(KnowledgeBackend):
         self.name = name
         self.emitter.on('WordnikKnowledgeAdquire', self._adquire)
         apiUrl = 'http://api.wordnik.com/v4'
-        # TODO read from config
-        apiKey = "39f2ba7ddaef2fe609301073d1e014ba34ecfb7574a20e83c"
+
+        try:
+            self.config = ConfigurationManager.instance().get("APIS")
+            apiKey = self.config["Wordnik"]
+        except:
+            self.config = ConfigurationManager.instance().get("LILACS")["Wordnik"]
+            apiKey = self.config["Wordnik"]
         client = swagger.ApiClient(apiKey, apiUrl)
         self.wordApi = WordApi.WordApi(client)
         self.limit = 5

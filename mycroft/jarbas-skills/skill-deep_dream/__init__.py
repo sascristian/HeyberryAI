@@ -30,7 +30,6 @@ logger = getLogger(__name__)
 dreamlogger = getLogger('Dream ')
 
 class DreamSkill(MycroftSkill):
-
 	def __init__(self):
 		super(DreamSkill, self).__init__(name="DreamSkill")
 		self.reload_skill = False

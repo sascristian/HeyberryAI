@@ -39,12 +39,9 @@ class TemplateSkill(MycroftSkill):
     def __init__(self):
         super(TemplateSkill, self).__init__(name="TemplateSkill")
         # initialize your variables
-        self.flag = False
+        self.intercept_flag = False
 
     def initialize(self):
-        # not sure where to put this in core, should be in initialize of every skill
-        self.emitter.on('enable_intent', self.handle_enable_intent)
-        self.emitter.on('disable_intent', self.handle_disable_intent)
         # initialize display service
         self.display_service = DisplayService(self.emitter)
         # initialize audio service
@@ -56,13 +53,12 @@ class TemplateSkill(MycroftSkill):
         # register objectives
         self.build_objectives()
         # make tree
-        self.build_intent_tree()
+        self.build_intent_layers()
 
-    def build_intent_tree(self):
+    def build_intent_layers(self):
         layers = [["FirstIntent"], ["SecondIntent"]]
         timer_timeout_in_seconds = 60
         self.layers = IntentLayers(self.emitter, layers, timer_timeout_in_seconds)
-
 
     def build_intents(self):
         # build
@@ -76,7 +72,6 @@ class TemplateSkill(MycroftSkill):
                              self.handle_enable_second_intent)
         self.register_intent(second_intent,
                              self.handle_second_intent)
-
 
     def build_objectives(self):
         # build objectives
@@ -92,14 +87,12 @@ class TemplateSkill(MycroftSkill):
         my_objective.add_way(goal, intent, intent_params)
 
         # get objective intent and handler
-        # required keywords same as doing .require(keyword) in intent
-        # no keyword uses objective name as keyword
+        # empty keyword uses objective name as keyword
         keyword = "TestKeyword"
-        intent, self.handler = my_objective.get_objective_intent(keyword)
+        my_objective.require(keyword)
+        intent, self.handler = my_objective.build()
         # register intent to execute objective by keyword
         self.register_intent(intent, self.handler)
-        # if wanted register in self-parser
-        self.intent_parser.register_intent(intent.__dict__)
 
     def handle_result_intent(self, message):
         # do stuff and get results
@@ -146,39 +139,19 @@ class TemplateSkill(MycroftSkill):
         self.layers.reset()
 
     def converse(self, transcript, lang="en-us"):
-        # determine intent from transcript
-        intent, id = self.intent_parser.determine_intent(transcript[0], lang)
-        if id == self.skill_id:
-            # some intent from this skill will trigger
-            # do nothing and let it trigger
-            return False
-        else:
-            # reset intent layers to ground state if desired
-            self.layers.reset()
-
-        if intent != "":
-            # intent determined, other skill will trigger
-            # do stuff if desired
+        # check if some of the intents will be handled
+        intent, id = self.intent_parser.determine_intent(transcript[0])
+        if id == 0:
+            # no intent will be triggered
             pass
-
-        elif self.flag:
-            # handle utterance manually if desired
-            # keep listening without wakeword
-            self.speak("handle utterance manually here", expect_response=True)
-            return True
-
-        # tell intent skill if you handled intent
+        elif id != self.skill_id:
+            # no longer inside this conversation
+            skill_id = self.intent_parser.get_skill_id(intent)
+            # utterance will trigger skill_id
+            if self.intercept_flag:
+                # dont let intent class handle this if you dont want to
+                return True
         return False
-
-    def feedback(self, feedback, lang):
-        if feedback == "positive":
-            # do stuff on positive reinforcement words intent
-            # objectives use this to adjust probabilities
-            pass
-        elif feedback == "negative":
-            # do stuff on negative reinforcement words intent
-            # objectives use this to adjust probabilities
-            pass
 
 
 def create_skill():

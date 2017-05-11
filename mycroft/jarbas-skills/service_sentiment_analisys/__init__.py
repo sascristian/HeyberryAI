@@ -23,7 +23,7 @@ class SentimentSkill(MycroftSkill):
         # TODO make config
         self.defaultapi = 2
 
-        self.emitter.on("sentiment_request", self.handle_sentiment_request)
+
 
     def initialize(self):
         sentiment_intent = IntentBuilder("SentimentIntent"). \
@@ -37,6 +37,8 @@ class SentimentSkill(MycroftSkill):
         sentiment3_intent = IntentBuilder("Sentiment3Intent"). \
             require("Sentiment3Keyword").build()
         self.register_intent(sentiment3_intent, self.handle_sentiment3_intent)
+
+        self.emitter.on("sentiment_request", self.handle_sentiment_request)
 
     def handle_sentiment_request(self, message):
         txt = message.data.get('utterances')[0]

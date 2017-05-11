@@ -29,6 +29,8 @@ class KonamiCodeSkill(MycroftSkill):
         self.intent_parser = IntentParser(self.emitter)
         self.build_intents()
         self.build_intent_layers()
+        self.emitter.on('enable_intent', self.handle_enable_intent)
+        self.emitter.on('disable_intent', self.handle_disable_intent)
 
     def build_intents(self):
 
