@@ -1,0 +1,3 @@
+(shutdown|stop|exit|terminate) (skill|skill id|skill with id) (?P<Skill_Shutdown>.*)
+(skill|skill id|skill with id) (shutdown|stop|exit|terminate) (?P<Skill_Shutdown>.*)
+(shutdown|stop|exit|terminate) (?P<Skill_Shutdown>.*) (skill)

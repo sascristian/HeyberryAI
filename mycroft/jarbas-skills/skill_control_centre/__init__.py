@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
+# TODO
+# - change (some) config file fields (voice)
+# - msm uninstall skill
+# - restart / shutdown mycroft service
 
 from adapt.intent import IntentBuilder
 from mycroft.messagebus.message import Message
@@ -31,6 +35,8 @@ class ControlCenterSkill(MycroftSkill):
         super(ControlCenterSkill, self).__init__(name="ControlCenterSkill")
         # initialize your variables
         self.reload_skill = False
+        self.external_reload = False
+        self.external_shutdown = False
         self.skill_name_to_id = {}
         self.loaded_skills = [] # [{"name":skill_name, "id":skill_id, "folder":skill_folder}]
         self.time_out = 20
@@ -47,12 +53,12 @@ class ControlCenterSkill(MycroftSkill):
                              self.handle_manifest_intent)
 
         reload_intent = IntentBuilder("SkillReloadIntent") \
-            .require("ReloadKeyword").build()
+            .require("Skill_Reload").build()
         self.register_intent(reload_intent,
                              self.handle_reload_skill_intent)
 
         shutdown_intent = IntentBuilder("SkillShutdownIntent") \
-            .require("ShutdownKeyword").build()
+            .require("Skill_Shutdown").build()
         self.register_intent(shutdown_intent,
                              self.handle_shutdown_skill_intent)
 
@@ -71,12 +77,7 @@ class ControlCenterSkill(MycroftSkill):
     def handle_receive_loaded_skills(self, message):
         self.loaded_skills = message.data["skills"]
         for skill in self.loaded_skills:
-            self.skill_name_to_id[skill["name"]] = skill["id"]
-            self.skill_name_to_id[skill["name"].lower()] = skill["id"]
-            self.skill_name_to_id[skill["name"]+"skill"] = skill["id"]
-            self.skill_name_to_id[skill["name"].lower()+"skill"] = skill["id"]
-            self.skill_name_to_id[skill["name"] + "Skill"] = skill["id"]
-            self.skill_name_to_id[skill["name"].lower() + "Skill"] = skill["id"]
+            self.skill_name_to_id[skill["name"].lower().replace("_", " ").replace(" skill", "").replace("skill", "")] = skill["id"]
         self.waiting = False
 
    # intents
@@ -88,10 +89,9 @@ class ControlCenterSkill(MycroftSkill):
 
     def handle_reload_skill_intent(self, message):
         self.get_loaded_skills()
-        # TODO regex skill name
-        #skill_name = message.data["skill"]
-        skill_name = "CBCNews"
-        possible_names = [skill_name, skill_name.lower(), skill_name + "Skill", skill_name.lower()+"Skill", skill_name + "skill", skill_name.lower()+"skill"]
+        skill_name = str(message.data["Skill_Reload"]).lower().replace(" skill", "").replace("skill", "").replace("_", " ")
+        possible_names = [skill_name, skill_name.lower()+" "]
+        self.speak("Requesting reload of " + skill_name)
         # if skill id was provided use it
         if skill_name.isdigit():
             skill_id = skill_name
@@ -108,17 +108,15 @@ class ControlCenterSkill(MycroftSkill):
             except:
                 self.speak("Skill " + skill_name + " isn't loaded")
                 return
-        self.log.info("Requesting reload of " + str(skill_id))
+        self.log.info("Requesting reload of " + str(skill_id) + " skill")
         # reload skill
         self.emitter.emit(Message("reload_skill_request", {"skill_id": skill_id}))
 
     def handle_shutdown_skill_intent(self, message):
         self.get_loaded_skills()
-        # TODO regex skill name
-        #skill_name = message.data["skill"]
-        skill_name = "CBCNews"
-        possible_names = [skill_name, skill_name.lower(), skill_name + "Skill", skill_name.lower() + "Skill",
-                          skill_name + "skill", skill_name.lower() + "skill"]
+        skill_name = str(message.data["Skill_Shutdown"]).lower().replace(" skill", "").replace("skill", "").replace("_", " ")
+        possible_names = [skill_name, skill_name.lower() + " "]
+        self.speak("Requesting shutdown of " + skill_name)
         # if skill id was provided use it
         if skill_name.isdigit():
             skill_id = skill_name
@@ -135,7 +133,7 @@ class ControlCenterSkill(MycroftSkill):
             except:
                 self.speak("Skill " + skill_name + " isn't loaded")
                 return
-        self.log.info("Requesting shutdown of " + str(skill_id))
+        self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
         # reload skill
         self.emitter.emit(Message("shutdown_skill_request", {"skill_id": skill_id}))
 
