@@ -38,7 +38,7 @@ class ControlCenterSkill(MycroftSkill):
         self.external_reload = False
         self.external_shutdown = False
         self.skill_name_to_id = {}
-        self.loaded_skills = [] # [{"name":skill_name, "id":skill_id, "folder":skill_folder}]
+        self.loaded_skills = [] # [{"name":skill_name, "id":skill_id, "folder":skill_folder}] #if name = unloaded <- blacklisted or shutdown
         self.time_out = 20
 
     def initialize(self):
@@ -67,6 +67,11 @@ class ControlCenterSkill(MycroftSkill):
         self.register_intent(number_intent,
                              self.handle_skill_number_intent)
 
+        unloaded_intent = IntentBuilder("SkillUnloadedManifestIntent") \
+            .require("UnloadManifestKeyword").build()
+        self.register_intent(unloaded_intent,
+                             self.handle_unloaded_skills_intent)
+
     # internal
 
     def get_loaded_skills(self):
@@ -81,17 +86,15 @@ class ControlCenterSkill(MycroftSkill):
 
     def handle_receive_loaded_skills(self, message):
         self.loaded_skills = message.data["skills"]
+        self.skill_name_to_id = {}
         for skill in self.loaded_skills:
             self.skill_name_to_id[skill["name"].lower().replace("_", " ").replace(" skill", "").replace("skill", "")] = skill["id"]
         self.waiting = False
 
-   # intents
-
     # intents
     def handle_skill_number_intent(self, message):
         self.get_loaded_skills()
-        self.speak("There are " + str(len(self.loaded_skills)) + " loaded skills")
-
+        self.speak("There are " + str(len(self.skill_name_to_id)-1) + " loaded skills") # all except "unloaded"
 
     def handle_reload_skill_intent(self, message):
         self.get_loaded_skills()
@@ -147,11 +150,18 @@ class ControlCenterSkill(MycroftSkill):
 
     def handle_manifest_intent(self, message):
         self.get_loaded_skills()
-        text = "Loaded skills manifest. "
+        text = "Loaded skills manifest.\n"
+        for skill in self.skill_name_to_id.keys():
+            if skill not in text and skill != "unloaded":
+                text += skill + ".\n"
+        self.speak(text)
+
+    def handle_unloaded_skills_intent(self, message):
+        self.get_loaded_skills()
+        text = "Unloaded skills manifest.\n"
         for skill in self.loaded_skills:
-            s = skill["name"].lower().replace("skill", "")
-            if s not in text and s != "blacklisted":
-                text += s + ". "
+            if skill["name"] == "unloaded":
+                text += skill["folder"] + ".\n"
         self.speak(text)
 
     def stop(self):
