@@ -62,6 +62,11 @@ class ControlCenterSkill(MycroftSkill):
         self.register_intent(shutdown_intent,
                              self.handle_shutdown_skill_intent)
 
+        number_intent = IntentBuilder("SkillNumberIntent") \
+            .require("SkillNumberKeyword").build()
+        self.register_intent(number_intent,
+                             self.handle_skill_number_intent)
+
     # internal
 
     def get_loaded_skills(self):
@@ -85,7 +90,8 @@ class ControlCenterSkill(MycroftSkill):
     # intents
     def handle_skill_number_intent(self, message):
         self.get_loaded_skills()
-        # speak how many skills are loaded
+        self.speak("There are " + str(len(self.loaded_skills)) + " loaded skills")
+
 
     def handle_reload_skill_intent(self, message):
         self.get_loaded_skills()
@@ -97,15 +103,16 @@ class ControlCenterSkill(MycroftSkill):
             skill_id = skill_name
         # else get skill_id from name
         else:
+            flag = False
             skill_id = 0
-            try:
-                for p in possible_names:
-                    try:
-                        skill_id = self.skill_name_to_id[p]
-                        break
-                    except:
-                        pass
-            except:
+            for p in possible_names:
+                try:
+                    skill_id = self.skill_name_to_id[p]
+                    flag = True
+                    break
+                except:
+                    pass
+            if not flag:
                 self.speak("Skill " + skill_name + " isn't loaded")
                 return
         self.log.info("Requesting reload of " + str(skill_id) + " skill")
@@ -122,15 +129,16 @@ class ControlCenterSkill(MycroftSkill):
             skill_id = skill_name
         # else get skill_id from name
         else:
+            flag = False
             skill_id = 0
-            try:
-                for p in possible_names:
-                    try:
-                        skill_id = self.skill_name_to_id[p]
-                        break
-                    except:
-                        pass
-            except:
+            for p in possible_names:
+                try:
+                    skill_id = self.skill_name_to_id[p]
+                    flag = True
+                    break
+                except:
+                    pass
+            if not flag:
                 self.speak("Skill " + skill_name + " isn't loaded")
                 return
         self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
