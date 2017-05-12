@@ -43,7 +43,7 @@ try:
     skills_config = ConfigurationManager.instance().get("skills")
     BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
 except:
-    BLACKLISTED_SKILLS = ["template_skill", "service_context", "mycroft_media", "skill-ip", "skill-audio-record", "service_sound_analisys"]
+    BLACKLISTED_SKILLS = ["template_skill", "mycroft_media"]
 
 # TODO read from config
 SKILLS_DIR = MYCROFT_ROOT_PATH + "/mycroft/jarbas-skills"
@@ -188,6 +188,8 @@ class MycroftSkill(object):
         self.registered_intents = []
         self.log = getLogger(name)
         self.reload_skill = True
+        self.external_reload = True
+        self.external_shutdown = True
         self.events = []
         self.skill_id = 0
 

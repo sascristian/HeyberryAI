@@ -24,9 +24,9 @@ class PhotoSkill(MycroftSkill):
         super(PhotoSkill, self).__init__(name="PhotoSkill")
 
         try:
-            self.wikimapia_key = self.config_apis("WikimapiaAPI")
+            self.wikimapia_key = self.config_apis["WikimapiaAPI"]
         except:
-            self.wikimapia_key = self.config("WikimapiaAPI")
+            self.wikimapia_key = self.config["WikimapiaAPI"]
 
         self.geolocator = Nominatim()
 

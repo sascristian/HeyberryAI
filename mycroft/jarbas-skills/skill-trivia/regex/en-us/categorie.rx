@@ -1,0 +1,2 @@
+(change|switch) (cat|categorie|class) (to|for|into) (?P<Categorie>.*)
+(change|switch) (quiz|trivia) (to|for|into) (?P<Categorie>.*)

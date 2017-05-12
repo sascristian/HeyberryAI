@@ -69,8 +69,6 @@ class DiagnosticsSkill(MycroftSkill):
             self.diagnostic_script = self.config.get('script')
 
     def initialize(self):
-        #self.load_data_files(dirname(__file__))
-
         cpu_intent = IntentBuilder("CpuIntent")\
             .require("CpuKeyword")\
             .build()
@@ -96,9 +94,6 @@ class DiagnosticsSkill(MycroftSkill):
         data = {
             "percent": psutil.cpu_percent(interval=1)
         }
-
-        self.add_result("cpu_usage", data["percent"])
-
         self.speak_dialog("cpu", data)
         self.speak_dialog("WorkingHardOn")
         output = subprocess.check_output("ps -eo pcpu,comm --no-headers|"
@@ -111,9 +106,6 @@ class DiagnosticsSkill(MycroftSkill):
         i = 0
         for out in output.split("\n"):
             i+=1
-            self.add_result("process "+str(i), out)
-
-        self.emit_results()
 
     def handle_drive_intent(self, message):
         partitions = psutil.disk_partitions()
@@ -128,16 +120,10 @@ class DiagnosticsSkill(MycroftSkill):
                 "free": sizeof_fmt(partition_data.free),
                 "percent": partition_data.percent
             }
-            self.add_result("drive_data", data)
             if partition_data.percent >= 90:
                 self.speak_dialog("drive.low", data)
-                self.add_result("drive_warning "+data["mountpoint"], "low disk space")
             else:
                 self.speak_dialog("drive", data)
-                self.add_result("drive_warning " + data["mountpoint"], "low disk space")
-
-        self.emit_results()
-
 
     def handle_ip_intent(self, message):
         ips = subprocess.check_output(['hostname', "-I"])
@@ -164,24 +150,16 @@ class DiagnosticsSkill(MycroftSkill):
         }
         self.speak_dialog("ip", data)
 
-        self.add_result("Public_IP", data["public"])
-        self.add_result("IP_adresses", data["ips"])
-
-        self.emit_results()
-
     def handle_updtime_intent(self, message):
         uptime = subprocess.check_output(['uptime', '-p'])
         data = {
             'uptime': uptime.strip()
         }
         self.speak_dialog("uptime", data)
-        self.add_result("uptime", data["uptime"])
-        self.emit_results()
 
     def handle_custom_intent(self, message):
         if not self.diagnostic_script:
             self.speak_dialog("no.script")
-            self.add_result("script", "no script")
             return
 
         if not exists(self.diagnostic_script):
@@ -189,7 +167,6 @@ class DiagnosticsSkill(MycroftSkill):
                 "script": self.diagnostic_script
             }
             self.speak_dialog("missing.script", data)
-            self.add_result("script", "missing")
             return
 
         if not is_exe(self.diagnostic_script):
@@ -197,15 +174,11 @@ class DiagnosticsSkill(MycroftSkill):
                 "script": self.diagnostic_script
             }
             self.speak_dialog("not.executable.script", data)
-            self.add_result("script", "not executable")
             return
 
         self.speak_dialog("processing.script")
         result = subprocess.check_output([self.diagnostic_script])
         self.speak(result.strip())
-
-        self.add_result("script", result)
-        self.emit_results()
 
     def stop(self):
         pass

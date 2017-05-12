@@ -162,7 +162,7 @@ class TrafficSkill(MycroftSkill):
         return address_converted
 
     def stop(self):
-        self.speak_dialog('traffic.module.halting')
+        #self.speak_dialog('traffic.module.halting')
         #self.process.terminate()
         #self.process.wait()
         pass

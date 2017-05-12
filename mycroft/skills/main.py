@@ -58,7 +58,7 @@ try:
     skills_config = ConfigurationManager.instance().get("skills")
     PRIORITY_SKILLS = skills_config["priority_skills"]
 except:
-    PRIORITY_SKILLS = ["service_intent_layer", "service_vision", "service_objectives", "service_display", "service_audio", "service_freewill", "service_sentiment_analisys", "LILACS_core", "LILACS_knowledge", "LILACS_storage", "LILACS_teach", "LILACS_curiosity", "LILACS_chatbot"]
+    PRIORITY_SKILLS = ["service_objectives", "service_display", "service_audio", "LILACS_core", "LILACS_knowledge", "LILACS_storage"]
 
 
 def connect():
@@ -236,6 +236,43 @@ def _watch_skills():
         time.sleep(2)
 
 
+def handle_shutdown_skill_request(message):
+    global ws, loaded_skills
+    skill_id = message.data["skill_id"]
+    for skill in loaded_skills:
+        try:
+            if loaded_skills[skill]["id"] == skill_id and loaded_skills[skill]["loaded"]:
+                logger.debug("Shutting down " + str(skill_id))
+                if loaded_skills[skill]["instance"].external_shutdown:
+                    loaded_skills[skill]["instance"].shutdown()
+                    loaded_skills[skill]["loaded"] = True #avoid auto-reload
+                    del loaded_skills[skill]["instance"]
+                else:
+                    logger.debug("external skill shutdown requested but not allowed by skill")
+                return
+        except:
+            logger.debug("skill already shutdown")
+
+
+def handle_reload_skill_request(message):
+    global ws, loaded_skills
+    skill_id = message.data["skill_id"]
+    for skill in loaded_skills:
+        if loaded_skills[skill]["id"] == skill_id and loaded_skills[skill]["loaded"]:
+            try:
+                logger.info("Shutting down " + str(skill_id))
+                if loaded_skills[skill]["instance"].external_reload:
+                    loaded_skills[skill]["instance"].shutdown()
+                    loaded_skills[skill]["loaded"] = False
+                    del loaded_skills[skill]["instance"]
+                else:
+                    logger.debug("external skill reload requested but not allowed by skill")
+                return
+            except:
+                loaded_skills[skill]["loaded"] = False
+    # _watch_skills will reload
+
+
 def handle_conversation_request(message):
     skill_id = int(message.data["skill_id"])
     utterances = message.data["utterances"]
@@ -245,12 +282,32 @@ def handle_conversation_request(message):
     for skill in loaded_skills:
         if loaded_skills[skill]["id"] == skill_id:
             instance = loaded_skills[skill]["instance"]
-            result = instance.converse(utterances, lang)
+            try:
+                result = instance.converse(utterances, lang)
+            except:
+                logger.error("Converse method malformed for skill " + str(skill_id))
+                result = False
             ws.emit(Message("converse_status_response", {
                     "skill_id": skill_id, "result": result}))
             return
     ws.emit(Message("converse_status_response", {
         "skill_id": 0, "result": False}))
+
+
+def handle_loaded_skills_request(message):
+    global ws, loaded_skills
+    skills = []
+    # loop trough skills list
+    for skill in loaded_skills:
+        loaded = {}
+        loaded.setdefault("folder", skill)
+        try:
+            loaded.setdefault("name", loaded_skills[skill]["instance"].name)
+        except:
+            loaded.setdefault("name", "blacklisted")
+        loaded.setdefault("id", loaded_skills[skill]["id"])
+        skills.append(loaded)
+    ws.emit(Message("loaded_skills_response", {"skills": skills}))
 
 
 def main():
@@ -284,6 +341,9 @@ def main():
     # Kick off loading of skills
     ws.once('open', _load_skills)
     ws.on('converse_status_request', handle_conversation_request)
+    ws.on('reload_skill_request', handle_reload_skill_request)
+    ws.on('shutdown_skill_request', handle_shutdown_skill_request)
+    ws.on('loaded_skills_request', handle_loaded_skills_request)
     ws.run_forever()
 
 

@@ -104,7 +104,8 @@ class LILACSChatbotSkill(MycroftSkill):
         pass
 
     def stop(self):
-        self.handle_deactivate_intent("global stop")
+        if self.active:
+           self.handle_deactivate_intent("global stop")
 
     def converse(self, transcript, lang="en-us"):
         # TODO check if intent would be handled by some skill and dont ove-ride

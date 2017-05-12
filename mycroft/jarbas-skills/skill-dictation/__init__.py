@@ -95,7 +95,8 @@ class DictationSkill(MycroftSkill):
         self.name = ""
 
     def stop(self):
-        self.handle_stop_dict_intent("dummy")
+        if self.dictating:
+            self.handle_stop_dict_intent("dummy")
 
     def converse(self, transcript, lang="en-us"):
         intent, id = self.intent_parser.determine_intent(transcript[0])

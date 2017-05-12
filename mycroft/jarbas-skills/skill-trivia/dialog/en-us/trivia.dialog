@@ -1,0 +1,8 @@
+Quizz game started, categorie {{ cat }}, say stop quizz to exit, first question {{ question }}
+Quizz game started, categorie {{ cat }}, say exit quizz to exit, first question {{ question }}
+Quizz game started, categorie {{ cat }}, say quizz exit to exit, first question {{ question }}
+Quizz game started, categorie {{ cat }}, say quizz stop to exit, first question {{ question }}
+Quizz game started, categorie {{ cat }}, say stop trivia to exit, first question {{ question }}
+Quizz game started, categorie {{ cat }}, say exit trivia to exit, first question {{ question }}
+Quizz game started, categorie {{ cat }}, say trivia exit to exit, first question {{ question }}
+Quizz game started, categorie {{ cat }}, say trivia stop to exit, first question {{ question }}

@@ -57,7 +57,8 @@ class ParrotSkill(MycroftSkill):
         self.speak("Parrot Mode Stopped")
 
     def stop(self):
-        self.handle_stop_parrot_intent("dummy")
+        if self.parroting:
+            self.handle_stop_parrot_intent("dummy")
 
     def converse(self, transcript, lang="en-us"):
         intent, id = self.intent_parser.determine_intent(transcript[0])

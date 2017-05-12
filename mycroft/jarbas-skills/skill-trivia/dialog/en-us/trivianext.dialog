@@ -1,0 +1,4 @@
+The answer is {{ ans }}, next question. {{ question }}
+The answer is {{ ans }}, lets proceed. {{ question }}
+The answer is {{ ans }}, next item. {{ question }}
+The answer is {{ ans }}, coming next. {{ question }}

@@ -77,6 +77,7 @@ Jarbas core uses [LILACS](https://github.com/ElliotTheRobot/LILACS-mycroft-core)
 
 # Other Changes
 
+- external reload or shutdown of skills now possible (eg. from other skills), skills may not allow this behaviour if desired
 - blacklisted skills now loaded from config instead of hard-coded
 - added priority skills loading, services should be loaded first (in order to not miss messages from other skills)
 - standard skills folder is now jarbas_skills, msm may need changes because skill_dir path is hardcoded
@@ -103,6 +104,8 @@ Lots of skills are bundled by default with this fork, following list may be outd
 ### Entertainment Skills
 
         skills that entertain you
+
+[Trivia Skill](https://github.com/JarbasAI/skill-trivia) - ask trivia questions
 
 [Parrot Skill](https://github.com/JarbasAI/mycroft---parrot-skill) - Speaks Everything back to user
 
@@ -140,6 +143,7 @@ Lots of skills are bundled by default with this fork, following list may be outd
 
 [Diagnostics Skill](https://github.com/the7erm/mycroft-skill-diagnostics) - System Info
 
+[Control Center]() - Reload or Shutdown skills has desired, available skill manifest
 
 
 ### Productivity Skills
