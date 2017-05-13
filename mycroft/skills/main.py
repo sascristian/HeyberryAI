@@ -50,7 +50,7 @@ skills_directories = []
 skill_reload_thread = None
 skills_manager_timer = None
 id_counter = 0
-
+reload_list = []
 installer_config = ConfigurationManager.instance().get("SkillInstallerSkill")
 MSM_BIN = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm', 'msm'))
 
@@ -185,7 +185,7 @@ def load_priority():
 
 def _watch_skills():
     global ws, loaded_skills, last_modified_skill, \
-        id_counter
+        id_counter, reload_list
     # Load prority skills first
     load_priority()
     # Scan the file folder that contains Skills.  If a Skill is updated,
@@ -217,12 +217,18 @@ def _watch_skills():
                 elif skill.get(
                         "instance") and modified > last_modified_skill:
                     # checking if skill should be reloaded
-                    if not skill["instance"].reload_skill:
+                    if not skill["instance"].reload_skill and skill["id"] not in reload_list:
                         continue
                     logger.debug("Reloading Skill: " + skill_folder)
                     # removing listeners and stopping threads
                     skill["instance"].shutdown()
                     del skill["instance"]
+                    # remove from external reload list
+                    i = 0
+                    for id in reload_list:
+                        if id == skill["id"]:
+                            reload_list.pop(i)
+                        i += 1
                 skill["loaded"] = True
                 skill["instance"] = load_skill(
                     create_skill_descriptor(skill["path"]), ws, skill["id"])
@@ -255,7 +261,7 @@ def handle_shutdown_skill_request(message):
 
 
 def handle_reload_skill_request(message):
-    global ws, loaded_skills
+    global ws, loaded_skills, reload_list
     skill_id = message.data["skill_id"]
     for skill in loaded_skills:
         if loaded_skills[skill]["id"] == skill_id and loaded_skills[skill]["loaded"]:
@@ -265,6 +271,7 @@ def handle_reload_skill_request(message):
                     loaded_skills[skill]["instance"].shutdown()
                     loaded_skills[skill]["loaded"] = False
                     del loaded_skills[skill]["instance"]
+                    reload_list.append(skill_id)
                 else:
                     logger.debug("external skill reload requested but not allowed by skill")
                 return
@@ -304,7 +311,7 @@ def handle_loaded_skills_request(message):
         try:
             loaded.setdefault("name", loaded_skills[skill]["instance"].name)
         except:
-            loaded.setdefault("name", "blacklisted")
+            loaded.setdefault("name", "unloaded")
         loaded.setdefault("id", loaded_skills[skill]["id"])
         skills.append(loaded)
     ws.emit(Message("loaded_skills_response", {"skills": skills}))

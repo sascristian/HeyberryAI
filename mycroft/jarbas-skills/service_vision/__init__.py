@@ -199,6 +199,7 @@ class VisionSkill(MycroftSkill):
         self.log.info("elasped time: {:.2f}".format(self.fps.elapsed()))
         self.log.info("[INFO] approx. FPS: {:.2f}".format(self.fps.fps()))
         self.vs.stop()
+        cv2.destroyAllWindows()
 
     # vision
     def save_feed(self, path=dirname(__file__) + "/feed.jpg"):

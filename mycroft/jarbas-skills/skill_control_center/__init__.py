@@ -34,12 +34,15 @@ class ControlCenterSkill(MycroftSkill):
     def __init__(self):
         super(ControlCenterSkill, self).__init__(name="ControlCenterSkill")
         # initialize your variables
+        self.current_level = "full"
         self.reload_skill = False
         self.external_reload = False
         self.external_shutdown = False
         self.skill_name_to_id = {}
         self.loaded_skills = [] # [{"name":skill_name, "id":skill_id, "folder":skill_folder}] #if name = unloaded <- blacklisted or shutdown
         self.time_out = 20
+        self.run_levels = self.config_core["skills"]["run_levels"]
+
 
     def initialize(self):
         self.emitter.on("loaded_skills_response", self.handle_receive_loaded_skills)
@@ -72,6 +75,16 @@ class ControlCenterSkill(MycroftSkill):
         self.register_intent(unloaded_intent,
                              self.handle_unloaded_skills_intent)
 
+        level_intent = IntentBuilder("RunLevelIntent") \
+            .require("RunLevelKeyword").build()
+        self.register_intent(level_intent,
+                             self.handle_current_run_level_intent)
+
+        go_to_level_intent = IntentBuilder("ChangeRunLevelIntent") \
+            .require("Level").build()
+        self.register_intent(go_to_level_intent,
+                             self.handle_go_to_run_level_intent)
+
     # internal
 
     def get_loaded_skills(self):
@@ -94,7 +107,49 @@ class ControlCenterSkill(MycroftSkill):
     # intents
     def handle_skill_number_intent(self, message):
         self.get_loaded_skills()
-        self.speak("There are " + str(len(self.skill_name_to_id)-1) + " loaded skills") # all except "unloaded"
+        self.speak("Number of loaded skills: " + str(len(self.skill_name_to_id)-1))
+
+    def handle_current_run_level_intent(self, message):
+        self.speak_dialog("current_run_level", {"level": self.current_level})
+        for level in self.run_levels.keys():
+            print "level: " + level
+            print str(self.run_levels[level]["type"]) + "ed skills: " + str(self.run_levels[level]["skills"])
+
+    def handle_go_to_run_level_intent(self, message):
+        self.get_loaded_skills()
+        level = message.data["Level"]
+        if level not in self.run_levels.keys():
+            self.speak_dialog("invalid_level")
+            return
+
+        self.speak_dialog("changing_run_level", {"level": level})
+        self.log.debug("Changing run level from " + self.current_level + " to " + level)
+        self.log.debug(self.current_level, self.run_levels[self.current_level])
+        self.log.debug(level, self.run_levels[level])
+        for s in self.loaded_skills:
+            skill_id = s["id"]
+            skill = s["folder"]
+            if self.run_levels[level]["type"] == "whitelist" and skill_id != self.skill_id:
+                if skill not in self.run_levels[level]["skills"]:
+                    # shutdown
+                    self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
+                    self.emitter.emit(Message("shutdown_skill_request", {"skill_id": skill_id}))
+                else:
+                    # reload
+                    self.log.info("Requesting reload of " + str(skill_id) + " skill")
+                    self.emitter.emit(Message("reload_skill_request", {"skill_id": skill_id}))
+            elif skill_id != self.skill_id:#blacklist
+                if skill in self.run_levels[level]["skills"]:
+                    # shutdown
+                    self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
+                    self.emitter.emit(Message("shutdown_skill_request", {"skill_id": skill_id}))
+                else:
+                    # reload
+                    self.log.info("Requesting reload of " + str(skill_id) + " skill")
+                    self.emitter.emit(Message("reload_skill_request", {"skill_id": skill_id}))
+        self.current_level = level
+        self.log.debug("Run level Changed")
+        self.speak("Run level change request finished")
 
     def handle_reload_skill_intent(self, message):
         self.get_loaded_skills()
