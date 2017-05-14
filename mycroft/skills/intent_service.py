@@ -37,12 +37,12 @@ class IntentService(object):
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
         self.emitter.on('detach_intent', self.handle_detach_intent)
         self.emitter.on('detach_skill', self.handle_detach_skill)
-        self.active_skills = []  # [skill_id , timestamp]
-        self.skill_ids = {} # {skill_id: [intents]}
-        self.converse_timeout = 5  # minutes to prune active_skills
         self.emitter.on('converse_status_response', self.handle_conversation_response)
         self.emitter.on('intent_request', self.handle_intent_request)
         self.emitter.on('intent_to_skill_request', self.handle_intent_to_skill_request)
+        self.active_skills = []  # [skill_id , timestamp]
+        self.skill_ids = {} # {skill_id: [intents]}
+        self.converse_timeout = 5  # minutes to prune active_skills
 
     def do_conversation(self, utterances, skill_id, lang):
         self.emitter.emit(Message("converse_status_request", {
@@ -192,8 +192,48 @@ class IntentService(object):
         self.engine.intent_parsers = new_parsers
 
     def handle_detach_skill(self, message):
-        skill_name = message.data.get('skill_name')
+        skill_id = message.data.get('skill_id')
         new_parsers = [
             p for p in self.engine.intent_parsers if
-            not p.name.startswith(skill_name)]
+            not p.name.startswith(skill_id)]
         self.engine.intent_parsers = new_parsers
+
+
+class IntentParser():
+    def __init__(self, emitter, time_out = 20):
+        self.emitter = emitter
+        self.waiting = False
+        self.intent = ""
+        self.id = 0
+        self.emitter.on("intent_response", self.handle_receive_intent)
+        self.emitter.on("intent_to_skill_response", self.handle_receive_skill_id)
+        self.time_out = time_out
+
+    def determine_intent(self, utterance, lang="en-us"):
+        self.waiting = True
+        self.emitter.emit(Message("intent_request", {"utterance": utterance, "lang": lang}))
+        start_time = time()
+        t = 0
+        while self.waiting and t < self.time_out:
+            t = time() - start_time
+        return self.intent, self.id
+
+    def get_skill_id(self, intent_name):
+        self.waiting = True
+        self.id = 0
+        self.emitter.emit(Message("intent_to_skill_request", {"intent_name": intent_name}))
+        start_time = time()
+        t = 0
+        while self.waiting and t < self.time_out:
+            t = time() - start_time
+        self.waiting = False
+        return self.id
+
+    def handle_receive_intent(self, message):
+        self.id = message.data["skill_id"]
+        self.intent = message.data["intent_name"]
+        self.waiting = False
+
+    def handle_receive_skill_id(self, message):
+        self.id = message.data["skill_id"]
+        self.waiting = False

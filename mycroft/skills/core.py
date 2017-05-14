@@ -117,6 +117,7 @@ def load_skill(skill_descriptor, emitter, skill_id):
             skill.skill_id = skill_id
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
             skill.initialize()
+            skill.initialize_emitter()
             logger.info("Loaded " + skill_descriptor["name"] + " with ID " + str(skill_id))
             return skill
         else:
@@ -257,6 +258,10 @@ class MycroftSkill(object):
     def converse(self, transcript, lang="en-us"):
         return False
 
+    def initialize_emitter(self):
+        self.emitter.on('enable_intent', self.handle_enable_intent)
+        self.emitter.on('disable_intent', self.handle_disable_intent)
+
     def register_intent(self, intent_parser, handler):
         name = intent_parser.name
         intent_parser.name = str(self.skill_id) + ':' + intent_parser.name
@@ -281,14 +286,15 @@ class MycroftSkill(object):
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
-        self.emitter.emit(Message("disable_intent", {"intent_name": intent_name}))
+        for (name, intent) in self.registered_intents:
+            if name == intent_name:
+                logger.debug('Disabling intent ' + intent_name)
+                name = str(self.skill_id) + ':' + intent_name
+                self.emitter.emit(Message("detach_intent", {"intent_name": name}))
+                return
 
     def enable_intent(self, intent_name):
-        """Reenable a registered self intent"""
-        self.emitter.emit(Message("enable_intent", {"intent_name": intent_name}))
-
-    def handle_enable_intent(self, message):
-        intent_name = message.data["intent_name"]
+        """Reenable a registered intent"""
         for (name, intent) in self.registered_intents:
             if name == intent_name:
                 self.registered_intents.remove((name, intent))
@@ -296,13 +302,14 @@ class MycroftSkill(object):
                 self.register_intent(intent, None)
                 logger.info("Enabling Intent " + intent_name)
                 return
-        logger.error("Could not Re-enable Intent " + intent_name)
+
+    def handle_enable_intent(self, message):
+        intent_name = message.data["intent_name"]
+        self.enable_intent(intent_name)
 
     def handle_disable_intent(self, message):
         intent_name = message.data["intent_name"]
-        logger.debug('Disabling intent ' + intent_name)
-        name = str(self.skill_id) + ':' + intent_name
-        self.emitter.emit(Message("detach_intent", {"intent_name": name}))
+        self.disable_intent(intent_name)
 
     def register_vocabulary(self, entity, entity_type):
         self.emitter.emit(Message('register_vocab', {
@@ -371,5 +378,5 @@ class MycroftSkill(object):
             self.emitter.remove(e, f)
 
         self.emitter.emit(
-            Message("detach_skill", {"skill_name": self.name + ":"}))
+            Message("detach_skill", {"skill_id": str(self.skill_id) + ":"}))
         self.stop()

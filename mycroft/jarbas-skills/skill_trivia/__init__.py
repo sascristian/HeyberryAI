@@ -179,7 +179,7 @@ class TriviaSkill(MycroftSkill):
         self.continuous = True
 
     def handle_change_cat_intent(self, message):
-        cat = message.data["Categorie"]
+        cat = message.data["Categorie"].replace(" ","").replace('"',"")
         if cat in self.categories:
             self.categorie = cat
             self.speak_dialog("categorie", {"cat": self.categorie})

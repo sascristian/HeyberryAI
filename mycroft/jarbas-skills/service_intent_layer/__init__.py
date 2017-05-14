@@ -141,7 +141,7 @@ class IntentLayers():
         return layer_list
 
     def disable(self):
-        logger.info("Disabling tree")
+        logger.info("Disabling intent layers")
         # disable all tree layers
         for i in range(0, len(self.layers)):
             self.deactivate_layer(i)
