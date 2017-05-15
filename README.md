@@ -4,12 +4,6 @@
 
 a fork of mycroft-core , the following things were changed
 
-# Centralized APIs
-
-Lots of APIs are used and sometimes more than once, they were centralized in a single section of the config file
-
-[PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
-
 # Converse method
 
 This allows any skill to handle an utterance before intent parsing, sets an internal id for each skill
@@ -77,14 +71,14 @@ Jarbas core uses [LILACS](https://github.com/ElliotTheRobot/LILACS-mycroft-core)
 
 # Other Changes
 
-- external reload or shutdown of skills now possible (eg. from other skills), skills may not allow this behaviour if desired
-- blacklisted skills now loaded from config instead of hard-coded
-- added priority skills loading, services should be loaded first (in order to not miss messages from other skills)
+- changed some things in skills main in order to better implement run levels
+- [external shutdown/reload, priority and blacklist skills from config](https://github.com/MycroftAI/mycroft-core/pull/756)
 - standard skills folder is now jarbas_skills, msm may need changes because skill_dir path is hardcoded
 - do not install default skills using msm
 - created a folder named database that is populated with created/scraped content during jarbas life-time (offline db)
-- implement disable speak flag for mute skill
+- implement [disable speak](https://github.com/MycroftAI/mycroft-core/pull/556) flag for mute skill
 - [Morse Code TTS engine](https://github.com/JarbasAI/mycoft---morse-code-tts)
+- Lots of APIs are used and sometimes more than once, they were centralized in a single section of the config file [PR#557](https://github.com/MycroftAI/mycroft-core/pull/557)
 
 # Included skills by default
 
@@ -126,6 +120,8 @@ Lots of skills are bundled by default with this fork, following list may be outd
 [Astronomy Picture of the Day](https://github.com/JarbasAI/mycroft---astronomy-picture-of-teh-day) - Downloads and display NASA astronomy picture of the day
 
 [EPIC Satellite Skill](https://github.com/JarbasAI/mycroft---EPIC-skill) - Near real time Earth satellite imagery
+
+[Cleverbot Skill](https://github.com/JarbasAI/skill_cleverbot) - Routes your utterances to Cleverbot instead of handling intents
 
 [LILACS Chatbot](https://github.com/ElliotTheRobot/LILACS-mycroft-core/tree/dev/mycroft/skills/LILACS_chatbot) - chatbot mode, intercepts utterances and answers with "crap"
 
@@ -411,10 +407,10 @@ Each layer has different intents available to be executed, this allows for much 
             to activate layer/state 0 -> self.layers.reset()
             to get current layer/state -> state = self.layers.current_layer
 
-            each tree has a timer, after changing state this timer starts and at the end resets the tree
+            each state/layer has a timer, after changing state this timer starts and at the end resets the layers
             to disable timer, after doing next/previous -> self.layers.stop_timer()
 
-            to go directly to a layer do -> self.tree.activate_layer(layer_num)
+            to go directly to a layer do -> self.layers.activate_layer(layer_num)
             in this case no timer is started so you should also do - > self.layers.start_timer()
 
             on converse -> parse intent/utterance and manipulate layers if needed (bad sequence)
@@ -435,7 +431,7 @@ intent parsing in converse method can manipulate correct tree branch if needed
 
 this allows for much more complex skills with each intent triggering their own sub-intents / sub - trees
 
-on demand manipulation of tree layers may also open several unforeseen opportunities for intent data structures
+on demand manipulation of branch layers may also open several unforeseen opportunities for intent data structures
 
             self.branch.add_layer([intent_list])
             self.branch.remove_layer(layer_num)
