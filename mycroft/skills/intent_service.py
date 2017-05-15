@@ -212,10 +212,10 @@ class IntentParser():
     def determine_intent(self, utterance, lang="en-us"):
         self.waiting = True
         self.emitter.emit(Message("intent_request", {"utterance": utterance, "lang": lang}))
-        start_time = time()
+        start_time = time.time()
         t = 0
         while self.waiting and t < self.time_out:
-            t = time() - start_time
+            t = time.time() - start_time
         return self.intent, self.id
 
     def get_skill_id(self, intent_name):

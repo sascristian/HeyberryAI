@@ -4,12 +4,7 @@ from mycroft.util.log import getLogger
 
 
 from os.path import dirname, exists
-import sys
-# add skills folder to import path
-path= dirname(dirname(__file__))
-sys.path.append(path)
-# import intent layers
-from service_intent_layer import IntentLayers, IntentParser
+from mycroft.skills.intent_service import IntentParser
 
 __author__ = 'jarbas'
 
@@ -29,8 +24,7 @@ class KonamiCodeSkill(MycroftSkill):
         self.intent_parser = IntentParser(self.emitter)
         self.build_intents()
         self.build_intent_layers()
-        self.emitter.on('enable_intent', self.handle_enable_intent)
-        self.emitter.on('disable_intent', self.handle_disable_intent)
+
 
     def build_intents(self):
 
