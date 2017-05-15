@@ -1108,7 +1108,10 @@ class FacebookSkill(MycroftSkill):
         self.selenium_face.close()
 
     def stop(self):
-        self.selenium_face.close()
+        try:
+            self.selenium_face.close()
+        except:
+            pass
 
 
 def create_skill():
