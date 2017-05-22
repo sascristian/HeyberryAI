@@ -50,15 +50,11 @@ skills_directories = []
 skill_reload_thread = None
 skills_manager_timer = None
 id_counter = 0
-reload_list = []
 installer_config = ConfigurationManager.instance().get("SkillInstallerSkill")
 MSM_BIN = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm', 'msm'))
 
-try:
-    skills_config = ConfigurationManager.instance().get("skills")
-    PRIORITY_SKILLS = skills_config["priority_skills"]
-except:
-    PRIORITY_SKILLS = ["service_objectives", "service_display", "service_audio", "LILACS_core", "LILACS_knowledge", "LILACS_storage"]
+skills_config = ConfigurationManager.instance().get("skills")
+PRIORITY_SKILLS = skills_config["priority_skills"]
 
 
 def connect():
@@ -67,8 +63,6 @@ def connect():
 
 
 def install_default_skills(speak=True):
-    # do not install defaults in this fork
-    return
     if exists(MSM_BIN):
         p = subprocess.Popen(MSM_BIN + " default", stderr=subprocess.STDOUT,
                              stdout=subprocess.PIPE, shell=True)
@@ -161,20 +155,9 @@ def load_priority():
             # getting the newest modified date of skill
             skill["last_modified"] = _get_last_modified_date(skill["path"])
             modified = skill.get("last_modified", 0)
-            # checking if skill is loaded and wasn't modified
-            if skill.get(
-                    "loaded") and modified <= last_modified_skill:
+            # checking if skill is loaded
+            if skill.get("loaded"):
                 continue
-            # checking if skill was modified
-            elif skill.get(
-                    "instance") and modified > last_modified_skill:
-                # checking if skill should be reloaded
-                if not skill["instance"].reload_skill:
-                    continue
-                logger.debug("Reloading Skill: " + skill_folder)
-                # removing listeners and stopping threads
-                skill["instance"].shutdown()
-                del skill["instance"]
             skill["loaded"] = True
             skill["instance"] = load_skill(
                 create_skill_descriptor(skill["path"]), ws, skill["id"])
@@ -184,7 +167,7 @@ def _watch_skills():
     global ws, loaded_skills, last_modified_skill, \
         id_counter
 
-    # register unique skill ids
+    # Scan the folder that contains Skills.
     list = filter(lambda x: os.path.isdir(
         os.path.join(SKILLS_DIR, x)), os.listdir(SKILLS_DIR))
     for skill_folder in list:
@@ -195,6 +178,7 @@ def _watch_skills():
 
     # Load priority skills first
     load_priority()
+
     # Scan the file folder that contains Skills.  If a Skill is updated,
     # unload the existing version from memory and reload from the disk.
     while True:
@@ -205,19 +189,20 @@ def _watch_skills():
 
             for skill_folder in list:
                 if skill_folder not in loaded_skills:
-                    # check if its a new skill just added
+                    # check if its a new skill just added to skills_folder
                     id_counter += 1
-                    loaded_skills[skill_folder] = {"id": id_counter, "loaded": False, "do_not_load": False, "reload_request": False, "shutdown":False}
-                # check if do_not_load requested
+                    loaded_skills[skill_folder] = {"id": id_counter, "loaded": False, "do_not_load": False, "reload_request": False, "shutdown": False}
+
                 skill = loaded_skills.get(skill_folder)
+                # see if this skill was supposed to be shutdown
                 if skill["shutdown"] and skill["loaded"]:
                     logger.debug("Skill " + skill_folder + " shutdown was requested")
                     skill["instance"].shutdown()
                     del skill["instance"]
                     skill["loaded"] = False
                     continue
+                # check if we are supposed to load this skill
                 elif skill["do_not_load"]:
-                    #logger.debug("This skill asked to not be loaded " + str(skill["id"]))
                     continue
                 skill["path"] = os.path.join(SKILLS_DIR, skill_folder)
                 # checking if is a skill
@@ -230,24 +215,25 @@ def _watch_skills():
                 if skill.get(
                         "loaded") and modified <= last_modified_skill and not skill["reload_request"]:
                     continue
-                # checking if skill was modified
+                # checking if skill was modified or reload was requested
                 elif (skill.get(
                         "instance") and modified > last_modified_skill) or skill["reload_request"]:
                     # checking if skill should be reloaded
                     if skill["reload_request"]:
                         logger.debug("External reload for " + skill_folder + " requested")
                         loaded_skills[skill_folder]["reload_request"] = False
+                    # check if skills allows auto_reload
                     elif not skill["instance"].reload_skill:
-                        #logger.debug("Skill asks to not be reloaded")
                         continue
                     logger.debug("Reloading Skill: " + skill_folder)
+                    # remove listeners and stopping threads
                     try:
                         logger.debug("Shutting down Skill: " + skill_folder)
-                        # removing listeners and stopping threads
                         skill["instance"].shutdown()
                         del skill["instance"]
                     except:
                         logger.debug("Skill " + skill_folder + " is already shutdown")
+                # load skill
                 skill["loaded"] = True
                 skill["instance"] = load_skill(
                     create_skill_descriptor(skill["path"]), ws, skill["id"])
@@ -262,20 +248,10 @@ def _watch_skills():
 
 
 def handle_shutdown_skill_request(message):
-    global ws, loaded_skills
+    global loaded_skills
     skill_id = message.data["skill_id"]
     for skill in loaded_skills:
         if loaded_skills[skill]["id"] == skill_id:
-            try:
-                if loaded_skills[skill]["loaded"]:
-                    logger.debug("Shutting down " + str(skill_id))
-                    if loaded_skills[skill]["instance"].external_shutdown:
-                        loaded_skills[skill]["instance"].shutdown()
-                        del loaded_skills[skill]["instance"]
-                    else:
-                        logger.debug("external skill shutdown requested but not allowed by skill")
-            except:
-                logger.debug("skill already shutdown, marking as do_not_load")
             # avoid auto-reload
             loaded_skills[skill]["do_not_load"] = True
             loaded_skills[skill]["shutdown"] = True
@@ -285,26 +261,14 @@ def handle_shutdown_skill_request(message):
 
 
 def handle_reload_skill_request(message):
-    global ws, loaded_skills
+    global loaded_skills
     skill_id = message.data["skill_id"]
     for skill in loaded_skills:
         if loaded_skills[skill]["id"] == skill_id:
-            try:
-                logger.info("Shutting down for reload " + str(skill_id))
-                if loaded_skills[skill]["instance"].external_reload:
-                    loaded_skills[skill]["instance"].shutdown()
-                    del loaded_skills[skill]["instance"]
-                else:
-                    logger.debug("external skill reload requested but not allowed by skill")
-                    return
-            except:
-                logger.debug("skill already shutdown, marking to reload")
-
             loaded_skills[skill]["reload_request"] = True
             loaded_skills[skill]["do_not_load"] = False
             loaded_skills[skill]["shutdown"] = False
             loaded_skills[skill]["loaded"] = False
-    # _watch_skills will reload
 
 
 def handle_conversation_request(message):
