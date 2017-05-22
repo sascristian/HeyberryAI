@@ -117,10 +117,8 @@ class FaceSkill(MycroftSkill):
         #print self.code
 
     def draw(self, utterance):
-        print utterance
         self.speaking = True
         for char in utterance:
-            print char
             cv2.imshow("mouth", self.visemes[int(char)])
             cv2.waitKey(self.speed)
         self.speaking = False
