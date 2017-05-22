@@ -23,8 +23,9 @@
 from adapt.intent import IntentBuilder
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
+from mycroft.configuration import ConfigurationManager
 
-from time import time
+from time import time, sleep
 
 __author__ = 'jarbas'
 
@@ -42,12 +43,23 @@ class ControlCenterSkill(MycroftSkill):
         self.loaded_skills = [] # [{"name":skill_name, "id":skill_id, "folder":skill_folder}] #if name = unloaded <- blacklisted or shutdown
         self.time_out = 20
         self.run_levels = self.config_core["skills"]["run_levels"]
-
+        self.default_level = self.config_core["skills"]["default_run_level"]
+        if self.default_level not in self.run_levels.keys():
+            self.default_level = "core"
+        # TODO get from subprocess mimic -lv
+        self.mimic_voices = ["ap", "slt", "kal", "awb", "kal16", "rms", "awb_time"]
+        self.espeak_langs = ["en", "en-us", "en-sc", "en-n", "en-rp", "en-wm"]
+        self.espeak_voices = ["m1", "m2", "m3", "m4", "m5", "m6", "croak", "whisper", "f1", "f2", "f3", "f4", "f5"]
 
     def initialize(self):
-        self.emitter.on("loaded_skills_response", self.handle_receive_loaded_skills)
-        # register intents
         self.build_intents()
+        if self.default_level != "full":
+            self.emitter.emit(Message(str(self.skill_id) + ":ChangeRunLevelIntent", {"Level": self.default_level}))
+        self.emitter.on("loaded_skills_response", self.handle_receive_loaded_skills)
+        self.manager = ConfigurationManager()
+        self.manager.init(self.emitter)
+        self.reset_config()
+        self.change_voice()
 
     def build_intents(self):
         manifest_intent = IntentBuilder("SkillManifestIntent") \
@@ -80,6 +92,11 @@ class ControlCenterSkill(MycroftSkill):
         self.register_intent(level_intent,
                              self.handle_current_run_level_intent)
 
+        voice_intent = IntentBuilder("VoiceIntent") \
+            .require("CurrentvoiceKeyword").build()
+        self.register_intent(voice_intent,
+                             self.handle_current_voice_intent)
+
         go_to_level_intent = IntentBuilder("ChangeRunLevelIntent") \
             .require("Level").build()
         self.register_intent(go_to_level_intent,
@@ -104,7 +121,33 @@ class ControlCenterSkill(MycroftSkill):
             self.skill_name_to_id[skill["name"].lower().replace("_", " ").replace(" skill", "").replace("skill", "")] = skill["id"]
         self.waiting = False
 
+    def update_config_field(self, key, data):
+        self.runtime_config[key] = data
+        self.emitter.emit(Message("configuration.updated", self.runtime_config))
+
+    def reset_config(self):
+        self.manager.load_defaults()
+        self.runtime_config = self.manager.get()
+        self.emitter.emit(Message("configuration.updated", self.runtime_config))
+
+    def change_voice(self, module="espeak", voice="m1"):
+        tts = self.runtime_config["tts"]
+        current_module = tts["module"]
+        current_voice = tts[current_module]["voice"]
+        tts["module"] = module
+        tts[module]["voice"] = voice
+        self.runtime_config["tts"] = tts
+        self.emitter.emit(Message("configuration.updated", self.runtime_config))
+
     # intents
+    def handle_current_voice_intent(self, message):
+        self.runtime_config = self.manager.get()
+        tts = self.runtime_config["tts"]
+        current_module = tts["module"]
+        current_voice = tts[current_module]["voice"]
+        voice = current_module + " " + current_voice
+        self.speak_dialog("current.voice", {"voice": voice})
+
     def handle_skill_number_intent(self, message):
         self.get_loaded_skills()
         self.speak("Number of loaded skills: " + str(len(self.skill_name_to_id)-1))
@@ -124,32 +167,32 @@ class ControlCenterSkill(MycroftSkill):
 
         self.speak_dialog("changing_run_level", {"level": level})
         self.log.debug("Changing run level from " + self.current_level + " to " + level)
-        self.log.debug(self.current_level, self.run_levels[self.current_level])
-        self.log.debug(level, self.run_levels[level])
+        self.log.debug(self.current_level + str(self.run_levels[self.current_level]))
+        self.log.debug(level + str(self.run_levels[level]))
         for s in self.loaded_skills:
             skill_id = s["id"]
             skill = s["folder"]
             if self.run_levels[level]["type"] == "whitelist" and skill_id != self.skill_id:
                 if skill not in self.run_levels[level]["skills"]:
                     # shutdown
-                    self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
+                    #self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
                     self.emitter.emit(Message("shutdown_skill_request", {"skill_id": skill_id}))
                 else:
                     # reload
-                    self.log.info("Requesting reload of " + str(skill_id) + " skill")
+                    #self.log.info("Requesting reload of " + str(skill_id) + " skill")
                     self.emitter.emit(Message("reload_skill_request", {"skill_id": skill_id}))
             elif skill_id != self.skill_id:#blacklist
                 if skill in self.run_levels[level]["skills"]:
                     # shutdown
-                    self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
+                    #self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
                     self.emitter.emit(Message("shutdown_skill_request", {"skill_id": skill_id}))
                 else:
                     # reload
-                    self.log.info("Requesting reload of " + str(skill_id) + " skill")
+                    #self.log.info("Requesting reload of " + str(skill_id) + " skill")
                     self.emitter.emit(Message("reload_skill_request", {"skill_id": skill_id}))
         self.current_level = level
         self.log.debug("Run level Changed")
-        self.speak("Run level change request finished")
+        #self.speak("Run level change request finished")
 
     def handle_reload_skill_intent(self, message):
         self.get_loaded_skills()
