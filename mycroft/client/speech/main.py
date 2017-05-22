@@ -28,7 +28,7 @@ from mycroft.identity import IdentityManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.tts import TTSFactory
-from mycroft.util import kill, create_signal
+from mycroft.util import kill, create_signal, check_for_signal
 from mycroft.util.log import getLogger
 from mycroft.lock import Lock as PIDLock  # Create/Support PID locking file
 
@@ -51,6 +51,11 @@ def handle_record_begin():
 def handle_record_end():
     logger.info("End Recording...")
     ws.emit(Message('recognizer_loop:record_end'))
+
+
+def handle_no_internet():
+    logger.debug("Notifying enclosure of no internet connection")
+    ws.emit(Message('enclosure.notify.no_internet'))
 
 
 def handle_wakeword(event):
@@ -118,6 +123,7 @@ def handle_speak(event):
     # TODO: Remove or make an option?  This is really a hack, anyway,
     # so we likely will want to get rid of this when not running on Mimic
     if not config.get('enclosure', {}).get('platform') == "picroft":
+        start = time.time()
         chunks = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s',
                           utterance)
         for chunk in chunks:
@@ -132,7 +138,7 @@ def handle_speak(event):
         mute_and_speak(utterance)
 
     if expect_response:
-        create_signal('buttonPress')
+        create_signal('startListening')
 
 
 def handle_sleep(event):
@@ -182,6 +188,7 @@ def main():
     loop.on('recognizer_loop:wakeword', handle_wakeword)
     loop.on('recognizer_loop:record_end', handle_record_end)
     loop.on('speak', handle_speak)
+    loop.on('recognizer_loop:no_internet', handle_no_internet)
     ws.on('open', handle_open)
     ws.on('speak', handle_speak)
     ws.on(

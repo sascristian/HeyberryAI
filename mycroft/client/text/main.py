@@ -72,7 +72,6 @@ meter_thresh = -1
 screen_mode = 0   # 0 = main, 1 = help, others in future?
 last_redraw = 0   # time when last full-redraw happened
 
-disable_speak_flag = False
 ##############################################################################
 # Helper functions
 
@@ -106,19 +105,10 @@ def load_settings():
 
 
 def save_settings():
-    config_file["filters"] = log_filters
+    config["filters"] = log_filters
     with open(config_file, 'w') as f:
-        json.dump(config_file, f)
+        json.dump(config, f)
 
-
-def set_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = True
-
-
-def unset_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = False
 
 ##############################################################################
 # Log file monitoring

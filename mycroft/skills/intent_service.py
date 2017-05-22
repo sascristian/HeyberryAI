@@ -42,7 +42,7 @@ class IntentService(object):
         self.emitter.on('intent_to_skill_request', self.handle_intent_to_skill_request)
         self.emitter.on('active_skill_request', self.handle_active_skill_request)
         self.active_skills = []  # [skill_id , timestamp]
-        self.skill_ids = {} # {skill_id: [intents]}
+        self.skill_ids = {}  # {skill_id: [intents]}
         self.converse_timeout = 5  # minutes to prune active_skills
 
     def do_conversation(self, utterances, skill_id, lang):
@@ -114,7 +114,7 @@ class IntentService(object):
             skill_id = int(best_intent['intent_type'].split(":")[0])
             intent_name = best_intent['intent_type'].split(":")[1]
             self.emitter.emit(Message("intent_response", {
-                "skill_id": skill_id, "utterance": utterance, "lang": lang, "intent_name":intent_name}))
+                "skill_id": skill_id, "utterance": utterance, "lang": lang, "intent_name": intent_name}))
             return True
         self.emitter.emit(Message("intent_response", {
             "skill_id": 0, "utterance": utterance, "lang": lang, "intent_name": ""}))
