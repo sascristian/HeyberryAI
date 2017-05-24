@@ -2,8 +2,8 @@ https://github.com/MycroftAI/mycroft-core/issues/790
 
 - speech and cli clients check for a "mute" in speech to not speak
 - speech and cli clients check if they are the target of the utterance before processing it
-- intent class makes the target the source of utterance
-- on register intent add a handler just to set target and mute flag on receiving intent message
+- intent class sets the target as the source of utterance, checks if source requested mute 
+- on register intent add a handler to set target and mute flag on receiving intent message
 - receive intent message (with target and mute flag), store target in self.target and call intent handler
 - on speak method add self.target and self.muted to metadata if none was provided
 
