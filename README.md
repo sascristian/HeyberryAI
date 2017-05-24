@@ -1,7 +1,7 @@
 
 speech metadata carries the following by default
 
-    {u'source_skill': 73, u'mute': False, u'target': 73, u'more': False}
+    {u'source_skill': skill_id/name, u'mute': False, u'target': "all", u'more': False}
 
 - speech and cli clients check for a "mute" in speech to not speak
 - speech and cli clients check if they are the target of the utterance ("all" by default)
