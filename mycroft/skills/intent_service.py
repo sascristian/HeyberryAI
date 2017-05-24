@@ -45,6 +45,10 @@ class IntentService(object):
             lang = "en-us"
 
         utterances = message.data.get('utterances', '')
+        source = message.data.get("source")
+        target = message.data.get("target")
+        if target is None:
+            target = source
 
         best_intent = None
         for utterance in utterances:
@@ -60,6 +64,7 @@ class IntentService(object):
                 continue
 
         if best_intent and best_intent.get('confidence', 0.0) > 0.0:
+            best_intent["target"] = target
             reply = message.reply(
                 best_intent.get('intent_type'), best_intent)
             self.emitter.emit(reply)
