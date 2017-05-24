@@ -281,7 +281,7 @@ class MycroftSkill(object):
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
     def speak(self, utterance, expect_response=False, metadata={}):
-        metadata["source_skill"] = self.skill_id
+        metadata["source_skill"] = self.name
         if "mute" not in metadata.keys():
             metadata["mute"] = False
         if "more" not in metadata.keys():
@@ -294,7 +294,7 @@ class MycroftSkill(object):
         self.emitter.emit(Message("speak", data))
 
     def speak_dialog(self, key, data={}, expect_response=False, metadata={}):
-        metadata["source_skill"] = self.skill_id
+        metadata["source_skill"] = self.name
         if "mute" not in metadata.keys():
             metadata["mute"] = False
         if "more" not in metadata.keys():
