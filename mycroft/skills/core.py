@@ -177,6 +177,7 @@ class MycroftSkill(object):
         self.log = getLogger(name)
         self.reload_skill = True
         self.events = []
+        self.target = "all"
 
     @property
     def location(self):
@@ -249,9 +250,13 @@ class MycroftSkill(object):
                     self.name, exc_info=True)
 
         if handler:
+            self.emitter.on(intent_parser.name, self.set_target)
             self.emitter.on(intent_parser.name, receive_handler)
             self.events.append((intent_parser.name, receive_handler))
 
+    def set_target(self, message):
+        self.target = message.data.get("target")
+        
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
         logger.debug('Disabling intent ' + intent_name)
@@ -287,7 +292,7 @@ class MycroftSkill(object):
         if "more" not in metadata.keys():
             metadata["more"] = False
         if "target" not in metadata.keys():
-            metadata["target"] = "all"
+            metadata["target"] = self.target
         data = {'utterance': utterance,
                 'expect_response': expect_response,
                 "metadata": metadata}
@@ -300,7 +305,7 @@ class MycroftSkill(object):
         if "more" not in metadata.keys():
             metadata["more"] = False
         if "target" not in metadata.keys():
-            metadata["target"] = "all"
+            metadata["target"] = self.target
         data['expect_response'] = expect_response
         data["metadata"] = metadata
         self.speak(self.dialog_renderer.render(key, data))
