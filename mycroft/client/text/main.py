@@ -254,7 +254,7 @@ def handle_speak(event):
     mutex.acquire()
     target = event.data.get("metadata").get("target")
     mute = event.data.get("metadata").get("mute")
-    if target != "all" and target != "speech":
+    if target != "all" and target != "cli":
         return
     if not bQuiet and not mute:
         ws.emit(Message("recognizer_loop:audio_output_start"))
@@ -707,7 +707,7 @@ def main(stdscr):
                     chat.append(line)
                     ws.emit(Message("recognizer_loop:utterance",
                                     {'utterances': [line.strip()],
-                                     'lang': 'en-us'}))
+                                     'lang': 'en-us', 'source': 'cli'}))
                 hist_idx = -1
                 line = ""
             elif c == curses.KEY_UP:
@@ -792,7 +792,7 @@ def simple_cli():
             line = sys.stdin.readline()
             ws.emit(
                 Message("recognizer_loop:utterance",
-                        {'utterances': [line.strip()]}))
+                        {'utterances': [line.strip()], "source": "cli"}))
     except KeyboardInterrupt, e:
         # User hit Ctrl+C to quit
         print("")
