@@ -280,13 +280,29 @@ class MycroftSkill(object):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
-    def speak(self, utterance, expect_response=False):
+    def speak(self, utterance, expect_response=False, metadata={}):
+        metadata["source_skill"] = self.skill_id
+        if "mute" not in metadata.keys():
+            metadata["mute"] = False
+        if "more" not in metadata.keys():
+            metadata["more"] = False
+        if "target" not in metadata.keys():
+            metadata["target"] = "all"
         data = {'utterance': utterance,
-                'expect_response': expect_response}
+                'expect_response': expect_response,
+                "metadata": metadata}
         self.emitter.emit(Message("speak", data))
 
-    def speak_dialog(self, key, data={}, expect_response=False):
+    def speak_dialog(self, key, data={}, expect_response=False, metadata={}):
+        metadata["source_skill"] = self.skill_id
+        if "mute" not in metadata.keys():
+            metadata["mute"] = False
+        if "more" not in metadata.keys():
+            metadata["more"] = False
+        if "target" not in metadata.keys():
+            metadata["target"] = "all"
         data['expect_response'] = expect_response
+        data["metadata"] = metadata
         self.speak(self.dialog_renderer.render(key, data))
 
     def init_dialog(self, root_directory):
