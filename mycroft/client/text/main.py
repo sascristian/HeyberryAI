@@ -252,7 +252,11 @@ def handle_speak(event):
     global chat
     global tts
     mutex.acquire()
-    if not bQuiet:
+    target = event.data.get("metadata").get("target")
+    mute = event.data.get("metadata").get("mute")
+    if target != "all" and target != "speech":
+        return
+    if not bQuiet and not mute:
         ws.emit(Message("recognizer_loop:audio_output_start"))
     try:
         utterance = event.data.get('utterance')
@@ -261,7 +265,7 @@ def handle_speak(event):
         else:
             chat.append(">> " + utterance)
         draw_screen()
-        if not bQuiet:
+        if not bQuiet and not mute:
             if not tts:
                 tts = TTSFactory.create()
                 tts.init(ws)
