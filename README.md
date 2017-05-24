@@ -30,4 +30,4 @@ arbitrary metadata, like source of info, can be appended to speech
         metadata = message.data.get("metadata")
         target = metadata.get("target")
         if target == self.name:
-            self.speak("Yeah, it works")
+            self.speak("Yeah, it works", metadata={"target": "all"})
