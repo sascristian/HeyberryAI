@@ -73,7 +73,7 @@ class WikipediaSkill(MycroftSkill):
         feedback = self.feedback_search[randrange(len(self.feedback_search))]
         sentence = feedback.replace('<prefix>', prefix).replace(
             '<title>', title)
-        self.speak(sentence)
+        self.speak(sentence, metadata={"more": True})
 
     def __ask_more_about(self, opts):
         sentence = self.question

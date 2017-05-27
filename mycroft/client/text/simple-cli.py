@@ -29,7 +29,9 @@ logger = getLogger("CLIClient")
 
 def handle_speak(event):
     utterance = event.data.get('utterance')
-    logger.info("Speak: " + utterance)
+    target = event.data.get('target')
+    if target == "cli" or target == "all":
+        logger.info("Speak: " + utterance)
 
 def connect():
     ws.run_forever()

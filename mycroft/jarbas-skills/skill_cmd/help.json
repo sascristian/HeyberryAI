@@ -1,0 +1,1 @@
+{"intents": [{"intent_keywords": ["Script"], "intent_name": "RunScriptCommandIntent", "intent_description": "no description provided"}], "description": "no description provided for this skill", "author": "forslund\tforslund", "support": {"website": "forslund\thttps://github.com/forslund/mycroft-core/", "email": "not provided"}, "keywords": {".gitkeep": []}, "skill_name": "cmd"}

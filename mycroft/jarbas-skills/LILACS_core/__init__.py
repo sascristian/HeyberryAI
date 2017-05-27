@@ -184,7 +184,7 @@ class LilacsCoreSkill(MycroftSkill):
         center_node, target_node, parents, synonims, midle, question = self.parse_utterance(utterance)
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
-            self.speak("i dont understand the question")
+            #self.speak("i dont understand the question")
             self.answered = self.handle_learning(utterance)
             return
 

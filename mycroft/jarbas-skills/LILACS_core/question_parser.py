@@ -59,6 +59,7 @@ class EnglishQuestionParser():
 
 class LILACSQuestionParser():
     def __init__(self, host="http://spotlight.sztaki.hu:2222/rest/annotate"):
+        # 222 2en 8pt 5fr
         self.parser = EnglishQuestionParser()
         self.host = host
 
@@ -97,7 +98,7 @@ class LILACSQuestionParser():
         parents = {}
         synonims = {}
         try:
-            annotations = spotlight.annotate(self.host, text)
+            annotations = spotlight.annotate(self.host, text, spotter='Default')
             for annotation in annotations:
 
                 # how sure we are this is about this dbpedia entry

@@ -34,14 +34,13 @@ from mycroft.lock import Lock as PIDLock  # Create/Support PID locking file
 
 logger = getLogger("SpeechClient")
 ws = None
-tts = None
-tts_hash = None
+tts = TTSFactory.create()
 lock = Lock()
 loop = None
 _last_stop_signal = 0
 
 config = ConfigurationManager.get()
-disable_speak_flag = False
+
 
 def handle_record_begin():
     logger.info("Begin Recording...")
@@ -65,41 +64,21 @@ def handle_wakeword(event):
 
 def handle_utterance(event):
     logger.info("Utterance: " + str(event['utterances']))
+    event["source"] = "speech"
     ws.emit(Message('recognizer_loop:utterance', event))
 
 
-def set_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = True
-
-
-def unset_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = False
-
-
 def mute_and_speak(utterance):
-    global tts_hash
-    global tts
-
     lock.acquire()
-    # update TTS object if configuration has changed
-    if tts_hash != hash(str(config.get('tts', ''))):
-        tts = TTSFactory.create()
-        tts.init(ws)
-        tts_hash = hash(str(config.get('tts', '')))
-
     ws.emit(Message("recognizer_loop:audio_output_start"))
-    global disable_speak_flag
-    if not disable_speak_flag:
-        try:
-            logger.info("Speak: " + utterance)
-            loop.mute()
-            tts.execute(utterance)
-        finally:
-            loop.unmute()
-            lock.release()
-            ws.emit(Message("recognizer_loop:audio_output_end"))
+    try:
+        logger.info("Speak: " + utterance)
+        loop.mute()
+        tts.execute(utterance)
+    finally:
+        loop.unmute()
+        lock.release()
+        ws.emit(Message("recognizer_loop:audio_output_end"))
 
 
 def handle_multi_utterance_intent_failure(event):
@@ -113,7 +92,10 @@ def handle_speak(event):
 
     utterance = event.data['utterance']
     expect_response = event.data.get('expect_response', False)
-
+    mute = event.data["mute"]
+    target = event.data["target"]
+    if target != "all" and target != "speech":
+        return
     # This is a bit of a hack for Picroft.  The analog audio on a Pi blocks
     # for 30 seconds fairly often, so we don't want to break on periods
     # (decreasing the chance of encountering the block).  But we will
@@ -122,20 +104,20 @@ def handle_speak(event):
     #
     # TODO: Remove or make an option?  This is really a hack, anyway,
     # so we likely will want to get rid of this when not running on Mimic
-    if not config.get('enclosure', {}).get('platform') == "picroft":
-        start = time.time()
-        chunks = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s',
-                          utterance)
-        for chunk in chunks:
-            now = time.time()
-            try:
-                mute_and_speak(chunk)
-            except:
-                logger.error('Error in mute_and_speak', exc_info=True)
-            if _last_stop_signal > now:
-                break
-    else:
-        mute_and_speak(utterance)
+    if not mute:
+        if not config.get('enclosure', {}).get('platform') == "picroft":
+            start = time.time()
+            chunks = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s',
+                              utterance)
+            for chunk in chunks:
+                try:
+                    mute_and_speak(chunk)
+                except:
+                    logger.error('Error in mute_and_speak', exc_info=True)
+                if _last_stop_signal > start or check_for_signal('buttonPress'):
+                    break
+        else:
+            mute_and_speak(utterance)
 
     if expect_response:
         create_signal('startListening')
@@ -172,15 +154,9 @@ def connect():
 def main():
     global ws
     global loop
-    global config
-    global tts
-    global tts_hash
     lock = PIDLock("voice")
     ws = WebsocketClient()
-    config = ConfigurationManager.get()
-    tts = TTSFactory.create()
     tts.init(ws)
-    tts_hash = config.get('tts')
     ConfigurationManager.init(ws)
     loop = RecognizerLoop()
     loop.on('recognizer_loop:utterance', handle_utterance)
@@ -198,8 +174,6 @@ def main():
     ws.on('recognizer_loop:wake_up', handle_wake_up)
     ws.on('mycroft.stop', handle_stop)
     ws.on("mycroft.paired", handle_paired)
-    ws.on('do_not_speak_flag_enable', set_speak_flag)
-    ws.on('do_not_speak_flag_disable', unset_speak_flag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()

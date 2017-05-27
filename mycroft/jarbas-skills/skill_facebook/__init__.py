@@ -28,6 +28,8 @@ from subprocess import Popen, STDOUT
 from threading import Thread
 from selenium import webdriver
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+import time
+from pyvirtualdisplay import Display
 
 __author__ = 'jarbas'
 
@@ -381,6 +383,8 @@ class FaceBot():
 
 class SeleniumFaceBot():
     def __init__(self, mail, passwd, bin = "/usr/lib/firefox-esr/firefox-esr"):
+        display = Display(visible=0, size=(800, 600))
+        display.start()
         self.mail = mail
         self.passwd = passwd
         self.bin = bin
@@ -470,10 +474,11 @@ class SeleniumFaceBot():
         except:
             # in some systems we must pass binary path or webdriver fails
             binary = FirefoxBin(self.bin)
+            firefox_profile = webdriver.FirefoxProfile()
             capabilities = webdriver.DesiredCapabilities().FIREFOX
             capabilities["marionette"] = False
-            self.driver = webdriver.Firefox(firefox_binary=binary)
-
+            capabilities['firefox_profile'] = firefox_profile.encoded
+            self.driver = webdriver.Firefox(firefox_binary=binary, capabilities=capabilities)
         sleep(5)
         #go to fb oage and login
 
@@ -768,17 +773,79 @@ class SeleniumFaceBot():
 
 class FaceChat(fbchat.Client):
 
-    def __init__(self, email, password, emitter=None, debug=True, user_agent=None):
+    def __init__(self, email, password, emitter=None, active=False, debug=True, user_agent="Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"):
         fbchat.Client.__init__(self, email, password, debug, user_agent)
+        self.log = getLogger("Facebook Chat")
         self.emitter = emitter
+        self.emitter.on("fb_chat_message", self.handle_chat_request)
+        self.emitter.on("speak", self.handle_speak)
+        self.chatting = False
+        self.queue = [] #[[author_id , utterance]]
+        self.response = ""
+        self.waiting = False
         self.monitor_thread = None
-        self.start_monitor_thread()
+        self.queue_thread = None
+        self.start_threads()
         self.privacy = False
+        self.active = active
 
-    def start_monitor_thread(self):
+    def activate_client(self):
+        self.active = True
+
+    def deactivate_client(self):
+        self.active = False
+
+    def _queue(self):
+        while True:
+            # check if there is a utterance in queue
+            if len(self.queue) > 0:
+                self.log.debug("Processing queue")
+                self.more = False
+                self.chatting = True
+                chat = self.queue[0]
+                # send that utterance to skills
+                self.log.debug("Processing utterance " + chat[1] + " for user " + str(chat[0]))
+                self.emitter.emit(
+                    Message("recognizer_loop:utterance",
+                            {'utterances': [chat[1]], 'source': 'fbchat', "mute": True}))
+                # capture speech response
+                self.wait_answer()
+                # answer
+                self.log.debug("Answering " + str(chat[0]) + " with " + self.response)
+                self.send(chat[0], self.response)
+                # remove from queue
+                self.log.debug("Removing item from queue")
+                self.queue.pop(0)
+                # reset response
+                self.response = ""
+                # if more speech is coming for this chat
+                if self.more:
+                    self.log.debug("More speech is expected, waiting")
+                    # capture speech response
+                    self.wait_answer()
+                    # answer
+                    self.log.debug("Answering " + str(chat[0]) + " with " + self.response)
+                    self.send(chat[0], self.response)
+                    # reset response
+                    self.response = ""
+                # check next item
+            elif self.chatting:
+                # if nothing on queue we are not chatting
+                self.chatting = False
+                self.log.debug("Not chatting on facebook " + time.asctime())
+            # sleep briefly
+            time.sleep(0.3)
+
+    def start_threads(self):
+        self.log.debug("Starting chat listener thread")
         self.monitor_thread = Thread(target=self.listen)
         self.monitor_thread.setDaemon(True)
         self.monitor_thread.start()
+
+        self.log.debug("Starting utterance queue thread")
+        self.queue_thread = Thread(target=self._queue)
+        self.queue_thread.setDaemon(True)
+        self.queue_thread.start()
 
     def get_last_messages(self, id):
         last_messages = self.getThreadInfo(id, 0)
@@ -799,6 +866,37 @@ class FaceChat(fbchat.Client):
         if str(author_id) != str(self.uid) and self.emitter is not None:
             self.emitter.emit(Message("fb_chat_message", {"author_id": author_id, "message": message}))
 
+    def handle_chat_request(self, message):
+        txt = message.data.get('message')
+        user = message.data.get('author_id')
+        # TODO check with intent parser if intent from control center wont be used (change run-level)
+        # read from config skills to be blacklisted
+        if self.active:
+            self.log.debug("Adding " + txt + " from user " + str(user) + " to queue")
+            self.queue.append([user, txt])
+
+    def handle_speak(self, message):
+        utterance = message.data.get("utterance")
+        target = message.data.get("target")
+        # if we are chatting and waiting for a response
+        if (target == "fbchat" or target == "all") and self.chatting and self.waiting:
+            # capture response
+            self.log.debug("Capturing speech response")
+            self.response = utterance
+            self.more = message.data.get("more")
+            self.waiting = False
+
+    def wait_answer(self):
+        start = time.time()
+        elapsed = 0
+        self.log.debug("Waiting for speech response")
+        self.waiting = True
+        # wait maximum 20 seconds
+        while self.waiting and elapsed < 20:
+            elapsed = time.time() - start
+            sleep(0.1)
+        self.waiting = False
+
 
 class FacebookSkill(MycroftSkill):
 
@@ -812,8 +910,10 @@ class FacebookSkill(MycroftSkill):
         self.mail = self.config['mail']
         self.passwd = self.config['passwd']
         # TODO read all bellow from config
+        self.default_target = "all" #where to speak chat messages
         self.speak_messages = True
         self.like_back = False
+        self.speak_posts = True
         self.firefox_path = "/usr/lib/firefox-esr/firefox-esr"
         self.friend_num = 1 #number of friends to add
         self.photo_num = 2 #number of photos to like
@@ -850,7 +950,7 @@ class FacebookSkill(MycroftSkill):
         # start bots
         self.face = FaceBot(self.api_key)
         self.selenium_face = SeleniumFaceBot(self.mail, self.passwd, self.firefox_path)
-        self.chat = FaceChat(self.mail, self.passwd, self.emitter)
+        self.chat = FaceChat(self.mail, self.passwd, self.emitter, debug=False)
         self.face_id = self.face.get_self_id()
         # populate friend ids
         self.get_ids_from_chat() # TODO make an intent for this?
@@ -941,6 +1041,7 @@ class FacebookSkill(MycroftSkill):
                 return friend
 
     def handle_post_request(self, message):
+        # TODO get target from message
         #type = message.data["type"]
         text = message.data["text"].encode("utf8")
         link = message.data["link"]
@@ -951,7 +1052,8 @@ class FacebookSkill(MycroftSkill):
         #else:
             # TODO more formatted post types
         #    pass
-        self.speak(speech)
+        if self.speak_posts:
+            self.speak(speech)
 
     def handle_chat_message(self, message):
         text = message.data["message"]
