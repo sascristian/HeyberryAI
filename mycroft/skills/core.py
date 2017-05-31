@@ -195,6 +195,7 @@ class MycroftSkill(object):
         self.skill_id = 0
         self.target = "all"
         self.muted = False
+        self.user = "unknown"
 
     @property
     def location(self):
@@ -289,10 +290,13 @@ class MycroftSkill(object):
     def set_target(self, message):
         self.target = message.data.get("target")
         self.muted = message.data.get("mute")
+        self.user = message.data.get("user")
         if not self.target:
             self.target = "all"
         if not self.muted:
             self.muted = False
+        if not self.user:
+            self.user = "unknown"
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""

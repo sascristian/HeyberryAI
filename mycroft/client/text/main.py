@@ -707,7 +707,7 @@ def main(stdscr):
                     chat.append(line)
                     ws.emit(Message("recognizer_loop:utterance",
                                     {'utterances': [line.strip()],
-                                     'lang': 'en-us', 'source': 'cli'}))
+                                     'lang': 'en-us', 'source': 'cli', "user":"unknown"}))
                 hist_idx = -1
                 line = ""
             elif c == curses.KEY_UP:
@@ -792,7 +792,7 @@ def simple_cli():
             line = sys.stdin.readline()
             ws.emit(
                 Message("recognizer_loop:utterance",
-                        {'utterances': [line.strip()], "source": "cli"}))
+                        {'utterances': [line.strip()], "source": "cli", "user":"unknown"}))
     except KeyboardInterrupt, e:
         # User hit Ctrl+C to quit
         print("")

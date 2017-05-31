@@ -132,6 +132,7 @@ class IntentService(object):
         source = message.data.get("source")
         target = message.data.get("target")
         mute = message.data.get("mute")
+        user = message.data.get("user")
         if target is None:
             target = source
         if mute is None:
@@ -165,6 +166,7 @@ class IntentService(object):
         if best_intent and best_intent.get('confidence', 0.0) > 0.0:
             best_intent["target"] = target
             best_intent["mute"] = mute
+            best_intent["user"] = user
             reply = message.reply(
                 best_intent.get('intent_type'), best_intent)
             self.emitter.emit(reply)

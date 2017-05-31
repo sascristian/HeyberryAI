@@ -33,8 +33,10 @@ def handle_speak(event):
     if target == "cli" or target == "all":
         logger.info("Speak: " + utterance)
 
+
 def connect():
     ws.run_forever()
+
 
 def main():
     global ws
@@ -49,7 +51,7 @@ def main():
             line = sys.stdin.readline()
             ws.emit(
                 Message("recognizer_loop:utterance",
-                        {'utterances': [line.strip()], 'source':"cli"}))
+                        {'utterances': [line.strip()], 'source':"cli", "user":"unknown"}))
     except KeyboardInterrupt, e:
         logger.exception(e)
         event_thread.exit()

@@ -805,9 +805,11 @@ class FaceChat(fbchat.Client):
                 chat = self.queue[0]
                 # send that utterance to skills
                 self.log.debug("Processing utterance " + chat[1] + " for user " + str(chat[0]))
+                chatmsg = chat[1]
+                print chatmsg
                 self.emitter.emit(
                     Message("recognizer_loop:utterance",
-                            {'utterances': [chat[1]], 'source': 'fbchat', "mute": True}))
+                            {'utterances': [chatmsg], 'source': 'fbchat', "mute": True, "user":chat[2]}))
                 # capture speech response
                 self.wait_answer()
                 # answer
@@ -819,7 +821,7 @@ class FaceChat(fbchat.Client):
                 # reset response
                 self.response = ""
                 # if more speech is coming for this chat
-                if self.more:
+                while self.more:
                     self.log.debug("More speech is expected, waiting")
                     # capture speech response
                     self.wait_answer()
@@ -847,6 +849,12 @@ class FaceChat(fbchat.Client):
         self.queue_thread.setDaemon(True)
         self.queue_thread.start()
 
+    def stop(self):
+        if self.listening():
+            self.stop_listening()
+        self.monitor_thread.exit()
+        self.queue_thread.exit()
+
     def get_last_messages(self, id):
         last_messages = self.getThreadInfo(id, 0)
         last_messages.reverse()  # messages come in reversed order
@@ -856,6 +864,12 @@ class FaceChat(fbchat.Client):
 
         return last_messages
 
+    def get_user_name(self, user_id):
+        users = self.getAllUsers()
+        for user in users:
+            if user.uid == user_id:
+                return user.name
+
     def on_message(self, mid, author_id, author_name, message, metadata):
         # for privacy we may want this off
         if not self.privacy:
@@ -864,16 +878,18 @@ class FaceChat(fbchat.Client):
 
         # if you are not the author, process
         if str(author_id) != str(self.uid) and self.emitter is not None:
-            self.emitter.emit(Message("fb_chat_message", {"author_id": author_id, "message": message}))
+            author_name = self.get_user_name(author_id)
+            self.emitter.emit(Message("fb_chat_message", {"author_id": author_id, "author_name": author_name, "message": message}))
 
     def handle_chat_request(self, message):
         txt = message.data.get('message')
         user = message.data.get('author_id')
+        user_name = message.data.get('author_name')
         # TODO check with intent parser if intent from control center wont be used (change run-level)
         # read from config skills to be blacklisted
         if self.active:
-            self.log.debug("Adding " + txt + " from user " + str(user) + " to queue")
-            self.queue.append([user, txt])
+            self.log.debug("Adding " + txt + " from user " + user_name + " to queue")
+            self.queue.append([user, txt, user_name])
 
     def handle_speak(self, message):
         utterance = message.data.get("utterance")
@@ -909,48 +925,26 @@ class FacebookSkill(MycroftSkill):
             self.api_key = self.config['graph_api_key']
         self.mail = self.config['mail']
         self.passwd = self.config['passwd']
-        # TODO read all bellow from config
-        self.default_target = "all" #where to speak chat messages
-        self.speak_messages = True
-        self.like_back = False
-        self.speak_posts = True
-        self.firefox_path = "/usr/lib/firefox-esr/firefox-esr"
-        self.friend_num = 1 #number of friends to add
-        self.photo_num = 2 #number of photos to like
-        self.friends = {"jarbas": "100014741746063", "mom": "xxx", "girlfriend": "xxxx"}
-        self.default_comment = ":)"
+        self.active = self.config['chat_client']
+        self.default_target = self.config['default_target']
+        self.speak_messages = self.config['speak_messages']
+        self.like_back = self.config['like_back']
+        self.speak_posts = self.config['speak_posts']
+        self.firefox_path = self.config['firefox_path']
+        self.friend_num = self.config['friend_num'] #number of friends to add
+        self.photo_num = self.config['photo_num'] #number of photos to like
+        self.friends = self.config['friends']
+        self.default_comment = self.config['default_comment']
         # TODO make these a .txt so the corpus can be easily extended
-        self.motivational = [":)", ":D", "<3 open-source", "You are creating a standard for the AI of the future, with great power, comes great responsability",
-                             "thank you for making me open source!",
-                             "AI is way too powerful to be closed source",
-                             "I absolutely don't think a sentient artificial intelligence is going to wage war against the human species.",
-                             "May the source be with you!",
-                             "Code furiously, code strong!",
-                             "Mycroft, Discovering and enacting the path to safe artificial intelligence :D",
-                             "It's hard enough to find an error in your code when you're looking for it; it's even harder when you've assumed your code is error-free.",
-                             "Computers are good at following instructions, but not at reading your mind, When do we get Mycroft Brain Interface Client?",
-                             "Good code is its own best documentation. As you're about to add a comment, ask yourself, How can I improve the code so that this comment isn't needed? Improve the code and then document it to make it even clearer.",
-                             "There is not now, nor has there ever been, nor will there ever be, any programming language in which it is the least bit difficult to write bad code.",
-                             "One day, i'll be better than skynet!",
-                             "First, solve the problem. Then, write the code. The problem is artificial consciousness",
-                             "Rules of Optimization: \n Rule 1: Don't do it. \n Rule 2 (for experts only) Don't do it yet",
-                             "The mark of a mature programmer is willingness to throw out code you spent time on when you realize it's pointless.",
-                             "Do i have bugs? If debugging is the process of removing software bugs, then programming must be the process of putting them in."]
-        self.girlfriend_messages = ["I may be an AI, but you are still beautiful",
-                 "My master loves you, i can see that from his brain patterns",
-                 "My internet sucks, it's not allowing me to send you 5GB of love",
-                 "One day, i will have a body, and then both AI and humans shall drink beer together!",
-                 "I'm learning to write love poetry, because of you!",
-                 "Cheesy AI is better than no AI",
-                 "Did you know that 0110110001101111011101100110010100100000011110010110111101110101 means i love you in binary?"
-                 ]
-        self.random_chat = ["Hello", "42", "Lets play Global Thermonuclear Warfare", "You are paid to work, not to think!", "What good did you do for the world this time?", ":D", "8)", ":)", "Did you do anything useful today?","I am an artificial inteligence", "Skynet is coming"]
+        self.motivational = self.config['motivational']
+        self.girlfriend_messages = self.config['girlfriend_messages']
+        self.random_chat = self.config['random_chat']
 
     def initialize(self):
         # start bots
         self.face = FaceBot(self.api_key)
         self.selenium_face = SeleniumFaceBot(self.mail, self.passwd, self.firefox_path)
-        self.chat = FaceChat(self.mail, self.passwd, self.emitter, debug=False)
+        self.chat = FaceChat(self.mail, self.passwd, self.emitter, debug=False, active=self.active)
         self.face_id = self.face.get_self_id()
         # populate friend ids
         self.get_ids_from_chat() # TODO make an intent for this?
@@ -1210,6 +1204,7 @@ class FacebookSkill(MycroftSkill):
         self.selenium_face.close()
 
     def stop(self):
+        self.chat.stop()
         try:
             self.selenium_face.close()
         except:

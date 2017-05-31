@@ -65,6 +65,7 @@ def handle_wakeword(event):
 def handle_utterance(event):
     logger.info("Utterance: " + str(event['utterances']))
     event["source"] = "speech"
+    event["user"] = "unknown"
     ws.emit(Message('recognizer_loop:utterance', event))
 
 
