@@ -102,33 +102,31 @@ elif [[ "$1" == "start" && -z "$2" ]]
 then
   start-mycroft service
   start-mycroft skills
-  start-mycroft voice
-  start-mycroft-nolog cli --quiet --simple
+  start-mycroft server
   exit 0
 elif [[ "$1" == "start" && "$2" == "-v" ]]
 then
   start-mycroft service
   start-mycroft skills
-  start-mycroft voice
+  start-mycroft server
   exit 0
 elif [[ "$1" == "start" && "$2" == "-c" ]]
 then
   start-mycroft service
   start-mycroft skills
-  start-mycroft-nolog cli --simple
+  start-mycroft server
   exit 0
 elif [[ "$1" == "start" && "$2" == "-d" ]]
 then
   start-mycroft service
   start-mycroft skills
-  debug-start-mycroft cli
+  start-mycroft server
   exit 0
 elif [[ "$1" == "stop" && -z "$2" ]]
 then
   stop-mycroft service
   stop-mycroft skills
-  stop-mycroft voice
-  stop-mycroft cli
+  stop-mycroft server
   exit 0
 elif [[ "$1" == "restart" && -z "$2" ]]
 then

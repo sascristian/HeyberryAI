@@ -6,10 +6,9 @@ ${TOP}/scripts/prepare-msm.sh
 
 case $1 in
 	"service") SCRIPT=${TOP}/mycroft/messagebus/service/main.py ;;
+	"server") SCRIPT=${TOP}/mycroft/client/server/main.py ;;
 	"skills") SCRIPT=${TOP}/mycroft/skills/main.py ;;
 	"skill_container") SCRIPT=${TOP}/mycroft/skills/container.py ;;
-	"voice") SCRIPT=${TOP}/mycroft/client/speech/main.py ;;
-	"cli") SCRIPT=${TOP}/mycroft/client/text/main.py ;;
 	"audiotest") SCRIPT=${TOP}/mycroft/util/audio_test.py ;;
 	"collector") SCRIPT=${TOP}/mycroft_data_collection/cli.py ;;
 	"unittest") SCRIPT=${TOP}/test/main.py ;;
