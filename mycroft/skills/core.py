@@ -33,11 +33,11 @@ from mycroft.dialog import DialogLoader
 from mycroft.filesystem import FileSystemAccess
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-from mycroft.skills.settings import SkillSettings
+
 __author__ = 'seanfitz'
 
 BLACKLISTED_SKILLS = ["send_sms", "media"]
-SKILLS_DIR = "/opt/mycroft/skills"
+SKILLS_DIR = "/home/user/server/mycroft-core/server_skills"
 
 MainModule = '__init__'
 
@@ -104,7 +104,6 @@ def load_skill(skill_descriptor, emitter):
             # v2 skills framework
             skill = skill_module.create_skill()
             skill.bind(emitter)
-            skill._dir = dirname(skill_descriptor['info'][1])
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
             skill.initialize()
             logger.info("Loaded " + skill_descriptor["name"])
@@ -177,6 +176,8 @@ class MycroftSkill(object):
         self.registered_intents = []
         self.log = getLogger(name)
         self.reload_skill = True
+        self.muted = False
+        self.target = "all"
         self.events = []
 
     @property
@@ -205,15 +206,6 @@ class MycroftSkill(object):
     @property
     def lang(self):
         return self.config_core.get('lang')
-
-    @property
-    def settings(self):
-        """ Load settings if not already loaded. """
-        try:
-            return self._settings
-        except:
-            self._settings = SkillSettings(join(self._dir, 'settings.json'))
-            return self._settings
 
     def bind(self, emitter):
         if emitter:
@@ -259,8 +251,17 @@ class MycroftSkill(object):
                     self.name, exc_info=True)
 
         if handler:
+            self.emitter.on(intent_parser.name, self.set_target)
             self.emitter.on(intent_parser.name, receive_handler)
             self.events.append((intent_parser.name, receive_handler))
+
+    def set_target(self, message):
+        self.target = message.data.get("target")
+        self.muted = message.data.get("mute")
+        if not self.target:
+            self.target = "all"
+        if not self.muted:
+            self.muted = False
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
@@ -290,13 +291,30 @@ class MycroftSkill(object):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
-    def speak(self, utterance, expect_response=False):
+    def speak(self, utterance, expect_response=False, mute=None, more=False, target=None, metadata={}):
+        metadata["source_skill"] = self.name
+        if mute is None:
+            mute = self.muted
+        if target is None:
+            target = self.target
         data = {'utterance': utterance,
-                'expect_response': expect_response}
+                'expect_response': expect_response,
+                'mute': mute,
+                'more': more,
+                'target': target,
+                "metadata": metadata}
         self.emitter.emit(Message("speak", data))
 
-    def speak_dialog(self, key, data={}, expect_response=False):
+    def speak_dialog(self, key, data={}, expect_response=False, mute=None, more=False, target=None, metadata={}):
+        metadata["source_skill"] = self.name
+        if mute is None:
+            mute = self.muted
+        if target is None:
+            data["target"] = self.target
         data['expect_response'] = expect_response
+        data['mute'] = mute
+        data['more'] = more
+        data["metadata"] = metadata
         self.speak(self.dialog_renderer.render(key, data))
 
     def init_dialog(self, root_directory):
@@ -340,8 +358,6 @@ class MycroftSkill(object):
         process termination. The skill implementation must
         shutdown all processes and operations in execution.
         """
-        # Store settings
-        self.settings.store()
 
         # removing events
         for e, f in self.events:

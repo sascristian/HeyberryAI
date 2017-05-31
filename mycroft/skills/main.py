@@ -198,7 +198,7 @@ def _watch_skills():
 
 def main():
     global ws
-    lock = Lock('skills')  # prevent multiple instances of this service
+    #lock = Lock('skills')  # prevent multiple instances of this service
 
     # Connect this Skill management process to the websocket
     ws = WebsocketClient()
