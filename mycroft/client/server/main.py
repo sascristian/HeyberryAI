@@ -44,10 +44,6 @@ more = False
 response = ""
 
 
-def prompt():
-    sys.stdout.flush()
-
-
 def handle_speak(event):
     global chatting, waiting, more, response
     utterance = event.data.get('utterance')
