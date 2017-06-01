@@ -37,7 +37,7 @@ from mycroft.util.log import getLogger
 __author__ = 'seanfitz'
 
 BLACKLISTED_SKILLS = ["send_sms", "media"]
-SKILLS_DIR = "/home/user/server/mycroft-core/server_skills"
+SKILLS_DIR = "/home/test/mycroft-core/server_skills"
 
 MainModule = '__init__'
 

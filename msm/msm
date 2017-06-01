@@ -25,7 +25,7 @@
 
 set -e
 
-mycroft_skill_folder="/home/user/server/mycroft-core/server_skills"
+mycroft_skill_folder="/home/test/mycroft-core/server_skills"
 mycroft_virtualenv=~/.virtualenvs/mycroft/bin/activate
 
 echo "#######  Mycroft Skill Manager #######"
