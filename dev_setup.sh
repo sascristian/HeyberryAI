@@ -59,10 +59,12 @@ echo Building with $CORES cores.
 #build and install pocketsphinx
 #cd ${TOP}
 #${TOP}/scripts/install-pocketsphinx.sh -q
+
+# not on server
 #build and install mimic
-cd ${TOP}
-${TOP}/scripts/install-mimic.sh
+#cd ${TOP}
+#${TOP}/scripts/install-mimic.sh
 
 # install pygtk for desktop_launcher skill
-${TOP}/scripts/install-pygtk.sh
+#${TOP}/scripts/install-pygtk.sh
 
