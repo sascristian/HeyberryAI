@@ -162,7 +162,6 @@ def main():
     global ws
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
-    ws.on('id_update', handle_id_update)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
