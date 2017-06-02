@@ -41,10 +41,13 @@ chatting = False
 waiting = False
 more = False
 response = ""
+default_answer = "i don't know how to answer that"
 
 
 def handle_failure(event):
-    global waiting
+    global waiting, response, default_answer
+    response = default_answer
+    logger.debug("intent failure detected, sending default answer")
     waiting = False
 
 
@@ -236,7 +239,6 @@ def main():
                                 answer = get_answer(utterance, user)
                                 logger.debug("answering: " + answer + " to user: " + user)
                                 answer_data(sock, answer, addr)
-                                response = ""
                                 chatting = False
                 except:
                     offline_client(sock, addr)
