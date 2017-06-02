@@ -211,7 +211,9 @@ def main():
                         if deserialized_message.type in allowed_bus_messages:
                             data = deserialized_message.data
 
-                            if data["id"] is None or data["id"] == "unknown":
+                            if data["id"] is None:
+                                data["id"] = user
+                            elif data["id"] == "unknown":
                                 data["id"] = user
 
                             if deserialized_message.type == "names_response":
