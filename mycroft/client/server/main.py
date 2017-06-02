@@ -44,6 +44,11 @@ more = False
 response = ""
 
 
+def handle_failure(event):
+    global waiting
+    waiting = False
+
+
 def handle_speak(event):
     global chatting, waiting, more, response
     utterance = event.data.get('utterance')
@@ -162,6 +167,7 @@ def main():
     global ws
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
+    ws.on('intent_failure', handle_failure)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
