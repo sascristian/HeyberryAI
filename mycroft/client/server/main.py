@@ -237,6 +237,7 @@ def main():
                                 answer = get_answer(utterance, user)
                                 logger.debug("answering: " + answer + " to user: " + user)
                                 answer_data(sock, answer, addr)
+                                response = ""
                                 chatting = False
                 except:
                     offline_client(sock, addr)
