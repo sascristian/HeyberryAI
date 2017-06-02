@@ -35,7 +35,7 @@ server_socket = None
 utterance_socket = None
 
 blacklisted_ips = []
-allowed_bus_messages = ["recognizer_loop:utterance", "names_response"]
+allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update"]
 names = {}
 
 chatting = False
@@ -162,6 +162,7 @@ def main():
     global ws
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
+    ws.on('id_update', handle_id_update)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
@@ -210,10 +211,16 @@ def main():
                         deserialized_message = Message.deserialize(utterance)
                         if deserialized_message.type in allowed_bus_messages:
                             data = deserialized_message.data
+
+                            if data["id"] is None or data["id"] == "unknown":
+                                data["id"] = user
+
                             if deserialized_message.type == "names_response":
                                 for name in data["names"]:
                                     logger.debug("Setting alias: " + name + " for socket: " + str(data["id"]))
                                     names[name] = data["id"]
+                            elif deserialized_message.type == "id_update":
+                                answer_id(sock, addr)
                             elif deserialized_message.type == "recognizer_loop:utterance":
                                 utterance = data["utterances"][0]
                                 # get answer
