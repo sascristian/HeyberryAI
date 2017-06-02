@@ -30,7 +30,6 @@ logger = getLogger("Mycroft_Server")
 CONNECTION_LIST = []
 RECV_BUFFER = 4096  # Advisable to keep it as an exponent of 2
 PORT = 5000
-UTTERANCE_PORT = 666
 server_socket = None
 utterance_socket = None
 
