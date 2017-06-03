@@ -15,12 +15,13 @@ from time import sleep
 
 #sys.path.append(dirname(dirname(__file__)))
 #from service_display.displayservice import DisplayService
-#sys.path.append(dirname(__file__))
 
-from util.randomart import makeImage
-from util.geopatterns import GeoPattern
+sys.path.append(dirname(__file__))
 
-import cairosvg
+#from utils.randomart import makeImage
+#from utils.geopatterns import GeoPattern
+
+#import cairosvg
 
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
@@ -38,11 +39,6 @@ dreamlogger = getLogger('Dream ')
 class DreamSkill(MycroftSkill):
 	def __init__(self):
 		super(DreamSkill, self).__init__(name="DreamSkill")
-		self.api_key = u'b125f4fe8e7931879700aaa5c055b7dd'
-		self.api_secret = u'e718e36d647bad2b'
-
-		self.flickr = flickrapi.FlickrAPI(self.api_key, self.api_secret)
-
 
 		self.reload_skill = False
 		caffepath = "home/test/caffe"#self.config["caffe_path"]
@@ -167,30 +163,10 @@ class DreamSkill(MycroftSkill):
 			'dream about', 'dream with', 'dream of', 'dream off', 'da']
 		self.__register_prefixed_regex(prefixes, "(?P<DreamSearch>.*)")
 
-		psy_dream_intent = IntentBuilder("PsyDreamIntent") \
-			.require("psydream").build()
-		self.register_intent(psy_dream_intent,
-							 self.handle_psy_dream_intent)
-
-		pure_dream_intent = IntentBuilder("PureDreamIntent") \
-			.require("puredream").build()
-		self.register_intent(pure_dream_intent,
-							 self.handle_pure_dream_intent)
-
 		dream_about_intent = IntentBuilder("DreamAboutIntent") \
 			.require("DreamSearch").build()
 		self.register_intent(dream_about_intent,
 							 self.handle_dream_about_intent)
-
-		dream_about_webcam_intent = IntentBuilder("WebcamDreamingIntent") \
-			.require("camdream").build()
-		self.register_intent(dream_about_webcam_intent,
-							 self.handle_dream_about_webcam_intent)
-
-		dream_about_this_intent = IntentBuilder("TargetedDreamingIntent") \
-			.require("this").build()
-		self.register_intent(dream_about_this_intent,
-							 self.handle_dream_about_this_intent)
 
 		dream_about_dreams_intent = IntentBuilder("DreamAboutDreamsIntent") \
 			.require("Dreamdreams").build()
@@ -224,52 +200,6 @@ class DreamSkill(MycroftSkill):
 		self.speak("look at this dream i had")
 		#self.screen_service.show(dream, message.data["utterance"])
 
-	def handle_psy_dream_intent(self, message):
-		if not self.dreaming:
-			makeImage(self.psypath, 3)
-
-		chosenpic = random.choice(os.listdir(self.psypath))
-		imagepah = self.psypath+"/" + str(chosenpic)
-		# choose dream mode
-		if self.choice != 0:
-			chosenguide = random.choice(os.listdir(self.psypath))
-			guidepah =self.psypath + "/"+ str(chosenguide)
-			# guided dream experiments
-			result = self.guided_dream(imagepah, guidepah)
-		else:
-			result = self.dream(imagepah)
-
-		if result is not None:
-			name = time.asctime()
-			save_path = self.outputdir + "/dream/psy/" + name + ".jpg"
-			cv2.imwrite(save_path, result)
-			self.speak("Here is what i dreamed")
-			#self.screen_service.show(save_path, message.data["utterance"])
-
-	def handle_pure_dream_intent(self, message):
-
-		if not self.dreaming:
-			self.generate_pattern(random.choice(self.strings))
-
-		chosenpic = random.choice(os.listdir(self.patternpath))
-		imagepah = self.patternpath+"/" + str(chosenpic)
-
-		# choose dream mode
-		if self.choice != 0:
-			chosenguide = random.choice(os.listdir(self.patternpath))
-			guidepah =self.patternpath + "/"+ str(chosenguide)
-			# guided dream experiments
-			result = self.guided_dream(imagepah, guidepah)
-		else:
-			result = self.dream(imagepah)
-
-		if result is not None:
-			name = time.asctime()
-			save_path = self.outputdir + "/pure/" + name + ".jpg"
-			cv2.imwrite(save_path, result)
-			self.speak("Here is what i dreamed")
-			#self.screen_service.show(save_path, message.data["utterance"])
-
 	def handle_dream_intent(self, message):
 		if not self.dreaming:
 			self.collectentropy()
@@ -289,35 +219,6 @@ class DreamSkill(MycroftSkill):
 		if result is not None:
 			name = time.asctime()
 			save_path = self.outputdir + "/dream/random/" + name + ".jpg"
-			cv2.imwrite(save_path, result)
-			self.speak("Here is what i dreamed")
-			#self.screen_service.show(save_path, message.data["utterance"])
-
-	def handle_dream_about_webcam_intent(self, message):
-
-		if not self.dreaming:
-			cap = cv2.VideoCapture(0)
-			ret, frame = cap.read()
-			cv2.imwrite(self.camfolder + "/feed.jpg", frame)
-			sleep(1)
-			ret, frame = cap.read()
-			cv2.imwrite(self.camfolder + "/feed2.jpg", frame)
-			cap.release()
-
-		imagepah = self.camfolder + "/feed.jpg"
-
-		# choose dream mode
-		if self.choice != 0:
-			chosenguide = random.choice(os.listdir(self.camfolder))
-			guidepah =self.camfolder + "/"+ str(chosenguide)
-			# guided dream experiments
-			result = self.guided_dream(imagepah, guidepah)
-		else:
-			result = self.dream(imagepah)
-
-		if result is not None:
-			name = time.asctime()
-			save_path = self.outputdir + "/webcam/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
 			#self.screen_service.show(save_path, message.data["utterance"])
@@ -342,31 +243,6 @@ class DreamSkill(MycroftSkill):
 		if result is not None:
 			name = time.asctime()
 			save_path = self.outputdir + "/recursive/" + name + ".jpg"
-			cv2.imwrite(save_path, result)
-			self.speak("Here is what i dreamed")
-			#self.screen_service.show(save_path, message.data["utterance"])
-
-	def handle_dream_about_this_intent(self, message):
-		chosenpic = random.choice(os.listdir(self.sharedfolder))
-
-		if chosenpic is None:
-			self.speak("no source picture")
-			return
-
-		imagepah = self.sharedfolder+"/" + str(chosenpic)
-
-		# choose dream mode
-		if self.choice != 0:
-			chosenguide = random.choice(os.listdir(self.sharedfolder))
-			guidepah =self.sharedfolder + "/"+ str(chosenguide)
-			# guided dream experiments
-			result = self.guided_dream(imagepah, guidepah)
-		else:
-			result = self.dream(imagepah)
-
-		if result is not None:
-			name = time.asctime()
-			save_path = self.outputdir + "/this/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
 			self.speak("Here is what i dreamed")
 			#self.screen_service.show(save_path, message.data["utterance"])
@@ -398,39 +274,6 @@ class DreamSkill(MycroftSkill):
 		self.bc.cleanup()
 
 	##### image / entropy collection functions ####
-
-	def generate_pattern(self, string):
-		generators = ["hexagons", "overlapping_circles", "overlapping_rings", "plaid", "plus_signs", "rings",
-					  "sinewaves", "squares", "xes"]
-		i=0
-		while i<8:
-			try:
-				pattern = GeoPattern(string, random.choice(generators))
-				svg = pattern.svg_string
-				savepath = self.patternpath + "/" + str(i) + ".png"
-				fout = open(savepath, "wb")
-				cairosvg.svg2png(bytestring=svg, write_to=fout)
-				fout.close()
-				pic = cv2.imread(savepath)
-				pic = imutils.resize(pic, self.w, self.h)
-				pic = self.filterdream(random.choice(range(0,13)),pic) #randomly filter or not the generated pattern, since its ugly in final dreams i can use it for something else
-				cv2.imwrite(savepath, pic)
-			except:
-				pass
-			i += 1
-
-	def collectentropy(self):
-		# collect dream entropy
-		self.store_raw_images(3)
-
-	def countdreams(self, dir = None):
-		if dir is None:
-			dir = self.outputdir
-		i = 1
-		for f in os.listdir(dir):
-			if os.path.isfile(os.path.join(dir, f)):
-				i += 1
-		return i
 
 	def store_raw_images(self, number=1):
 
