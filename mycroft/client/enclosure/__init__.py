@@ -19,7 +19,6 @@
 import subprocess
 import time
 from Queue import Queue
-from alsaaudio import Mixer
 from threading import Thread, Timer
 
 import serial
@@ -33,7 +32,6 @@ from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util import play_wav, create_signal, connected
-from mycroft.util.audio_test import record
 from mycroft.util.log import getLogger
 
 __author__ = 'aatchison', 'jdorleans', 'iward'
@@ -102,20 +100,6 @@ class EnclosureReader(Thread):
         if "system.test.end" in data:
             self.ws.emit(Message('recognizer_loop:wake_up'))
 
-        if "mic.test" in data:
-            mixer = Mixer()
-            prev_vol = mixer.getvolume()[0]
-            mixer.setvolume(35)
-            self.ws.emit(Message("speak", {
-                'utterance': "I am testing one two three"}))
-
-            time.sleep(0.5)  # Prevents recording the loud button press
-            record("/tmp/test.wav", 3.0)
-            mixer.setvolume(prev_vol)
-            play_wav("/tmp/test.wav").communicate()
-
-            # Test audio muting on arduino
-            subprocess.call('speaker-test -P 10 -l 0 -s 1', shell=True)
 
         if "unit.shutdown" in data:
             self.ws.emit(
