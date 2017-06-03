@@ -47,8 +47,7 @@ default_answer = "i don't know how to answer that"
 def handle_failure(event):
     global waiting, response, default_answer
     response = default_answer
-    logger.debug("intent failure detected, sending default answer")
-    waiting = False
+    logger.debug("intent failure detected")
 
 
 def handle_speak(event):
