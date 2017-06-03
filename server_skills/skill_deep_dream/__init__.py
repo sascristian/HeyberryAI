@@ -27,7 +27,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
-import flickrapi
+#import flickrapi
 
 
 __author__ = 'jarbas'
@@ -94,7 +94,7 @@ class DreamSkill(MycroftSkill):
 						"conv2/3x3_reduce", "pool1/norm1"] #"pool1/3x3_s2" , "conv17x7_s2"
 
 		# random dreaming mode choice
-		self.choice = 0#self.config["mode"]  # guided dream=1 normal = 0
+		self.choice = 1#self.config["mode"]  # guided dream=1 normal = 0
 
 		# Define the codec and create VideoWriter object
 		# self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -197,7 +197,7 @@ class DreamSkill(MycroftSkill):
 				dreams.append(os.path.join(self.outputdir, f))
 		dream = random.choice(dreams)
 
-		self.speak("look at this dream i had")
+		self.speak("look at this dream i had", metadata={"dream_url":dream})
 		#self.screen_service.show(dream, message.data["utterance"])
 
 	def handle_dream_intent(self, message):
@@ -220,7 +220,7 @@ class DreamSkill(MycroftSkill):
 			name = time.asctime()
 			save_path = self.outputdir + "/dream/random/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
-			self.speak("Here is what i dreamed")
+			self.speak("Here is what i dreamed", metadata={"dream_url":result})
 			#self.screen_service.show(save_path, message.data["utterance"])
 
 	def handle_dream_about_dreams_intent(self, message):
@@ -244,7 +244,7 @@ class DreamSkill(MycroftSkill):
 			name = time.asctime()
 			save_path = self.outputdir + "/recursive/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
-			self.speak("Here is what i dreamed")
+			self.speak("Here is what i dreamed", metadata={"dream_url":result})
 			#self.screen_service.show(save_path, message.data["utterance"])
 
 	def handle_dream_about_intent(self, message):
@@ -266,7 +266,7 @@ class DreamSkill(MycroftSkill):
 			name = search + "_" + time.asctime()
 			save_path = self.outputdir + "/about/" + name + ".jpg"
 			cv2.imwrite(save_path, result)
-			self.speak("Here is what i dreamed")
+			self.speak("Here is what i dreamed", metadata={"dream_url":result})
 			#self.screen_service.show(save_path, message.data["utterance"])
 
 	def stop(self):
@@ -274,6 +274,10 @@ class DreamSkill(MycroftSkill):
 		self.bc.cleanup()
 
 	##### image / entropy collection functions ####
+
+	def collectentropy(self):
+		# collect dream entropy
+		self.store_raw_images(3)
 
 	def store_raw_images(self, number=1):
 
