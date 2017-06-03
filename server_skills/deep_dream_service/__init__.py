@@ -6,6 +6,7 @@ from PIL import Image
 import imutils
 import sys
 
+from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 
 #import flickrapi
