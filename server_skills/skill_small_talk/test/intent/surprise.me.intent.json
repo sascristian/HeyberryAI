@@ -1,0 +1,7 @@
+{
+  "utterance": "surprise me",
+  "intent_type": "SurpriseMeIntent",
+  "intent": {
+    "SurpriseMeKeyphrase": "surprise me"
+  }
+}

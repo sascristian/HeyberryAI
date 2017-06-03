@@ -1,0 +1,7 @@
+{
+  "utterance": "what is your favorite day",
+  "intent_type": "FavoriteDayIntent",
+  "intent": {
+    "FavoriteDayKeyphrase": "favorite day"
+  }
+}

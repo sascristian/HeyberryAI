@@ -1,0 +1,7 @@
+{
+  "utterance": "what is your name from",
+  "intent_type": "WhatIsYourNameFromIntent",
+  "intent": {
+    "WhatIsYourNameFromKeyphrase": "what is your name from"
+  }
+}

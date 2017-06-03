@@ -1,0 +1,7 @@
+{
+  "utterance": "what do you look like",
+  "intent_type": "WhatDoYouLookLikeIntent",
+  "intent": {
+    "WhatDoYouLookLikeKeyphrase": "what do you look like"
+  }
+}

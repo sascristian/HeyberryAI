@@ -1,0 +1,7 @@
+{
+  "utterance": "will you marry me",
+  "intent_type": "WillYouMarryMeIntent",
+  "intent": {
+    "WillYouMarryMeKeyphrase": "will you marry me"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "utterance": "what is your favorite band",
+  "intent_type": "FavoriteBandIntent",
+  "intent": {
+    "FavoriteBandKeyphrase": "favorite band"
+  }
+}

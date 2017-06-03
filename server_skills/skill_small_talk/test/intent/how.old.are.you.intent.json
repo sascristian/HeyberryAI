@@ -1,0 +1,7 @@
+{
+  "utterance": "how old are you",
+  "intent_type": "HowOldAreYouIntent",
+  "intent": {
+    "HowOldAreYouKeyphrase": "how old are you"
+  }
+}

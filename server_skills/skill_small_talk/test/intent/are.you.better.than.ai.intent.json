@@ -1,0 +1,7 @@
+{
+  "utterance": "are you better than cortana",
+  "intent_type": "AreYouBetterThanAiIntent",
+  "intent": {
+    "AreYouBetterThanAiKeyphrase": "cortana"
+  }
+}

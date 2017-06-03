@@ -1,0 +1,7 @@
+{
+  "utterance": "can i borrow some money",
+  "intent_type": "CanIBorrowSomeMoneyIntent",
+  "intent": {
+    "CanIBorrowSomeMoneyKeyphrase": "can i borrow some money"
+  }
+}

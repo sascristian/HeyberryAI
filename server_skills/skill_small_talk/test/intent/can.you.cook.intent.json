@@ -1,0 +1,7 @@
+{
+  "utterance": "can you cook",
+  "intent_type": "CanYouCookIntent",
+  "intent": {
+    "CanYouCookKeyphrase": "can you cook"
+  }
+}

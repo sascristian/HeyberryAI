@@ -1,0 +1,7 @@
+{
+  "utterance": "what is your favorite color",
+  "intent_type": "FavoriteColorIntent",
+  "intent": {
+    "FavoriteColorKeyphrase": "favorite color"
+  }
+}

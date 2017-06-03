@@ -1,0 +1,7 @@
+{
+  "utterance": "do you love me",
+  "intent_type": "DoYouLoveMeIntent",
+  "intent": {
+    "DoYouLoveMeKeyphrase": "do you love me"
+  }
+}

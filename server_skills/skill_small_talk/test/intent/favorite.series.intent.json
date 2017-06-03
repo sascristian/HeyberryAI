@@ -1,0 +1,7 @@
+{
+  "utterance": "what is your favorite series",
+  "intent_type": "FavoriteSeriesIntent",
+  "intent": {
+    "FavoriteSeriesKeyphrase": "favorite series"
+  }
+}
