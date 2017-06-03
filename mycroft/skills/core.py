@@ -33,11 +33,12 @@ from mycroft.dialog import DialogLoader
 from mycroft.filesystem import FileSystemAccess
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
+from mycroft import MYCROFT_ROOT_PATH
 
 __author__ = 'seanfitz'
 
 BLACKLISTED_SKILLS = ["send_sms", "media"]
-SKILLS_DIR = "/home/test/mycroft-core/server_skills"
+SKILLS_DIR = MYCROFT_ROOT_PATH + "/server_skills"
 
 MainModule = '__init__'
 
