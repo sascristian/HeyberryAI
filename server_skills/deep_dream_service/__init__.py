@@ -6,6 +6,7 @@ from PIL import Image
 import imutils
 import sys
 import urllib
+import os
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 
@@ -101,7 +102,6 @@ class DreamService(MycroftSkill):
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
-        print source, guide, name
 
         if name is None:
             name = time.asctime() + ".jpg".replace(" ","_")
