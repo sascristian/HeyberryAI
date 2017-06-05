@@ -8,7 +8,7 @@ import PIL.Image
 from os.path import dirname
 from os import path, mkdir
 
-caffepath = "home/test/caffe"  # self.config["caffe_path"]
+caffepath = "~/caffe"  # self.config["caffe_path"]
 print "\n" + caffepath + "\n"
 
 import sys
