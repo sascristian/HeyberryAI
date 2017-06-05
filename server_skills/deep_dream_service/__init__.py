@@ -20,13 +20,9 @@ class DreamService(MycroftSkill):
         super(DreamService, self).__init__(name="DreamSkill")
         self.reload_skill = False
 
-        caffepath = "~/caffe"  # self.config["caffe_path"]
-        print "\n" + caffepath + "\n"
-
-        sys.path.append(caffepath)
+        path = "home/test/caffe"  # self.config["caffe_path"]
+        sys.path.insert(0, path + '/python')
         from batcountry import BatCountry
-
-        path = caffepath
 
         self.model = "bvlc_googlenet"
         path += '/models/' + self.model
