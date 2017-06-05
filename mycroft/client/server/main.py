@@ -44,6 +44,7 @@ response = ""
 default_answer = "i don't know how to answer that"
 metadata = {}
 
+
 def handle_failure(event):
     global waiting, response, default_answer
     response = default_answer
