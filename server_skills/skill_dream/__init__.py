@@ -77,10 +77,13 @@ class DreamSkill(MycroftSkill):
 
     def handle_dream_intent(self, message):
         if not self.dreaming:
-            with open(self.sourcespath) as f:
-                urls = f.readlines()
-                image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
-            imagepath = random.choice(image_urls.split('\n'))
+            try:
+                with open(self.sourcespath) as f:
+                    urls = f.readlines()
+                    image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
+                    imagepath = random.choice(image_urls.split('\n'))
+            except:
+                imagepath = "https://mycroft.ai/wp-content/uploads/2017/02/mark1_white.png"
             result = self.dream(imagepath)
 
     def handle_dream_about_intent(self, message):
@@ -110,7 +113,7 @@ class DreamSkill(MycroftSkill):
         i = 0
         ActualImages = []  # contains the link for Large original images, type of  image
         for a in soup.find_all("div", {"class": "rg_meta"}):
-            link, Type = json.loads(a.text)["ou"], json.loads(a.text)["ity"]
+            link = json.loads(a.text)["ou"]
             ActualImages.append(link)
             i += 1
             if i >= dlnum:
