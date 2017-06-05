@@ -42,7 +42,7 @@ waiting = False
 more = False
 response = ""
 default_answer = "i don't know how to answer that"
-data = {}
+metadata = {}
 
 def handle_failure(event):
     global waiting, response, default_answer
@@ -54,11 +54,11 @@ def handle_speak(event):
     global chatting, waiting, more, response, data
     utterance = event.data.get('utterance')
     target = event.data.get('target')
-    metadata = event.data.get('metadata')
-    if metadata is None:
-        data = {}
+    data = event.data.get('metadata')
+    if data is None:
+        metadata = {}
     else:
-        data = metadata
+        metadata = data
     logger.debug("Speak: " + utterance + " Target: " + target)
     # if we are chatting and waiting for a response
     # TODO process target
@@ -180,7 +180,7 @@ def main():
     event_thread.setDaemon(True)
     event_thread.start()
 
-    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, more, chatting, response, names
+    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, more, chatting, response, names, metadata
     # start server socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -241,12 +241,13 @@ def main():
                                 utterance = data["utterances"][0]
                                 # get answer
                                 more = False
+                                metadata = {}
                                 chatting = True
                                 # answer
                                 answer = get_answer(utterance, user)
                                 logger.debug("answering: " + answer + " to user: " + user)
                                 answer_data(sock, answer, addr)
-                                if "dream_url" in data.keys():
+                                if "dream_url" in metadata.keys():
                                     dream_msg = get_msg(Message("deep_dream_result",
                                                     {"dream_url": data["dream_url"]}))
                                     logger.info("sending formatted dream result: " + dream_msg)
