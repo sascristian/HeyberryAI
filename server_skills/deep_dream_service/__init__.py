@@ -9,19 +9,6 @@ import sys
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 
-try:
-    caffepath = "home/test/caffe/python"  # self.config["caffe_path"]
-    print "\n" + caffepath + "\n"
-
-    sys.path.append(caffepath)
-    from batcountry import BatCountry
-except:
-    caffepath = "home/test/caffe"  # self.config["caffe_path"]
-    print "\n" + caffepath + "\n"
-
-    sys.path.append(caffepath)
-    from batcountry import BatCountry
-
 #import flickrapi
 
 __author__ = 'jarbas'
@@ -33,7 +20,11 @@ class DreamService(MycroftSkill):
         super(DreamService, self).__init__(name="DreamSkill")
         self.reload_skill = False
 
+        caffepath = "~/caffe"  # self.config["caffe_path"]
+        print "\n" + caffepath + "\n"
 
+        sys.path.append(caffepath)
+        from batcountry import BatCountry
 
         path = caffepath
 
