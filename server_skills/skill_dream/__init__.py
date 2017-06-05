@@ -5,7 +5,7 @@ import os
 import random
 import json
 from bs4 import BeautifulSoup
-import sys
+from mycroft.messagebus.message import Message
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
@@ -64,10 +64,10 @@ class DreamSkill(MycroftSkill):
         for prefix in prefixes:
             self.register_regex(prefix + ' ' + suffix_regex)
 
-    def dream(self):
+    def dream(self, dream_pic, dream_guide=None, dream_name=None):
         self.dreaming = True
         self.dream = None
-        self.emitter.emit("deep_dream_request")
+        self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name}))
         start = time.time()
         elapsed = 0
         while self.dreaming and elapsed < 60 * 5:
