@@ -43,8 +43,8 @@ TOP=$(cd $(dirname $0) && pwd -L)
 #source ${VIRTUALENV_ROOT}/bin/activate
 
 cd ${TOP}
-easy_install pip==7.1.2 # force version of pip
-pip install --upgrade virtualenv
+#easy_install pip==7.1.2 # force version of pip
+#pip install --upgrade virtualenv
 
 # install requirements (except pocketsphinx)
 pip2 install -r requirements.txt 

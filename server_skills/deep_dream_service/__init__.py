@@ -21,11 +21,13 @@ class DreamService(MycroftSkill):
         self.reload_skill = False
 
         caffepath = "home/test/caffe"#self.config["caffe_path"]
+        print "\n" + caffepath + "\n"
 
         sys.path.append(caffepath)
         from batcountry import BatCountry
 
         path = caffepath
+
         self.model = "bvlc_googlenet"
         path += '/models/' + self.model
 
