@@ -112,7 +112,7 @@ class DreamSkill(MycroftSkill):
         self.dream = None
 
     def initialize(self):
-        self.emitter.on("speak", self.receive_dream)
+        self.emitter.on("deep_dream_result", self.receive_dream)
 
         prefixes = [
             'dream about', 'dream with', 'dream of', 'dream off', 'da']
@@ -137,6 +137,7 @@ class DreamSkill(MycroftSkill):
     def dream(self):
         self.dreaming = True
         self.dream = None
+        self.emitter.emit("deep_dream_request")
         start = time.time()
         elapsed = 0
         while self.dreaming and elapsed < 60 * 5:
@@ -146,11 +147,9 @@ class DreamSkill(MycroftSkill):
         return self.dream
 
     def receive_dream(self, message):
-        data = message.data.get("metadata")
-        if "dream_url" in data.keys():
-            self.dream = data["dream_url"]
-            self.dreaming = False
-            self.speak("Dream received from server with sucess")
+        self.dream = message.data.get("dream_url")
+        self.dreaming = False
+        self.speak("Dream received from server with sucess")
 
     def handle_dream_intent(self, message):
         if not self.dreaming:

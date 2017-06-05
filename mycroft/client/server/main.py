@@ -243,6 +243,10 @@ def main():
                                 answer = get_answer(utterance, user)
                                 logger.debug("answering: " + answer + " to user: " + user)
                                 answer_data(sock, answer, addr)
+                                if "dream_url" in data.keys():
+                                    dream_msg = get_msg(Message("deep_dream_result",
+                                                    {"dream_url": data["dream_url"]}))
+                                    answer_data(sock, dream_msg, addr)
                                 chatting = False
                 except:
                     offline_client(sock, addr)
