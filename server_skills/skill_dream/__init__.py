@@ -57,21 +57,14 @@ class DreamSkill(MycroftSkill):
         for prefix in prefixes:
             self.register_regex(prefix + ' ' + suffix_regex)
 
+    def receive_dream(self, message):
+        self.dreaming = False
+
     def dream(self, dream_pic, dream_guide=None, dream_name=None):
         self.dreaming = True
         self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name}))
-        start = time.time()
-        elapsed = 0
-        while self.dreaming and elapsed < 60 * 5:
-            elapsed = time.time() - start
-            time.sleep(0.2)
-        self.dreaming = False
-
-    def receive_dream(self, message):
-        self.dreaming = False
-        dream = message.data.get("dream_url")
-        if self.save:
-            self.speak("Dream received from server with sucess " + dream)
+        while self.dreaming:
+            time.sleep(1)
 
     def handle_dream_intent(self, message):
         if not self.dreaming:
