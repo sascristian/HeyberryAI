@@ -104,7 +104,7 @@ class DreamService(MycroftSkill):
         print source, guide, name
 
         if name is None:
-            name = time.asctime()
+            name = time.asctime() + ".jpg".replace(" ","_")
 
         if guide is not None:
             result = self.guided_dream(source, guide, name)
