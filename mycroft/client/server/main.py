@@ -42,7 +42,7 @@ waiting = False
 more = False
 response = ""
 default_answer = "i don't know how to answer that"
-
+data = {}
 
 def handle_failure(event):
     global waiting, response, default_answer
@@ -51,9 +51,14 @@ def handle_failure(event):
 
 
 def handle_speak(event):
-    global chatting, waiting, more, response
+    global chatting, waiting, more, response, data
     utterance = event.data.get('utterance')
     target = event.data.get('target')
+    metadata = event.data.get('metadata')
+    if metadata is None:
+        data = {}
+    else:
+        data = metadata
     logger.debug("Speak: " + utterance + " Target: " + target)
     # if we are chatting and waiting for a response
     # TODO process target
@@ -153,7 +158,7 @@ def get_answer(utterance, user):
         # capture speech response
         wait_answer()
         answer += "\n" + response
-    answer = get_msg(Message("speak", {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":{}}))
+    answer = get_msg(Message("speak", {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":data}))
     return answer
 
 
