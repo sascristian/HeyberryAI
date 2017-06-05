@@ -5,7 +5,7 @@ import numpy as np
 from os.path import dirname
 import sys
 
-path = dirname(dirname(dirname(dirname(__file__)))) + "/caffe"  # self.config["caffe_path"]
+path = "~/caffe"  # self.config["caffe_path"]
 
 sys.path.insert(0, path + '/python')
 
