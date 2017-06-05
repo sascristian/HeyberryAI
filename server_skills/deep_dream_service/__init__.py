@@ -97,6 +97,7 @@ class DreamService(MycroftSkill):
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
+        print source, guide, name
 
         if name is None:
             name = time.asctime()
@@ -117,7 +118,6 @@ class DreamService(MycroftSkill):
             self.speak("i am dreaming")
             return None
         else:
-            self.speak_dialog("dream")
             self.speak("please wait while the dream is processed", more=True)
 
         while fails <= 5:
