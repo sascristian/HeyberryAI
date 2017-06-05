@@ -60,13 +60,14 @@ class DreamSkill(MycroftSkill):
     def receive_dream(self, message):
         self.dreaming = False
 
-    def dream(self, dream_pic, dream_guide=None, dream_name=None):
+    def dream(self, dream_pic, user="unknown", dream_guide=None, dream_name=None):
         self.dreaming = True
         self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name}))
         while self.dreaming:
             time.sleep(1)
 
     def handle_dream_intent(self, message):
+        user_id = message.data.get("source")
         if not self.dreaming:
             try:
                 with open(self.sourcespath) as f:
@@ -75,16 +76,17 @@ class DreamSkill(MycroftSkill):
                     imagepath = random.choice(image_urls.split('\n'))
             except:
                 imagepath = "https://mycroft.ai/wp-content/uploads/2017/02/mark1_white.png"
-            result = self.dream(imagepath)
+            self.dream(imagepath, user_id)
 
     def handle_dream_about_intent(self, message):
         search = message.data.get("DreamSearch")
+        user_id = message.data.get("source")
         if not self.dreaming:
             # collect dream entropy
             self.speak("dreaming about " + search)
             pics = self.search_pic(search)
             imagepath = random.choice(pics)
-            result = self.dream(imagepath)
+            self.dream(imagepath, user_id)
 
     def stop(self):
         pass
