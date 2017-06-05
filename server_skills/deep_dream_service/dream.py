@@ -7,6 +7,11 @@ import PIL.Image
 #from google.protobuf import text_format
 from os.path import dirname
 from os import path, mkdir
+
+caffepath = "homr/test/caffe"  # self.config["caffe_path"]
+print "\n" + caffepath + "\n"
+
+sys.path.append(caffepath)
 import caffe
 import argparse
 
