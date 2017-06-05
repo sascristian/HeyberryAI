@@ -62,7 +62,7 @@ elif path.isfile(args.model):
     net_fn      = path.join(path.dirname(args.model), "deploy.prototxt")
     param_fn    = args.model
 else:
-    modeldir    = path.join("/opt/caffe/models", args.model)
+    modeldir    = path.join(caffepath + "/models", args.model)
     net_fn      = path.join(modeldir, "deploy.prototxt")
     param_fn    = path.join(modeldir, "{}.caffemodel".format(args.model))
 
