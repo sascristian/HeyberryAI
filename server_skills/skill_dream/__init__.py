@@ -1,7 +1,4 @@
 import urllib2
-import urllib
-import cv2
-import numpy as np
 import os
 import random
 import json
@@ -77,8 +74,7 @@ class DreamSkill(MycroftSkill):
             try:
                 with open(self.sourcespath) as f:
                     urls = f.readlines()
-                    image_urls = urllib.urlopen(random.choice(urls)).read().decode('utf-8')
-                    #image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
+                    image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
                     imagepath = random.choice(image_urls.split('\n'))
             except:
                 imagepath = "https://mycroft.ai/wp-content/uploads/2017/02/mark1_white.png"
