@@ -27,11 +27,6 @@
 # exit on any error
 set -Ee
 
-if [ $(id -u) -eq 0 ]; then
-  echo "This script should not be run as root or with sudo."
-  exit 1
-fi
-
 TOP=$(cd $(dirname $0) && pwd -L)
 
 #if [ -z "$WORKON_HOME" ]; then
