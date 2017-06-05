@@ -52,7 +52,7 @@ def handle_failure(event):
 
 
 def handle_speak(event):
-    global chatting, waiting, more, response, data
+    global chatting, waiting, more, response, metadata
     utterance = event.data.get('utterance')
     target = event.data.get('target')
     data = event.data.get('metadata')
@@ -161,7 +161,7 @@ def get_answer(utterance, user):
         if response not in answer:
             # if wait ended not because of time_out, append answer
             answer += "\n" + response
-    answer = get_msg(Message("speak", {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":data}))
+    answer = get_msg(Message("speak", {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":metadata}))
     return answer
 
 
@@ -250,7 +250,7 @@ def main():
                                 answer_data(sock, answer, addr)
                                 if "dream_url" in metadata.keys():
                                     dream_msg = get_msg(Message("deep_dream_result",
-                                                    {"dream_url": data["dream_url"]}))
+                                                    {"dream_url": metadata["dream_url"]}))
                                     logger.info("sending formatted dream result: " + dream_msg)
                                     answer_data(sock, dream_msg, addr)
                                 chatting = False
