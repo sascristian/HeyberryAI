@@ -82,6 +82,10 @@ class DreamService(MycroftSkill):
 
         self.outputdir = self.config_core["database_path"] + "/dreams/"
 
+        # check if folders exist
+        if not os.path.exists(self.outputdir):
+            os.makedirs(self.outputdir)
+
     def initialize(self):
         self.emitter.on("deep_dream_request", self.handle_dream)
 
@@ -115,35 +119,28 @@ class DreamService(MycroftSkill):
     def dream(self, imagepah, name):
         fails = 0
         if self.dreaming:
-            self.speak("i am dreaming")
+            self.speak("i am already dreaming")
             return None
         else:
             self.speak("please wait while the dream is processed", more=True)
 
-        while fails <= 5:
-            layer = random.choice(self.layers)
-            try:
-                req = urllib.urlopen(imagepah)
-                arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
-                img = cv2.imdecode(arr, -1)  # 'load it as it is'
-                dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
-                self.dreaming = True
-                image = self.bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
-                # write the output image to file
-                print "dreamed"
-                result = Image.fromarray(np.uint8(image))
-                outpath = self.outputdir + "/" + name
-                result.save(outpath)
-                time.sleep(5)
-                print "saved"
-                self.dreaming = False
-                return outpath
-            except:
-                fails += 1
-
+        layer = random.choice(self.layers)
+        req = urllib.urlopen(imagepah)
+        arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+        img = cv2.imdecode(arr, -1)  # 'load it as it is'
+        dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
+        self.dreaming = True
+        image = self.bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
+        # write the output image to file
+        print "dreamed"
+        result = Image.fromarray(np.uint8(image))
+        outpath = self.outputdir + "/" + name
+        result.save(outpath)
+        time.sleep(5)
+        print "saved"
         self.dreaming = False
-        self.speak("Could not dream this time")
-        return None
+        return outpath
+
 
     def guided_dream(self, sourcepath, guidepath, name):
         # dreampic = np.zeros((480, 640, 3), np.uint8)
