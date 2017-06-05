@@ -161,8 +161,9 @@ def get_answer(utterance, user):
         if response not in answer:
             # if wait ended not because of time_out, append answer
             answer += "\n" + response
-    answer = get_msg(Message("speak", {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":metadata}))
-    return answer
+    data = {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":metadata}
+    answer_type = "speak"
+    return answer_type, data
 
 
 def get_msg(message):
@@ -171,6 +172,10 @@ def get_msg(message):
     else:
         return json.dumps(message.__dict__)
 
+
+def send_message(sock, addr, type="speak", data={}):
+    message = get_msg(Message(type, data))
+    answer_data(sock, message, addr)
 
 def main():
     global ws
@@ -245,14 +250,12 @@ def main():
                                 metadata = {}
                                 chatting = True
                                 # answer
-                                answer = get_answer(utterance, user)
-                                logger.debug("answering: " + answer + " to user: " + user)
-                                answer_data(sock, answer, addr)
+                                answer_type, answer_data = get_answer(utterance, user)
+                                logger.debug("answering: " + str(answer_data) + " to user: " + user)
+                                send_message(sock, addr, answer_type, answer_data)
                                 if "dream_url" in metadata.keys():
-                                    dream_msg = get_msg(Message("deep_dream_result",
-                                                    {"dream_url": metadata["dream_url"]}))
-                                    logger.info("sending formatted dream result: " + dream_msg)
-                                    answer_data(sock, dream_msg, addr)
+                                    logger.info("sending formatted dream result")
+                                    send_message(sock, addr, "deep_dream_result", {"dream_url": metadata["dream_url"]})
                                 chatting = False
                 except:
                     offline_client(sock, addr)
