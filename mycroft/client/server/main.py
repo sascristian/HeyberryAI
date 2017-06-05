@@ -157,7 +157,9 @@ def get_answer(utterance, user):
         logger.debug( "More speech is expected, waiting")
         # capture speech response
         wait_answer()
-        answer += "\n" + response
+        if response not in answer:
+            # if wait ended not because of time_out, append answer
+            answer += "\n" + response
     answer = get_msg(Message("speak", {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":data}))
     return answer
 
@@ -221,6 +223,7 @@ def main():
                         logger.debug("received: " + str(utterance).strip() + " from socket: " + user + " from ip: " + ip)
                         deserialized_message = Message.deserialize(utterance)
                         if deserialized_message.type in allowed_bus_messages:
+                            # TODO make queue per user, so other dont wait for "long skills"
                             data = deserialized_message.data
 
                             if data.get("id") is None:
@@ -246,6 +249,7 @@ def main():
                                 if "dream_url" in data.keys():
                                     dream_msg = get_msg(Message("deep_dream_result",
                                                     {"dream_url": data["dream_url"]}))
+                                    logger.info("sending formatted dream result: " + dream_msg)
                                     answer_data(sock, dream_msg, addr)
                                 chatting = False
                 except:

@@ -31,6 +31,7 @@ class DreamSkill(MycroftSkill):
 
         ### flag to avoid dreaming multiple times at once
         self.dreaming = False
+        self.save = True
 
     def initialize(self):
         self.emitter.on("deep_dream_result", self.receive_dream)
@@ -67,7 +68,9 @@ class DreamSkill(MycroftSkill):
 
     def receive_dream(self, message):
         self.dreaming = False
-        self.speak("Dream received from server with sucess")
+        dream = message.data.get("dream_url")
+        if self.save:
+            self.speak("Dream received from server with sucess " + dream)
 
     def handle_dream_intent(self, message):
         if not self.dreaming:

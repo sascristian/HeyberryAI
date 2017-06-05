@@ -99,6 +99,7 @@ class DreamService(MycroftSkill):
         self.speak_dialog("dreamstatus")
 
     def handle_dream(self, message):
+        # TODO dreaming queue
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
@@ -122,7 +123,7 @@ class DreamService(MycroftSkill):
             self.speak("i am already dreaming")
             return None
         else:
-            self.speak("please wait while the dream is processed", more=True)
+            self.speak("please wait while the dream is processed\n", more=True)
 
         layer = random.choice(self.layers)
         req = urllib.urlopen(imagepah)
@@ -132,12 +133,9 @@ class DreamService(MycroftSkill):
         self.dreaming = True
         image = self.bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
         # write the output image to file
-        print "dreamed"
         result = Image.fromarray(np.uint8(image))
-        outpath = self.outputdir + "/" + name
+        outpath = self.outputdir + name
         result.save(outpath)
-        time.sleep(5)
-        print "saved"
         self.dreaming = False
         return outpath
 
