@@ -20,7 +20,11 @@ class DreamService(MycroftSkill):
         super(DreamService, self).__init__(name="DreamSkill")
         self.reload_skill = False
 
-        path = "home/test/caffe"  # self.config["caffe_path"]
+        try:
+            path = self.config["caffe_path"]
+        except:
+            path = "../caffe"
+
         sys.path.insert(0, path + '/python')
         from batcountry import BatCountry
 
