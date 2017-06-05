@@ -9,6 +9,7 @@ import urllib
 import os
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
+from mycroft.messagebus.message import Message
 
 #import flickrapi
 
@@ -103,6 +104,7 @@ class DreamService(MycroftSkill):
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
+        user_id = message.data.get("source")
 
         if name is None:
             name = time.asctime().replace(" ","_") + ".jpg"
@@ -115,6 +117,7 @@ class DreamService(MycroftSkill):
         if result is not None:
             # TODO upload on flickr, send remote link
             self.speak("Here is what i dreamed", metadata={"dream_url": result})
+            self.emitter.emit(Message("message_request", {"user":user_id, "data":{"dream_url":result}, "type":"deep_dream_result"}))
 
     #### dreaming functions
     def dream(self, imagepah, name):
@@ -123,7 +126,7 @@ class DreamService(MycroftSkill):
             self.speak("i am already dreaming")
             return None
         else:
-            self.speak("please wait while the dream is processed\n", more=True)
+            self.speak("please wait while the dream is processed\n")
 
         layer = random.choice(self.layers)
         req = urllib.urlopen(imagepah)

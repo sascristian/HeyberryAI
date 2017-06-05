@@ -89,7 +89,7 @@ def connect():
 
 
 # Function to broadcast messages to all connected clients
-def broadcast_data(sock, message, addr):
+def broadcast_data(sock, message):
     # Do not send the message to master socket and the client who has send us the message
     for socket in CONNECTION_LIST:
         if socket != server_socket and socket != sock:
@@ -103,7 +103,7 @@ def broadcast_data(sock, message, addr):
 
 
 # answer
-def answer_data(sock, message, addr):
+def answer_data(sock, message):
     # send the message to the client who has send us the message
     for socket in CONNECTION_LIST:
         if socket == sock:
@@ -111,17 +111,17 @@ def answer_data(sock, message, addr):
                 socket.send(message)
             except:
                 # broken socket connection may be, chat client pressed ctrl+c for example
-                offline_client(sock, addr)
+                offline_client(sock)
 
 
-def offline_client(sock, addr):
+def offline_client(sock):
     global names
     try:
         sock.close()
         CONNECTION_LIST.remove(sock)
-        # broadcast_data(sock, "Client (%s, %s) is offline" % addr, addr)
-        logger.debug("Client (%s, %s) is offline" % addr)
-        ip, user = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
+        # broadcast_data(sock, "Client (%s, %s) is offline" % addr)
+        ip, user = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+        logger.debug("Client is offline: " + str(sock.getpeername()))
         names.pop(int(user), None)
     except:
         # already removed
@@ -129,17 +129,18 @@ def offline_client(sock, addr):
 
 
 # answer id
-def answer_id(sock, addr):
+def answer_id(sock):
     # send the message to the client who has send us the message
     for socket in CONNECTION_LIST:
         if socket == sock:
             try:
-                logger.debug("Sending Id to Client (%s, %s)" % addr)
-                answer = get_msg(Message("id", {"id": addr}))
+                ip, user = sock.getpeername()
+                logger.debug("Sending Id to Client " + str(sock.getpeername()))
+                answer = get_msg(Message("id", {"id": user}))
                 socket.send(answer)
             except:
                 # broken socket connection may be, chat client pressed ctrl+c for example
-                offline_client(sock, addr)
+                offline_client(sock)
 
 
 def get_answer(utterance, user):
@@ -173,15 +174,25 @@ def get_msg(message):
         return json.dumps(message.__dict__)
 
 
-def send_message(sock, addr, type="speak", data={}):
+def send_message(sock, type="speak", data={}):
     message = get_msg(Message(type, data))
-    answer_data(sock, message, addr)
+    answer_data(sock, message)
+
+def handle_message_request(event):
+    user_id = int(event.data.get("user_id"))
+    type = event.data.get("type")
+    data = event.data.get("data")
+    for socket in CONNECTION_LIST:
+        ip, user = socket.getppername().replace("(", "").replace(")", "").replace(" ", "").split(",")
+        if user_id == int(user):
+            send_message(socket, type, data)
 
 def main():
     global ws
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
     ws.on('intent_failure', handle_failure)
+    ws.on('message_request', handle_message_request)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
@@ -215,10 +226,10 @@ def main():
                     # tell other clients this is available
                     #broadcast_data(sockfd, "[%s:%s] is available\n" % addr, addr)
                     # tell client it's id
-                    answer_id(sockfd, addr)
+                    answer_id(sockfd)
                 else:
                 #  if blacklisted kick
-                    offline_client(sockfd, addr)
+                    offline_client(sockfd)
             # Some incoming message from a client
             else:
                 # Data received from client, process it
@@ -242,7 +253,7 @@ def main():
                                     logger.debug("Setting alias: " + name + " for socket: " + str(data["id"]))
                                     names[name] = data["id"]
                             elif deserialized_message.type == "id_update":
-                                answer_id(sock, addr)
+                                answer_id(sock)
                             elif deserialized_message.type == "recognizer_loop:utterance":
                                 utterance = data["utterances"][0]
                                 # get answer
@@ -252,13 +263,13 @@ def main():
                                 # answer
                                 answer_type, answer_data = get_answer(utterance, user)
                                 logger.debug("answering: " + str(answer_data) + " to user: " + user)
-                                send_message(sock, addr, answer_type, answer_data)
+                                send_message(sock, answer_type, answer_data)
                                 if "dream_url" in metadata.keys():
                                     logger.info("sending formatted dream result")
-                                    send_message(sock, addr, "deep_dream_result", {"dream_url": metadata["dream_url"]})
+                                    send_message(sock, "deep_dream_result", {"dream_url": metadata["dream_url"]})
                                 chatting = False
                 except:
-                    offline_client(sock, addr)
+                    offline_client(sock)
                     continue
     server_socket.close()
 
