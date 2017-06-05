@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 TOP=$(cd $(dirname $0) && pwd -L)
-VIRTUALENV_ROOT=${VIRTUALENV_ROOT:-"${HOME}/.virtualenvs/mycroft"}
+#VIRTUALENV_ROOT=${VIRTUALENV_ROOT:-"${HOME}/.virtualenvs/mycroft"}
 
 ${TOP}/scripts/prepare-msm.sh
 
@@ -23,5 +23,5 @@ echo "Starting $@"
 
 shift
 
-source ${VIRTUALENV_ROOT}/bin/activate
+#source ${VIRTUALENV_ROOT}/bin/activate
 PYTHONPATH=${TOP} python ${SCRIPT} $@
