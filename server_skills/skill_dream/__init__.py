@@ -1,29 +1,15 @@
-
-from os.path import dirname
 import urllib2
 import cv2
 import numpy as np
 import os
 import random
-from threading import Thread
 import json
 from bs4 import BeautifulSoup
-from PIL import Image
-import imutils
 import sys
-from time import sleep
-
-from mycroft.skills.dreamskill.randomart import makeImage
-from mycroft.skills.dreamskill.geopatterns import GeoPattern
-
-import cairosvg
-from mycroft.configuration import ConfigurationManager
-
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
-from mycroft.messagebus.message import Message
 import time
 
 __author__ = 'jarbas'
