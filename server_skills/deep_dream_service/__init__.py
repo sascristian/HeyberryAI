@@ -33,7 +33,6 @@ class DreamService(MycroftSkill):
 
         # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
         self.bc = BatCountry(path)#path,model_path=path)
-        #if model == "bvlc_googlenet":
         self.iter = 20#self.config["iter"] #dreaming iterations
         self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
                         "inception_5b/pool", "inception_5b/5x5",
@@ -86,13 +85,13 @@ class DreamService(MycroftSkill):
     def initialize(self):
         self.emitter.on("deep_dream_request", self.handle_dream)
 
-        dream_status_intent = IntentBuilder("DreamIntent") \
+        dream_status_intent = IntentBuilder("DreamStatusIntent") \
             .require("dream").build()
         self.register_intent(dream_status_intent,
                              self.handle_dream_status_intent)
 
     def handle_dream_status_intent(self, message):
-        self.speak("deep dream service loaded")
+        self.speak_dialog("dreamstatus")
 
     def handle_dream(self, message):
         source = message.data.get("dream_source")
