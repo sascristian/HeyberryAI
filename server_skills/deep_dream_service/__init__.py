@@ -20,11 +20,18 @@ class DreamService(MycroftSkill):
         super(DreamService, self).__init__(name="DreamSkill")
         self.reload_skill = False
 
-        caffepath = "home/test/caffe"#self.config["caffe_path"]
-        print "\n" + caffepath + "\n"
+        try:
+            caffepath = "home/test/caffe/python"#self.config["caffe_path"]
+            print "\n" + caffepath + "\n"
 
-        sys.path.append(caffepath)
-        from batcountry import BatCountry
+            sys.path.append(caffepath)
+            from batcountry import BatCountry
+        except:
+            caffepath = "home/test/caffe"  # self.config["caffe_path"]
+            print "\n" + caffepath + "\n"
+
+            sys.path.append(caffepath)
+            from batcountry import BatCountr
 
         path = caffepath
 
