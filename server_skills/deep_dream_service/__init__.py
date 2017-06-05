@@ -5,7 +5,7 @@ import random
 from PIL import Image
 import imutils
 import sys
-
+import urllib
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 
@@ -123,7 +123,10 @@ class DreamService(MycroftSkill):
         while fails <= 5:
             layer = random.choice(self.layers)
             try:
-                dreampic = imutils.resize(cv2.imread(imagepah), self.w, self.h)  # cv2.resize(img, (640, 480))
+                req = urllib.urlopen(imagepah)
+                arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+                img = cv2.imdecode(arr, -1)  # 'load it as it is'
+                dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
                 self.dreaming = True
                 image = self.bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
                 # write the output image to file
@@ -152,6 +155,7 @@ class DreamService(MycroftSkill):
             self.dreaming = True
             layer = random.choice(self.layers)
             try:
+
                 features = self.bc.prepare_guide(Image.open(guidepath), end=layer)
                 dreampic = imutils.resize(cv2.imread(sourcepath), self.w, self.h)  # cv2.resize(img, (640, 480))
                 image = self.bc.dream(np.float32(dreampic), end=layer,
