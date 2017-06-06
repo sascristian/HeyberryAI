@@ -125,10 +125,10 @@ class DreamService(MycroftSkill):
 
         if result is not None:
             # TODO upload, send remote link
-            data = self.client.upload_from_path("/home/user/JarbasAI/mycroft/client/server/ssl.jpeg")
+            data = self.client.upload_from_path(result)
             link = data["link"]
             self.speak("Here is what i dreamed", metadata={"dream_url": link})
-            self.emitter.emit(Message("message_request", {"user":user_id, "data":{"dream_url":link}, "type":"deep_dream_result"}))
+            self.emitter.emit(Message("message_request", {"user_id":user_id, "data":{"dream_url":link}, "type":"deep_dream_result"}))
 
     #### dreaming functions
     def dream(self, imagepah, name):
