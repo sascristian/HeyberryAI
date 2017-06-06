@@ -11,7 +11,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 
-#import flickrapi
+from imgurpython import ImgurClient
 
 __author__ = 'jarbas'
 
@@ -21,6 +21,12 @@ class DreamService(MycroftSkill):
     def __init__(self):
         super(DreamService, self).__init__(name="DreamSkill")
         self.reload_skill = False
+
+        # TODO get from config
+        client_id = 'e56ee056be7d06f'
+        client_secret = '9cf2e6b1740ea43abce2a6b37510daf45742f52f'
+
+        self.client = ImgurClient(client_id, client_secret)
 
         try:
             path = self.config["caffe_path"]
@@ -118,9 +124,11 @@ class DreamService(MycroftSkill):
             result = self.dream(source, name)
 
         if result is not None:
-            # TODO upload on flickr, send remote link
-            self.speak("Here is what i dreamed", metadata={"dream_url": result})
-            self.emitter.emit(Message("message_request", {"user":user_id, "data":{"dream_url":result}, "type":"deep_dream_result"}))
+            # TODO upload, send remote link
+            data = self.client.upload_from_path("/home/user/JarbasAI/mycroft/client/server/ssl.jpeg")
+            link = data["link"]
+            self.speak("Here is what i dreamed", metadata={"dream_url": link})
+            self.emitter.emit(Message("message_request", {"user":user_id, "data":{"dream_url":link}, "type":"deep_dream_result"}))
 
     #### dreaming functions
     def dream(self, imagepah, name):
