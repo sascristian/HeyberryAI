@@ -107,7 +107,7 @@ class DreamService(MycroftSkill):
 
     def handle_dream(self, message):
         # TODO dreaming queue
-        source = message.data.get("dream_source").replace("\n", "").replace("\r", "")
+        source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
         user_id = message.data.get("source")
@@ -117,6 +117,7 @@ class DreamService(MycroftSkill):
                 user_id = "all"
             self.target = user_id
         else:
+            self.log.warning("no user/target specified")
             user_id = "all"
 
         if name is None:
@@ -138,11 +139,7 @@ class DreamService(MycroftSkill):
 
     #### dreaming functions
     def dream(self, imagepah, name):
-        if self.dreaming:
-            self.speak("i am already dreaming")
-            return None
-        else:
-            self.speak("please wait while the dream is processed")
+        self.speak("please wait while the dream is processed")
 
         layer = random.choice(self.layers)
 
@@ -150,48 +147,17 @@ class DreamService(MycroftSkill):
         arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
         img = cv2.imdecode(arr, -1)  # 'load it as it is'
         dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
-        self.dreaming = True
+
 
         image = self.bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
         # write the output image to file
         result = Image.fromarray(np.uint8(image))
         outpath = self.outputdir + name
         result.save(outpath)
-        self.dreaming = False
         return outpath
 
-
     def guided_dream(self, sourcepath, guidepath, name):
-        # dreampic = np.zeros((480, 640, 3), np.uint8)
-        if self.dreaming:
-            self.speak("i am dreaming")
-            return None
-        else:
-            self.speak_dialog("dream")
-            self.speak("please wait while the dream is processed")
-        fails = 0
-        while fails <= 5:
-            self.dreaming = True
-            layer = random.choice(self.layers)
-            try:
-
-                features = self.bc.prepare_guide(Image.open(guidepath), end=layer)
-                dreampic = imutils.resize(cv2.imread(sourcepath), self.w, self.h)  # cv2.resize(img, (640, 480))
-                image = self.bc.dream(np.float32(dreampic), end=layer,
-                                      iter_n=int(self.iter), objective_fn=self.bc.guided_objective,
-                                      objective_features=features)
-
-                # write the output image to file
-                result = Image.fromarray(np.uint8(image))
-                outpath = self.outputdir + name
-                result.save(outpath)
-                self.dreaming = False
-                return outpath
-            except:
-                fails += 1
-        self.dreaming = False
-        self.speak("Could not dream this time")
-        return None
+        pass
 
     def stop(self):
         try:

@@ -30,8 +30,6 @@ class DreamSkill(MycroftSkill):
         self.w = 640
         self.h = 480
 
-        ### flag to avoid dreaming multiple times at once
-        self.dreaming = False
         self.save = True
 
     def initialize(self):
@@ -57,36 +55,28 @@ class DreamSkill(MycroftSkill):
         for prefix in prefixes:
             self.register_regex(prefix + ' ' + suffix_regex)
 
-    def receive_dream(self, message):
-        self.dreaming = False
-
     def dream(self, dream_pic, user="unknown", dream_guide=None, dream_name=None):
-        self.dreaming = True
         self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name, "source":user}))
-        while self.dreaming:
-            time.sleep(1)
 
     def handle_dream_intent(self, message):
         user_id = message.data.get("target")
-        if not self.dreaming:
-            try:
-                with open(self.sourcespath) as f:
-                    urls = f.readlines()
-                    image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
-                    imagepath = random.choice(image_urls.split('\n'))
-            except:
-                imagepath = "https://mycroft.ai/wp-content/uploads/2017/02/mark1_white.png"
-            self.dream(imagepath, user_id)
+        try:
+            with open(self.sourcespath) as f:
+                urls = f.readlines()
+                image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
+                imagepath = random.choice(image_urls.split('\n'))
+        except:
+            imagepath = "https://mycroft.ai/wp-content/uploads/2017/02/mark1_white.png"
+        self.dream(imagepath, user_id)
 
     def handle_dream_about_intent(self, message):
         search = message.data.get("DreamSearch")
         user_id = message.data.get("target")
-        if not self.dreaming:
-            # collect dream entropy
-            self.speak("dreaming about " + search)
-            pics = self.search_pic(search)
-            imagepath = random.choice(pics)
-            self.dream(imagepath, user_id)
+        # collect dream entropy
+        self.speak("dreaming about " + search)
+        pics = self.search_pic(search)
+        imagepath = random.choice(pics)
+        self.dream(imagepath, user_id)
 
     def stop(self):
         pass
