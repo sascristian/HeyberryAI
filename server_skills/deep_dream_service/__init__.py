@@ -147,8 +147,6 @@ class DreamService(MycroftSkill):
         arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
         img = cv2.imdecode(arr, -1)  # 'load it as it is'
         dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
-
-
         image = self.bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
         # write the output image to file
         result = Image.fromarray(np.uint8(image))

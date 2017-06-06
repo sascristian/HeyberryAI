@@ -21,7 +21,6 @@ class DreamSkill(MycroftSkill):
     def __init__(self):
         super(DreamSkill, self).__init__(name="DreamSkill")
         # make working directories, TODO refactor into config file
-        self.sourcespath = os.path.dirname(__file__) + '/sources.txt'
         self.outputdir = "../pictures/dreams"
         # check if folders exist
         if not os.path.exists(self.outputdir):
@@ -59,13 +58,7 @@ class DreamSkill(MycroftSkill):
 
     def handle_dream_intent(self, message):
         user_id = message.data.get("target")
-        try:
-            with open(self.sourcespath) as f:
-                urls = f.readlines()
-                image_urls = urllib2.urlopen(random.choice(urls)).read().decode('utf-8')
-                imagepath = random.choice(image_urls.split('\n'))
-        except:
-            imagepath = "https://mycroft.ai/wp-content/uploads/2017/02/mark1_white.png"
+        imagepath = "https://unsplash.it/640/480/?random"
         self.dream(imagepath, user_id)
 
     def handle_dream_about_intent(self, message):
