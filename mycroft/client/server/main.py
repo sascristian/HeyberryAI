@@ -34,54 +34,41 @@ server_socket = None
 utterance_socket = None
 
 blacklisted_ips = []
+# TODO maybe add deep dream request, but i want the utterance handled internally for now /more control
 allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update"]
 names = {}
 
-chatting = False
-waiting = False
-more = False
-response = ""
-default_answer = "i don't know how to answer that"
-metadata = {}
-
 
 def handle_failure(event):
-    global waiting, response, default_answer
-    response = default_answer
+    # TODO warn user of possible lack of answer (wait for wolfram alpha x seconds first)
     logger.debug("intent failure detected")
 
 
 def handle_speak(event):
-    global chatting, waiting, more, response, metadata
     utterance = event.data.get('utterance')
     target = event.data.get('target')
-    data = event.data.get('metadata')
-    if data is None:
+    metadata = event.data.get('metadata')
+    more = event.data.get('more')
+    mute = event.data.get('mute')
+    expect_response = event.data.get('expect_response')
+
+    if metadata is None:
         metadata = {}
-    else:
-        metadata = data
-    logger.debug("Speak: " + utterance + " Target: " + target)
-    # if we are chatting and waiting for a response
-    # TODO process target
-    if chatting and waiting:
-        # capture response
-        logger.debug("Capturing speech response")
-        response = utterance
-        more = event.data.get("more")
-        waiting = False
 
+    logger.debug("Answer: " + utterance + " Target: " + target)
+    target, sock_num = target.split(":")
+    answer_data = {"utterance": utterance, 'target': target, "mute": mute, "more": more, "expect_response": expect_response, "metadata":metadata}
+    answer_type = "speak"
 
-def wait_answer():
-    global waiting
-    start = time.time()
-    elapsed = 0
-    logger.debug( "Waiting for speech response")
-    waiting = True
-    # wait maximum 20 seconds
-    while waiting and elapsed < 20:
-        elapsed = time.time() - start
-        time.sleep(0.1)
-    waiting = False
+    for socket in CONNECTION_LIST:
+        ip, sock = socket.getppername().replace("(", "").replace(")", "").replace(" ", "").split(",")
+        if sock == sock_num:
+            logger.debug("Sending message to socket " + sock_num)
+            send_message(socket, answer_type, answer_data)
+            if "dream_url" in metadata.keys():
+                logger.info("Sending formatted dream result")
+                send_message(socket, "deep_dream_result", {"dream_url": metadata["dream_url"], "user": target})
+            break
 
 
 def connect():
@@ -144,7 +131,6 @@ def answer_id(sock):
 
 
 def get_answer(utterance, user):
-    global more, chatting, ws, response
     logger.debug("emitting utterance to bus: " + utterance)
     source, usr = user.split(":")
     ws.emit(
@@ -152,20 +138,6 @@ def get_answer(utterance, user):
                {'utterances': [utterance.strip()], 'source': user, "user": usr, "mute": True}))
 
     logger.debug("Waiting answer for user " + user)
-    # capture speech response
-    wait_answer()
-    # if more speech is coming for this chat
-    answer = response
-    while more:
-        logger.debug( "More speech is expected, waiting")
-        # capture speech response
-        wait_answer()
-        if response not in answer:
-            # if wait ended not because of time_out, append answer
-            answer += "\n" + response
-    data = {"utterance": answer, 'target': source, "mute": False, "more": False, "expect_response": False, "metadata":metadata}
-    answer_type = "speak"
-    return answer_type, data
 
 
 def get_msg(message):
@@ -190,6 +162,7 @@ def handle_message_request(event):
         print source, user
         if user_id == user:
             send_message(socket, type, data)
+
 
 def main():
     global ws
@@ -261,18 +234,8 @@ def main():
                             elif deserialized_message.type == "recognizer_loop:utterance":
                                 utterance = data["utterances"][0]
                                 # get answer
-                                more = False
-                                metadata = {}
-                                chatting = True
-                                # answer
                                 user = data["source"] + ":" + user
-                                answer_type, answer_data = get_answer(utterance, user)
-                                logger.debug("answering: " + str(answer_data) + " to user: " + user)
-                                send_message(sock, answer_type, answer_data)
-                                if "dream_url" in metadata.keys():
-                                    logger.info("sending formatted dream result")
-                                    send_message(sock, "deep_dream_result", {"dream_url": metadata["dream_url"], "user":user})
-                                chatting = False
+                                get_answer(utterance, user)
                 except:
                     offline_client(sock)
                     continue
