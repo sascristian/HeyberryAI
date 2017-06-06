@@ -31,13 +31,13 @@ CONNECTION_LIST = []
 RECV_BUFFER = 4096  # Advisable to keep it as an exponent of 2
 PORT = 5000
 server_socket = None
-utterance_socket = None
 
 blacklisted_ips = []
 # TODO maybe add deep dream request, but i want the utterance handled internally for now /more control
 allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update"]
 names = {}
 
+message_queue = {}
 
 def handle_failure(event):
     # TODO warn user of possible lack of answer (wait for wolfram alpha x seconds first)
@@ -45,7 +45,7 @@ def handle_failure(event):
 
 
 def handle_speak(event):
-    global CONNECTION_LIST
+    global message_queue
     utterance = event.data.get('utterance')
     target = event.data.get('target')
     metadata = event.data.get('metadata')
@@ -60,17 +60,11 @@ def handle_speak(event):
     target, sock_num = target.split(":")
     answer_data = {"utterance": utterance, 'target': target, "mute": mute, "more": more, "expect_response": expect_response, "metadata":metadata}
     answer_type = "speak"
-    logger.info("Searching for sock " + str(sock_num))
-    read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, [], [])
-    for socket in write_sockets:
-        print socket.getpeername() #TODO crashes here solve
-        ip, sock = str(socket.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-        print ip, sock
-        if int(sock) == int(sock_num):
-            logger.debug("Sending message to socket " + str(sock_num))
-            send_message(socket, answer_type, answer_data)
-            return
-    logger.error("Target socket could not be found " + str(sock_num))
+
+    if sock_num not in message_queue.keys():
+        message_queue[sock_num] = []
+    message_queue[sock_num].append([answer_type, answer_data])
+
 
 
 def connect():
@@ -155,18 +149,15 @@ def send_message(sock, type="speak", data={}):
 
 
 def handle_message_request(event):
-    global CONNECTION_LIST
+    global message_queue
     user_id = event.data.get("user_id")
     type = event.data.get("type")
     data = event.data.get("data")
-    read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, [], [])
-    for socket in write_sockets:
-        print socket.getpeername()
-        ip, user = str(socket.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-        source, user = user.split(":")
-        print source, user
-        if user_id == user:
-            send_message(socket, type, data)
+    sock_num = user_id.split(":")[1]
+    if sock_num not in message_queue.keys():
+        message_queue[sock_num] = []
+    message_queue[sock_num].append([type, data])
+
 
 
 def main():
@@ -179,7 +170,7 @@ def main():
     event_thread.setDaemon(True)
     event_thread.start()
 
-    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket
+    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue
     # start server socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -193,7 +184,16 @@ def main():
 
     while True:
         # Get the list sockets which are ready to be read through select
-        read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, [], [])
+        read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
+
+        for sock in write_sockets:
+            ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+            if sock_num in message_queue.keys():
+                i = 0
+                for type, data in message_queue[sock_num]:
+                    send_message(sock, type, data)
+                    message_queue[sock_num].pop(i)
+                    i += 1
 
         for sock in read_sockets:
             # New connection
