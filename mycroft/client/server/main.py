@@ -62,8 +62,9 @@ def handle_speak(event):
     answer_type = "speak"
     logger.info("Searching for sock " + str(sock_num))
     for socket in CONNECTION_LIST:
-        ip, sock = socket.getpeername().replace("(", "").replace(")", "").replace(" ", "").split(",")
-        print sock
+        print socket
+        ip, sock = str(socket.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+        print ip, sock
         if int(sock) == int(sock_num):
             logger.debug("Sending message to socket " + str(sock_num))
             send_message(socket, answer_type, answer_data)
@@ -158,7 +159,7 @@ def handle_message_request(event):
     type = event.data.get("type")
     data = event.data.get("data")
     for socket in CONNECTION_LIST:
-        ip, user = socket.getpeername().replace("(", "").replace(")", "").replace(" ", "").split(",")
+        ip, user = str(socket.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
         source, user = user.split(":")
         print source, user
         if user_id == user:
