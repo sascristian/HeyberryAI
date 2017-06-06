@@ -178,13 +178,14 @@ def send_message(sock, type="speak", data={}):
     message = get_msg(Message(type, data))
     answer_data(sock, message)
 
+
 def handle_message_request(event):
-    user_id = int(event.data.get("user_id"))
+    user_id = event.data.get("user")
     type = event.data.get("type")
     data = event.data.get("data")
     for socket in CONNECTION_LIST:
         ip, user = socket.getppername().replace("(", "").replace(")", "").replace(" ", "").split(",")
-        if user_id == int(user):
+        if user_id == user:
             send_message(socket, type, data)
 
 def main():
