@@ -67,7 +67,7 @@ class DreamSkill(MycroftSkill):
             time.sleep(1)
 
     def handle_dream_intent(self, message):
-        user_id = message.data.get("source")
+        user_id = message.data.get("target")
         if not self.dreaming:
             try:
                 with open(self.sourcespath) as f:
@@ -80,7 +80,7 @@ class DreamSkill(MycroftSkill):
 
     def handle_dream_about_intent(self, message):
         search = message.data.get("DreamSearch")
-        user_id = message.data.get("source")
+        user_id = message.data.get("target")
         if not self.dreaming:
             # collect dream entropy
             self.speak("dreaming about " + search)
