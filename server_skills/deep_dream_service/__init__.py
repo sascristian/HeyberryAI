@@ -106,6 +106,8 @@ class DreamService(MycroftSkill):
         name = message.data.get("dream_name")
         user_id = message.data.get("source")
         if user_id is not None:
+            if user_id == "unknown":
+                user_id = "all"
             self.target = user_id
         if name is None:
             name = time.asctime().replace(" ","_") + ".jpg"
@@ -122,7 +124,6 @@ class DreamService(MycroftSkill):
 
     #### dreaming functions
     def dream(self, imagepah, name):
-        fails = 0
         if self.dreaming:
             self.speak("i am already dreaming")
             return None

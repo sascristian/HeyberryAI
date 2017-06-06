@@ -148,7 +148,7 @@ def get_answer(utterance, user):
     logger.debug("emitting utterance to bus: " + utterance)
     ws.emit(
        Message("recognizer_loop:utterance",
-               {'utterances': [utterance.strip()], 'source': user, "user": "unknown", "mute": True}))
+               {'utterances': [utterance.strip()], 'source': str(user), "user": "unknown", "mute": True}))
 
     logger.debug("Waiting answer for user " + user)
     # capture speech response

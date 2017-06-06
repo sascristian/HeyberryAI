@@ -62,7 +62,7 @@ class DreamSkill(MycroftSkill):
 
     def dream(self, dream_pic, user="unknown", dream_guide=None, dream_name=None):
         self.dreaming = True
-        self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name}))
+        self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name, "source":user}))
         while self.dreaming:
             time.sleep(1)
 
