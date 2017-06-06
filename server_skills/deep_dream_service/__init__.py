@@ -41,7 +41,7 @@ class DreamService(MycroftSkill):
 
         # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
         self.bc = BatCountry(path)#path,model_path=path)
-        self.iter = 1#20#self.config["iter"] #dreaming iterations
+        self.iter = 5#20#self.config["iter"] #dreaming iterations
         self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
                         "inception_5b/pool", "inception_5b/5x5",
                         "inception_5b/5x5_reduce", "inception_5b/3x3",
@@ -123,6 +123,7 @@ class DreamService(MycroftSkill):
         else:
             result = self.dream(source, name)
 
+        print result
         if result is not None:
             # TODO upload, send remote link
             data = self.client.upload_from_path(result)
