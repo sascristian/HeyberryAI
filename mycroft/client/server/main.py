@@ -163,7 +163,7 @@ def get_answer(utterance, user):
         if response not in answer:
             # if wait ended not because of time_out, append answer
             answer += "\n" + response
-    data = {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":metadata}
+    data = {"utterance": answer, 'target': source, "mute": False, "more": False, "expect_response": False, "metadata":metadata}
     answer_type = "speak"
     return answer_type, data
 
