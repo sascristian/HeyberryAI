@@ -146,9 +146,10 @@ def answer_id(sock):
 def get_answer(utterance, user):
     global more, chatting, ws, response
     logger.debug("emitting utterance to bus: " + utterance)
+    source, usr = user.split(":")
     ws.emit(
        Message("recognizer_loop:utterance",
-               {'utterances': [utterance.strip()], 'source': str(user), "user": "unknown", "mute": True}))
+               {'utterances': [utterance.strip()], 'source': user, "user": usr, "mute": True}))
 
     logger.debug("Waiting answer for user " + user)
     # capture speech response
@@ -185,6 +186,8 @@ def handle_message_request(event):
     data = event.data.get("data")
     for socket in CONNECTION_LIST:
         ip, user = socket.getppername().replace("(", "").replace(")", "").replace(" ", "").split(",")
+        source, user = user.split(":")
+        print source, user
         if user_id == user:
             send_message(socket, type, data)
 
@@ -262,12 +265,13 @@ def main():
                                 metadata = {}
                                 chatting = True
                                 # answer
+                                user = data["source"] + ":" + user
                                 answer_type, answer_data = get_answer(utterance, user)
                                 logger.debug("answering: " + str(answer_data) + " to user: " + user)
                                 send_message(sock, answer_type, answer_data)
                                 if "dream_url" in metadata.keys():
                                     logger.info("sending formatted dream result")
-                                    send_message(sock, "deep_dream_result", {"dream_url": metadata["dream_url"]})
+                                    send_message(sock, "deep_dream_result", {"dream_url": metadata["dream_url"], "user":user})
                                 chatting = False
                 except:
                     offline_client(sock)
