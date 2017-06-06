@@ -116,10 +116,13 @@ class DreamService(MycroftSkill):
             if user_id == "unknown":
                 user_id = "all"
             self.target = user_id
+        else:
+            user_id = "all"
 
         if name is None:
             name = time.asctime().replace(" ","_") + ".jpg"
 
+        print name, source, guide, user_id
         if guide is not None:
             result = self.guided_dream(source, guide, name)
         else:
