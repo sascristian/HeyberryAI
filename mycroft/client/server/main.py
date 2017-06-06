@@ -188,11 +188,13 @@ def main():
 
         for sock in write_sockets:
             ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+            print ip, sock_num
             if sock_num in message_queue.keys():
                 i = 0
                 for type, data in message_queue[sock_num]:
                     send_message(sock, type, data)
                     message_queue[sock_num].pop(i)
+                    # TODO remove empty sock num in queue
                     i += 1
 
         for sock in read_sockets:
