@@ -33,7 +33,6 @@ class DreamSkill(MycroftSkill):
         self.save = True
 
     def initialize(self):
-        self.emitter.on("deep_dream_result", self.receive_dream)
 
         prefixes = [
             'dream about', 'dream with', 'dream of', 'dream off', 'da']
