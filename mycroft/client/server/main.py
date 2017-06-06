@@ -45,6 +45,7 @@ def handle_failure(event):
 
 
 def handle_speak(event):
+    global CONNECTION_LIST
     utterance = event.data.get('utterance')
     target = event.data.get('target')
     metadata = event.data.get('metadata')
@@ -59,16 +60,15 @@ def handle_speak(event):
     target, sock_num = target.split(":")
     answer_data = {"utterance": utterance, 'target': target, "mute": mute, "more": more, "expect_response": expect_response, "metadata":metadata}
     answer_type = "speak"
-
+    logger.info("Searching for sock " + str(sock_num))
     for socket in CONNECTION_LIST:
         ip, sock = socket.getppername().replace("(", "").replace(")", "").replace(" ", "").split(",")
-        if sock == sock_num:
-            logger.debug("Sending message to socket " + sock_num)
+        print sock
+        if int(sock) == int(sock_num):
+            logger.debug("Sending message to socket " + str(sock_num))
             send_message(socket, answer_type, answer_data)
-            if "dream_url" in metadata.keys():
-                logger.info("Sending formatted dream result")
-                send_message(socket, "deep_dream_result", {"dream_url": metadata["dream_url"], "user": target})
-            break
+            return
+    logger.error("Target socket could not be found " + str(sock_num))
 
 
 def connect():
@@ -153,7 +153,8 @@ def send_message(sock, type="speak", data={}):
 
 
 def handle_message_request(event):
-    user_id = event.data.get("user")
+    global CONNECTION_LIST
+    user_id = event.data.get("user_id")
     type = event.data.get("type")
     data = event.data.get("data")
     for socket in CONNECTION_LIST:
@@ -174,7 +175,7 @@ def main():
     event_thread.setDaemon(True)
     event_thread.start()
 
-    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, more, chatting, response, names, metadata
+    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket
     # start server socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
