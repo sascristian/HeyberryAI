@@ -58,7 +58,7 @@ class EnglishQuestionParser():
 
 
 class LILACSQuestionParser():
-    def __init__(self, host="http://localhost:2222/rest/annotate"):
+    def __init__(self, host="http://192.168.15.19:2222/rest/annotate"):
         # 222 2en 8pt 5fr
         self.parser = EnglishQuestionParser()
         self.host = host
