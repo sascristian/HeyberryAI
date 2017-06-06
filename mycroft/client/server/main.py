@@ -61,7 +61,8 @@ def handle_speak(event):
     answer_data = {"utterance": utterance, 'target': target, "mute": mute, "more": more, "expect_response": expect_response, "metadata":metadata}
     answer_type = "speak"
     logger.info("Searching for sock " + str(sock_num))
-    for socket in CONNECTION_LIST:
+    read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, [], [])
+    for socket in write_sockets:
         print socket.getpeername() #TODO crashes here solve
         ip, sock = str(socket.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
         print ip, sock
@@ -158,7 +159,8 @@ def handle_message_request(event):
     user_id = event.data.get("user_id")
     type = event.data.get("type")
     data = event.data.get("data")
-    for socket in CONNECTION_LIST:
+    read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, [], [])
+    for socket in write_sockets:
         print socket.getpeername()
         ip, user = str(socket.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
         source, user = user.split(":")
