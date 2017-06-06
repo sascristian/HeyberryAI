@@ -36,6 +36,8 @@ class LILACSKnowledgeSkill(MycroftSkill):
         super(LILACSKnowledgeSkill, self).__init__(name="LILACS_Knowledge_Skill")
 
     def initialize(self):
+        from time import sleep
+        sleep(20)
         timer_thread = Thread(target=self.service)
         timer_thread.setDaemon(True)
         timer_thread.start()
