@@ -23,8 +23,17 @@ class DreamService(MycroftSkill):
         self.reload_skill = False
 
         # TODO get from config
-        client_id = 'e56ee056be7d06f'
-        client_secret = '9cf2e6b1740ea43abce2a6b37510daf45742f52f'
+        try:
+            client_id = self.config_core.get("APIS")["ImgurKey"]
+            client_secret = self.config_core.get("APIS")["ImgurSecret"]
+        except:
+            try:
+                client_id = self.config.get("ImgurKey")
+                client_secret = self.config.get("ImgurSecret")
+            except:
+                # TODO throw error
+                client_id = 'xx'
+                client_secret = 'yyyyyyyyy'
 
         self.client = ImgurClient(client_id, client_secret)
 
