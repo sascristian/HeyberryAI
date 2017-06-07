@@ -456,7 +456,10 @@ class FaceChat(fbchat.Client):
     def handle_speak(self, message):
         utterance = message.data.get("utterance")
         target = message.data.get("target")
+        metadata = message.data.get("metadata")
         if "fbchat" in target and self.active:
+            if "dream_url" in metadata.keys():
+                utterance += " " + metadata["dream_url"]
             user = target.replace("fbchat_", "")
             if user.isdigit():
                 self.send(user, utterance)
