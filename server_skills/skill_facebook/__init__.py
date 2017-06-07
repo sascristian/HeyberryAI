@@ -391,42 +391,16 @@ class FaceChat(fbchat.Client):
             # check if there is a utterance in queue
             if len(self.queue) > 0:
                 self.log.debug("Processing queue")
-                self.more = False
-                self.chatting = True
                 chat = self.queue[0]
                 # send that utterance to skills
                 self.log.debug("Processing utterance " + chat[1] + " for user " + str(chat[0]))
                 chatmsg = chat[1]
-                print chatmsg
                 self.emitter.emit(
                     Message("recognizer_loop:utterance",
-                            {'utterances': [chatmsg], 'source': 'fbchat', "mute": True, "user":chat[2]}))
-                # capture speech response
-                self.wait_answer()
-                # answer
-                self.log.debug("Answering " + str(chat[0]) + " with " + self.response)
-                self.send(chat[0], self.response)
+                            {'utterances': [chatmsg], 'source': 'fbchat_'+chat[0], "mute": True, "user":chat[2]}))
                 # remove from queue
                 self.log.debug("Removing item from queue")
                 self.queue.pop(0)
-                # reset response
-                self.response = ""
-                # if more speech is coming for this chat
-                while self.more:
-                    self.log.debug("More speech is expected, waiting")
-                    # capture speech response
-                    self.wait_answer()
-                    # answer
-                    self.log.debug("Answering " + str(chat[0]) + " with " + self.response)
-                    self.send(chat[0], self.response)
-                    # reset response
-                    self.response = ""
-                # check next item
-            elif self.chatting:
-                # if nothing on queue we are not chatting
-                self.chatting = False
-                self.log.debug("Not chatting on facebook " + time.asctime())
-            # sleep briefly
             time.sleep(0.3)
 
     def start_threads(self):
@@ -485,24 +459,12 @@ class FaceChat(fbchat.Client):
     def handle_speak(self, message):
         utterance = message.data.get("utterance")
         target = message.data.get("target")
-        # if we are chatting and waiting for a response
-        if (target == "fbchat" or target == "all") and self.chatting and self.waiting:
-            # capture response
-            self.log.debug("Capturing speech response")
-            self.response = utterance
-            self.more = message.data.get("more")
-            self.waiting = False
-
-    def wait_answer(self):
-        start = time.time()
-        elapsed = 0
-        self.log.debug("Waiting for speech response")
-        self.waiting = True
-        # wait maximum 20 seconds
-        while self.waiting and elapsed < 20:
-            elapsed = time.time() - start
-            sleep(0.1)
-        self.waiting = False
+        if "fbchat" in target:
+            user = target.replace("fbchat_")
+            if user.isdigit():
+                self.send(user, utterance)
+            else:
+                self.log.error("invalid user id " + user)
 
 
 class FacebookSkill(MycroftSkill):
