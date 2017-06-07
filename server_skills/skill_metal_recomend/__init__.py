@@ -79,7 +79,9 @@ class MetalSkill(MycroftSkill):
 
     def handle_suggest_intent(self, message):
 
-        self.get_band()
+        if not self.get_band():
+            self.speak("Could not reach metal archives")
+            return
         #"Tell name"
         self.speak_dialog("metal_recommend", {"band":self.Name})
         self.speak_dialog("origin", {"country":self.Country})
@@ -111,10 +113,11 @@ class MetalSkill(MycroftSkill):
                 self.Date = tree.xpath(".//*[@id='band_stats']/dl[1]/dd[4]/text()")[0]
                 years_active = tree.xpath(".//*[@id='band_stats']/dl[3]/dd/text()")[0]
                 self.Years = years_active.strip()
-                return
+                return True
             except:
                 fails += 1
-        self.speak("Could not reach metal archives")
+        return False
+
 
     def stop(self):
         pass
