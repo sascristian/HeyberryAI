@@ -142,7 +142,7 @@ class DreamService(MycroftSkill):
             data = self.client.upload_from_path(result)
             link = data["link"]
             print user_id
-            time.sleep(500)
+            time.sleep(30)
             self.speak("Here is what i dreamed", metadata={"dream_url": link})
             self.emitter.emit(Message("message_request", {"user_id":user_id, "data":{"dream_url":link}, "type":"deep_dream_result"}))
 
