@@ -34,8 +34,8 @@ class MarkovGen():
         self.minsize = 8
         self.maxsize = 20
         self.freqDict = {}
-        self.banned = ["smoked", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamines", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
-                  "stash", "2-cb", "2c-b", "2cb", " mg ", " g ", "shrooms"]
+        self.banned = ["smoked", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
+                  "stash", "2-cb", "2c-b", "2cb", " mg ", " g ", "shrooms", "crack"]
         self.replaces = ["memories", "computing power", "super-computer", "galactic council","gnome", "pod bay doors", "tricorder", "alien goo", "flux capacitator","dinosaur turd", "space ship", "computer", "bot", "evil", "AI", "synthetic", "alien",
                        "pink-skin human", "orc", "time-machine", "medkit", "terminator", "Mark1", "radioactive poop", "waste"]
 
