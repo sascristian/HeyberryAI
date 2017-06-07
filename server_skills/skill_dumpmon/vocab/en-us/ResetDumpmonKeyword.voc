@@ -1,0 +1,5 @@
+reset dumpmon
+dumpmon reset
+dump monitor reset
+reset monitoring dumps
+reset dump monitor

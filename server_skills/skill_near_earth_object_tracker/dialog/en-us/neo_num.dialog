@@ -1,0 +1,2 @@
+in the next 7 days there are {{ neo_num }} catalogued asteroids that could hit earth
+nasa is tracking {{ neo_num }} asteroids that could hit earth this week
