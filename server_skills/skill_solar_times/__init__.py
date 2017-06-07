@@ -11,7 +11,7 @@ from solartime import SolarTime
 __author__ = 'msev'
 
 LOGGER = getLogger(__name__)
-
+# TODO make origin configurable
 from geopy.geocoders import Nominatim
 
 class SunSkill(MycroftSkill):
