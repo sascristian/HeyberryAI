@@ -92,20 +92,9 @@ class MetalSkill(MycroftSkill):
             #how long been playing
             self.speak_dialog("active", {"date":self.Date})
 
-        self.add_result("Band_Name",self.Name)
-        self.add_result("Band_Style",self.Style)
-        self.add_result("Band_Theme", self.Theme)
-        self.add_result("Band_Label", self.Label)
-        self.add_result("Band_Country", self.Country)
-        self.add_result("Band_Location", self.Location)
-        self.add_result("Band_Status", self.Status)
-        self.add_result("Band_Formation_Date", self.Date)
-        self.add_result("Band_Active_Years", self.Years)
-        self.emit_results()
-
     def get_band(self):
-        sucess = False
-        while not sucess:
+        fails = 0
+        while fails < 10:
             try:
                 response = requests.get('http://www.metal-archives.com/band/random')
                 tree = html.fromstring(response.content)
@@ -122,9 +111,10 @@ class MetalSkill(MycroftSkill):
                 self.Date = tree.xpath(".//*[@id='band_stats']/dl[1]/dd[4]/text()")[0]
                 years_active = tree.xpath(".//*[@id='band_stats']/dl[3]/dd/text()")[0]
                 self.Years = years_active.strip()
-                sucess = True
+                return
             except:
-                pass
+                fails += 1
+        self.speak("Could not reach metal archives")
 
     def stop(self):
         pass
