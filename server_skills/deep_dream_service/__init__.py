@@ -132,7 +132,6 @@ class DreamService(MycroftSkill):
         if name is None:
             name = time.asctime().replace(" ","_") + ".jpg"
 
-        print name, source, guide, user_id
         if guide is not None:
             result = self.guided_dream(source, guide, name)
         else:
@@ -140,9 +139,10 @@ class DreamService(MycroftSkill):
 
         print result
         if result is not None:
-            # TODO upload, send remote link
             data = self.client.upload_from_path(result)
             link = data["link"]
+            print user_id
+            time.sleep(500)
             self.speak("Here is what i dreamed", metadata={"dream_url": link})
             self.emitter.emit(Message("message_request", {"user_id":user_id, "data":{"dream_url":link}, "type":"deep_dream_result"}))
 

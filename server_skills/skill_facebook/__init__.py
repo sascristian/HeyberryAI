@@ -370,10 +370,7 @@ class FaceChat(fbchat.Client):
         self.emitter = emitter
         self.emitter.on("fb_chat_message", self.handle_chat_request)
         self.emitter.on("speak", self.handle_speak)
-        self.chatting = False
-        self.queue = [] #[[author_id , utterance]]
-        self.response = ""
-        self.waiting = False
+        self.queue = [] #[[author_id , utterance, name]]
         self.monitor_thread = None
         self.queue_thread = None
         self.start_threads()
