@@ -74,12 +74,16 @@ class IntentService(object):
         elif len(utterances) == 1:
             self.emitter.emit(Message("intent_failure", {
                 "utterance": utterances[0],
-                "lang": lang
+                "lang": lang,
+                "target": target,
+                "mute": mute
             }))
         else:
             self.emitter.emit(Message("multi_utterance_intent_failure", {
                 "utterances": utterances,
-                "lang": lang
+                "lang": lang,
+                "target": target,
+                "mute": mute
             }))
 
     def handle_register_vocab(self, message):

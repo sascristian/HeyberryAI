@@ -330,6 +330,8 @@ class LilacsCoreSkill(MycroftSkill):
     def handle_fallback(self, message):
         # on single utterance intent failure ask user for correct answer
         utterance = message.data["utterance"]
+        self.target = message.data["target"]
+        self.muted = message.data["mute"]
         self.deduce_answer(utterance)
 
     def handle_multiple_fallback(self, message):
