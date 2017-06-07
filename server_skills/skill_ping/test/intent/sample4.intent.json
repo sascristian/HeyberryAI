@@ -1,0 +1,8 @@
+{
+  "utterance": "Go ping yourself",
+  "intent_type": "PingIntent",
+  "intent": {
+    "PingKeyword": "pin",
+    "key": "yourself"
+  }
+}

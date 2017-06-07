@@ -1,0 +1,1 @@
+First coin flip is {{ flip1 }}. Second coin flip is {{ flip2 }}. {{ flip1 }} and {{ flip2 }}

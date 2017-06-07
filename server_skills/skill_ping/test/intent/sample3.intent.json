@@ -1,0 +1,8 @@
+{
+  "utterance": "Ping google",
+  "intent_type": "PingIntent",
+  "intent": {
+    "PingKeyword": "pin",
+    "key": "google"
+  }
+}
