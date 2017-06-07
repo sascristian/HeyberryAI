@@ -56,32 +56,23 @@ class SunSkill(MycroftSkill):
     def handle_sunrise_intent(self, message):
         sunrise = self.schedule['sunrise'].astimezone(self.localtz)
         self.speak_dialog("sunrise", {"sunrise": str(sunrise)[10:16]})
-        self.add_result("sunrise", str(sunrise)[10:16])
-        self.emit_results()
+
 
     def handle_sunset_intent(self, message):
         sunset = self.schedule['sunset'].astimezone(self.localtz)
         self.speak_dialog("sunset", {"sunset": str(sunset)[10:16]})
-        self.add_result("sunset", str(sunset)[10:16])
-        self.emit_results()
 
     def handle_dawn_intent(self, message):
         dawn = self.schedule['dawn'].astimezone(self.localtz)
         self.speak_dialog("dawn", {"dawn": str(dawn)[10:16]})
-        self.add_result("dawn", str(dawn)[10:16])
-        self.emit_results()
 
     def handle_dusk_intent(self, message):
         dusk = self.schedule['dusk'].astimezone(self.localtz)
         self.speak_dialog("dusk", {"dusk": str(dusk)[10:16]})
-        self.add_result("dusk", str(dusk)[10:16])
-        self.emit_results()
 
     def handle_noon_intent(self, message):
         noon = self.schedule['noon'].astimezone(self.localtz)
         self.speak_dialog("noon", {"noon": str(noon)[10:16]})
-        self.add_result("solarnoon", str(noon)[10:16])
-        self.emit_results()
 
     def stop(self):
         pass
