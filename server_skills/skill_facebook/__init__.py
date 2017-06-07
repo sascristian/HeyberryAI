@@ -459,8 +459,8 @@ class FaceChat(fbchat.Client):
     def handle_speak(self, message):
         utterance = message.data.get("utterance")
         target = message.data.get("target")
-        if "fbchat" in target:
-            user = target.replace("fbchat_")
+        if "fbchat" in target and self.active:
+            user = target.replace("fbchat_", "")
             if user.isdigit():
                 self.send(user, utterance)
             else:
