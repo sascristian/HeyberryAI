@@ -175,7 +175,7 @@ class PoetrySkill(MycroftSkill):
 
     def poetry(self, style):
         # style = "shakespeare"
-        path = self.path + "_styles/" + style + ".txt"
+        path = dirname(__file__) + "/styles/" + style + ".txt"
         # init dicionares
         poemFreqDict = {}
         poemProbDict = addToDict(path, poemFreqDict, self.mode)
