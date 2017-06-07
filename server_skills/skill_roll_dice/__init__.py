@@ -10,6 +10,7 @@ __author__ = 'paul'
 
 LOGGER = getLogger(__name__)
 
+
 class RollDiceSkill(MycroftSkill):
 
     def __init__(self):
