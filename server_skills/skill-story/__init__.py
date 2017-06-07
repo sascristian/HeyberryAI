@@ -34,7 +34,7 @@ class MarkovGen():
         self.minsize = 8
         self.maxsize = 20
         self.freqDict = {}
-        self.banned = ["ganja", "serotonine", "ketamine", "k-hole","norepinephrine", "dopamine", "reuptake", "psilo", "hallucinating", "bismol", "marijuana", "dxm", "tab", "drug", "chemical", "dope", "kush", "acid", "peyote", "hallucinogen", " m ","smoked", "engine", "tabitha", "mescaline", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
+        self.banned = ["coke", " k ", "snort", "ganja", "serotonine", "ketamine", "k-hole","norepinephrine", "dopamine", "reuptake", "psilo", "hallucinating", "bismol", "marijuana", "dxm", "tab", "drug", "chemical", "dope", "kush", "acid", "peyote", "hallucinogen", " m ","smoked", "engine", "tabitha", "mescaline", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
                   "stash", "2-cb", "2c-b", "2cb", " mg", "0ug", " g ", "shrooms", "crack"]
         self.replaces = ["memorie", "jon do", "engine", "friend", "computing power", "super-computer", "galactic council","gnome", "pod bay doors", "tricorder", "alien goo", "flux capacitator","dinosaur turd", "space ship", "computer", "bot", "evil", "AI", "synthetic", "alien",
                        "pink-skin human", "data", "metadata", "robo-orc", "time-machine", "medkit", "terminator", "Mark1", "radioactive poop", "waste"]
