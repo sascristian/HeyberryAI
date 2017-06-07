@@ -1,5 +1,5 @@
 import re, random
-
+from os.path import dirname
 
 class MarkovGen():
     def __init__(self):
@@ -7,10 +7,10 @@ class MarkovGen():
         self.minsize = 8
         self.maxsize = 20
         self.freqDict = {}
-        self.banned = ["smoked", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamines", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
-                  "stash", "2-cb", "2c-b", "2cb", " mg ", " g ", "shrooms"]
-        self.replaces = ["memories", "computing power", "super-computer", "galactic council","gnome", "pod bay doors", "tricorder", "alien goo", "flux capacitator","dinosaur turd", "space ship", "computer", "bot", "evil", "AI", "synthetic", "alien",
-                       "pink-skin human", "orc", "time-machine", "medkit", "terminator", "Mark1", "radioactive poop", "waste"]
+        self.banned = ["psilo", "marijuana", "dxm", "tab", "drug", "chemical", "dope", "kush", "acid", "peyote", "hallucinogen", " m ","smoked", "engine", "tabitha", "mescaline", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
+                  "stash", "2-cb", "2c-b", "2cb", " mg", " ug", " g ", "shrooms", "crack"]
+        self.replaces = ["memorie", "jon do", "engine", "friend", "computing power", "super-computer", "galactic council","gnome", "pod bay doors", "tricorder", "alien goo", "flux capacitator","dinosaur turd", "space ship", "computer", "bot", "evil", "AI", "synthetic", "alien",
+                       "pink-skin human", "data", "metadata", "orc", "time-machine", "medkit", "terminator", "Mark1", "radioactive poop", "waste"]
 
     def replace_bads(self, text):
         lines = text
@@ -84,7 +84,7 @@ starts = ["Once upon a time in a place far far away, ",
 
 
 Mark = MarkovGen()
-Mark.add_to_dict("/home/user/JarbasAI/server_skills/skill_story/skill_story/styles/drugs.txt")
+Mark.add_to_dict(dirname(__file__) + "/styles/drugs.txt")
 print Mark.generate(random.choice(starts))
 
 

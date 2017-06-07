@@ -34,10 +34,10 @@ class MarkovGen():
         self.minsize = 8
         self.maxsize = 20
         self.freqDict = {}
-        self.banned = ["psilo", "marijuana", "dxm", "tab", "drug", "chemical", "dope", "kush", "acid", "peyote", "hallucinogen", " m ","smoked", "engine", "tabitha", "mescaline", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
-                  "stash", "2-cb", "2c-b", "2cb", "mg", "ug", " g ", "shrooms", "crack"]
+        self.banned = ["ganja", "serotonine", "ketamine", "k-hole","norepinephrine", "dopamine", "reuptake", "psilo", "hallucinating", "bismol", "marijuana", "dxm", "tab", "drug", "chemical", "dope", "kush", "acid", "peyote", "hallucinogen", " m ","smoked", "engine", "tabitha", "mescaline", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
+                  "stash", "2-cb", "2c-b", "2cb", " mg", "0ug", " g ", "shrooms", "crack"]
         self.replaces = ["memorie", "jon do", "engine", "friend", "computing power", "super-computer", "galactic council","gnome", "pod bay doors", "tricorder", "alien goo", "flux capacitator","dinosaur turd", "space ship", "computer", "bot", "evil", "AI", "synthetic", "alien",
-                       "pink-skin human", "data", "metadata", "orc", "time-machine", "medkit", "terminator", "Mark1", "radioactive poop", "waste"]
+                       "pink-skin human", "data", "metadata", "robo-orc", "time-machine", "medkit", "terminator", "Mark1", "radioactive poop", "waste"]
 
     def replace_bads(self, text):
         lines = text
@@ -108,6 +108,7 @@ class StorySkill(MycroftSkill):
     def __init__(self):
         super(StorySkill, self).__init__(name="StorySkill")
         self.reload_skill = False
+        self.styles = ["lovecraft", "drugs"]
         self.starts = ["Once upon a time in a place far far away, ",
           "The story im about to tell is unbelievable, ",
           "Everything started like this, ",
@@ -127,8 +128,9 @@ class StorySkill(MycroftSkill):
                              self.handle_story_intent)
 
     def handle_story_intent(self, message):
+        style = random.choice(self.styles)
         Mark = MarkovGen()
-        Mark.add_to_dict(dirname(__file__) + "/styles/drugs.txt")
+        Mark.add_to_dict(dirname(__file__) + "/styles/" + style + ".txt")
         out = Mark.generate(random.choice(self.starts))
         self.save(out)
         # speak
