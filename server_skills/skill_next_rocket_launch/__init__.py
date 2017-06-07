@@ -54,7 +54,7 @@ class NextLaunchSkill(MycroftSkill):
                 launch['launch_date'] += ' ' + ":".join([gmt_time[:2], gmt_time[2:]]) + ' GMT'
                 time_struct, parse_status = cal.parse(launch['launch_date'])
                 if parse_status == 0:
-                    print("Could not parse for {0} - {1}".format(launch['launch_date'], launch['rocket_name']))
+                    self.log.info("Could not parse for {0} - {1}".format(launch['launch_date'], launch['rocket_name']))
                     continue # If this didn't work it's probably not the upcoming launch
                 sched_date = datetime.fromtimestamp(mktime(time_struct))
                 time_till = sched_date - datetime.now()
@@ -67,15 +67,7 @@ class NextLaunchSkill(MycroftSkill):
                 continue
 
         sorted_schedule = sorted(schedule, key=lambda k: k['time_till'])
-        print sorted_schedule
         self.speak_dialog("next.launch", sorted_schedule[0])
-
-        self.add_result("launch_date", sorted_schedule[0]["launch_date"])
-        self.add_result("launch_time", sorted_schedule[0]["launch_time"])
-        self.add_result("time_till_launch", sorted_schedule[0]["time_till"])
-        self.add_result("schedule", sorted_schedule)
-
-        self.emit_results()
 
     def stop(self):
         pass
