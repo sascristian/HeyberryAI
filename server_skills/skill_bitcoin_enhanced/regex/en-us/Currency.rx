@@ -1,0 +1,1 @@
+(in|for) (?P<Currency>.*)
