@@ -534,7 +534,7 @@ class FacebookSkill(MycroftSkill):
     def initialize(self):
         # start bots
         self.face = FaceBot(self.api_key)
-        self.selenium_face = SeleniumFaceBot(self.mail, self.passwd, self.firefox_path)
+        self.selenium_face = None #SeleniumFaceBot(self.mail, self.passwd, self.firefox_path)
         self.chat = FaceChat(self.mail, self.passwd, self.emitter, debug=False, active=self.active)
         self.face_id = self.face.get_self_id()
         # populate friend ids
