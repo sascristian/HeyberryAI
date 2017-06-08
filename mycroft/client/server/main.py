@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-import socket, select, sys, time, json
+import ssl, socket, select, json
+from os.path import dirname
 from threading import Thread
 
 from mycroft.messagebus.client.ws import WebsocketClient
@@ -182,6 +183,9 @@ def main():
 
     logger.debug("Listening started on port " + str(PORT))
 
+    # read cert and key
+    cert = dirname(__file__) + "/certs/myapp.crt"
+    key = dirname(__file__) + "/certs/myapp.key"
     while True:
         # Get the list sockets which are ready to be read through select
         read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
@@ -201,6 +205,12 @@ def main():
             if sock == server_socket:
                 # Handle the case in which there is a new connection received through server_socket
                 sockfd, addr = server_socket.accept()
+                # wrap in ssl
+                sockfd = ssl.wrap_socket(sockfd,
+                                         server_side=True,
+                                         certfile=cert,
+                                         keyfile=key,
+                                         ssl_version=ssl.PROTOCOL_TLSv1)
                 CONNECTION_LIST.append(sockfd)
                 logger.debug( "Client (%s, %s) connected" % addr )
                 ip, user = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
