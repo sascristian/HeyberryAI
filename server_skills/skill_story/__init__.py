@@ -108,7 +108,7 @@ class StorySkill(MycroftSkill):
     def __init__(self):
         super(StorySkill, self).__init__(name="StorySkill")
         self.reload_skill = False
-        self.styles = ["lovecraft", "drugs"]
+        self.styles = ["lovecraft", "drugs", "sci_fi"]
         self.starts = ["Once upon a time in a place far far away, ",
           "The story im about to tell is unbelievable, ",
           "Everything started like this, ",

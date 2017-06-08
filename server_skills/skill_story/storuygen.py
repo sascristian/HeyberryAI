@@ -84,7 +84,7 @@ starts = ["Once upon a time in a place far far away, ",
 
 
 Mark = MarkovGen()
-Mark.add_to_dict(dirname(__file__) + "/styles/drugs.txt")
+Mark.add_to_dict(dirname(__file__) + "/styles/sci_fi.txt")
 print Mark.generate(random.choice(starts))
 
 

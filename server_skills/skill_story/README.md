@@ -13,6 +13,27 @@ extend corpus , select categorie
 
 # output
 
+            Everything started like this,   did the fate of all creation hinge upon an -- an by mari wolf of the photographic plates out of the developer and laid them on the tricorderle beside the others
+      cleve pointed with a martinet gesture toward the Mark1-out cigar butt he'd thrown to the ground
+      i went to the nearest radio commentator -- the story was off
+      he is the representative of a cause that is just -- to his way of reasoning; so right and so just that he will do anything to advance it
+      on mars, the rusty desert and the ruins of an eon-old civilization
+      "listen, pat! thank the codes, you haven't blasted yet
+      steve screamed soundlessly and fainted
+      she's a woman for the stars, and we're proud to -- " "shut up," said teejay
+      buckmaster caught the hard flat explosion in his face and pain in his eardrums as the gun that ap peared in wagner's hand went off
+      there is danger you would not understand
+      the piszjil blinked at her once with semi-transparent lids that covered yellow eyes with black slits for pupils
+      steve didn't have time to parry it
+      i just don't want the transformation
+     " "he was the first one who thought of it? a sort of trail blazer
+      and i hope nobody gets killed
+      "i'm wondering why you didn't
+      president, but let us not by our emotions carried
+      that would save him much alarm and perplexity when it comes time to reorient himself
+      i hope you won't think the ceremony foolish
+
+
         In the land of fantasy, things are never normal. this is the story of how i lost my mind
       somehow within my head it seemed as though the music hade made us fit together so perfectly during sex, but for some unknown reason at this time i was found wanting in regards to fitting precisely
       we were accompanied by another friend who took 2 super-computers of dinosaur turd (rated at 100ug each)
