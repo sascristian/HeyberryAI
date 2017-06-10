@@ -46,18 +46,22 @@ class UserIdSkill(MycroftSkill):
         user = message.data.get("user")
         if user == "unknown":
             try:
+                # server
                 target, sock_num = message.data.get("target").split(":")
                 user = sock_num
             except:
-                self.log.warning("possible bad target, could not get user from " + str(message.data.get("target")))
+                # non server
+                self.log.debug("could not get socket from " + str(message.data.get("target")))
         self.speak_dialog("who.user.is", {"username": user})
 
     def handle_what_am_i_intent(self, message):
         try:
+            # server
             target, sock_num = message.data.get("target").split(":")
         except:
+            # non server
             target = message.data.get("target")
-            self.log.warning("possible bad target, could not get socket from " + str(message.data.get("target")))
+            self.log.debug("could not get socket from " + str(message.data.get("target")))
         self.speak_dialog("what.user.is", {"usertype": target})
 
     def stop(self):
