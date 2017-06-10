@@ -59,19 +59,16 @@ change port and host in files
 # Working
 
 - check if client ip is blacklisted
-- create socket per client, sends internal id to client
-- server forwards client utterances to mycroft messagebus
-- server captures speech response and sends to client
+- create ssl socket per client, sends internal id to client
+- server forwards client utterances to internal mycroft messagebus, with source of utterance
+- server checks if target of speech messages is a socket and answers if it is
 - client listens for server messages and emits them to personal mycroft messagebus
-- set alias/names for each client in server on connect
-- try to answer locally before requesting server (only on intent_failure use server)
-- interface with normal clients (capture all inputs)
+- set alias/names for each client in server on connect (socket 5868 = "kitchen")
 
 # TODO
 
 server side:
 
-- ssl
 - user session
 - action authorization (require password for some intents)
 

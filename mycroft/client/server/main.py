@@ -36,7 +36,8 @@ server_socket = None
 blacklisted_ips = []
 # TODO maybe add deep dream request, but i want the utterance handled internally for now /more control
 allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update"]
-names = {}
+names = {}#name, sock this name refers to
+users = {}#sock, [current user of sock]
 
 message_queue = {}
 
@@ -104,9 +105,9 @@ def offline_client(sock):
         sock.close()
         CONNECTION_LIST.remove(sock)
         # broadcast_data(sock, "Client (%s, %s) is offline" % addr)
-        ip, user = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+        ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
         logger.debug("Client is offline: " + str(sock.getpeername()))
-        names.pop(int(user), None)
+        names.pop(sock_num, None)
     except:
         # already removed
         pass
@@ -118,23 +119,29 @@ def answer_id(sock):
     for socket in CONNECTION_LIST:
         if socket == sock:
             try:
-                ip, user = sock.getpeername()
+                ip, sock_num = sock.getpeername()
                 logger.debug("Sending Id to Client " + str(sock.getpeername()))
-                answer = get_msg(Message("id", {"id": user}))
+                answer = get_msg(Message("id", {"id": sock_num}))
                 socket.send(answer)
             except:
                 # broken socket connection may be, chat client pressed ctrl+c for example
                 offline_client(sock)
 
 
-def get_answer(utterance, user):
+def get_answer(utterance, user_id):
     logger.debug("emitting utterance to bus: " + utterance)
-    source, usr = user.split(":")
+    source, sock_num = user_id.split(":")
+    # check if we know who is the user of this socket
+    if sock_num in users.keys():
+        user = users[sock_num]
+    else:
+        user = sock_num
+
     ws.emit(
        Message("recognizer_loop:utterance",
-               {'utterances': [utterance.strip()], 'source': user, "user": usr, "mute": True}))
+               {'utterances': [utterance.strip()], 'source': user_id, "user": user, "mute": True}))
 
-    logger.debug("Waiting answer for user " + user)
+    logger.debug("Waiting answer for user " + user_id)
 
 
 def get_msg(message):
@@ -171,7 +178,7 @@ def main():
     event_thread.setDaemon(True)
     event_thread.start()
 
-    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue
+    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue, users
     # start server socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -213,7 +220,7 @@ def main():
                                          ssl_version=ssl.PROTOCOL_TLSv1)
                 CONNECTION_LIST.append(sockfd)
                 logger.debug( "Client (%s, %s) connected" % addr )
-                ip, user = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
+                ip, sock_num = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
                 # see if blacklisted
                 if ip not in blacklisted_ips:
                     # tell other clients this is available
@@ -229,29 +236,22 @@ def main():
                 try:
                     utterance = sock.recv(RECV_BUFFER)
                     if utterance:
-                        ip, user = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-                        logger.debug("received: " + str(utterance).strip() + " from socket: " + user + " from ip: " + ip)
+                        ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+                        logger.debug("received: " + str(utterance).strip() + " from socket: " + sock_num + " from ip: " + ip)
                         deserialized_message = Message.deserialize(utterance)
                         if deserialized_message.type in allowed_bus_messages:
-                            # TODO make queue per user, so other dont wait for "long skills"
                             data = deserialized_message.data
-
-                            if data.get("id") is None:
-                                data["id"] = user
-                            elif data["id"] == "unknown":
-                                data["id"] = user
-
                             if deserialized_message.type == "names_response":
                                 for name in data["names"]:
-                                    logger.debug("Setting alias: " + name + " for socket: " + str(data["id"]))
-                                    names[name] = data["id"]
+                                    logger.debug("Setting alias: " + name + " for socket: " + sock_num)
+                                    names[name] = sock_num
                             elif deserialized_message.type == "id_update":
                                 answer_id(sock)
                             elif deserialized_message.type == "recognizer_loop:utterance":
                                 utterance = data["utterances"][0]
                                 # get answer
-                                user = data["source"] + ":" + user
-                                get_answer(utterance, user)
+                                user_id = data["source"] + ":" + sock_num
+                                get_answer(utterance, user_id)
                 except:
                     offline_client(sock)
                     continue
