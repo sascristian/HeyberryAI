@@ -144,31 +144,20 @@ class UserIdSkill(MycroftSkill):
         vision_user = self.userid.request_vision_id()
         if vision_user is None:
             vision_user = "unknown"
-        #elif vision_user != "unknown":
-        user += vision_user + ", according to vision service\n"
+        if vision_user != "unknown":
+            user += vision_user + ", according to vision service\n"
 
         voice_user = self.userid.request_voice_print_id()
         if voice_user is None:
             voice_user = "unknown"
-        #elif voice_user != "unknown":
-        user += voice_user + ", according to voice print service\n"
+        if voice_user != "unknown":
+            user += voice_user + ", according to voice print service\n"
 
         bluetooth_user = self.userid.request_bluetooth_id()
         if bluetooth_user is None:
             bluetooth_user = "unknown"
-        #elif bluetooth_user != "unknown":
-        user += bluetooth_user + ", according to bluetooth service\n"
-
-        if self.server:
-            socket_user = ""
-            try:
-                self.log.debug("Attempting to identify user by socket")
-                # server
-                target, sock_num = message.data.get("target").split(":")
-                socket_user += "unknown sock user " + sock_num + "\n"
-            except:
-                # non server
-                self.log.debug("could not get socket from " + str(message.data.get("target")))
+        if bluetooth_user != "unknown":
+            user += bluetooth_user + ", according to bluetooth service\n"
 
         usr = message.data.get("user")
         if usr is None or usr == "unknown":
