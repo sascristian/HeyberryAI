@@ -80,7 +80,7 @@ class UserIdService():
         self.vision_result = None
         return result
 
-    def request_vision_id(self):
+    def request_vision_id(self, user_id):
         self.logger.info("Vision Recognition requested")
         self.vision_result = None
         self.face_recog_result = None
@@ -88,8 +88,8 @@ class UserIdService():
             # TODO request vision result from client
             # request vision service for feed
             self.logger.info("Requesting client vision service")
-            #self.emitter.emit(Message("vision_request", {}))
-            #self.wait()
+            self.emitter.emit(Message("message_request", {"user_id": user_id, "message_type": "vision_request", "message_data": {}}))
+            self.wait()
             if self.vision_result is None:
                 self.logger.info("No vision result received for " + str(self.timeout) + " seconds, aborting")
                 return None
@@ -110,11 +110,11 @@ class UserIdService():
             self.logger.info("Requesting face recognition from server")
             return self.server_face_recog(self.vision_result["feed_path"])
 
-    def request_bluetooth_id(self):
+    def request_bluetooth_id(self, user_id):
         self.logger.error("Bluetooth recognition requested but not implemented")
         return None
 
-    def request_voice_print_id(self):
+    def request_voice_print_id(self, user_id):
         self.logger.error("Voice recognition requested but not implemented")
         return None
 
@@ -140,20 +140,21 @@ class UserIdSkill(MycroftSkill):
         self.userid = UserIdService(self.emitter, server=self.server)
 
     def handle_who_am_i_intent(self, message):
+        user_id = message.data.get("target")
         user = ""
-        vision_user = self.userid.request_vision_id()
+        vision_user = self.userid.request_vision_id(user_id)
         if vision_user is None:
             vision_user = "unknown"
         if vision_user != "unknown":
             user += vision_user + ", according to vision service\n"
 
-        voice_user = self.userid.request_voice_print_id()
+        voice_user = self.userid.request_voice_print_id(user_id)
         if voice_user is None:
             voice_user = "unknown"
         if voice_user != "unknown":
             user += voice_user + ", according to voice print service\n"
 
-        bluetooth_user = self.userid.request_bluetooth_id()
+        bluetooth_user = self.userid.request_bluetooth_id(user_id)
         if bluetooth_user is None:
             bluetooth_user = "unknown"
         if bluetooth_user != "unknown":
