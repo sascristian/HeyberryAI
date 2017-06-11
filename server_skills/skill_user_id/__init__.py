@@ -39,14 +39,14 @@ class UserIdService():
             self.logger = logger
         else:
             self.logger = getLogger("User_ID")
-        self.emitter.on("vision_response", self.end_wait)
+        self.emitter.on("vision_result", self.end_wait)
         self.emitter.on("face_recog_result", self.end_wait)
 
     def end_wait(self, message):
         # TODO implemnt all wait cases
         if message.type == "face_recog_result":
             self.face_recog_result = message.data["result"]
-        if message.type == "vision_response":
+        if message.type == "vision_result":
             self.vision_result = message.data
         self.waiting = False
 
