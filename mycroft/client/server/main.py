@@ -35,11 +35,13 @@ server_socket = None
 
 blacklisted_ips = []
 # TODO maybe add deep dream request, but i want the utterance handled internally for now /more control
-allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update"]
+allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "face_recognition_request"]
 names = {}#name, sock this name refers to
 users = {}#sock, [current user of sock]
 
 message_queue = {}
+file_socks = {} #sock num: file object
+
 
 def handle_failure(event):
     # TODO warn user of possible lack of answer (wait for wolfram alpha x seconds first)
@@ -178,7 +180,7 @@ def main():
     event_thread.setDaemon(True)
     event_thread.start()
 
-    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue, users
+    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue, users, file_socks
     # start server socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -236,22 +238,50 @@ def main():
                 try:
                     utterance = sock.recv(RECV_BUFFER)
                     if utterance:
-                        ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-                        logger.debug("received: " + str(utterance).strip() + " from socket: " + sock_num + " from ip: " + ip)
-                        deserialized_message = Message.deserialize(utterance)
-                        if deserialized_message.type in allowed_bus_messages:
-                            data = deserialized_message.data
-                            if deserialized_message.type == "names_response":
-                                for name in data["names"]:
-                                    logger.debug("Setting alias: " + name + " for socket: " + sock_num)
-                                    names[name] = sock_num
-                            elif deserialized_message.type == "id_update":
-                                answer_id(sock)
-                            elif deserialized_message.type == "recognizer_loop:utterance":
-                                utterance = data["utterances"][0]
-                                # get answer
-                                user_id = data["source"] + ":" + sock_num
-                                get_answer(utterance, user_id)
+                        ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(
+                            ",")
+                        if sock_num not in file_socks:
+                            logger.debug(
+                                "received: " + str(utterance).strip() + " from socket: " + sock_num + " from ip: " + ip)
+                            deserialized_message = Message.deserialize(utterance)
+                            if deserialized_message.type in allowed_bus_messages:
+                                data = deserialized_message.data
+                                if deserialized_message.type == "names_response":
+                                    for name in data["names"]:
+                                        logger.debug("Setting alias: " + name + " for socket: " + sock_num)
+                                        names[name] = sock_num
+                                elif deserialized_message.type == "id_update":
+                                    answer_id(sock)
+                                elif deserialized_message.type == "recognizer_loop:utterance":
+                                    utterance = data["utterances"][0]
+                                    # get answer
+                                    user_id = data["source"] + ":" + sock_num
+                                    get_answer(utterance, user_id)
+                                elif deserialized_message.type == "incoming_file":
+                                    logger.info("started receiving file for " + str(sock_num))
+                                    file_socks[sock_num] = open("../tmp_file.jpg", 'wb')
+                                elif deserialized_message.type == "face_recognition_request":
+                                    # TODO authorize user
+                                    if sock_num in users.keys():
+                                        user = users[sock_num]
+                                    else:
+                                        user = sock_num
+                                    user_id = data["source"] + ":" + sock_num
+                                    deserialized_message.data["source"] = user_id
+                                    deserialized_message.data["user"] = user
+                                    deserialized_message.data["file"] = "../tmp_file.jpg"
+                                    ws.emit(Message(deserialized_message.type, deserialized_message.data))
+
+
+                        else:
+                            if utterance == "end_of_file":
+                                logger.info("file received for " + str(sock_num))
+                                file_socks[sock_num].close()
+                                file_socks.pop(sock_num)
+                            else:
+                                logger.info("file chunk received for " + str(sock_num))
+                                file_socks[sock_num].write(utterance)
+
                 except:
                     offline_client(sock)
                     continue
