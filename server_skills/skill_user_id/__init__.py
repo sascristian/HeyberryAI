@@ -28,7 +28,7 @@ logger = getLogger(__name__)
 
 
 class UserIdService():
-    def __init__(self, emitter, timeout=20, logger=None, server = True):
+    def __init__(self, emitter, timeout=20, logger=None, server=False):
         self.emitter = emitter
         self.waiting = False
         self.server = server
@@ -82,21 +82,33 @@ class UserIdService():
 
     def request_vision_id(self):
         self.logger.info("Vision Recognition requested")
-        # request vision service for feed
-        self.emitter.emit(Message("vision_request", {}))
-        self.wait()
-        if self.vision_result is None:
-            self.logger.info("No vision result received for " + str(self.timeout) + " seconds, aborting")
-            return None
-        if self.vision_result["num_persons"] == 0:
-            self.logger.info("No persons detected")
-            return None
-        elif self.server:
-            self.logger.info("Face Recognition requested from server")
-            return self.server_face_recog(self.vision_result["feed_path"])
-        else:
-            self.logger.info("Requesting Face Recognition Service")
+        self.vision_result = None
+        self.face_recog_result = None
+        if self.server:
+            # TODO request vision result from client
+            # request vision service for feed
+            self.logger.info("Requesting client vision service")
+            #self.emitter.emit(Message("vision_request", {}))
+            #self.wait()
+            if self.vision_result is None:
+                self.logger.info("No vision result received for " + str(self.timeout) + " seconds, aborting")
+                return None
+            if self.vision_result["num_persons"] == 0:
+                self.logger.info("No persons detected")
+                return None
+            self.logger.info("Requesting local face recognition service")
             return self.local_face_recog(self.vision_result["feed_path"])
+
+        else:
+            # request vision service for feed
+            self.logger.info("Requesting local vision service")
+            self.emitter.emit(Message("vision_request", {}))
+            self.wait()
+            if self.vision_result["num_persons"] == 0:
+                self.logger.info("No persons detected")
+                return None
+            self.logger.info("Requesting face recognition from server")
+            return self.server_face_recog(self.vision_result["feed_path"])
 
     def request_bluetooth_id(self):
         self.logger.error("Bluetooth recognition requested but not implemented")
@@ -111,6 +123,7 @@ class UserIdSkill(MycroftSkill):
 
     def __init__(self):
         super(UserIdSkill, self).__init__(name="User Identification Skill")
+        self.server = True
 
     def initialize(self):
 
@@ -124,21 +137,43 @@ class UserIdSkill(MycroftSkill):
         self.register_intent(what_am_i_intent,
                              self.handle_what_am_i_intent)
 
-        self.userid = UserIdService(self.emitter, server=True)
+        self.userid = UserIdService(self.emitter, server=self.server)
 
     def handle_who_am_i_intent(self, message):
-        user = self.userid.request_vision_id()
-        if user is None:
-            user = "unknown"
-        if user == "unknown":
+        user = ""
+        vision_user = self.userid.request_vision_id()
+        if vision_user is None:
+            vision_user = "unknown"
+        #elif vision_user != "unknown":
+        user += vision_user + ", according to vision service\n"
+
+        voice_user = self.userid.request_voice_print_id()
+        if voice_user is None:
+            voice_user = "unknown"
+        #elif voice_user != "unknown":
+        user += voice_user + ", according to voice print service\n"
+
+        bluetooth_user = self.userid.request_bluetooth_id()
+        if bluetooth_user is None:
+            bluetooth_user = "unknown"
+        #elif bluetooth_user != "unknown":
+        user += bluetooth_user + ", according to bluetooth service\n"
+
+        if self.server:
+            socket_user = ""
             try:
+                self.log.debug("Attempting to identify user by socket")
                 # server
                 target, sock_num = message.data.get("target").split(":")
-                user = "user " + sock_num + " of " + target + " client"
+                socket_user += "unknown sock user " + sock_num + "\n"
             except:
                 # non server
                 self.log.debug("could not get socket from " + str(message.data.get("target")))
-                user += " user of " + message.data.get("target") + " client"
+
+        usr = message.data.get("user")
+        if usr is None or usr == "unknown":
+            usr = "unknown " + message.data.get("target") + " user"
+        user += usr + ", according to source of message\n"
         self.speak_dialog("who.user.is", {"username": user})
 
     def handle_what_am_i_intent(self, message):
