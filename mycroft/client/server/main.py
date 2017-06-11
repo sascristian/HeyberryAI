@@ -153,7 +153,9 @@ def get_msg(message):
         return json.dumps(message.__dict__)
 
 
-def send_message(sock, type="speak", data={}):
+def send_message(sock, type="speak", data=None):
+    if data is None:
+        data = {}
     message = get_msg(Message(type, data))
     answer_data(sock, message)
 
