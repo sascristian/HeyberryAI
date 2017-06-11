@@ -88,7 +88,7 @@ class UserIdService():
             # TODO request vision result from client
             # request vision service for feed
             self.logger.info("Requesting client vision service")
-            self.emitter.emit(Message("message_request", {"user_id": user_id, "message_type": "vision_request", "message_data": {}}))
+            self.emitter.emit(Message("message_request", {"user_id": user_id, "type": "vision_request", "data": {}}))
             self.wait()
             if self.vision_result is None:
                 self.logger.info("No vision result received for " + str(self.timeout) + " seconds, aborting")
