@@ -164,12 +164,12 @@ def handle_message_request(event):
     user_id = event.data.get("user_id")
     type = event.data.get("type")
     data = event.data.get("data")
+    data["target"] = "server"
     sock_num = user_id.split(":")[1]
     logger.info("Received message request for sock:" + sock_num + " with type: " + type)
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     message_queue[sock_num].append([type, data])
-
 
 
 def main():
