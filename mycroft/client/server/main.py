@@ -160,10 +160,12 @@ def send_message(sock, type="speak", data={}):
 
 def handle_message_request(event):
     global message_queue
+
     user_id = event.data.get("user_id")
     type = event.data.get("type")
     data = event.data.get("data")
     sock_num = user_id.split(":")[1]
+    logger.info("Received message request for sock:" + sock_num + " with type: " + type)
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     message_queue[sock_num].append([type, data])
