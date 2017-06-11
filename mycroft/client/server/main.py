@@ -285,6 +285,9 @@ def main():
                                     deserialized_message.data["user"] = user
                                     deserialized_message.data["file"] = "../tmp_file.jpg"
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data))
+                                else:
+                                    # message is whitelisted and no special handling was provided
+                                    ws.emit(Message(deserialized_message.type, deserialized_message.data))
 
 
                         else:
