@@ -46,8 +46,9 @@ class FaceRecService(MycroftSkill):
         self.log.info("getting face encodings of unknown image")
         encoding = face_recognition.face_encodings(unknown_image)[0]
         # results is an array of True/False telling if the unknown face matched anyone in the known_faces array
-        for person in self.known_faces:
+        for person in self.known_faces.keys():
             self.log.info("comparing to person " + person)
+            print self.known_faces[person]
             # check if unknown person is this face, by comparing face encodings
             match = face_recognition.compare_faces(self.known_faces[person], encoding)
             print match
