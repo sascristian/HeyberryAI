@@ -58,8 +58,8 @@ class UserIdService():
             elapsed = time.time() - start
             time.sleep(0.1)
 
-    def local_face_recog(self, picture_path):
-        requester = "user_id_service"
+    def local_face_recog(self, picture_path, user_id):
+        requester = user_id
         message_type = "face_recognition_request"
         message_data = {"file": picture_path, "source": requester, "user":"unknown"}
         self.emitter.emit(Message(message_type, message_data))
@@ -69,8 +69,8 @@ class UserIdService():
         self.vision_result = None
         return result
 
-    def server_face_recog(self, picture_path):
-        requester = "user_id_service"
+    def server_face_recog(self, picture_path, user_id):
+        requester = user_id
         message_type = "face_recognition_request"
         message_data = {"file": picture_path}
         self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data}))
@@ -97,7 +97,7 @@ class UserIdService():
                 self.logger.info("No persons detected")
                 return None
             self.logger.info("Requesting local face recognition service")
-            return self.local_face_recog(self.vision_result["feed_path"])
+            return self.local_face_recog(self.vision_result["feed_path"], user_id)
 
         else:
             # request vision service for feed
@@ -108,7 +108,7 @@ class UserIdService():
                 self.logger.info("No persons detected")
                 return None
             self.logger.info("Requesting face recognition from server")
-            return self.server_face_recog(self.vision_result["feed_path"])
+            return self.server_face_recog(self.vision_result["feed_path"], user_id)
 
     def request_bluetooth_id(self, user_id):
         self.logger.error("Bluetooth recognition requested but not implemented")
