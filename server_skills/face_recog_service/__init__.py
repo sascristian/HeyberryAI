@@ -60,6 +60,9 @@ class FaceRecService(MycroftSkill):
 
         self.emitter.emit(Message("message_request",
                                   {"user_id": user_id, "data": {"result": result}, "type": "face_recognition_result"}))
+        self.emitter.emit(Message("face_recognition_result",
+                                  {"result": result}))
+
 
     def stop(self):
         pass
