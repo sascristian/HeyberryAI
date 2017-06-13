@@ -13,7 +13,8 @@ class FaceRecService(MycroftSkill):
     def __init__(self):
         super(FaceRecService, self).__init__(name="FaceRecogSkill")
         self.reload_skill = False
-
+        from time import sleep
+        sleep(60)
         self.known_faces = {}
         # load known faces
         faces = os.listdir(os.path.dirname(__file__) + "/known faces")
@@ -35,7 +36,7 @@ class FaceRecService(MycroftSkill):
         if user_id is not None:
             if user_id == "unknown":
                 user_id = "all"
-            #self.target = user_id
+            self.target = user_id
         else:
             self.log.warning("no user/target specified")
             user_id = "all"
