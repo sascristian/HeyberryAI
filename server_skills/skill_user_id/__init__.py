@@ -44,7 +44,7 @@ class UserIdService():
 
     def end_wait(self, message):
         # TODO implemnt all wait cases
-        if message.type == "face_recog_result":
+        if message.type == "face_recognition_result":
             self.face_recog_result = message.data["result"]
         if message.type == "vision_result":
             self.vision_result = message.data

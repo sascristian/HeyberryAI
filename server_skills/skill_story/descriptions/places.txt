@@ -1,0 +1,70 @@
+    A dank cavern. The floor is strewn with gnawed bones and cracked-open skulls.
+    Somewhere deep within a range of forested hills. A craggy hill lies ahead, crowned with sculpted stones etched with baleful symbols.
+    A glacial valley in the mountains. A massive ring of flint hovers in mid-air, above a gaping chasm.
+    Somewhere deep within an ancient woods. A pool of still water reflects a dark forest filled with fell things.
+    A dank cavern. The floor is flooded with an alien ichor.
+    A derelict home. A corpse is chained to a wall, warped and deformed almost beyond recognition.
+    An ancient crypt. The skinless corpse of a woman lies on the ground.
+    An abandoned building. A frayed rope descends through a hole cut into the floor.
+    Somewhere deep within a range of barren hills. A massive crater has been blasted in the ground, strewn with fragments of incandescent rock.
+    A desolate farm. The entire farmhouse has collapsed into a jagged chasm.
+        A luxurious sailing yacht. The deck is pierced by jagged holes, torn open from below.
+    A dank cavern. The walls are covered with deformed bones arranged in evil patterns.
+    A river valley in the hills. Bleached bones and barren rock mark the edge of a steaming pool.
+    Somewhere deep within a gloomy forest. A pool of still water reflects a strange and twisted landscape.
+    A forlorn train station. An abandoned train car rests on the rails, perforated with what might be bullet holes.
+    A river valley in the hills. A faceted ring of quartz hovers in mid-air, above a jagged chasm.
+    A grand theatre. A bottle of foul ichor sits backstage next to a shot glass.
+    A gothic bank building. The floorboards have been broken, as though by some colossal weight.
+    A dimly-lit private library. The floor is covered with aberrant claw marks.
+    An overgrown farmhouse. A frayed rope descends through a hole smashed through the floor.
+        An eccentric private museum. Someone has scrawled seemingly random letters and numbers on the wall.
+    A cluttered hospital. A bottle of foul ichor sits on a desk next to a syringe.
+    A forlorn train station. The corpse of a thin man lies on the rails, his flesh engraved with baleful glyphs.
+    A neglected train station. There is an abandoned motorcar here, its doors violently torn from their hinges.
+    Somewhere deep within a range of weathered hills. A deep crater has been blasted in the ground, filled with foul fumes.
+    A craggy valley in the mountains. A stream of alien ichor issues from the mouth of a rough cave.
+    A gloomy sanatorium. A locked wall safe contains photographs of dismembered corpses.
+    A popular theatre. A monstrous torture device stands on stage, seemingly recently used.
+    An empty train station. An abandoned train car rests on the rails, pierced by several jagged holes.
+    A dusty bookshop. Unintelligible whispering can be heard from inside a filing cabinet.
+        Uran, a vast world of broken hills and bizarre rock formations. A scarred moon looms overhead, marked with geometric glyphs.
+    Cykr-Lloigua, a ruined world of burning deserts and oceans of molten rock. A monolithic cube of translucent metal stands here, surrounded by clouds of freezing mist.
+    Shanianoth, an ancient world of ashen deserts and storm-wracked oceans beneath a sky of countless stars. A dark moon looms overhead, marked with endless spirals.
+    Zaoth-Nartha, an eldritch world of broken hills and graven formations of obsidian beneath a sky of perpetual storms. A city of Alien City Construction looms ahead, inhabited by mi-go.
+    Thadratha, a doomed world of broken hills and desiccating deserts. The surface is strewn with deep craters.
+    Shaddaga, a vast world of graven rock formations and icy oceans. A shifting form of living flame hovers here, continually forming and dissolving writhing tentacles.
+    Yub-Dhothee, a ruined world of thorny jungles and icy oceans. Twisted ruins of graven cities lie strewn across the landscape.
+    Glei-Atath, a dying world of dark rifts and deserts of ash beneath a sky of writhing clouds. An aethereal monolith stands here, visible only by its shadow.
+    Llathudde, an ancient world of broken hills and oceans of foul ooze beneath a sky of sickly greenish flame. A scarred moon looms overhead, marked with incoherent labyrinths.
+    Shoggua, a vast world of sinister jungles and icy seas beneath a dark sky. A bizarre tower stands here, each stone engraved with geometric symbols.
+        Yub-Zaotha, a fell world of eroded rock formations and deserts of shattered glass. A city of graven basalt looms ahead, inhabited by flying polyps.
+    Bhothoggua, a dying world of rugged hills and eroded formations of green stone beneath a starry sky. A bizarre tower stands here, each stone engraved with geometric glyphs.
+    Gle-Hatyng, a loathsome world of graven rock formations and desiccating wastes. A titanic mass of alien flesh lurks in a pit, covered by countless thin spines of metal.
+    Agguathoth, an eldritch world of vast deserts and oceans of black pitch. The surface is strewn with volcanic tunnels.
+    Yigguggoth, a loathsome world of volcanic peaks and forests of giant fungi beneath a sky of howling winds. A baleful moon looms overhead, marked with alien glyphs.
+    Hotakub, a doomed world of storm-wracked mountains and dark jungles beneath a sky of lightning. A monolithic column of clear quartz stands here, filled with continually shifting colors.
+    Cthanophkyth, a vast world of ancient hills and forests of thorns. A shifting mass of protean flesh lurks in a pit, covered by countless thin spines of metal.
+    Ha-Turakh, a doomed world of towering mountains and deserts of shattered glass beneath a sky of perpetual storms. The surface is strewn with deep craters.
+    Yna-Hogga, an ancient world of fiery rifts and vast deserts beneath a sky of sickly greenish flame. Shattered obsidian cysts lie strewn across the landscape.
+    Dlacha, a loathsome world of jagged mountains and seas of black pitch beneath a sky of countless stars. A monstrous thing lurks in a pit, amidst foul ooze and vapors.
+    Kubo, an eldritch world of vast wastes and icy oceans. A bizarre tower stands here, each stone etched with evil symbols.
+    Ur-Shoorle, a dying world of deep rifts and desiccating deserts. A city of hewn basalt looms ahead, inhabited by lloigor.
+    Shudde, an eldritch world of bizarre rock formations and oceans of foul slime lit by a baleful red sun. A phantasmal spire stands here, visible only by its shadow.
+    Yigommoth, a ruined world of burning deserts and acidic oceans. The surface is strewn with gaping chasms.
+    Vhoturakh, a vast world of storm-wracked peaks and deserts of shattered glass beneath an ashen sky. A bizarre tower stands here, each stone engraved with bizarre symbols.
+    Cthoorla, a fell world of bizarre rock formations and decaying mires. A monolithic column of clear quartz stands here, surrounded by a void of impenetrable darkness.
+    Yith-Daga, a fell world of ashen deserts and acidic seas. A phantasmal pyramid stands here, visible only by its shadow.
+    Bhothole, a ruined world of rugged hills and seas of black pitch beneath a sickly green sky. A shifting mass of protean flesh lurks in a pit, continually forming and dissovling fanged maws, and sucking tubes.
+    Yithathoph, an ancient world of rugged hills and stinking mires beneath a sky of countless stars. An aethereal monolith stands here, visible only by its shadow.
+    Kyniggua, an ancient world of obsidian mountains and deserts of shattered glass beneath a sky of perpetual storms. Decaying ruins of graven cities lie strewn across the landscape.
+        Gle-Ythoth, a doomed world of graven rock formations and burning wastes beneath a fiery sky. The surface is strewn with volcanic tunnels.
+    Yith-Yngak, a ruined world of broken hills and twisted formations of green stone lit by a cold and distant sun. It is inhabited by metallic shape-shifting creatures which worship Nyarlathotep.
+    Vhle-Sothoa, an ancient world of black fens and seas of noxious slime. A city of graven basalt looms ahead, inhabited by flying polyps.
+    Xotha, a ruined world of shadowed rifts and black mires lit by a cold and distant sun. A shifting form of living shadow hovers here, surrounded by monolithic stones engraved with bizarre glyphs.
+    Thantulzscha, a loathsome world of rugged hills and haunted fens beneath a sky of writhing clouds. A bizarre tower stands here, each stone etched with evil glyphs.
+    Bithotha, a loathsome world of vast deserts and storm-wracked oceans beneath a sky of perpetual storms. A monolithic cube of clear quartz stands here, surrounded by clouds of freezing mist.
+    Yith-Fthulha, a doomed world of dark jungles and vast seas. A city of hewn iron looms ahead, inhabited by star-spawn.
+    Vhaddathoa, a doomed world of rugged hills and ashen wastes lit by five suns. A titanic form of living flame hovers here, surrounded by sculpted stones engraved with geometric symbols.
+    Zothyopha, a ruined world of eroded rock formations and deserts of ash. A city of graven crystal looms ahead, inhabited by elder things.
+    Cthogthulhu, an ancient world of eroded hills and oceans of molten rock. A shifting form of iridescent blackness hovers here, surrounded by monolithic stones engraved with eldritch glyphs.
