@@ -40,7 +40,7 @@ class UserIdService():
         else:
             self.logger = getLogger("User_ID")
         self.emitter.on("vision_result", self.end_wait)
-        self.emitter.on("face_recog_result", self.end_wait)
+        self.emitter.on("face_recognition_result", self.end_wait)
 
     def end_wait(self, message):
         # TODO implemnt all wait cases
