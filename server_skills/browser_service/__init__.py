@@ -39,8 +39,8 @@ class BrowserService(MycroftSkill):
         self.driver = None
 
     def initialize(self):
-        sleep(150)
         started = self.start_browser()
+        self.log.info("browser started")
        # hello_world_intent = IntentBuilder("HelloWorldIntent"). \
        #     require("HelloWorldKeyword").build()
        # self.register_intent(hello_world_intent,
