@@ -1,5 +1,5 @@
 from os.path import dirname
-import time
+import time, os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
@@ -27,6 +27,9 @@ class SeleniumCleverbot():
         if bot is None or bot not in self.bots:
             bot = self.bot
         self.url = "http://" + bot + ".com"
+        gecko = os.path.normpath(os.path.join(os.path.dirname(__file__), 'geckodriver'))
+        #binary = FirefoxBinary(r'C:\Program Files (x86)\Mozilla Firefox\firefox.exe')
+        driver = webdriver.Firefox(executable_path=gecko)
         self.browser = webdriver.Firefox()
         self.browser.get(self.url)
         self.log = []
