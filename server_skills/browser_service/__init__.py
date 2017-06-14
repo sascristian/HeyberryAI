@@ -40,7 +40,8 @@ class BrowserService(MycroftSkill):
 
     def initialize(self):
         started = self.start_browser()
-        self.log.info("browser started")
+        self.log.info("browser started: " + str(started))
+        sleep(200)
        # hello_world_intent = IntentBuilder("HelloWorldIntent"). \
        #     require("HelloWorldKeyword").build()
        # self.register_intent(hello_world_intent,
