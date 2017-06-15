@@ -1,9 +1,10 @@
-from os.path import dirname
-import time, os
+from os.path import dirname, join
+import time, os, sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
 
+sys.path.append(join(dirname(__file__), 'geckodriver'))
 
 class SeleniumCleverbot():
     def __init__(self, bot="cleverbot", binary="/usr/lib/firefox-esr/firefox-esr"):
@@ -28,8 +29,8 @@ class SeleniumCleverbot():
             bot = self.bot
         self.url = "http://" + bot + ".com"
         gecko = os.path.normpath(os.path.join(os.path.dirname(__file__), 'geckodriver'))
-        #binary = FirefoxBinary(r'C:\Program Files (x86)\Mozilla Firefox\firefox.exe')
-        driver = webdriver.Firefox(executable_path=gecko)
+        print gecko
+
         self.browser = webdriver.Firefox()
         self.browser.get(self.url)
         self.log = []
@@ -39,7 +40,14 @@ class SeleniumCleverbot():
         input_for_bot = self.browser.find_element_by_name("stimulus")
         input_for_bot.send_keys(text)
         input_for_bot.send_keys(Keys.RETURN)
-        time.sleep(8) #this is the time to wait for the typing of cleverbot, longer answers may be cut short
+        received = False
+        while not received:
+            try:
+                # should fail here until response received
+                finished = self.browser.find_element_by_xpath(".//*[@id='line1']/span[1]")
+                received = True
+            except:
+                time.sleep(0.3)
         elem = self.browser.find_element_by_xpath(".//*[@id='line1']/span[1]")
         response = elem.text
         # failsafe, sometimes this happens
