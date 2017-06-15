@@ -30,7 +30,7 @@ logger = getLogger("Mycroft_Server")
 # List to keep track of socket descriptors
 CONNECTION_LIST = []
 RECV_BUFFER = 4096  # Advisable to keep it as an exponent of 2
-PORT = 5000
+PORT = 5678
 server_socket = None
 
 blacklisted_ips = []
