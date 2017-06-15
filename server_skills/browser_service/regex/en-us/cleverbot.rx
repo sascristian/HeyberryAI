@@ -1,0 +1,1 @@
+(ask cleverbot) (?P<Ask>.*)

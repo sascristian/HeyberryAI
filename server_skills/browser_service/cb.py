@@ -1,5 +1,5 @@
 from os.path import dirname, join
-import time, os, sys
+import time, sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
