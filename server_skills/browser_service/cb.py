@@ -28,9 +28,6 @@ class SeleniumCleverbot():
         if bot is None or bot not in self.bots:
             bot = self.bot
         self.url = "http://" + bot + ".com"
-        gecko = os.path.normpath(os.path.join(os.path.dirname(__file__), 'geckodriver'))
-        print gecko
-
         self.browser = webdriver.Firefox()
         self.browser.get(self.url)
         self.log = []
@@ -44,7 +41,7 @@ class SeleniumCleverbot():
         while not received:
             try:
                 # should fail here until response received
-                finished = self.browser.find_element_by_xpath(".//*[@id='line1']/span[1]")
+                finished = self.browser.find_element_by_xpath(".//*[@id='snipTextIcon']")
                 received = True
             except:
                 time.sleep(0.3)
