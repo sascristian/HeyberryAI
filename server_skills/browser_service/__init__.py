@@ -201,7 +201,8 @@ class BrowserService(MycroftSkill):
         # start browser control instance, set to auto-start/restart browser
         browser = BrowserControl(self.emitter, autostart=True)
         # get clevebot url
-        browser.open_url("www.cleverbot.com")
+        if browser.open_url("www.cleverbot.com") is None:
+            return
         # search this element by type and name it "input"
         browser.get_element(data="stimulus", name="input", type="name")
         # clear element named input
