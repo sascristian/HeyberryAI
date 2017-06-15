@@ -176,7 +176,6 @@ class BrowserService(MycroftSkill):
 
     def initialize(self):
         started = self.start_browser()
-        time.sleep(60)
         self.log.info("browser service started: " + str(started))
         self.emitter.on("browser_restart_request", self.handle_restart_browser)
         self.emitter.on("browser_close_request", self.handle_close_browser)
@@ -200,6 +199,7 @@ class BrowserService(MycroftSkill):
         ask = message.data.get("Ask")
         # start browser control instance, set to auto-start/restart browser
         browser = BrowserControl(self.emitter, autostart=True)
+        time.sleep(60) #for debug
         # get clevebot url
         if browser.open_url("www.cleverbot.com") is None:
             return
