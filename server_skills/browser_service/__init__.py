@@ -67,12 +67,9 @@ class BrowserService(MycroftSkill):
         try:
             self.driver = webdriver.Firefox()
             return True
-        except:
+        except Exception as e:
+            self.log.error(e)
             return False
-
-    def go_to_url(self, url):
-        self.driver.get(url)
-        return self.driver.current_url
 
     def handle_clear_element(self, message):
         # TODO error checking, see if element in self.elemtns.keys()
@@ -141,8 +138,8 @@ class BrowserService(MycroftSkill):
 
     def handle_go_to_url(self, message):
         url = message.data.get("url")
-        result = self.go_to_url(url)
-        self.emitter.emit("browser_url_opened", {"result": result, "page_title": self.driver.title, "requested_url": url})
+        self.driver.get(url)
+        self.emitter.emit("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url})
 
     def stop(self):
         try:
