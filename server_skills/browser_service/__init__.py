@@ -176,6 +176,7 @@ class BrowserService(MycroftSkill):
 
     def initialize(self):
         started = self.start_browser()
+        time.sleep(60)
         self.log.info("browser service started: " + str(started))
         self.emitter.on("browser_restart_request", self.handle_restart_browser)
         self.emitter.on("browser_close_request", self.handle_close_browser)
