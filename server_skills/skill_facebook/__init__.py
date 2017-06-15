@@ -505,6 +505,7 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_chat_message", self.handle_chat_message)
         self.emitter.on("fb_post_request", self.handle_post_request)
         self.build_intents()
+        time.sleep(60)
 
     def build_intents(self):
         # build intents
