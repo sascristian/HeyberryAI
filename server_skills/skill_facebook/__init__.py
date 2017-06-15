@@ -471,7 +471,7 @@ class FacebookSkill(MycroftSkill):
 
     def __init__(self):
         super(FacebookSkill, self).__init__(name="FacebookSkill")
-        self.reload_skill = False
+        self.reload_skill = True
         try:
             self.api_key = self.config_apis['GraphAPI']
         except:
