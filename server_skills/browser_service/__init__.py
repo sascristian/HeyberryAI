@@ -205,10 +205,10 @@ class BrowserService(MycroftSkill):
         # get a browser control instance, optionally set to auto-start/restart browser
         browser = BrowserControl(self.emitter)#, autostart=True)
         # restart webbrowser if it is open (optionally)
-       # started = browser.start_browser()
-       # if not started:
+        started = browser.start_browser()
+        if not started:
             # TODO throw some error
-       #     return
+            return
         browser.reset_elements()
         # get clevebot url
         open = browser.open_url("www.cleverbot.com")
@@ -250,7 +250,7 @@ class BrowserService(MycroftSkill):
             self.log.debug("tried to close driver but: " + str(e))
 
         try:
-            self.driver = webdriver.Firefox(timeout=300)
+            self.driver = webdriver.Firefox(timeout=60)
             return True
         except TimeoutException as e:
             self.log.error("Selenium TimeoutException: " + str(e))
