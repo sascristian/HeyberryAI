@@ -211,7 +211,9 @@ class BrowserService(MycroftSkill):
        #     return
         browser.reset_elements()
         # get clevebot url
-        browser.open_url("www.cleverbot.com")
+        open = browser.open_url("www.cleverbot.com")
+        if open is None:
+            return
         # search this element by type and name it "input"
         browser.get_element(data="stimulus", name="input", type="name")
         # clear element named input
@@ -342,9 +344,12 @@ class BrowserService(MycroftSkill):
     def handle_go_to_url(self, message):
         url = message.data.get("url")
         self.driver.get(url)
-        while self.driver.current_url != url:
+        g = True
+        while g:
             time.sleep(0.5)
             self.log.info(self.driver.title, self.driver.current_url)
+            if "cleverbot" in self.driver.title:
+                break
         self.emitter.emit(Message("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url}))
 
     def stop(self):
