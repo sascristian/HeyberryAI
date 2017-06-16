@@ -64,11 +64,11 @@ class BrowserControl():
         self.waiting = True
         start = time.time()
         elapsed = 0
-        while self.waiting and elapsed <= self.timeout:
+        while self.waiting:# and elapsed <= self.timeout:
             elapsed = time.time() - start
             time.sleep(0.3)
-        if self.waiting:
-            result = False
+        #if self.waiting:
+        #    result = False
         else:
             result = True
         self.waiting = False
