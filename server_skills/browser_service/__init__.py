@@ -240,12 +240,17 @@ class BrowserService(MycroftSkill):
         browser.close_browser()
 
     def start_browser(self):
+        fp = webdriver.FirefoxProfile()
+        fp.set_preference("http.response.timeout", 5)
+        fp.set_preference("dom.max_script_run_time", 5)
+        fp.set_preference("network.http.response.timeout", 5)
+        fp.set_preference('webdriver.load.strategy', 'unstable')
         try:
             self.driver.close()
         except Exception as e:
             self.log.debug("tried to close driver but: " + str(e))
         try:
-            self.driver = webdriver.Firefox().set_script_timeout(30)
+            self.driver = webdriver.Firefox(firefox_profile=fp)
             return True
         except Exception as e:
             self.log.error(e)
