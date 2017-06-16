@@ -347,8 +347,8 @@ class BrowserService(MycroftSkill):
         while True:
             time.sleep(0.5)
             try:
-                self.log.info(self.driver.current_url)
-                self.log.info(self.driver.title)
+                self.log.info("url: " + str(self.driver.current_url))
+                self.log.info("title: " + str(self.driver.title))
                 if "cleverbot" in self.driver.title:
                     break
             except Exception as e:
