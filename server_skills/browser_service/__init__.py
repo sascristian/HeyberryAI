@@ -347,7 +347,7 @@ class BrowserService(MycroftSkill):
         g = True
         while g:
             time.sleep(0.5)
-            self.log.info(self.driver.title, self.driver.current_url)
+            self.log.info(self.driver.title + self.driver.current_url)
             if "cleverbot" in self.driver.title:
                 break
         self.emitter.emit(Message("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url}))
