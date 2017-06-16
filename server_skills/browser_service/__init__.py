@@ -205,10 +205,10 @@ class BrowserService(MycroftSkill):
         # get a browser control instance, optionally set to auto-start/restart browser
         browser = BrowserControl(self.emitter)#, autostart=True)
         # restart webbrowser if it is open (optionally)
-        started = browser.start_browser()
-        if not started:
-            # TODO throw some error
-            return
+        #started = browser.start_browser()
+        #if not started:
+        #    # TODO throw some error
+        #    return
         browser.reset_elements()
         # get clevebot url
         open = browser.open_url("www.cleverbot.com")
@@ -217,7 +217,7 @@ class BrowserService(MycroftSkill):
         # search this element by type and name it "input"
         browser.get_element(data="stimulus", name="input", type="name")
         # clear element named input
-        browser.clear_element("input")
+        #browser.clear_element("input")
         # send text to element named "input"
         browser.send_keys_to_element(text=ask, name="input", special=False)
         # send a key_press to element named "input"
@@ -226,16 +226,19 @@ class BrowserService(MycroftSkill):
         # wait until you find element by xpath and name it sucess
         received = False
         fails = 0
-        while not received and fails < 5:
-            # returns false when element wasnt found
-            # this appears only after cleverbot finishes answering
-            received = browser.get_element(data=".//*[@id='snipTextIcon']", name="sucess", type="xpath")
-            fails += 1
+        response = ""
+        while response == "":
+            while not received and fails < 5:
+                # returns false when element wasnt found
+                # this appears only after cleverbot finishes answering
+                received = browser.get_element(data=".//*[@id='snipTextIcon']", name="sucess", type="xpath")
+                fails += 1
 
-        # find element by xpath, name it "response"
-        browser.get_element(data=".//*[@id='line1']/span[1]", name="response", type="xpath")
-        # get text of the element named "response"
-        response = browser.get_element_text("response")
+            # find element by xpath, name it "response"
+            browser.get_element(data=".//*[@id='line1']/span[1]", name="response", type="xpath")
+            # get text of the element named "response"
+            response = browser.get_element_text("response")
+
         self.speak(response)
         # clean the used elements for this session
         browser.reset_elements()
