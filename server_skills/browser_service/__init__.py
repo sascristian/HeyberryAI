@@ -167,7 +167,7 @@ class BrowserControl():
 class BrowserService(MycroftSkill):
     def __init__(self):
         super(BrowserService, self).__init__(name="BrowserSkill")
-        self.reload_skill = False
+       # self.reload_skill = False
         # start virtual display
         display = Display(visible=0, size=(800, 600))
         display.start()
@@ -343,7 +343,7 @@ class BrowserService(MycroftSkill):
         self.driver.get(url)
         while self.driver.current_url != url:
             time.sleep(0.5)
-            print self.driver.title, self.driver.current_url
+            self.log.info(self.driver.title, self.driver.current_url)
         self.emitter.emit(Message("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url}))
 
     def stop(self):
