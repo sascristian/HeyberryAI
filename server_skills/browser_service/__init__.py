@@ -25,7 +25,7 @@ import sys, os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
-
+from selenium.common.exceptions import TimeoutException
 
 __author__ = 'jarbas'
 
@@ -245,11 +245,13 @@ class BrowserService(MycroftSkill):
         except Exception as e:
             self.log.debug("tried to close driver but: " + str(e))
         try:
-            self.driver = webdriver.Firefox().set_script_timeout(30)
+            self.driver = webdriver.Firefox()
             return True
+        except TimeoutException as e:
+            self.log.error(e)
         except Exception as e:
             self.log.error(e)
-            return False
+        return False
 
     def handle_clear_element(self, message):
         # TODO error checking, see if element in self.elemtns.keys()
