@@ -174,7 +174,7 @@ class BrowserService(MycroftSkill):
         self.log.info("adding gecko driver to path: " + dirname(__file__))
         os.environ["PATH"] += dirname(__file__) #path for gecko driver
         sys.path.append(dirname(__file__))
-
+        time.sleep(100)
 
         self.driver = None
         self.elements = {}
