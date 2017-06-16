@@ -26,7 +26,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
 
-sys.path.append(join(dirname(__file__), 'geckodriver'))
+sys.path.append(dirname(__file__))
 
 __author__ = 'jarbas'
 
