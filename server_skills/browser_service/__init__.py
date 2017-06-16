@@ -25,8 +25,11 @@ import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
-
+# so geckodriver can be found
 sys.path.append(dirname(__file__))
+
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+import subprocess
 
 __author__ = 'jarbas'
 
@@ -173,6 +176,10 @@ class BrowserService(MycroftSkill):
         # start working variables
         self.driver = None
         self.elements = {}
+        try:
+            self.binary = FirefoxBinary(subprocess.check_output('which firefox'))
+        except:
+            self.log.error("Could not find firefox")
 
     def initialize(self):
         started = self.start_browser()
