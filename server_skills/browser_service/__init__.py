@@ -22,7 +22,7 @@ from mycroft.util.log import getLogger
 import time
 from os.path import dirname
 import socket, os
-socket.setdefaulttimeout(30)
+socket.setdefaulttimeout(300)
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
@@ -64,11 +64,12 @@ class BrowserControl():
         self.waiting = True
         start = time.time()
         elapsed = 0
-        while self.waiting:# and elapsed <= self.timeout:
+        while self.waiting and elapsed <= self.timeout:
             elapsed = time.time() - start
             time.sleep(0.3)
-        #if self.waiting:
-        #    result = False
+        if self.waiting:
+        # TODO throw exception
+            result = False
         else:
             result = True
         self.waiting = False
@@ -172,10 +173,9 @@ class BrowserService(MycroftSkill):
         display = Display(visible=0, size=(800, 600))
         display.start()
         # start working variables
-        geckod = dirname(__file__) + "/geckodriver"
-        self.log.info("adding gecko driver to path: " + geckod)
-        os.environ["PATH"] += geckod
-
+        #geckod = dirname(__file__) + "/geckodriver"
+       #self.log.info("adding gecko driver to PATH: " + geckod)
+        #os.environ["PATH"] += geckod
         self.driver = None
         self.elements = {}
 
@@ -291,8 +291,8 @@ class BrowserService(MycroftSkill):
         key = message.data.get("special_key")
         text = message.data.get("text")
         element = self.elements[name]
-        if key is not None:
-            if key == "RETURN":
+        if key:
+            if text == "RETURN":
                 element.send_keys(Keys.RETURN)
             else:
                 # TODO all keys
@@ -300,6 +300,8 @@ class BrowserService(MycroftSkill):
                 return
         else:
             element.send_keys(text)
+            # TODO change this, needed because text may be big
+            time.sleep(1)
         self.emitter.emit(Message("browser_sent_keys", {"sucess":True, "name": name, "data": text}))
 
     def handle_get_element(self, message):
@@ -307,6 +309,7 @@ class BrowserService(MycroftSkill):
         data = message.data.get("data") # name, xpath expression....
         name = message.data.get("element_name")# how to call this element later
         try:
+            # todo extra
             if get_by == "xpath":
                 self.elements[name] = self.driver.find_element_by_xpath(data)
             elif get_by == "css":

@@ -1,1 +1,2 @@
 (ask cleverbot) (?P<Ask>.*)
+(say) (?P<Ask>.*) (to cleverbot)
