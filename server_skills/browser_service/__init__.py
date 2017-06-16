@@ -351,6 +351,7 @@ class BrowserService(MycroftSkill):
                 time.sleep(0.5)
                 self.log.info("url: " + str(self.driver.current_url))
                 self.log.info("title: " + str(self.driver.title))
+                break
             except Exception as e:
                 self.log.error(e)
         self.emitter.emit(Message("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url}))
