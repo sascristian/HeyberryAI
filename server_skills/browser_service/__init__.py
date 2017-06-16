@@ -199,7 +199,6 @@ class BrowserService(MycroftSkill):
         ask = message.data.get("Ask")
         # start browser control instance, set to auto-start/restart browser
         browser = BrowserControl(self.emitter, autostart=True)
-        time.sleep(60) #for debug
         # get clevebot url
         if browser.open_url("www.cleverbot.com") is None:
             return
@@ -234,11 +233,10 @@ class BrowserService(MycroftSkill):
     def start_browser(self):
         try:
             self.driver.close()
-        except:
-            pass
+        except Exception as e:
+            self.log.debug("tried to close driver but: " + str(e))
         try:
-
-            self.driver = webdriver.Firefox()
+            self.driver = webdriver.Firefox().set_page_load_timeout(30)
             return True
         except Exception as e:
             self.log.error(e)
