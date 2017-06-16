@@ -180,6 +180,8 @@ class BrowserService(MycroftSkill):
             self.binary = FirefoxBinary(subprocess.check_output('which firefox'))
         except:
             self.log.error("Could not find firefox")
+            # is this the correct way to disable skill?
+            self.shutdown()
 
     def initialize(self):
         started = self.start_browser()
@@ -247,7 +249,7 @@ class BrowserService(MycroftSkill):
         except Exception as e:
             self.log.debug("tried to close driver but: " + str(e))
         try:
-            self.driver = webdriver.Firefox().set_script_timeout(30)
+            self.driver = webdriver.Firefox(firefox_binary=self.binary)
             return True
         except Exception as e:
             self.log.error(e)
