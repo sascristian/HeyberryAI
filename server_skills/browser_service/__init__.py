@@ -344,16 +344,15 @@ class BrowserService(MycroftSkill):
     def handle_go_to_url(self, message):
         url = message.data.get("url")
         self.driver.get(url)
-        g = True
-        while g:
+        while True:
             time.sleep(0.5)
             try:
-                self.log.info(self.driver.title)
                 self.log.info(self.driver.current_url)
+                self.log.info(self.driver.title)
                 if "cleverbot" in self.driver.title:
                     break
-            except:
-                pass
+            except Exception as e:
+                self.log.error(e)
         self.emitter.emit(Message("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url}))
 
     def stop(self):
