@@ -25,7 +25,7 @@ import sys, os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 
 __author__ = 'jarbas'
 
@@ -247,9 +247,11 @@ class BrowserService(MycroftSkill):
             self.driver = webdriver.Firefox()
             return True
         except TimeoutException as e:
-            self.log.error("Selenium TimeoutException:" + str(e))
+            self.log.error("Selenium TimeoutException: " + str(e))
+        except WebDriverException as e:
+            self.log.error("Selenium WebDriverException: " + str(e))
         except Exception as e:
-            self.log.error(e)
+            self.log.error("Exception: " + str(e))
         return False
 
     def handle_clear_element(self, message):
