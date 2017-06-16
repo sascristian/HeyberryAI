@@ -46,6 +46,7 @@ class BrowserControl():
         self.emitter.on("browser_elements_reset_result", self.end_wait)
         self.emitter.on("browser_sent_keys", self.end_wait)
         self.emitter.on("browser_element_stored", self.end_wait)
+        self.emitter.on("browser_elements_stored", self.end_wait)
         self.emitter.on("browser_element_text", self.end_wait)
         self.emitter.on("browser_element_clicked", self.end_wait)
         self.emitter.on("browser_element_cleared", self.end_wait)
@@ -107,6 +108,15 @@ class BrowserControl():
         self.waiting_for = "browser_element_stored"
         self.emitter.emit(Message("browser_get_element", {"type":type, "data":data, "element_name":name}))
         self.logger.info("Browser get element: " + str(self.wait()))
+        try:
+            return self.result["sucess"]
+        except:
+            return False
+
+    def get_elements(self, data, name="temp", type="name"):
+        self.waiting_for = "browser_elements_stored"
+        self.emitter.emit(Message("browser_get_elements", {"type":type, "data":data, "element_name":name}))
+        self.logger.info("Browser get elements: " + str(self.wait()))
         try:
             return self.result["sucess"]
         except:
@@ -186,6 +196,7 @@ class BrowserService(MycroftSkill):
         self.emitter.on("browser_close_request", self.handle_close_browser)
         self.emitter.on("browser_url_request", self.handle_go_to_url)
         self.emitter.on("browser_get_element", self.handle_get_element)
+        self.emitter.on("browser_get_elements", self.handle_get_elements)
         self.emitter.on("browser_get_element_text", self.handle_get_element_text)
         self.emitter.on("browser_available_elements_request", self.handle_available_elements)
         self.emitter.on("browser_send_keys_to_element", self.handle_send_keys)
@@ -226,8 +237,8 @@ class BrowserService(MycroftSkill):
         # wait until you find element by xpath and name it sucess
         received = False
         fails = 0
-        response = ""
-        while response == "":
+        response = " "
+        while response == " ":
             while not received and fails < 5:
                 # returns false when element wasnt found
                 # this appears only after cleverbot finishes answering
@@ -304,6 +315,53 @@ class BrowserService(MycroftSkill):
             time.sleep(1)
         self.emitter.emit(Message("browser_sent_keys", {"sucess":True, "name": name, "data": text}))
 
+    def handle_get_elements(self, message):
+        get_by = message.data.get("type") #xpath, css, name, id
+        data = message.data.get("data") # name, xpath expression....
+        name = message.data.get("element_name")# how to call this element later
+        try:
+            i = 0
+            if get_by == "xpath":
+                for e in self.driver.find_elements_by_xpath(data):
+                    self.elements[name+str(i)] = e
+                    i+=1
+            elif get_by == "css":
+                for e in self.driver.find_elements_by_css(data):
+                    self.elements[name + str(i)] = e
+                    i += 1
+            elif get_by == "name":
+                for e in self.driver.find_elements_by_name(data):
+                    self.elements[name + str(i)] = e
+                    i += 1
+            elif get_by == "class":
+                for e in self.driver.find_elements_by_class_name(data):
+                    self.elements[name + str(i)] = e
+                    i += 1
+            elif get_by == "link_text":
+                for e in self.driver.find_elements_by_link_text(data):
+                    self.elements[name + str(i)] = e
+                    i += 1
+            elif get_by == "partial_link_text":
+                for e in self.driver.find_elements_by_partial_link_text(data):
+                    self.elements[name + str(i)] = e
+                    i += 1
+            elif get_by == "tag_name":
+                for e in self.driver.find_elements_by_tag_name(data):
+                    self.elements[name + str(i)] = e
+                    i += 1
+            elif get_by == "id":
+                for e in self.driver.find_elements_by_id(data):
+                    self.elements[name + str(i)] = e
+                    i += 1
+            else:
+                self.log.error("Invalid element type: " + get_by)
+                self.emitter.emit(
+                    Message("browser_elements_stored", {"name": name, "type": get_by, "data": data, "sucess": False}))
+                return
+            self.emitter.emit(Message("browser_elements_stored", {"name":name, "type":get_by, "data":data, "sucess":True}))
+        except:
+            self.emitter.emit(Message("browser_elements_stored", {"name": name, "type": get_by, "data": data, "sucess":False}))
+
     def handle_get_element(self, message):
         get_by = message.data.get("type") #xpath, css, name, id
         data = message.data.get("data") # name, xpath expression....
@@ -316,9 +374,18 @@ class BrowserService(MycroftSkill):
                 self.elements[name] = self.driver.find_element_by_css(data)
             elif get_by == "name":
                 self.elements[name] = self.driver.find_element_by_name(data)
+            elif get_by == "class":
+                self.elements[name] = self.driver.find_element_by_class_name(data)
+            elif get_by == "link_text":
+                self.elements[name] = self.driver.find_element_by_link_text(data)
+            elif get_by == "partial_link_text":
+                self.elements[name] = self.driver.find_element_by_partial_link_text(data)
+            elif get_by == "tag_name":
+                self.elements[name] = self.driver.find_element_by_tag_name(data)
             elif get_by == "id":
                 self.elements[name] = self.driver.find_element_by_id(data)
             else:
+                self.log.error("Invalid element type: " + get_by)
                 self.emitter.emit(
                     Message("browser_element_stored", {"name": name, "type": get_by, "data": data, "sucess": False}))
                 return
@@ -358,12 +425,12 @@ class BrowserService(MycroftSkill):
         while True:
             try:
                 self.driver.get(url)
-                time.sleep(0.5)
                 self.log.info("url: " + str(self.driver.current_url))
                 self.log.info("title: " + str(self.driver.title))
                 break
             except Exception as e:
                 self.log.error(e)
+            time.sleep(0.5)
         self.emitter.emit(Message("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url}))
 
     def stop(self):
