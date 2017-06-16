@@ -20,8 +20,9 @@ from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 import time
-from os.path import dirname, join
-import sys, os
+from os.path import dirname
+import socket, os
+socket.setdefaulttimeout(30)
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
@@ -245,7 +246,6 @@ class BrowserService(MycroftSkill):
         except Exception as e:
             self.log.debug("tried to close driver but: " + str(e))
 
-        self.driver = webdriver.Firefox(timeout=300)
         try:
             self.driver = webdriver.Firefox(timeout=300)
             return True
