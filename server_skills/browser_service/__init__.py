@@ -240,7 +240,7 @@ class BrowserService(MycroftSkill):
         except Exception as e:
             self.log.debug("tried to close driver but: " + str(e))
         try:
-            self.driver = webdriver.Firefox()
+            self.driver = webdriver.Firefox().set_script_timeout(30)
             return True
         except Exception as e:
             self.log.error(e)
