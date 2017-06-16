@@ -3,8 +3,9 @@ import time, sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
+from mycroft.util.log import getLogger
 
-sys.path.append(join(dirname(__file__), 'geckodriver'))
+sys.path.append(dirname(__file__))
 
 class SeleniumCleverbot():
     def __init__(self, bot="cleverbot", binary="/usr/lib/firefox-esr/firefox-esr"):
