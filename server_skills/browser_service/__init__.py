@@ -343,6 +343,8 @@ class BrowserService(MycroftSkill):
 
     def handle_go_to_url(self, message):
         url = message.data.get("url")
+        if "http" not in url:
+            url = "http://"+url
         while True:
             time.sleep(0.5)
             try:
