@@ -104,7 +104,7 @@ class BrowserControl():
 
     def get_element(self, data, name="temp", type="name"):
         self.waiting_for = "browser_element_stored"
-        self.emitter.emit(Message("browser_get_element", {"type":type, "data":data, "name":name}))
+        self.emitter.emit(Message("browser_get_element", {"type":type, "data":data, "element_name":name}))
         self.logger.info("Browser get element: " + str(self.wait()))
         try:
             return self.result["sucess"]
@@ -302,7 +302,7 @@ class BrowserService(MycroftSkill):
     def handle_get_element(self, message):
         get_by = message.data.get("type") #xpath, css, name, id
         data = message.data.get("data") # name, xpath expression....
-        name = message.data.get("element_name") # how to call this element later
+        name = message.data.get("element_name")# how to call this element later
         try:
             if get_by == "xpath":
                 self.elements[name] = self.driver.find_element_by_xpath(data)
