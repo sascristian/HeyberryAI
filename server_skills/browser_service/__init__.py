@@ -29,6 +29,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException, Rem
 
 __author__ = 'jarbas'
 
+driver = None
 
 class BrowserControl():
     def __init__(self, emitter, timeout=20, logger=None, autostart=False):
@@ -244,7 +245,9 @@ class BrowserService(MycroftSkill):
         except Exception as e:
             self.log.debug("tried to close driver but: " + str(e))
         try:
-            self.driver = webdriver.Firefox(timeout=300)
+            global driver
+            driver = webdriver.Firefox(timeout=300)
+            self.driver = driver
             return True
         except TimeoutException as e:
             self.log.error("Selenium TimeoutException: " + str(e))
