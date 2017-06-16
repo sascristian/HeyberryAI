@@ -172,7 +172,7 @@ class BrowserService(MycroftSkill):
         display.start()
         # start working variables
 
-        os.environ["PATH"] += dirname(__file__) #gecko driver
+        os.environ["PATH"] += dirname(__file__) +"/geckodriver" #gecko driver
         self.driver = None
         self.elements = {}
 
