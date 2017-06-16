@@ -171,10 +171,9 @@ class BrowserService(MycroftSkill):
         display = Display(visible=0, size=(800, 600))
         display.start()
         # start working variables
-        self.log.info("adding gecko driver to path: " + dirname(__file__))
-        os.environ["PATH"] += dirname(__file__) #path for gecko driver
-        sys.path.append(dirname(__file__))
-        time.sleep(100)
+        geckod = dirname(__file__) + "/geckodriver"
+        self.log.info("adding gecko driver to path: " + geckod)
+        os.environ["PATH"] += geckod
 
         self.driver = None
         self.elements = {}
@@ -248,7 +247,7 @@ class BrowserService(MycroftSkill):
             self.driver = webdriver.Firefox()
             return True
         except TimeoutException as e:
-            self.log.error(e)
+            self.log.error("Selenium TimeoutException:" + str(e))
         except Exception as e:
             self.log.error(e)
         return False
