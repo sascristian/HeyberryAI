@@ -167,7 +167,7 @@ class BrowserControl():
 class BrowserService(MycroftSkill):
     def __init__(self):
         super(BrowserService, self).__init__(name="BrowserSkill")
-       # self.reload_skill = False
+        self.reload_skill = False
         # start virtual display
         display = Display(visible=0, size=(800, 600))
         display.start()
