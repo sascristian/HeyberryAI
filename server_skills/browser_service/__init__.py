@@ -341,6 +341,9 @@ class BrowserService(MycroftSkill):
     def handle_go_to_url(self, message):
         url = message.data.get("url")
         self.driver.get(url)
+        while self.driver.current_url != url:
+            time.sleep(0.5)
+            print self.driver.title, self.driver.current_url
         self.emitter.emit(Message("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url}))
 
     def stop(self):
