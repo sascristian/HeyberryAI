@@ -252,6 +252,7 @@ class BrowserService(MycroftSkill):
             self.log.error("Selenium WebDriverException: " + str(e))
         except Exception as e:
             self.log.error("Exception: " + str(e))
+        time.sleep(100)
         return False
 
     def handle_clear_element(self, message):
