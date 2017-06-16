@@ -412,7 +412,7 @@ class FaceChat(fbchat.Client):
         self.queue_thread.start()
 
     def stop(self):
-        if self.listening():
+        if self.listening:
             self.stop_listening()
         self.monitor_thread.exit()
         self.queue_thread.exit()
@@ -505,7 +505,6 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_chat_message", self.handle_chat_message)
         self.emitter.on("fb_post_request", self.handle_post_request)
         self.build_intents()
-        time.sleep(60)
 
     def build_intents(self):
         # build intents
@@ -758,7 +757,10 @@ class FacebookSkill(MycroftSkill):
         self.selenium_face.close()
 
     def stop(self):
-        self.chat.stop()
+        try:
+            self.chat.stop()
+        except:
+            pass
         try:
             self.selenium_face.close()
         except:
