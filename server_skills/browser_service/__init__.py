@@ -197,11 +197,15 @@ class BrowserService(MycroftSkill):
 
     def handle_ask_cleverbot_intent(self, message):
         ask = message.data.get("Ask")
-        # start browser control instance, set to auto-start/restart browser
-        browser = BrowserControl(self.emitter, autostart=True)
-        # get clevebot url
-        if browser.open_url("www.cleverbot.com") is None:
+        # get a browser control instance, optionally set to auto-start/restart browser
+        browser = BrowserControl(self.emitter)#, autostart=True)
+        # restart webbrowser if it is open (optionally)
+        started = browser.start_browser()
+        if not started:
+            # TODO throw some error
             return
+        # get clevebot url
+        browser.open_url("www.cleverbot.com")
         # search this element by type and name it "input"
         browser.get_element(data="stimulus", name="input", type="name")
         # clear element named input
@@ -236,7 +240,7 @@ class BrowserService(MycroftSkill):
         except Exception as e:
             self.log.debug("tried to close driver but: " + str(e))
         try:
-            self.driver = webdriver.Firefox().set_page_load_timeout(30)
+            self.driver = webdriver.Firefox()
             return True
         except Exception as e:
             self.log.error(e)
