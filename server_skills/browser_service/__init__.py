@@ -182,10 +182,10 @@ class BrowserService(MycroftSkill):
         # start virtual display
         display = Display(visible=0, size=(800, 600))
         display.start()
-        # start working variables
-        #geckod = dirname(__file__) + "/geckodriver"
-       #self.log.info("adding gecko driver to PATH: " + geckod)
-        #os.environ["PATH"] += geckod
+        # TODO doesnt seem to be working
+        geckod = dirname(__file__)
+        self.log.info("adding gecko driver to PATH: " + geckod)
+        os.environ["PATH"] += geckod
         self.driver = None
         self.elements = {}
 
@@ -253,7 +253,7 @@ class BrowserService(MycroftSkill):
         self.speak(response)
         # clean the used elements for this session
         browser.reset_elements()
-        # optionally close the browser
+        # optionally close the browser, but dont or other services may crash or take longer
         #browser.close_browser()
 
     def start_browser(self):
@@ -266,16 +266,6 @@ class BrowserService(MycroftSkill):
         try:
             self.driver = webdriver.Firefox(timeout=60)
             return True
-        except TimeoutException as e:
-            self.log.error("Selenium TimeoutException: " + str(e))
-        except RemoteDriverServerException as e:
-            self.log.error("Selenium RemoteDriverException: " + str(e))
-        except WebDriverException as e:
-            self.log.error("Selenium WebDriverException: " + str(e))
-        except OSError as e:
-            self.log.error("OSError: " + str(e))
-        except SystemError as e:
-            self.log.error("SystemError: " + str(e))
         except Exception as e:
             self.log.error("Exception: " + str(e))
         return False
