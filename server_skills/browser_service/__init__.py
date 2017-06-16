@@ -312,9 +312,9 @@ class BrowserService(MycroftSkill):
                 self.elements[name] = self.driver.find_element_by_name(data)
             elif get_by == "id":
                 self.elements[name] = self.driver.find_element_by_id(data)
-            self.emitter.emit(Message("browser_element_stored", {"name":name, "type":type, "data":data, "sucess":True}))
+            self.emitter.emit(Message("browser_element_stored", {"name":name, "type":get_by, "data":data, "sucess":True}))
         except:
-            self.emitter.emit(Message("browser_element_stored", {"name": name, "type": type, "data": data, "sucess":False}))
+            self.emitter.emit(Message("browser_element_stored", {"name": name, "type": get_by, "data": data, "sucess":False}))
 
     def handle_get_element_text(self, message):
         # TODO error checking, see if element in self.elemtns.keys()
