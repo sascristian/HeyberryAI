@@ -239,6 +239,7 @@ class BrowserService(MycroftSkill):
         browser.close_browser()
 
     def start_browser(self):
+
         try:
             self.driver.quit()
         except Exception as e:
@@ -252,6 +253,10 @@ class BrowserService(MycroftSkill):
             self.log.error("Selenium RemoteDriverException: " + str(e))
         except WebDriverException as e:
             self.log.error("Selenium WebDriverException: " + str(e))
+        except OSError as e:
+            self.log.error("OSError: " + str(e))
+        except SystemError as e:
+            self.log.error("SystemError: " + str(e))
         except Exception as e:
             self.log.error("Exception: " + str(e))
         return False
