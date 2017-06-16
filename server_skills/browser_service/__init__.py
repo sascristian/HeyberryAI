@@ -205,10 +205,11 @@ class BrowserService(MycroftSkill):
         # get a browser control instance, optionally set to auto-start/restart browser
         browser = BrowserControl(self.emitter)#, autostart=True)
         # restart webbrowser if it is open (optionally)
-        started = browser.start_browser()
-        if not started:
+       # started = browser.start_browser()
+       # if not started:
             # TODO throw some error
-            return
+       #     return
+        browser.reset_elements()
         # get clevebot url
         browser.open_url("www.cleverbot.com")
         # search this element by type and name it "input"
@@ -237,7 +238,7 @@ class BrowserService(MycroftSkill):
         # clean the used elements for this session
         browser.reset_elements()
         # optionally close the browser
-        browser.close_browser()
+        #browser.close_browser()
 
     def start_browser(self):
 
