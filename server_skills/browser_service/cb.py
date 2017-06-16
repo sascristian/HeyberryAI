@@ -3,7 +3,6 @@ import time, sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
-from mycroft.util.log import getLogger
 
 sys.path.append(dirname(__file__))
 

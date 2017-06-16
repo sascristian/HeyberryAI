@@ -25,11 +25,8 @@ import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
-# so geckodriver can be found
-sys.path.append(dirname(__file__))
 
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-import subprocess
+sys.path.append(dirname(__file__))
 
 __author__ = 'jarbas'
 
@@ -170,16 +167,13 @@ class BrowserControl():
 class BrowserService(MycroftSkill):
     def __init__(self):
         super(BrowserService, self).__init__(name="BrowserSkill")
+        self.reload_skill = False
         # start virtual display
         display = Display(visible=0, size=(800, 600))
         display.start()
         # start working variables
         self.driver = None
         self.elements = {}
-        try:
-            self.binary = FirefoxBinary("/usr/bin/firefox")
-        except:
-            self.log.error("Could not find firefox")
 
     def initialize(self):
         started = self.start_browser()
@@ -247,10 +241,7 @@ class BrowserService(MycroftSkill):
         except Exception as e:
             self.log.debug("tried to close driver but: " + str(e))
         try:
-            try:
-                self.driver = webdriver.Firefox(firefox_binary=self.binary)
-            except:
-                self.driver = webdriver.Firefox()
+            self.driver = webdriver.Firefox().set_script_timeout(30)
             return True
         except Exception as e:
             self.log.error(e)
