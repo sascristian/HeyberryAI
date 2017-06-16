@@ -177,8 +177,7 @@ class BrowserService(MycroftSkill):
         self.driver = None
         self.elements = {}
         try:
-            print subprocess.check_output('which firefox')
-            self.binary = FirefoxBinary(subprocess.check_output('which firefox'))
+            self.binary = FirefoxBinary("/usr/bin/firefox")
         except:
             self.log.error("Could not find firefox")
 
