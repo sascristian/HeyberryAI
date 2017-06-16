@@ -21,12 +21,11 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 import time
 from os.path import dirname, join
-import sys
+import sys, os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
 
-sys.path.append(dirname(__file__))
 
 __author__ = 'jarbas'
 
@@ -172,6 +171,8 @@ class BrowserService(MycroftSkill):
         display = Display(visible=0, size=(800, 600))
         display.start()
         # start working variables
+
+        os.environ["PATH"] += dirname(__file__) #gecko driver
         self.driver = None
         self.elements = {}
 

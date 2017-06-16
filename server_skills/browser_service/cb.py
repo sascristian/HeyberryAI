@@ -28,7 +28,7 @@ class SeleniumCleverbot():
         if bot is None or bot not in self.bots:
             bot = self.bot
         self.url = "http://" + bot + ".com"
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Firefox(firefox_binary="/usr/bin/firefox")
         self.browser.get(self.url)
         self.log = []
 
