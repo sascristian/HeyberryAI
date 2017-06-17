@@ -33,16 +33,15 @@ class ImageRecognitionService(MycroftSkill):
                         path + '/'+self.model+'.caffemodel', caffe.TEST)
 
         # pre-process input image stuff
-        self.transformer = caffe.io.Transformer({'data': self.net.blobs['data'].data.shape})
+        #self.transformer = caffe.io.Transformer({'data': self.net.blobs['data'].data.shape})
         # set mean_image
-        self.transformer.set_mean('data',
-                             np.load(self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(1).mean(1))
+        #self.transformer.set_mean('data', np.load(self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(1).mean(1))
         # subtract mean image from input image
-        self.transformer.set_transpose('data', (2, 0, 1))
+        #self.transformer.set_transpose('data', (2, 0, 1))
         #self.transformer.set_channel_swap('data', (2, 1, 0))  # if using RGB instead of BGR
-        self.transformer.set_raw_scale('data', 255.0)
+        #self.transformer.set_raw_scale('data', 255.0)
         # reshape the blobs so that they match the image shape file
-        self.net.blobs['data'].reshape(1, 3, 227, 227)
+        #self.net.blobs['data'].reshape(1, 3, 227, 227)
 
         # output to text
         self.label_mapping = np.loadtxt(dirname(__file__) + "/synset_words.txt", str, delimiter='\t')
@@ -73,10 +72,8 @@ class ImageRecognitionService(MycroftSkill):
             user_id = "all"
 
         # load
-        self.log.info("loading picture: " + pic)
-        img = cv2.imread(pic)
         self.log.info("pre-processing picture")
-        self.net.blobs['data'].data[...] = self.transformer.preprocess('data', img)
+        self.net.blobs['data'].data[...] = self.net.transformer.preprocess('data',caffe.io.load_image(pic))
         # get result
         self.log.info("getting result")
         output = self.net.forward()
