@@ -1,4 +1,4 @@
-./mycroft.sh stop
+killall screen
 git pull
 ./mycroft.sh start
 screen -list
