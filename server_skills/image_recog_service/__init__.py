@@ -83,17 +83,20 @@ class ImageRecognitionService(MycroftSkill):
             self.log.error(e)
 
         self.log.info("predicting")
+        result = "unknown"
         try:
             prediction = self.net.predict([input_image])
             proba = prediction[0][prediction[0].argmax()]
             ind = prediction[0].argsort()[-5:][::-1]  # top-5 predictions
             print proba, ind
+            result = self.label_mapping[proba]
         except Exception as e:
             self.log.error(e)
 
+        self.log.info(result)
         # send result
         msg_type = "image_classification_result"
-        msg_data = {"classfication":self.label_mapping[best_n]}
+        msg_data = {"classfication":result}
         # to source socket
         try:
             if user_id.split(":")[1].isdigit():
