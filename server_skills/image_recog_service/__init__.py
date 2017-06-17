@@ -14,7 +14,7 @@ class ImageRecognitionService():
         self.emitter = emitter
         self.waiting = False
         self.server = server
-        self.image_classification_result = None
+        self.image_classification_result = {"classification":"unknown"}
         self.timeout = timeout
         if logger is not None:
             self.logger = logger
@@ -98,8 +98,16 @@ class ImageRecognitionSkill(MycroftSkill):
     def handle_img_recog_intent(self, message):
         self.speak_dialog("imgrecogstatus")
         classifier = ImageRecognitionService(self.emitter)
-        result = classifier.local_image_classification(dirname(__file__)+"/obama.jpg", message.data.get("target"))
-        self.speak("in test image i see " + result[0] + ", or maybe it is " + result[1])
+        results = classifier.local_image_classification(dirname(__file__)+"/obama.jpg", message.data.get("target"))
+        for result in dict(results):
+            # cleave first word nxxxxx
+            re = result.split(" ")[1:]
+            r = ""
+            for word in re:
+                r += word + " "
+            r = r[:-1].split(",")[0]
+            results[result] = r
+        self.speak("in test image i see " + results[0] + ", or maybe it is " + results[1])
 
     def handle_classify(self, message):
         pic = message.data.get("file")
