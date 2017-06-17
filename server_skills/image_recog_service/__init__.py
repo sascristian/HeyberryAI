@@ -85,8 +85,9 @@ class ImageRecognitionService(MycroftSkill):
         self.log.info("predicting")
         try:
             prediction = self.net.predict([input_image])
-            print prediction
-            self.log.info(prediction)
+            proba = prediction[0][prediction[0].argmax()]
+            ind = prediction[0].argsort()[-5:][::-1]  # top-5 predictions
+            print proba, ind
         except Exception as e:
             self.log.error(e)
 
