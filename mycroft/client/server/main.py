@@ -285,6 +285,16 @@ def main():
                                     deserialized_message.data["user"] = user
                                     deserialized_message.data["feed_path"] = "../tmp_file.jpg"
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data))
+                                elif deserialized_message.type == "image_classification_request":
+                                    if sock_num in users.keys():
+                                        user = users[sock_num]
+                                    else:
+                                        user = sock_num
+                                    user_id = data["source"] + ":" + sock_num
+                                    deserialized_message.data["source"] = user_id
+                                    deserialized_message.data["user"] = user
+                                    deserialized_message.data["feed_path"] = "../tmp_file.jpg"
+                                    ws.emit(Message(deserialized_message.type, deserialized_message.data))
                                 else:
                                     # message is whitelisted and no special handling was provided
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data))
