@@ -86,8 +86,9 @@ class ImageRecognitionService(MycroftSkill):
         result = []
         try:
             prediction = self.net.predict([input_image])
-            ind = prediction[0].argsort()[:5]  # top 5 predictions
-            result = self.label_mapping[ind]
+            ind = prediction[0].argsort()#[-5:][::-1]  # top-5 predictions
+            for i in ind:
+                result.append(self.label_mapping[i])
         except Exception as e:
             self.log.error(e)
 
