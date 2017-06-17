@@ -73,7 +73,7 @@ class ImageRecognitionService(MycroftSkill):
             user_id = "all"
 
         # load
-        self.log.info("loading picture to caffe")
+        self.log.info("loading picture: " + pic)
         img = cv2.imread(pic)
         self.log.info("pre-processing picture")
         self.net.blobs['data'].data[...] = self.transformer.preprocess('data', img)
