@@ -72,7 +72,7 @@ class ImageRecognitionService(MycroftSkill):
             user_id = "all"
 
         # load
-        self.log.info("pre-processing picture")
+        self.log.info("pre-processing picture: " + pic)
         self.net.blobs['data'].data[...] = self.net.transformer.preprocess('data',caffe.io.load_image(pic))
         # get result
         self.log.info("getting result")
