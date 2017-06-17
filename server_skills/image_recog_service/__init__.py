@@ -62,7 +62,7 @@ class ImageRecognitionService(MycroftSkill):
 
     def handle_img_recog_intent(self, message):
         self.speak_dialog("imgrecogstatus")
-        self.emitter.emit(Message("image_classification_request", {"file":dirname(__file__)+"/obama.jpg", "source":"testing"}))
+        self.emitter.emit(Message("image_classification_request", {"file":dirname(__file__)+"/obama.jpg", "source":message.data.get("target")}))
 
     def handle_classify(self, message):
         pic = message.data.get("file")
