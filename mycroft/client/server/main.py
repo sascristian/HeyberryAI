@@ -35,7 +35,7 @@ server_socket = None
 
 blacklisted_ips = []
 # TODO maybe add deep dream request, but i want the utterance handled internally for now /more control
-allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "vision_result", "face_recognition_request"]
+allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "vision_result", "image_classification_request", "face_recognition_request"]
 names = {}#name, sock this name refers to
 users = {}#sock, [current user of sock]
 
