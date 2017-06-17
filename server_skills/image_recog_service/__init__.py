@@ -99,14 +99,16 @@ class ImageRecognitionSkill(MycroftSkill):
         self.speak_dialog("imgrecogstatus")
         classifier = ImageRecognitionService(self.emitter)
         results = classifier.local_image_classification(dirname(__file__)+"/obama.jpg", message.data.get("target"))
-        for result in dict(results):
+        i = 0
+        for result in list(results):
             # cleave first word nxxxxx
-            re = result.split(" ")[1:]
+            result = result.split(" ")[1:]
             r = ""
-            for word in re:
+            for word in result:
                 r += word + " "
-            r = r[:-1].split(",")[0]
-            results[result] = r
+            result = r[:-1].split(",")[0]
+            results[i] = result
+            i += 1
         self.speak("in test image i see " + results[0] + ", or maybe it is " + results[1])
 
     def handle_classify(self, message):
