@@ -75,11 +75,18 @@ class ImageRecognitionService(MycroftSkill):
             user_id = "all"
 
         self.log.info("loading image: " + pic)
-        input_image = caffe.io.load_image(pic)
+        try:
+            input_image = caffe.io.load_image(pic)
+        except Exception as e:
+            self.log.error(e)
+
         self.log.info("predicting")
-        prediction = self.net.predict([input_image])
-        print prediction
-        self.log.info(prediction)
+        try:
+            prediction = self.net.predict([input_image])
+            print prediction
+            self.log.info(prediction)
+        except Exception as e:
+            self.log.error(e)
 
         # send result
         msg_type = "image_classification_result"
