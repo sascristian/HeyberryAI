@@ -1,17 +1,64 @@
 import numpy as np
-import sys
+import sys, time
 from os.path import dirname
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
+from mycroft.util.log import getLogger
 
 __author__ = 'jarbas'
 
 
-class ImageRecognitionService(MycroftSkill):
+class ImageRecognitionService():
+    def __init__(self, emitter, timeout=30, logger=None, server=False):
+        self.emitter = emitter
+        self.waiting = False
+        self.server = server
+        self.image_classification_result = None
+        self.timeout = timeout
+        if logger is not None:
+            self.logger = logger
+        else:
+            self.logger = getLogger("ImageRecognitionService")
+        self.emitter.on("image_classification_result", self.end_wait)
+
+    def end_wait(self, message):
+        if message.type == "image_classification_result":
+            self.logger.info("image classification result received")
+            self.image_classification_result = message.data["result"]
+        self.waiting = False
+
+    def wait(self):
+        start = time.time()
+        elapsed = 0
+        self.waiting = True
+        while self.waiting and elapsed < self.timeout:
+            elapsed = time.time() - start
+            time.sleep(0.1)
+
+    def local_image_classification(self, picture_path, user_id="unknown"):
+        requester = user_id
+        message_type = "image_classification_request"
+        message_data = {"file": picture_path, "source": requester, "user":"unknown"}
+        self.emitter.emit(Message(message_type, message_data))
+        self.wait()
+        result = self.image_classification_result["classification"]
+        return result
+
+    def server_image_classification(self, picture_path, user_id="unknown"):
+        requester = user_id
+        message_type = "image_classification_request"
+        message_data = {"file": picture_path, "source": requester, "user":"unknown"}
+        self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data}))
+        self.wait()
+        result = self.image_classification_result["classification"]
+        return result
+
+
+class ImageRecognitionSkill(MycroftSkill):
 
     def __init__(self):
-        super(ImageRecognitionService, self).__init__(name="ImageRecognitionSkill")
+        super(ImageRecognitionSkill, self).__init__(name="ImageRecognitionSkill")
         #self.reload_skill = False
         # load caffe
         try:
@@ -40,18 +87,19 @@ class ImageRecognitionService(MycroftSkill):
         # output to text
         self.label_mapping = np.loadtxt(dirname(__file__) + "/synset_words.txt", str, delimiter='\t')
 
-
     def initialize(self):
         self.emitter.on("image_classification_request", self.handle_classify)
 
-        dream_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
+        image_recog_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
             .require("imgstatus").build()
-        self.register_intent(dream_status_intent,
+        self.register_intent(image_recog_status_intent,
                              self.handle_img_recog_intent)
 
     def handle_img_recog_intent(self, message):
         self.speak_dialog("imgrecogstatus")
-        self.emitter.emit(Message("image_classification_request", {"file":dirname(__file__)+"/obama.jpg", "source":message.data.get("target")}))
+        classifier = ImageRecognitionService(self.emitter)
+        result = classifier.local_image_classification(dirname(__file__)+"/obama.jpg", message.data.get("target"))
+        self.speak("in test image i see " + result[0] + ", or maybe it is " + result[1])
 
     def handle_classify(self, message):
         pic = message.data.get("file")
@@ -82,10 +130,10 @@ class ImageRecognitionService(MycroftSkill):
             self.log.error(e)
 
         self.log.info(result)
-        self.speak("in test image i see " + result[0] + ", or maybe it is " + result[1])
+
         # send result
         msg_type = "image_classification_result"
-        msg_data = {"classfication":result}
+        msg_data = {"classification":result}
         # to source socket
         try:
             if user_id.split(":")[1].isdigit():
@@ -103,4 +151,4 @@ class ImageRecognitionService(MycroftSkill):
 
 
 def create_skill():
-    return ImageRecognitionService()
+    return ImageRecognitionSkill()
