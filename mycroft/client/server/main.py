@@ -296,6 +296,7 @@ def main():
                                     deserialized_message.data["file"] = "../tmp_file.jpg"
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data))
                                 else:
+                                    logger.info("no special handling provided for " + deserialized_message.type)
                                     # message is whitelisted and no special handling was provided
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data))
 
