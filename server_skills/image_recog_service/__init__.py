@@ -34,7 +34,7 @@ class ImageRecognitionService(MycroftSkill):
         path += '/models/' + self.model
 
         self.net = caffe.Net(path + '/deploy.prototxt',
-                        self.model + '.caffemodel', caffe.TEST)
+                        path + '.caffemodel', caffe.TEST)
 
     def initialize(self):
         self.emitter.on("image_classify_request", self.handle_classify)
