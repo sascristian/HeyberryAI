@@ -21,7 +21,8 @@ class ImageRecognitionService(MycroftSkill):
 
         sys.path.insert(0, self.path + '/python')
         import caffe
-
+        from caffe.io import load_image
+        self.load_image = load_image
         # load net
         try:
            self.model = self.config["caffe_path"]
@@ -64,7 +65,6 @@ class ImageRecognitionService(MycroftSkill):
         self.emitter.emit(Message("image_classification_request", {"file":dirname(__file__)+"/obama.jpg", "source":"testing"}))
 
     def handle_classify(self, message):
-        import caffe
         pic = message.data.get("file")
         user_id = message.data.get("source")
 
@@ -78,7 +78,7 @@ class ImageRecognitionService(MycroftSkill):
 
         self.log.info("loading image: " + pic)
         try:
-            input_image = caffe.io.load_image(pic)
+            input_image = self.load_image(pic)
         except Exception as e:
             self.log.error(e)
 
