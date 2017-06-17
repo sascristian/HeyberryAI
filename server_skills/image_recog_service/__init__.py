@@ -5,6 +5,9 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 
+sys.path.insert(0, '../caffe/python')
+import caffe
+
 __author__ = 'jarbas'
 
 
@@ -20,7 +23,7 @@ class ImageRecognitionService(MycroftSkill):
             self.path = "../caffe"
 
         sys.path.insert(0, self.path + '/python')
-        import caffe
+        #import caffe
         # load net
         try:
            self.model = self.config["caffe_path"]
@@ -73,7 +76,7 @@ class ImageRecognitionService(MycroftSkill):
 
         # load
         self.log.info("pre-processing picture: " + pic)
-        self.net.blobs['data'].data[...] = self.net.transformer.preprocess('data',caffe.io.load_image(pic))
+        self.net.blobs['data'].data[...] = self.net.transformer.preprocess('data', caffe.io.load_image(pic))
         # get result
         self.log.info("getting result")
         output = self.net.forward()
