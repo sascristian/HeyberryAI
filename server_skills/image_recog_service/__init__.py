@@ -25,7 +25,7 @@ class ImageRecognitionService():
     def end_wait(self, message):
         if message.type == "image_classification_result":
             self.logger.info("image classification result received")
-            self.image_classification_result = message.data["result"]
+            self.image_classification_result = message.data
         self.waiting = False
 
     def wait(self):
