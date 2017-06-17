@@ -12,7 +12,7 @@ class ImageRecognitionService(MycroftSkill):
 
     def __init__(self):
         super(ImageRecognitionService, self).__init__(name="ImageRecognitionSkill")
-        self.reload_skill = False
+        #self.reload_skill = False
         # load caffe
         try:
             self.path = self.config["caffe_path"]
@@ -73,13 +73,16 @@ class ImageRecognitionService(MycroftSkill):
             user_id = "all"
 
         # load
+        self.log.info("loading picture to caffe")
         img = caffe.io.load_image(pic)
+        self.log.info("pre-processing picture")
         self.net.blobs['data'].data[...] = self.transformer.preprocess('data', img)
         # get result
+        self.log.info("getting result")
         output = self.net.forward()
-        print output['prob'].argmax()
+        self.log.info(output['prob'].argmax())
         best_n = self.net.blobs['prob'].data[0].flatten().argsort()[-1:-6:-1]
-        print self.label_mapping[best_n]
+        self.log.info(self.label_mapping[best_n])
 
         # send result
         msg_type = "image_classification_result"
