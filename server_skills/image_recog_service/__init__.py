@@ -5,9 +5,6 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 
-sys.path.insert(0, '../caffe/python')
-import caffe
-
 __author__ = 'jarbas'
 
 
@@ -23,7 +20,7 @@ class ImageRecognitionService(MycroftSkill):
             self.path = "../caffe"
 
         sys.path.insert(0, self.path + '/python')
-        #import caffe
+        import caffe
         # load net
         try:
            self.model = self.config["caffe_path"]
@@ -32,13 +29,16 @@ class ImageRecognitionService(MycroftSkill):
 
         path = self.path + '/models/' + self.model
 
-        self.net = caffe.Net(path + '/deploy.prototxt',
-                        path + '/'+self.model+'.caffemodel', caffe.TEST)
+        self.net = caffe.Classifier(path + '/deploy.prototxt', path + '/' + self.model + '.caffemodel',
+                                    mean=np.load(self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(1).mean(1),
+                                    channel_swap=(2, 1, 0),
+                                    raw_scale=255,
+                                    image_dims=(224, 224))
 
         # pre-process input image stuff
         #self.transformer = caffe.io.Transformer({'data': self.net.blobs['data'].data.shape})
         # set mean_image
-        #self.transformer.set_mean('data', np.load(self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(1).mean(1))
+        #self.transformer.set_mean('data', np.load().mean(1).mean(1))
         # subtract mean image from input image
         #self.transformer.set_transpose('data', (2, 0, 1))
         #self.transformer.set_channel_swap('data', (2, 1, 0))  # if using RGB instead of BGR
@@ -74,15 +74,12 @@ class ImageRecognitionService(MycroftSkill):
             self.log.warning("no user/target specified")
             user_id = "all"
 
-        # load
-        self.log.info("pre-processing picture: " + pic)
-        self.net.blobs['data'].data[...] = self.net.transformer.preprocess('data', caffe.io.load_image(pic))
-        # get result
-        self.log.info("getting result")
-        output = self.net.forward()
-        self.log.info(output['prob'].argmax())
-        best_n = self.net.blobs['prob'].data[0].flatten().argsort()[-1:-6:-1]
-        self.log.info(self.label_mapping[best_n])
+        self.log.info("loading image: " + pic)
+        input_image = caffe.io.load_image(pic)
+        self.log.info("predicting")
+        prediction = self.net.predict([input_image])
+        print prediction
+        self.log.info(prediction)
 
         # send result
         msg_type = "image_classification_result"
