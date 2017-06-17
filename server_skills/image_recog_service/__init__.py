@@ -93,6 +93,7 @@ class ImageRecognitionService(MycroftSkill):
             self.log.error(e)
 
         self.log.info(result)
+        self.speak("in test image i see " + result[0] + ", or maybe it is " + result[1])
         # send result
         msg_type = "image_classification_result"
         msg_data = {"classfication":result}
