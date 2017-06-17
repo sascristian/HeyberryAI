@@ -84,7 +84,7 @@ class ImageRecognitionService(MycroftSkill):
 
         self.log.info("predicting")
         try:
-            prediction = self.net.predict([pic])
+            prediction = self.net.predict([input_image])
             print prediction
             self.log.info(prediction)
         except Exception as e:
