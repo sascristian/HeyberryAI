@@ -57,9 +57,6 @@ class FaceRecService(MycroftSkill):
                     break
         except:
             self.log.error("no face detected in provided image")
-            result = "no person"
-
-
 
         self.emitter.emit(Message("face_recognition_result",
                                   {"result": result}))
