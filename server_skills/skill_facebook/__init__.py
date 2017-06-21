@@ -198,6 +198,8 @@ class FacebookSkill(MycroftSkill):
 
     def login(self):
         self.browser.open_url("m.facebook.com")
+        while "facebook" not in self.browser.get_current_url():
+            sleep(0.1)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[1]/input", name="input", type="xpath")
         self.browser.send_keys_to_element(text=self.mail, name="input", special=False)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[2]/div/input", name="passwd", type="xpath")
@@ -206,7 +208,12 @@ class FacebookSkill(MycroftSkill):
         self.browser.click_element("login")
 
     def post_to_wall(self, keys):
+        url = self.browser.get_current_url()
+        url2 = url
         self.browser.open_url("m.facebook.com/me")  # profile page
+        while url2 == url:
+            url2 = self.browser.get_current_url()
+            sleep(0.1)
         self.browser.get_element(data=".// *[ @ id = 'u_0_0']", name="post_box", type="xpath")
         self.browser.click_element("post_box")
         self.browser.send_keys_to_element(text=keys, name="post_box", special=False)
