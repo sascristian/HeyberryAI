@@ -185,7 +185,8 @@ class BrowserService(MycroftSkill):
         # TODO doesnt seem to be working
         geckod = dirname(__file__)
         self.log.info("adding gecko driver to PATH: " + geckod)
-        os.environ["PATH"] += geckod
+        #os.environ["PATH"] += geckod
+        os.system("export PATH=$PATH:" + geckod)
         self.driver = None
         self.elements = {}
 
