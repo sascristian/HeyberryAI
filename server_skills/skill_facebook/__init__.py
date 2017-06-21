@@ -25,7 +25,10 @@ import fbchat
 import random
 from time import sleep, asctime
 from threading import Thread
-import time
+import time, sys
+from os.path import dirname
+sys.path.append(dirname(dirname(__file__)))
+from browser_service import BrowserControl
 
 __author__ = 'jarbas'
 
@@ -185,12 +188,95 @@ class FacebookSkill(MycroftSkill):
         # start bots
         self.chat = FaceChat(self.mail, self.passwd, self.emitter, debug=False, active=self.active)
         self.face_id = self.chat.uid
+        self.browser = BrowserControl(self.emitter)
+        self.login()
+        self.post_to_wall("hello world")
         # populate friend ids
         self.get_ids_from_chat() # TODO make an intent for this?
         # listen for chat messages
         self.emitter.on("fb_chat_message", self.handle_chat_message)
         self.emitter.on("fb_post_request", self.handle_post_request)
         self.build_intents()
+
+    def login(self):
+        self.browser.open_url("m.facebook.com")
+        self.browser.get_element(data=".//*[@id='login_form']/ul/li[1]/input", name="input", type="xpath")
+        self.browser.send_keys_to_element(text=self.mail, name="input", special=False)
+        self.browser.get_element(data=".//*[@id='login_form']/ul/li[2]/div/input", name="passwd", type="xpath")
+        self.browser.send_keys_to_element(text=self.passwd, name="passwd", special=False)
+        self.browser.get_element(data=".//*[@id='login_form']/ul/li[3]/input", name="login", type="xpath")
+        self.browser.click_element("login")
+
+    def post_to_wall(self, keys):
+        self.browser.open_url("m.facebook.com/me")  # profile page
+        self.browser.get_element(data=".// *[ @ id = 'u_0_0']", name="post_box", type="xpath")
+        self.browser.click_element("post_box")
+        self.browser.send_keys_to_element(text=keys, name="post_box", special=False)
+        sleep(5)
+        self.browser.get_element(data=".//*[@id='timelineBody']/div[1]/div[1]/form/table/tbody/tr/td[2]/div/input", name="post_button", type="xpath")
+        self.browser.click_element("post_button")
+
+    def add_suggested_friends(self, num):
+        i = 0
+        while i <= num:
+            self.browser.open_url("https://m.facebook.com/friends/center/mbasic/") # people you may now page
+            sleep(2)  # random errors depending on connection
+            self.browser.get_element(data=".//*[@id='friends_center_main']/div[2]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]", name="add_friend", type="xpath")
+            self.browser.click_element("add_friend")
+            i += 1
+
+    def like_photos_from(self, num, id):
+        link = "https://m.facebook.com/profile.php?id=" + id
+        self.browser.open_url(link)  # persons profile page
+        self.browser.get_element(data=".//*[@id='m-timeline-cover-section']/div[4]/a[3]", name="photos", type="xpath")
+        self.browser.click_element("photos")
+        sleep(3)
+        if self.browser.get_element(data=".//*[@id='root']/div[2]/div[2]/div/ul/li[1]/table/tbody/tr/td/span/a", name="photos",
+                                     type="xpath"):
+            self.browser.click_element("photos")
+        else:
+            if self.browser.get_element(data=".//*[@id='root']/div[2]/div[1]/div[1]/table/tbody/tr/td[1]/a",
+                                         name="photos",
+                                         type="xpath"):
+                self.browser.click_element("photos")
+            else:
+                if self.browser.get_element(data=".//*[@id='root']/div[2]/div[2]/div[1]/table/tbody/tr/td[1]/a",
+                                            name="photos",
+                                            type="xpath"):
+                    self.browser.click_element("photos")
+                else:
+                    if self.browser.get_element(data=".//*[@id='root']/table/tbody/tr/td/div/a[1]",
+                                             name="photos",
+                                             type="xpath"):
+                        self.browser.click_element("photos")
+        sleep(3)
+        # click like
+        liked = False
+        c1 = 0
+        while not liked:
+            self.browser.open_url(link)  # persons profile page
+            self.browser.get_element(data=".//*[@id='root']/div[1]/div/div[2]/div/table/tbody/tr/td[1]/a", name="like_button",
+                                     type="xpath")
+            self.browser.click_element("like_button")
+            sleep(5)
+            url2 = self.browser.get_current_url()
+            if "https://m.facebook.com/reactions" in url2:  # already liked opened reaction page
+                self.browser.go_back()
+                sleep(2)
+            if c1 <= num:  # dont go back more than 5 photos thats weird
+                try:
+                    self.browser.get_element(data=".//*[@id='root']/div[1]/div/div[1]/div[2]/table/tbody/tr/td[2]/a",
+                                             name="next_button",
+                                             type="xpath")
+                    self.browser.click_element("next_button")
+                    sleep(2)
+                except:
+                    print "next photo button not found"
+                    liked = True
+                c1 += 1
+            else:
+                liked = True  # abort
+        sleep(0.5)
 
     def build_intents(self):
         # build intents

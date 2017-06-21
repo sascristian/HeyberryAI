@@ -52,9 +52,29 @@ class BrowserControl():
         self.emitter.on("browser_element_cleared", self.end_wait)
         self.emitter.on("browser_closed", self.end_wait)
         self.emitter.on("browser_restart_result", self.end_wait)
+        self.emitter.on("browser_go_back_result", self.end_wait)
+        self.emitter.on("browser_current_url_result", self.end_wait)
         self.emitter.on("browser_url_opened", self.end_wait)
         if autostart:
             self.start_browser()
+
+    def go_back(self, message):
+        self.waiting_for = "browser_go_back_result"
+        self.emitter.emit(Message("browser_go_back_request", {}))
+        self.logger.info("Browser go back: " + str(self.wait()))
+        try:
+            return self.result["sucess"]
+        except:
+            return False
+
+    def get_current_url(self, message):
+        self.waiting_for = "browser_current_url_result"
+        self.emitter.emit(Message("browser_current_url_request", {}))
+        self.logger.info("Browser current url: " + str(self.wait()))
+        try:
+            return self.result["url"]
+        except:
+            return None
 
     def end_wait(self, message):
         if message.type == self.waiting_for:
@@ -186,7 +206,7 @@ class BrowserService(MycroftSkill):
         geckod = dirname(__file__)
         self.log.info("adding gecko driver to PATH: " + geckod)
         #os.environ["PATH"] += geckod
-        os.system("export PATH=$PATH:" + geckod)
+        #os.system("export PATH=$PATH:" + geckod)
         self.driver = None
         self.elements = {}
 
@@ -196,6 +216,8 @@ class BrowserService(MycroftSkill):
         self.emitter.on("browser_restart_request", self.handle_restart_browser)
         self.emitter.on("browser_close_request", self.handle_close_browser)
         self.emitter.on("browser_url_request", self.handle_go_to_url)
+        self.emitter.on("browser_go_back_request", self.handle_go_back)
+        self.emitter.on("browser_current_url_request", self.handle_current_url)
         self.emitter.on("browser_get_element", self.handle_get_element)
         self.emitter.on("browser_get_elements", self.handle_get_elements)
         self.emitter.on("browser_get_element_text", self.handle_get_element_text)
@@ -256,6 +278,13 @@ class BrowserService(MycroftSkill):
         browser.reset_elements()
         # optionally close the browser, but dont or other services may crash or take longer
         #browser.close_browser()
+
+    def handle_go_back(self, message):
+        self.driver.back()
+        self.emitter.emit(Message("browser_go_back_result", {"sucess": True, "url": self.driver.current_url}))
+
+    def handle_current_url(self, message):
+        self.emitter.emit(Message("browser_current_url_result", {"sucess": True, "url": self.driver.current_url}))
 
     def start_browser(self):
 
