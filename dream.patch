@@ -1,0 +1,98 @@
+Index: mycroft/client/server/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mycroft/client/server/main.py	(revision df6bbbe81d40e18ab903456f7c05d48655ef45ec)
++++ mycroft/client/server/main.py	(revision )
+@@ -157,7 +157,9 @@
+         logger.debug( "More speech is expected, waiting")
+         # capture speech response
+         wait_answer()
+-        answer += "\n" + response
++        if response not in answer:
++            # if wait ended not because of time_out, append answer
++            answer += "\n" + response
+     answer = get_msg(Message("speak", {"utterance": answer, 'target': user, "mute": False, "more": False, "expect_response": False, "metadata":data}))
+     return answer
+ 
+@@ -221,6 +223,7 @@
+                         logger.debug("received: " + str(utterance).strip() + " from socket: " + user + " from ip: " + ip)
+                         deserialized_message = Message.deserialize(utterance)
+                         if deserialized_message.type in allowed_bus_messages:
++                            # TODO make queue per user, so other dont wait for "long skills"
+                             data = deserialized_message.data
+ 
+                             if data.get("id") is None:
+@@ -246,6 +249,7 @@
+                                 if "dream_url" in data.keys():
+                                     dream_msg = get_msg(Message("deep_dream_result",
+                                                     {"dream_url": data["dream_url"]}))
++                                    logger.info("sending formatted dream result: " + dream_msg)
+                                     answer_data(sock, dream_msg, addr)
+                                 chatting = False
+                 except:
+Index: server_skills/deep_dream_service/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- server_skills/deep_dream_service/__init__.py	(revision df6bbbe81d40e18ab903456f7c05d48655ef45ec)
++++ server_skills/deep_dream_service/__init__.py	(revision )
+@@ -99,6 +99,7 @@
+         self.speak_dialog("dreamstatus")
+ 
+     def handle_dream(self, message):
++        # TODO dreaming queue
+         source = message.data.get("dream_source")
+         guide = message.data.get("dream_guide")
+         name = message.data.get("dream_name")
+@@ -122,7 +123,7 @@
+             self.speak("i am already dreaming")
+             return None
+         else:
+-            self.speak("please wait while the dream is processed", more=True)
++            self.speak("please wait while the dream is processed\n", more=True)
+ 
+         layer = random.choice(self.layers)
+         req = urllib.urlopen(imagepah)
+@@ -132,12 +133,9 @@
+         self.dreaming = True
+         image = self.bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
+         # write the output image to file
+-        print "dreamed"
+         result = Image.fromarray(np.uint8(image))
+-        outpath = self.outputdir + "/" + name
++        outpath = self.outputdir + name
+         result.save(outpath)
+-        time.sleep(5)
+-        print "saved"
+         self.dreaming = False
+         return outpath
+ 
+Index: server_skills/skill_dream/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- server_skills/skill_dream/__init__.py	(revision df6bbbe81d40e18ab903456f7c05d48655ef45ec)
++++ server_skills/skill_dream/__init__.py	(revision )
+@@ -31,6 +31,7 @@
+ 
+         ### flag to avoid dreaming multiple times at once
+         self.dreaming = False
++        self.save = True
+ 
+     def initialize(self):
+         self.emitter.on("deep_dream_result", self.receive_dream)
+@@ -67,7 +68,9 @@
+ 
+     def receive_dream(self, message):
+         self.dreaming = False
+-        self.speak("Dream received from server with sucess")
++        dream = message.data.get("dream_url")
++        if self.save:
++            self.speak("Dream received from server with sucess " + dream)
+ 
+     def handle_dream_intent(self, message):
+         if not self.dreaming:

@@ -196,6 +196,7 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_post_request", self.handle_post_request)
         self.build_intents()
 
+    # browser service methods
     def login(self):
         self.browser.open_url("m.facebook.com")
         while "facebook" not in self.browser.get_current_url():
@@ -221,16 +222,17 @@ class FacebookSkill(MycroftSkill):
         self.browser.get_element(data=".//*[@id='timelineBody']/div[1]/div[1]/form/table/tbody/tr/td[2]/div/input", name="post_button", type="xpath")
         self.browser.click_element("post_button")
 
-    def add_suggested_friends(self, num):
+    def add_suggested_friends(self, num=3):
         i = 0
         while i <= num:
             self.browser.open_url("https://m.facebook.com/friends/center/mbasic/") # people you may now page
-            sleep(2)  # random errors depending on connection
+           # sleep(2)  # random errors depending on connection
             self.browser.get_element(data=".//*[@id='friends_center_main']/div[2]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]", name="add_friend", type="xpath")
             self.browser.click_element("add_friend")
             i += 1
 
-    def like_photos_from(self, num, id):
+    def like_photos_from(self, id, num=3):
+        id = str(id) #in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
         self.browser.get_element(data=".//*[@id='m-timeline-cover-section']/div[4]/a[3]", name="photos", type="xpath")
@@ -404,8 +406,9 @@ class FacebookSkill(MycroftSkill):
 
     def handle_friend_number_intent(self, message):
         self.login()
-        sleep(10)
-        self.post_to_wall("hello world")
+        self.add_suggested_friends(2)
+        self.like_photos_from("100014741746063")
+        #self.post_to_wall("hello world")
        # self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
 
     def handle_post_friend_number_intent(self, message):

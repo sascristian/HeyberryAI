@@ -1,0 +1,20 @@
+Index: mycroft/client/client/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mycroft/client/client/main.py	(revision 61319fb4fdf232e24402c99b4d154ea2760b1443)
++++ mycroft/client/client/main.py	(revision )
+@@ -77,10 +77,9 @@
+ 
+ def handle_utterance(event):
+     global ask, detected, source
+-    print "detetetet"
+     source = event.data.get("source")
+-    print source
+-    print event.data.get("utterances")[0]
++    if source is None:
++        source = "unknown"
+     logger.debug("Processing utterance: " + event.data.get("utterances")[0] + " from source: " + source)
+     wait_answer()
+     # ask server
