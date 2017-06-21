@@ -225,12 +225,17 @@ class FacebookSkill(MycroftSkill):
     def add_suggested_friends(self, num=3):
         i = 0
         while i <= num:
+            fails = 0
             self.browser.open_url("https://m.facebook.com/friends/center/mbasic/") # people you may now page
-            while not self.browser.get_element(data=".//*[@id='friends_center_main']/div[2]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]",
+            while not self.browser.get_element(data="id('friends_center_main')/x:div[2]/x:div[1]/x:table/x:tbody/x:tr/x:td[2]/x:div[2]/x:a[1]",
                                                name="add_friend",
-                                               type="xpath"):
+                                               type="xpath") and fails < 10:
                 sleep(0.5)
-            self.browser.click_element("add_friend")
+                fails += 1
+            if self.browser.click_element("add_friend"):
+                self.log.info("Friend added!")
+            else:
+                self.log.error("Could not add friend")
             i += 1
 
     def like_photos_from(self, id, num=3):
