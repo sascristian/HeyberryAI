@@ -67,7 +67,7 @@ class BrowserControl():
         except:
             return False
 
-    def get_current_url(self, message):
+    def get_current_url(self):
         self.waiting_for = "browser_current_url_result"
         self.emitter.emit(Message("browser_current_url_request", {}))
         self.logger.info("Browser current url: " + str(self.wait()))
