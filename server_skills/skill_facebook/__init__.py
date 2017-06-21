@@ -237,9 +237,9 @@ class FacebookSkill(MycroftSkill):
         id = str(id) #in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
-        self.browser.get_element(data=".//*[@id='m-timeline-cover-section']/div[4]/a[3]", name="photos", type="xpath")
-        self.browser.click_element("photos")
-        sleep(3)
+        while not self.browser.get_element(data=".//*[@id='m-timeline-cover-section']/div[4]/a[3]", name="photos", type="xpath"):
+            self.browser.click_element("photos")
+            sleep(0.5)
         if self.browser.get_element(data=".//*[@id='root']/div[2]/div[2]/div/ul/li[1]/table/tbody/tr/td/span/a", name="photos",
                                      type="xpath"):
             self.browser.click_element("photos")
