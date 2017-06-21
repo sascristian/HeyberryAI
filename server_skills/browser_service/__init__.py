@@ -61,6 +61,7 @@ class BrowserControl():
     def go_back(self, message):
         self.waiting_for = "browser_go_back_result"
         self.emitter.emit(Message("browser_go_back_request", {}))
+        self.wait()
         try:
             return self.result["sucess"]
         except:
@@ -69,6 +70,7 @@ class BrowserControl():
     def get_current_url(self):
         self.waiting_for = "browser_current_url_result"
         self.emitter.emit(Message("browser_current_url_request", {}))
+        self.wait()
         try:
             return self.result["url"]
         except:
