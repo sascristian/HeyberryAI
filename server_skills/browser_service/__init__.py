@@ -237,7 +237,7 @@ class BrowserService(MycroftSkill):
         # get a browser control instance, optionally set to auto-start/restart browser
         browser = BrowserControl(self.emitter)#, autostart=True)
         # restart webbrowser if it is open (optionally)
-        #started = browser.start_browser()
+        started = browser.start_browser()
         #if not started:
         #    # TODO throw some error
         #    return
