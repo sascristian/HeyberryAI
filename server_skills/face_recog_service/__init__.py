@@ -46,20 +46,23 @@ class FaceRecService(MycroftSkill):
         self.log.info("getting face encodings of unknown image")
         try:
             encoding = face_recognition.face_encodings(unknown_image)[0]
+            for person in self.known_faces.keys():
+                self.log.info("comparing to person " + person)
+                # check if unknown person is this face, by comparing face encodings
+                match = face_recognition.compare_faces([self.known_faces[person]], encoding)
+                # match is an array of True/False telling if the unknown face matched anyone in the known_faces array
+                if match[0]:
+                    result = person.replace(".jpg", "")
+                    self.log.info("match found, unknown image is " + result)
+                    break
         except:
             self.log.error("no face detected in provided image")
-            return "no person"
-        # results is an array of True/False telling if the unknown face matched anyone in the known_faces array
-        for person in self.known_faces.keys():
-            self.log.info("comparing to person " + person)
-            # check if unknown person is this face, by comparing face encodings
-            match = face_recognition.compare_faces([self.known_faces[person]], encoding)
-            print match
-            if match:
-                result = person.replace(".jpg", "")
-                self.log.info("match found, unknown image is " + result)
-                break
+            result = "no person"
 
+
+
+        self.emitter.emit(Message("face_recognition_result",
+                                  {"result": result}))
         try:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
@@ -67,8 +70,7 @@ class FaceRecService(MycroftSkill):
         except:
             # .split failed
             pass
-        self.emitter.emit(Message("face_recognition_result",
-                                  {"result": result}))
+
 
 
     def stop(self):
