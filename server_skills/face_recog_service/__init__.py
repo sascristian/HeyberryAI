@@ -39,12 +39,16 @@ class FaceRecService(MycroftSkill):
             self.log.warning("no user/target specified")
             user_id = "all"
 
-        result = None
+        result = "unknown person"
         # read unknown image
         self.log.info("loading unknown image")
         unknown_image = face_recognition.load_image_file(face)
         self.log.info("getting face encodings of unknown image")
-        encoding = face_recognition.face_encodings(unknown_image)[0]
+        try:
+            encoding = face_recognition.face_encodings(unknown_image)[0]
+        except:
+            self.log.error("no face detected in provided image")
+            return "no person"
         # results is an array of True/False telling if the unknown face matched anyone in the known_faces array
         for person in self.known_faces.keys():
             self.log.info("comparing to person " + person)
