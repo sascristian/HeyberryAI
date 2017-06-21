@@ -414,7 +414,7 @@ class FacebookSkill(MycroftSkill):
     def handle_friend_number_intent(self, message):
         self.login()
         self.add_suggested_friends(2)
-        self.like_photos_from("100014741746063")
+        #self.like_photos_from("100014741746063")
         #self.post_to_wall("hello world")
        # self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
 
