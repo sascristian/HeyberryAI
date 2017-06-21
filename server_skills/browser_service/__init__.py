@@ -265,6 +265,7 @@ class BrowserService(MycroftSkill):
                 # this appears only after cleverbot finishes answering
                 received = browser.get_element(data=".//*[@id='snipTextIcon']", name="sucess", type="xpath")
                 fails += 1
+                sleep(0.5)
 
             # find element by xpath, name it "response"
             browser.get_element(data=".//*[@id='line1']/span[1]", name="response", type="xpath")
