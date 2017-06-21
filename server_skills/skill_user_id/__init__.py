@@ -19,8 +19,9 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-import time
+import time, urllib
 from mycroft.messagebus.message import Message
+from os.path import dirname
 
 __author__ = 'jarbas'
 
@@ -108,6 +109,26 @@ class UserIdService():
             self.logger.info("Requesting face recognition from server")
             return self.server_face_recog(self.vision_result["feed_path"], user_id)
 
+    def face_recog_from_url(self, url, user_id):
+        self.logger.info("URL Face Recognition requested")
+        self.vision_result = None
+        self.face_recog_result = None
+        if self.server:
+            self.logger.info("Requesting local face recognition service")
+            saved_url = dirname(__file__)+"/temp.jpg"
+            f = open(saved_url, 'wb')
+            f.write(urllib.urlopen(url).read())
+            f.close()
+            return self.local_face_recog(saved_url, user_id)
+
+        else:
+            self.logger.info("Requesting face recognition from server")
+            saved_url = dirname(__file__) + "/temp.jpg"
+            f = open(saved_url, 'wb')
+            f.write(urllib.urlopen(url).read())
+            f.close()
+            return self.server_face_recog(saved_url, user_id)
+
     def request_bluetooth_id(self, user_id):
         self.logger.error("Bluetooth recognition requested but not implemented")
         return None
@@ -122,8 +143,10 @@ class UserIdSkill(MycroftSkill):
     def __init__(self):
         super(UserIdSkill, self).__init__(name="User Identification Skill")
         self.server = True
+        self.photo = None
 
     def initialize(self):
+        self.emitter.on("recognizer_loop:utterance", self.handle_set_fb_photo)
 
         who_am_i_intent = IntentBuilder("WhoAmIIntent")\
             .require("WhoAmIKeyword").build()
@@ -137,10 +160,18 @@ class UserIdSkill(MycroftSkill):
 
         self.userid = UserIdService(self.emitter, server=self.server)
 
+    def handle_set_fb_photo(self, message):
+        if "fbchat" in message.data.get("source"):
+            self.photo = message.data.get("photo")
+
     def handle_who_am_i_intent(self, message):
         user_id = message.data.get("target")
         user = ""
-        vision_user = self.userid.request_vision_id(user_id)
+        if "fbchat" in user_id:
+            url = self.photo
+            vision_user = self.userid.face_recog_from_url(url, user_id)
+        else:
+            vision_user = self.userid.request_vision_id(user_id)
         if vision_user is None:
             vision_user = "unknown"
         if vision_user != "unknown":

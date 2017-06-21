@@ -64,7 +64,7 @@ class FaceChat(fbchat.Client):
                 chatmsg = chat[1]
                 self.emitter.emit(
                     Message("recognizer_loop:utterance",
-                            {'utterances': [chatmsg], 'source': 'fbchat_'+chat[0], "mute": True, "user":chat[2]}))
+                            {'utterances': [chatmsg], 'source': 'fbchat_'+chat[0], "mute": True, "user":chat[2], "photo":chat[3]}))
                 # remove from queue
                 self.log.debug("Removing item from queue")
                 self.queue.pop(0)
@@ -100,7 +100,7 @@ class FaceChat(fbchat.Client):
         users = self.getAllUsers()
         for user in users:
             if user.uid == user_id:
-                return user.name
+                return user.name, user.photo
 
     def on_message(self, mid, author_id, author_name, message, metadata):
         # for privacy we may want this off
@@ -110,18 +110,19 @@ class FaceChat(fbchat.Client):
 
         # if you are not the author, process
         if str(author_id) != str(self.uid) and self.emitter is not None:
-            author_name = self.get_user_name(author_id)
-            self.emitter.emit(Message("fb_chat_message", {"author_id": author_id, "author_name": author_name, "message": message}))
+            author_name, photo = self.get_user_name(author_id)
+            self.emitter.emit(Message("fb_chat_message", {"author_id": author_id, "author_name": author_name, "message": message, "photo":photo}))
 
     def handle_chat_request(self, message):
         txt = message.data.get('message')
         user = message.data.get('author_id')
         user_name = message.data.get('author_name')
+        user_photo = message.data.get('photo')
         # TODO check with intent parser if intent from control center wont be used (change run-level)
         # read from config skills to be blacklisted
         if self.active:
             self.log.debug("Adding " + txt + " from user " + user_name + " to queue")
-            self.queue.append([user, txt, user_name])
+            self.queue.append([user, txt, user_name, user_photo])
 
     def handle_speak(self, message):
         utterance = message.data.get("utterance")
