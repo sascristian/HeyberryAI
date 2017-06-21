@@ -116,6 +116,7 @@ class BrowserControl():
     def open_url(self, url):
         self.waiting_for = "browser_url_opened"
         self.emitter.emit(Message("browser_url_request", {"url":url}))
+        self.wait()
         try:
             return self.result["result"]
         except:
