@@ -10,8 +10,18 @@ import os
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
-
+from mycroft.configuration import ConfigurationManager
 from imgurpython import ImgurClient
+
+time.sleep(200)
+try:
+    path = ConfigurationManager.get("caffe_path")
+except:
+    path = "../caffe"
+
+sys.path.insert(0, path + '/python')
+print path
+from batcountry import BatCountry
 
 __author__ = 'jarbas'
 
@@ -38,18 +48,14 @@ class DreamService(MycroftSkill):
         self.client = ImgurClient(client_id, client_secret)
 
         try:
-            path = self.config["caffe_path"]
+            self.path = self.config_core.get("caffe_path")
         except:
-            path = "../caffe"
-
-        sys.path.insert(0, path + '/python')
-        from batcountry import BatCountry
+            self.path = "../caffe"
 
         self.model = "bvlc_googlenet"
-        path += '/models/' + self.model
+        self.path += '/models/' + self.model
 
-        # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
-        self.bc = BatCountry(path)#path,model_path=path)
+
         self.iter = 25#20#self.config["iter"] #dreaming iterations
         self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
                         "inception_5b/pool", "inception_5b/5x5",
@@ -149,24 +155,29 @@ class DreamService(MycroftSkill):
         self.speak("please wait while the dream is processed")
 
         layer = random.choice(self.layers)
+        # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
+        # TODO any model
+        self.model = "bvlc_googlenet"
+        self.path += '/models/' + self.model
+        bc = BatCountry(self.path)  # path,model_path=path)
 
         req = urllib.urlopen(imagepah)
         arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
         img = cv2.imdecode(arr, -1)  # 'load it as it is'
         dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
-        image = self.bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
+        image = bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
         # write the output image to file
         result = Image.fromarray(np.uint8(image))
         outpath = self.outputdir + name
         result.save(outpath)
+        bc.cleanup()
         return outpath
 
     def guided_dream(self, sourcepath, guidepath, name):
-        pass
+        self.log.error("Guided dream not implemented")
 
     def stop(self):
         try:
-            self.bc.cleanup()
             cv2.destroyAllWindows()
         except:
             pass
