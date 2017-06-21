@@ -206,7 +206,7 @@ class FacebookSkill(MycroftSkill):
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[2]/div/input", name="passwd", type="xpath")
         self.browser.send_keys_to_element(text=self.passwd, name="passwd", special=False)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[3]/input", name="login", type="xpath")
-        self.browser.click_element("login")
+        return self.browser.click_element("login")
 
     def post_to_wall(self, keys):
         url = self.browser.get_current_url()
@@ -414,8 +414,8 @@ class FacebookSkill(MycroftSkill):
             self.speak("i have no friends")
 
     def handle_friend_number_intent(self, message):
-        self.login()
-        self.add_suggested_friends(2)
+        if self.login():
+            self.add_suggested_friends(1)
         #self.like_photos_from("100014741746063")
         #self.post_to_wall("hello world")
        # self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
