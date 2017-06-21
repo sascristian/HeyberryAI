@@ -226,8 +226,10 @@ class FacebookSkill(MycroftSkill):
         i = 0
         while i <= num:
             self.browser.open_url("https://m.facebook.com/friends/center/mbasic/") # people you may now page
-           # sleep(2)  # random errors depending on connection
-            self.browser.get_element(data=".//*[@id='friends_center_main']/div[2]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]", name="add_friend", type="xpath")
+            while not self.browser.get_element(data=".//*[@id='friends_center_main']/div[2]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]",
+                                               name="add_friend",
+                                               type="xpath"):
+                sleep(0.5)
             self.browser.click_element("add_friend")
             i += 1
 
