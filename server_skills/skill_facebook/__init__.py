@@ -230,9 +230,9 @@ class FacebookSkill(MycroftSkill):
             self.browser.open_url("https://m.facebook.com/friends/center/mbasic/") # people you may now page
             self.log.info(self.browser.get_current_url())
             # ".//*[@id='friends_center_main']/div[2]/div[2]/table/tbody/tr/td[2]/div[2]/a[1]"
-            while not self.browser.get_element(data=".z.ba.cf.bd",
+            while not self.browser.get_element(data="https://m.facebook.com/a/mobile/friends/add_friend.php?id=",
                                                name="add_friend",
-                                               type="css") and fails < 5:
+                                               type="partial_link_text") and fails < 5:
                 sleep(0.5)
                 fails += 1
             if self.browser.click_element("add_friend"):
