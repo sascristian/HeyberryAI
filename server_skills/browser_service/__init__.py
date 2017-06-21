@@ -102,6 +102,7 @@ class BrowserControl():
     def start_browser(self):
         self.waiting_for = "browser_restart_result"
         self.emitter.emit(Message("browser_restart_request", {}))
+        self.wait()
         try:
             return self.result["sucess"]
         except:
@@ -110,8 +111,7 @@ class BrowserControl():
     def close_browser(self):
         self.waiting_for = "browser_closed"
         self.emitter.emit(Message("browser_close_request", {}))
-        wait = self.wait()
-        return wait
+        return self.wait()
 
     def open_url(self, url):
         self.waiting_for = "browser_url_opened"
@@ -125,7 +125,7 @@ class BrowserControl():
     def get_element(self, data, name="temp", type="name"):
         self.waiting_for = "browser_element_stored"
         self.emitter.emit(Message("browser_get_element", {"type":type, "data":data, "element_name":name}))
-
+        self.wait()
         try:
             return self.result["sucess"]
         except:
@@ -134,7 +134,7 @@ class BrowserControl():
     def get_elements(self, data, name="temp", type="name"):
         self.waiting_for = "browser_elements_stored"
         self.emitter.emit(Message("browser_get_elements", {"type":type, "data":data, "element_name":name}))
-
+        self.wait()
         try:
             return self.result["sucess"]
         except:
@@ -143,7 +143,7 @@ class BrowserControl():
     def get_element_text(self, name="temp"):
         self.waiting_for = "browser_element_text"
         self.emitter.emit(Message("browser_get_element_text", {"element_name":name}))
-
+        self.wait()
         try:
             return self.result["text"]
         except:
@@ -152,7 +152,7 @@ class BrowserControl():
     def get_available_elements(self):
         self.waiting_for = "browser_available_elements"
         self.emitter.emit(Message("browser_available_elements_request", {}))
-
+        self.wait()
         try:
             return self.result["elements"]
         except:
@@ -161,14 +161,12 @@ class BrowserControl():
     def reset_elements(self):
         self.waiting_for = "browser_elements_reset_result"
         self.emitter.emit(Message("browser_reset_elements", {}))
-        wait = self.wait()
-
-        return wait
+        return self.wait()
 
     def clear_element(self, name="temp"):
         self.waiting_for = "browser_element_cleared"
         self.emitter.emit(Message("browser_clear_element", {"element_name":name}))
-
+        self.wait()
         try:
             return self.result["sucess"]
         except:
@@ -177,7 +175,7 @@ class BrowserControl():
     def click_element(self, name="temp"):
         self.waiting_for = "browser_element_clicked"
         self.emitter.emit(Message("browser_click_element", {"element_name":name}))
-
+        self.wait()
         try:
             return self.result["sucess"]
         except:
@@ -186,7 +184,7 @@ class BrowserControl():
     def send_keys_to_element(self, text, name="temp", special=False):
         self.waiting_for = "browser_sent_keys"
         self.emitter.emit(Message("browser_send_keys_to_element", {"element_name": name, "special_key":special, "text":text}))
-
+        self.wait()
         try:
             return self.result["sucess"]
         except:
