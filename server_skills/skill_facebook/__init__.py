@@ -404,6 +404,7 @@ class FacebookSkill(MycroftSkill):
 
     def handle_friend_number_intent(self, message):
         self.login()
+        sleep(10)
         self.post_to_wall("hello world")
        # self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
 
