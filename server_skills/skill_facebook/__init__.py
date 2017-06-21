@@ -20,7 +20,7 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 
-import fb
+import requests
 import fbchat
 import random
 from time import sleep, asctime
@@ -30,336 +30,6 @@ import time
 __author__ = 'jarbas'
 
 # TODO logs in bots
-
-
-class FaceBot():
-    def __init__(self, token):
-        self.token = token
-        self.facebook = fb.graph.api(self.token)
-        self.id = self.get_self_id()
-
-    def get_self_id(self):
-        return self.get_field("id", "me")["id"]
-
-    def get_friends(self, id="me"):
-        return self.facebook.get_object(cat='single', id=id, fields=['friends'])
-
-    def get_field(self, field, id = "me"):
-        return self.facebook.get_object(cat='single', id=id, fields=[field])
-
-    def get_friend_num(self, id="me"):
-        friends = self.facebook.get_object(cat='single', id=id, fields=['friends'])
-        try:
-            friends = friends["friends"]["summary"]["total_count"]
-            print "number of friends: " + str(friends)
-        except:
-            pass
-            #print "you dont have acess to this users friends"
-        return friends
-
-    def post_to_wall(self, text="My facebook status", id="me", link=None):
-        if link is not None:
-            return self.facebook.publish(cat="feed", id=id, message=text, link=link)
-        else:
-            return self.facebook.publish(cat="feed", id=id, message=text)
-
-    def comment_object(self, object_id, comment="My comment"):
-        return self.facebook.publish(cat="comments", id=object_id, message=comment)
-
-    def create_album(self, name="Album Name", message="Album Details", id="me"):
-        return self.facebook.publish(cat="albums", id=id, name=name, message=message)
-
-    def delete_status(self, status_id):
-        return self.facebook.delete(id=status_id)
-
-    def delete_comment(self, comment_id):
-        return self.facebook.delete(id=comment_id)
-
-    def clean_profile(self, profile):
-        try:
-            profile["age_range"] = profile["age_range"]["min"]
-        except:
-            pass
-
-        try:
-            l = []
-            for language in profile["languages"]:
-                l.append(language["name"])
-            profile["languages"] = l
-        except:
-            pass
-
-        try:
-            profile["friends"] = profile["friends"]["summary"]["total_count"]
-        except:
-            pass
-
-        try:
-            ed = []
-            for e in profile["education"]:
-                d = {}
-                d.setdefault("name", e["school"]["name"])
-                d.setdefault("type", e["type"])
-                ed.append(d)
-            profile["education"] = ed
-        except:
-            pass
-
-        try:
-            work = []
-            for w in profile["work"]:
-                wr = {}
-                wr.setdefault("name", w["position"]["name"])
-                wr.setdefault("start_date", w["start_date"])
-                wr.setdefault("end_date", w["end_date"])
-                wr.setdefault("employer", w["employer"]["name"])
-                work.append(wr)
-            profile["work"] = work
-        except:
-            pass
-
-        try:
-            profile["feed"] = profile["feed"]["data"]
-        except:
-            pass
-
-        try:
-            profile["likes"] = profile["likes"]["data"]
-        except:
-            pass
-
-        try:
-            profile["albums"] = profile["albums"]["data"]
-        except:
-            pass
-
-        try:
-            profile["picture"] = profile["picture"]["data"]["url"]
-        except:
-            pass
-
-        return profile
-
-    def get_profile(self, id="me"):
-
-        try:
-            print self.facebook.get_object(cat='single', id=id, fields=[])["error"]["message"]
-            return {}
-        except:
-            pass
-
-        profile = {}
-        keys = ["birthday", "about", "age_range", "education", "devices", "email", "first_name", "gender", "hometown",
-                  "inspirational_people", "interested_in", "location", "languages", "last_name", "political",
-                  "public_key", "quotes", "religion", "relationship_status", "significant_other", "work", "albums",
-                  "friends", "family", "feed", "likes", "picture", "cover"]
-
-        for key in keys:
-            try:
-                field = self.get_field(key, id)
-                profile.setdefault(key, field[key])
-            except:
-                profile.setdefault(key)
-
-        return self.clean_profile(profile)
-
-    def get_wall_post_ids(self, id="me"):
-        # return id of wall_posts
-        # return "events" from wall
-        e = []
-        try:
-            p = self.get_field("feed", id)["feed"]["data"]
-        except: #no acess
-            return e
-        for i in p:
-            try:
-                e.append(i["id"])
-            except:
-                pass
-        return e
-
-    def get_wall_posts(self, id="me"):
-        # return "events" from wall
-        p = self.get_field("feed", id)
-        e = []
-        try:
-            p = p["feed"]["data"]
-        except:
-            # no acess to this users
-            return e
-
-        for i in p:
-            try:
-                l = {}
-                l.setdefault("message", i["message"])
-                l.setdefault("created_time", i["created_time"])
-                l.setdefault("id", i["id"])
-                e.append(l)
-            except:
-                pass
-        return e
-
-    def get_wall_events(self, id="me"):
-        # return "events" from wall
-        e = []
-        try:
-            p = self.get_field("feed", id)["feed"]["data"]
-        except:
-            return e
-        for i in p:
-            try:
-                l = {}
-                l.setdefault("story", i["story"])
-                l.setdefault("created_time", i["created_time"])
-                l.setdefault("id", i["id"])
-                e.append(l)
-            except:
-                pass
-        return e
-
-    def get_wall_comments(self, id="me"):
-        ids = self.get_wall_post_ids(id)
-        comments = {}
-        for i in ids:
-            comme = self.get_field("comments", i)
-            try:
-                comments.setdefault(i, comme["comments"]["data"])
-            except:
-                # " no comments"
-                pass
-        cleaned = []
-        for wall_post_id in comments:
-            com = {}
-            com.setdefault("wall_post_id", wall_post_id)
-            for comment in comments[wall_post_id]:
-                com.setdefault("comment_id", comment["id"])
-                com.setdefault("comment", comment["message"].encode("utf8"))
-                com.setdefault("sender", comment["from"]["name"].encode("utf8"))
-                com.setdefault("sender_id", comment["from"]["id"])
-                com.setdefault("date", comment["created_time"])
-                cleaned.append(com)
-        return cleaned
-
-    def get_likes(self, id="me"):
-        lik = []
-        try:
-            likes = self.get_field("likes", id)["likes"]["data"]
-        except:  # no acess
-            return lik
-        for like in likes:
-            lik.append(like["name"])
-        return lik
-
-    def get_detailed_like_info(self, id="me"):
-        lik = []
-        try:
-            likes = self.get_field("likes", id)["likes"]["data"]
-        except: #no acess
-            return lik
-
-        for like in likes:
-            l = {}
-            l.setdefault("name", like["name"])
-            p = self.get_profile(like["id"])
-            for key in p:
-                l.setdefault(key, p[key])
-            lik.append(l)
-        return lik
-
-    def get_albums(self, id="me"):
-        try:
-            print self.facebook.get_object(cat='single', id=id, fields=[])["error"]["message"]
-            return []
-        except:
-            pass
-
-        al = []
-        try:
-            albums = self.get_field("albums", id)["albums"]["data"]
-        except:# no acess
-            return al
-
-        for f in albums:
-            a = {}
-            a.setdefault("name", f["name"])
-            a.setdefault("id", f["id"])
-            a.setdefault("created_time", f["created_time"])
-            try:
-                photos = self.get_field("photos", f["id"])["photos"]["data"]
-            except:
-                photos = None
-
-            a.setdefault("photos", photos)
-            try:
-                likes = self.get_field("likes", f["id"])["likes"]["data"]
-                a.setdefault("likes", likes)
-            except:
-                a.setdefault("likes")
-            al.append(a)
-        return al
-
-    def get_people_who_liked(self, id="me"):
-        people = {}
-        # get people who liked feed posts
-        posts = self.get_wall_post_ids(id)
-        for p in posts:
-            try:
-                likes = self.get_field("likes", p)["likes"]["data"]
-                for like in likes:
-                    people.setdefault(like["name"], like["id"])
-            except:
-                pass #no likes
-        # get people who liked albums
-        albums = self.get_albums(id)
-        for a in albums:
-            try:
-                likes = a["likes"]
-                for like in likes:
-                    people.setdefault(like["name"], like["id"])
-            except:
-                pass  # no likes
-        # get people who commented
-        comments = self.get_wall_comments(id)
-        for c in comments:
-            people.setdefault(c["sender"], c["sender_id"])
-
-        return people
-
-    def commented_on(self, id="me"):
-        answered = False
-        replys = self.get_field("comments", id)
-        replys = replys["comments"]["data"]
-        for reply in replys:
-            if reply["from"]["id"] == self.id:
-                answered = True
-        return answered
-
-    def like(self, id):
-        # TODO fix some other way
-        liked = self.facebook.publish(cat="likes", id=id)
-        try:
-            print liked["error"]["message"]
-        except:
-            print liked
-
-    def answer_comments_from(self, from_id="me", where_id="me", text=":)"):
-        # TODO answer posts in wall
-        # answer replys to posts in wall
-        comments = self.get_wall_comments(where_id)
-        for comment in comments:
-            if comment["sender_id"] == from_id:
-                answered = self.commented_on(comment["comment_id"])
-                if not answered:
-                    self.comment_object(comment["comment_id"], text)
-
-    def delete(self, id):
-        # TODO fix permissions
-        return self.facebook.delete(id=id)
-
-    def create_event(self):
-        # TODO change, deprecated
-        return self.facebook.publish(cat="events", id="me", name="Become self aware", start_time="2018-10-16-12:20",
-                         end_time="2018-10-18-14:30")
 
 
 class FaceChat(fbchat.Client):
@@ -466,6 +136,23 @@ class FaceChat(fbchat.Client):
             else:
                 self.log.error("invalid user id " + user)
 
+    def do_one_listen(self, markAlive=True):
+        """Does one cycle of the listening loop.
+        This method is only useful if you want to control fbchat from an
+        external event loop."""
+        try:
+         # TODO temporary bug fix
+           # if markAlive: self.ping(self.sticky)
+            try:
+                content = self._pullMessage(self.sticky, self.pool)
+                if content: self._parseMessage(content)
+            except requests.exceptions.RequestException as e:
+                pass
+        except KeyboardInterrupt:
+            self.listening = False
+        except requests.exceptions.Timeout:
+            pass
+
 
 class FacebookSkill(MycroftSkill):
 
@@ -495,10 +182,8 @@ class FacebookSkill(MycroftSkill):
 
     def initialize(self):
         # start bots
-        self.face = FaceBot(self.api_key)
-        self.selenium_face = None #SeleniumFaceBot(self.mail, self.passwd, self.firefox_path)
         self.chat = FaceChat(self.mail, self.passwd, self.emitter, debug=False, active=self.active)
-        self.face_id = self.face.get_self_id()
+        self.face_id = self.chat.uid
         # populate friend ids
         self.get_ids_from_chat() # TODO make an intent for this?
         # listen for chat messages
@@ -610,10 +295,10 @@ class FacebookSkill(MycroftSkill):
             text = self.get_name_from_id(author) + " said " + text
             self.speak(text)
         # on chat message like that persons photos
-        if self.like_back:
-            self.selenium_face.login()
-            self.selenium_face.like_photos_from(author, self.photo_num)
-            self.selenium_face.close()
+        #if self.like_back:
+        #    self.selenium_face.login()
+        #    self.selenium_face.like_photos_from(author, self.photo_num)
+         #   self.selenium_face.close()
 
     def handle_who_are_my_friends_intent(self, message):
         text = ""
@@ -630,32 +315,32 @@ class FacebookSkill(MycroftSkill):
 
     def handle_post_friend_number_intent(self, message):
         self.speak_dialog("post_friend_number")
-        num_friends = self.face.get_friend_num()
+        num_friends = 0 #self.face.get_friend_num()
         time = asctime()
         message = "i have " + str(num_friends) + " friends on facebook and now is " + str(
             time) + '\nNot bad for an artificial inteligence'
-        self.face.post_to_wall(message)
+        #self.face.post_to_wall(message)
 
     def handle_like_photos_old_intent(self, message):
         self.speak_dialog("like_photos")
-        self.selenium_face.login()
-        self.selenium_face.like_photos(number=self.photo_num)
-        self.selenium_face.close()
+       # self.selenium_face.login()
+      #  self.selenium_face.like_photos(number=self.photo_num)
+      #  self.selenium_face.close()
 
     def handle_like_photos_intent(self, message):
         self.speak_dialog("like_photos")
         self.get_ids_from_chat()
         friend = random.choice(self.friends.keys())
         friend = self.friends[friend]
-        self.selenium_face.login()
-        self.selenium_face.like_photos_from(friend, self.photo_num)
-        self.selenium_face.close()
+      #  self.selenium_face.login()
+      #  self.selenium_face.like_photos_from(friend, self.photo_num)
+      #  self.selenium_face.close()
 
     def handle_make_friends_intent(self, message):
         self.speak_dialog("make_friend")
-        self.selenium_face.login()
-        self.selenium_face.add_suggested_friends(num=self.friend_num)
-        self.selenium_face.close()
+      #  self.selenium_face.login()
+      #  self.selenium_face.add_suggested_friends(num=self.friend_num)
+      #  self.selenium_face.close()
 
     def handle_make_friends_of_friends_intent(self, message):
         # TODO own dialog
@@ -663,15 +348,15 @@ class FacebookSkill(MycroftSkill):
         self.get_ids_from_chat()
         friend = random.choice(self.friends.keys())
         friend = self.friends[friend]
-        self.selenium_face.login()
-        self.selenium_face.add_friends_of(friend, self.friend_num)
-        self.selenium_face.close()
+      #  self.selenium_face.login()
+       # self.selenium_face.add_friends_of(friend, self.friend_num)
+       # self.selenium_face.close()
 
     def handle_who_liked_me_intent(self, message):
-        people = self.face.get_people_who_liked()
+      #  people = self.face.get_people_who_liked()
         self.speak_dialog("liked_my_stuff")
-        for p in people:
-            self.speak(p)
+        #for p in people:
+        #    self.speak(p)
 
     def handle_chat_girlfriend_intent(self, message):
         # text = message.data["text"]
@@ -684,19 +369,19 @@ class FacebookSkill(MycroftSkill):
     def handle_build_about_me_intent(self, message):
         # TODO use dialog
         self.speak("Building about me section on facebook")
-        self.selenium_face.login()
-        self.selenium_face.build_about_me()
-        self.selenium_face.close()
+       # self.selenium_face.login()
+       # self.selenium_face.build_about_me()
+       # self.selenium_face.close()
 
     def handle_my_likes_intent(self, message):
-        likes = self.face.get_likes()
+       # likes = self.face.get_likes()
         self.speak_dialog("likes", {"number": len(likes)})
         i = 0
-        for like in likes:
-            self.speak(like)
-            i += 1
-            if i > 5:
-                return
+        #for like in likes:
+           # self.speak(like)
+        #    i += 1
+        #    if i > 5:
+        #        return
 
     def handle_random_chat_intent(self, message):
         text = random.choice(self.random_chat)
@@ -717,9 +402,10 @@ class FacebookSkill(MycroftSkill):
         self.speak("I said " + message + " to " + self.get_name_from_id(person))
 
     def handle_last_wall_post_intent(self, message):
-        posts = self.face.get_wall_posts()
+       # posts = self.face.get_wall_posts()
         # TODO sort by time (or is it sorted?)
-        self.speak(posts[0]["message"])
+        #self.speak(posts[0]["message"])
+        pass
 
     def handle_chat_person_intent(self, message):
         person = message.data["person"]
@@ -738,31 +424,27 @@ class FacebookSkill(MycroftSkill):
         #text = message.data["text"]
         text = self.default_comment
         person_id = self.friends[name]
-        self.face.answer_comments_from(person_id, text=text)
+       # self.face.answer_comments_from(person_id, text=text)
         # TODO use dialog
         self.speak("I am replying to all comments from " + name + " with a smiley")
 
     def handle_add_friends_of_friend_intent(self, message):
         person = message.data["person"]
         id = self.friends[person]
-        self.selenium_face.login()
-        self.selenium_face.add_friends_of(id, self.friend_num)
-        self.selenium_face.close()
+       # self.selenium_face.login()
+       # self.selenium_face.add_friends_of(id, self.friend_num)
+       # self.selenium_face.close()
 
     def handle_like_photos_of_intent(self, message):
         person = message.data["person"]
         id = self.friends[person]
-        self.selenium_face.login()
-        self.selenium_face.like_photos_from(id, self.photo_num)
-        self.selenium_face.close()
+       # self.selenium_face.login()
+       # self.selenium_face.like_photos_from(id, self.photo_num)
+       # self.selenium_face.close()
 
     def stop(self):
         try:
             self.chat.stop()
-        except:
-            pass
-        try:
-            self.selenium_face.close()
         except:
             pass
 
