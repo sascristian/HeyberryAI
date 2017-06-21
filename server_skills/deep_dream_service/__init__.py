@@ -53,10 +53,6 @@ class DreamService(MycroftSkill):
         except:
             self.path = "../caffe"
 
-        self.model = "bvlc_googlenet"
-        self.path += '/models/' + self.model
-
-
         self.iter = 25#20#self.config["iter"] #dreaming iterations
         self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
                         "inception_5b/pool", "inception_5b/5x5",
