@@ -23,7 +23,7 @@ sys.path.insert(0, path + '/python')
 print path
 
 from batcountry import BatCountry
-time.sleep(50)
+
 
 __author__ = 'jarbas'
 
