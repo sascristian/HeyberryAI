@@ -195,6 +195,7 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_chat_message", self.handle_chat_message)
         self.emitter.on("fb_post_request", self.handle_post_request)
         self.build_intents()
+        self.login()
 
     # browser service methods
     def login(self):
@@ -416,8 +417,7 @@ class FacebookSkill(MycroftSkill):
             self.speak("i have no friends")
 
     def handle_friend_number_intent(self, message):
-        if self.login():
-            self.add_suggested_friends(1)
+        self.add_suggested_friends(1)
         #self.like_photos_from("100014741746063")
         #self.post_to_wall("hello world")
        # self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
