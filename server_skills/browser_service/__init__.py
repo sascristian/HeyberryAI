@@ -259,6 +259,7 @@ class BrowserService(MycroftSkill):
         received = False
         fails = 0
         response = " "
+        from time import sleep
         while response == " ":
             while not received and fails < 5:
                 # returns false when element wasnt found
