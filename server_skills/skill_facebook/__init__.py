@@ -189,8 +189,6 @@ class FacebookSkill(MycroftSkill):
         self.chat = FaceChat(self.mail, self.passwd, self.emitter, debug=False, active=self.active)
         self.face_id = self.chat.uid
         self.browser = BrowserControl(self.emitter)
-        self.login()
-        self.post_to_wall("hello world")
         # populate friend ids
         self.get_ids_from_chat() # TODO make an intent for this?
         # listen for chat messages
@@ -398,7 +396,9 @@ class FacebookSkill(MycroftSkill):
             self.speak("i have no friends")
 
     def handle_friend_number_intent(self, message):
-        self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
+        self.login()
+        self.post_to_wall("hello world")
+       # self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
 
     def handle_post_friend_number_intent(self, message):
         self.speak_dialog("post_friend_number")
