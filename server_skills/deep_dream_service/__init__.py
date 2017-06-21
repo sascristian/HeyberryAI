@@ -159,10 +159,14 @@ class DreamService(MycroftSkill):
         layer = random.choice(self.layers)
         # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
         # TODO any model
+        self.log.info(layer)
         self.model = "bvlc_googlenet"
         self.path += '/models/' + self.model
-        bc = BatCountry(self.path)  # path,model_path=path)
-
+        self.log.info(self.path)
+        try:
+            bc = BatCountry(self.path)  # path,model_path=path)
+        except Exception as e:
+            self.log.error(e)
         req = urllib.urlopen(imagepah)
         arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
         img = cv2.imdecode(arr, -1)  # 'load it as it is'
