@@ -20,7 +20,6 @@ except:
     path = "../caffe"
 
 sys.path.insert(0, path + '/python')
-print path
 
 from batcountry import BatCountry
 
@@ -50,7 +49,7 @@ class DreamService(MycroftSkill):
         self.client = ImgurClient(client_id, client_secret)
 
         try:
-            self.path = self.config_core.get("caffe_path")
+            self.path = self.config_core["caffe_path"]
         except:
             self.path = "../caffe"
 
