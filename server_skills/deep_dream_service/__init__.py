@@ -13,7 +13,7 @@ from mycroft.messagebus.message import Message
 from mycroft.configuration import ConfigurationManager
 from imgurpython import ImgurClient
 
-time.sleep(200)
+
 try:
     path = ConfigurationManager.get("caffe_path")
 except:
@@ -21,7 +21,9 @@ except:
 
 sys.path.insert(0, path + '/python')
 print path
+
 from batcountry import BatCountry
+time.sleep(50)
 
 __author__ = 'jarbas'
 
@@ -122,6 +124,7 @@ class DreamService(MycroftSkill):
 
     def handle_dream(self, message):
         # TODO dreaming queue
+        self.log.info("Dream request received")
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
