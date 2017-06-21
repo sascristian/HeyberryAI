@@ -85,10 +85,9 @@ class FaceChat(fbchat.Client):
         self.queue_thread.start()
 
     def stop(self):
-        if self.listening:
-            self.stop_listening()
         self.monitor_thread.exit()
         self.queue_thread.exit()
+        self.stop_listening()
 
     def get_last_messages(self, id):
         last_messages = self.getThreadInfo(id, 0)
