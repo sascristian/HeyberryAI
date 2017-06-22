@@ -4,6 +4,14 @@
 
 a fork of mycroft-core , the following things were changed
 
+
+# Want to help me work on mycroft full time?
+
+Support me on [Patreon](https://www.patreon.com/jarbasAI)
+
+Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to 15B4ZQFY5UfopjRtSRQPx7ibRaFukE1Ntq
+
+
 # Converse method
 
 This allows any skill to handle an utterance before intent parsing, sets an internal id for each skill
@@ -210,6 +218,28 @@ these are old experiments half-working, should not be used until a refactor is d
 
 - [Facebook Chat Client](https://github.com/JarbasAI/mycroft---facebookchat---client) <- WIP
 - [Graphic User Interface](https://github.com/JarbasAI/jarbas---pygtk---GUI) <- WIPO
+
+
+# what is broken
+
+- lilacs question parser, spotlight server is down
+- lilacs will partially work, as in not fuck things and still output something, but not work as expected
+- cleverbot skill
+- facebook skill buggy and under refactor
+- dreaming is hard to setup and under refactor
+- control center incomplete but working
+
+# what is coming
+
+- server / client architecture - check patch-13 and patch-14
+- browser service
+- help skill
+- face_recognition
+- image_recognition
+- user_id skill
+- snowboy wakeword
+
+
 
 # Developing skills for Jarbas
 
