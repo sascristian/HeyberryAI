@@ -42,6 +42,7 @@ _last_stop_signal = 0
 
 config = ConfigurationManager.get()
 
+disable_speak_flag = False
 
 def handle_record_begin():
     logger.info("Begin Recording...")
@@ -68,6 +69,13 @@ def handle_utterance(event):
     event["source"] = "speech"
     ws.emit(Message('recognizer_loop:utterance', event))
 
+def set_speak_flag(event):
+    global disable_speak_flag
+    disable_speak_flag = True
+
+def unset_speak_flag(event):
+    global disable_speak_flag
+    disable_speak_flag = False
 
 def mute_and_speak(utterance):
     global tts_hash
@@ -81,17 +89,19 @@ def mute_and_speak(utterance):
         tts_hash = hash(str(config.get('tts', '')))
 
     ws.emit(Message("recognizer_loop:audio_output_start"))
-    already_muted = loop.is_muted()
-    try:
-        logger.info("Speak: " + utterance)
-        if not already_muted:
-            loop.mute()  # only mute if necessary
-        tts.execute(utterance)
-    finally:
-        if not already_muted:
-            loop.unmute()  # restore
-        lock.release()
-        ws.emit(Message("recognizer_loop:audio_output_end"))
+    logger.info("Speak: " + utterance)
+    global disable_speak_flag
+    if not disable_speak_flag:
+        already_muted = loop.is_muted()
+        try:
+            if not already_muted:
+                loop.mute()  # only mute if necessary
+            tts.execute(utterance)
+        finally:
+            if not already_muted:
+                loop.unmute()  # restore
+            lock.release()
+            ws.emit(Message("recognizer_loop:audio_output_end"))
 
 
 def handle_multi_utterance_intent_failure(event):
@@ -210,6 +220,8 @@ def main():
     ws.on('mycroft.mic.unmute', handle_mic_unmute)
     ws.on('mycroft.stop', handle_stop)
     ws.on("mycroft.paired", handle_paired)
+    ws.on('do_not_speak_flag_enable', set_speak_flag)
+    ws.on('do_not_speak_flag_disable', unset_speak_flag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()

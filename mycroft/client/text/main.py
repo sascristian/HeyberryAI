@@ -63,14 +63,7 @@ default_log_filters = ["enclosure.mouth.viseme"]
 log_filters = list(default_log_filters)
 log_files = []
 
-# Values used to display the audio meter
-show_meter = True
-meter_peak = 20
-meter_cur = -1
-meter_thresh = -1
-
-screen_mode = 0   # 0 = main, 1 = help, others in future?
-last_redraw = 0   # time when last full-redraw happened
+disable_speak_flag = False
 
 ##############################################################################
 # Helper functions
@@ -85,6 +78,14 @@ def stripNonAscii(text):
     """ Remove junk characters that might be in the file """
     return ''.join([i if ord(i) < 128 else ' ' for i in text])
 
+def set_speak_flag(event):
+    global disable_speak_flag
+    disable_speak_flag = True
+
+
+def unset_speak_flag(event):
+    global disable_speak_flag
+    disable_speak_flag = False
 
 ##############################################################################
 # Settings
@@ -275,6 +276,7 @@ def start_tts(utterance):
 def handle_speak(event):
     global chat
     global tts_threads
+    global disable_speak_flag
     target = event.data.get("target")
     mute = event.data.get("mute")
     if target != "all" and target != "cli":
@@ -285,7 +287,7 @@ def handle_speak(event):
     else:
         chat.append(">> " + utterance)
     draw_screen()
-    if not bQuiet and not mute:
+    if not bQuiet and not mute and not disable_speak_flag:
         t = Thread(start_tts, utterance)
         t.start()
         tts_threads.append(t)
@@ -671,6 +673,8 @@ def main(stdscr):
 
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
+    ws.on('do_not_speak_flag_enable', set_speak_flag)
+    ws.on('do_not_speak_flag_disable', unset_speak_flag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()

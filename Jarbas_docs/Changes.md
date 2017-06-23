@@ -25,3 +25,9 @@
             - on register intent add a handler to auto-set target and mute
             - on intent_service make the target the source of speech, check if utterance source requested mute
             - speech and cli clients check if they are the target if utterance and mute flag
+
+- [PR#556](https://github.com/MycroftAI/mycroft-core/pull/556)
+
+            - adds disable_speak_flag to speech and cli
+            - this flag is a global mute switch, if set no tts is ever made
+            - skill to mute/unmute not yet merged
