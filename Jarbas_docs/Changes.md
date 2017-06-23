@@ -14,3 +14,14 @@
             - intent parser helper class, get intent from utterance, source skill from intent
             - skills main now listens for external messages for skill_manifest, skill_shutdown and skill_reload
             - enable and disable intent can be requested from outside
+
+- [PR#790](https://github.com/MycroftAI/mycroft-core/pull/790)
+
+            - adds "source" field to all utterances
+            - adds "metadata" field to speak method
+            - adds "more" field to speak method (know more speech is coming)
+            - adds "target" field to speak method
+            - adds "mute" field to speak method (do not tts flag)
+            - on register intent add a handler to auto-set target and mute
+            - on intent_service make the target the source of speech, check if utterance source requested mute
+            - speech and cli clients check if they are the target if utterance and mute flag

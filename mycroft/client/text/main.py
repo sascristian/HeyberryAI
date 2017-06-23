@@ -275,13 +275,17 @@ def start_tts(utterance):
 def handle_speak(event):
     global chat
     global tts_threads
+    target = event.data.get("target")
+    mute = event.data.get("mute")
+    if target != "all" and target != "cli":
+        return
     utterance = event.data.get('utterance')
     if bSimple:
         print(">> " + utterance)
     else:
         chat.append(">> " + utterance)
     draw_screen()
-    if not bQuiet:
+    if not bQuiet and not mute:
         t = Thread(start_tts, utterance)
         t.start()
         tts_threads.append(t)
@@ -718,7 +722,7 @@ def main(stdscr):
                     chat.append(line)
                     ws.emit(Message("recognizer_loop:utterance",
                                     {'utterances': [line.strip()],
-                                     'lang': 'en-us'}))
+                                     'lang': 'en-us', 'source': 'cli'}))
                 hist_idx = -1
                 line = ""
             elif c == curses.KEY_UP:
@@ -803,7 +807,7 @@ def simple_cli():
             line = sys.stdin.readline()
             ws.emit(
                 Message("recognizer_loop:utterance",
-                        {'utterances': [line.strip()]}))
+                        {'utterances': [line.strip()], "source": "cli"}))
     except KeyboardInterrupt, e:
         # User hit Ctrl+C to quit
         print("")
