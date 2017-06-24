@@ -262,7 +262,7 @@ def main():
                                 elif deserialized_message.type == "recognizer_loop:utterance":
                                     utterance = data["utterances"][0]
                                     # get answer
-                                    user_id = data["source"] + ":" + sock_num
+                                    user_id = data.get("source", str(ip)) + ":" + sock_num
                                     get_answer(utterance, user_id)
                                 elif deserialized_message.type == "incoming_file":
                                     logger.info("started receiving file for " + str(sock_num))
@@ -273,7 +273,7 @@ def main():
                                         user = users[sock_num]
                                     else:
                                         user = sock_num
-                                    user_id = data["source"] + ":" + sock_num
+                                    user_id = data.get("source", str(ip)) + ":" + sock_num
                                     deserialized_message.data["source"] = user_id
                                     deserialized_message.data["user"] = user
                                     deserialized_message.data["file"] = "../tmp_file.jpg"
@@ -283,7 +283,7 @@ def main():
                                         user = users[sock_num]
                                     else:
                                         user = sock_num
-                                    user_id = data["source"] + ":" + sock_num
+                                    user_id = data.get("source", str(ip)) + ":" + sock_num
                                     deserialized_message.data["source"] = user_id
                                     deserialized_message.data["user"] = user
                                     deserialized_message.data["feed_path"] = "../tmp_file.jpg"
@@ -293,7 +293,7 @@ def main():
                                         user = users[sock_num]
                                     else:
                                         user = sock_num
-                                    user_id = data["source"] + ":" + sock_num
+                                    user_id = data.get("source", str(ip)) + ":" + sock_num
                                     deserialized_message.data["source"] = user_id
                                     deserialized_message.data["user"] = user
                                     deserialized_message.data["file"] = "../tmp_file.jpg"
