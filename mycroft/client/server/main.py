@@ -253,6 +253,8 @@ def main():
                             deserialized_message = Message.deserialize(utterance)
                             if deserialized_message.type in allowed_bus_messages:
                                 data = deserialized_message.data
+                                if "source" not in data.keys():
+                                    data["source"] = "unknown"
                                 if deserialized_message.type == "names_response":
                                     for name in data["names"]:
                                         logger.debug("Setting alias: " + name + " for socket: " + sock_num)
@@ -313,7 +315,8 @@ def main():
                                 logger.info("file chunk received for " + str(sock_num))
                                 file_socks[sock_num].write(utterance)
 
-                except:
+                except Exception as e:
+                    logger.error(e)
                     offline_client(sock)
                     continue
     server_socket.close()
