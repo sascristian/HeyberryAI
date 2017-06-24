@@ -217,25 +217,28 @@ def main():
             # New connection
             if sock == server_socket:
                 # Handle the case in which there is a new connection received through server_socket
-                sockfd, addr = server_socket.accept()
-                # wrap in ssl
-                sockfd = ssl.wrap_socket(sockfd,
-                                         server_side=True,
-                                         certfile=cert,
-                                         keyfile=key,
-                                         ssl_version=ssl.PROTOCOL_TLSv1)
-                CONNECTION_LIST.append(sockfd)
-                logger.debug( "Client (%s, %s) connected" % addr )
-                ip, sock_num = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
-                # see if blacklisted
-                if ip not in blacklisted_ips:
-                    # tell other clients this is available
-                    #broadcast_data(sockfd, "[%s:%s] is available\n" % addr, addr)
-                    # tell client it's id
-                    answer_id(sockfd)
-                else:
-                #  if blacklisted kick
-                    offline_client(sockfd)
+                try:
+                    sockfd, addr = server_socket.accept()
+                    # wrap in ssl
+                    sockfd = ssl.wrap_socket(sockfd,
+                                             server_side=True,
+                                             certfile=cert,
+                                             keyfile=key,
+                                             ssl_version=ssl.PROTOCOL_TLSv1)
+                    CONNECTION_LIST.append(sockfd)
+                    logger.debug( "Client (%s, %s) connected" % addr )
+                    ip, sock_num = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
+                    # see if blacklisted
+                    if ip not in blacklisted_ips:
+                        # tell other clients this is available
+                        #broadcast_data(sockfd, "[%s:%s] is available\n" % addr, addr)
+                        # tell client it's id
+                        answer_id(sockfd)
+                    else:
+                    #  if blacklisted kick
+                        offline_client(sockfd)
+                except Exception as e:
+                    logger.error(e)
             # Some incoming message from a client
             else:
                 # Data received from client, process it
