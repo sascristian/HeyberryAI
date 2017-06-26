@@ -385,7 +385,8 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
         # select layer
         layer = o['layer']
 
-        for i in xrange(o['iter_n']):
+        #for i in xrange(o['iter_n']):
+        for i in xrange(140):
             if imw > w:
                 if random_crop:
                     # randomly select a crop
@@ -412,19 +413,22 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
 
             sigma = o['start_sigma'] + ((o['end_sigma'] - o['start_sigma']) * i) / o['iter_n']
             step_size = o['start_step_size'] + ((o['end_step_size'] - o['start_step_size']) * i) / o['iter_n']
-
-            make_step(net, end=layer, clip=clip, focus=focus,
+            if logger is not None:
+                logger.info('making step: ' + str(i))
+            try:
+                make_step(net, end=layer, clip=clip, focus=focus,
                       sigma=sigma, step_size=step_size)
+            except Exception as e:
+                if logger is not None:
+                    logger.error(e)
 
             if i % 10 == 0:
                 if logger is not None:
                     logger.info('finished step %d in octave %d' % (i, e))
 
             # insert modified image back into original image (if necessary)
-            try:
-                image[:, ox:ox + w, oy:oy + h] = src.data[0]
-            except Exception as e:
-                print e
+            image[:, ox:ox + w, oy:oy + h] = src.data[0]
+
 
     if logger is not None:
         logger.info("deprocessing image")
