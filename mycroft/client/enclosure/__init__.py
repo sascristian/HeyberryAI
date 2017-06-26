@@ -19,6 +19,7 @@
 import subprocess
 import time
 from Queue import Queue
+from alsaaudio import Mixer
 from threading import Thread, Timer
 
 import serial
@@ -31,8 +32,11 @@ from mycroft.client.enclosure.weather import EnclosureWeather
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
-from mycroft.util import play_wav, create_signal, connected
+from mycroft.util import play_wav, create_signal, connected, \
+    wait_while_speaking
+from mycroft.util.audio_test import record
 from mycroft.util.log import getLogger
+from mycroft.api import is_paired, has_been_paired
 
 __author__ = 'aatchison', 'jdorleans', 'iward'
 
@@ -73,7 +77,11 @@ class EnclosureReader(Thread):
                 LOG.error("Reading error: {0}".format(e))
 
     def process(self, data):
-        self.ws.emit(Message(data))
+        # TODO: Look into removing this emit altogether.
+        # We need to check if any other serial bus messages
+        # are handled by other parts of the code
+        if "mycroft.stop" not in data:
+            self.ws.emit(Message(data))
 
         if "Command: system.version" in data:
             # This happens in response to the "system.version" message
@@ -81,8 +89,9 @@ class EnclosureReader(Thread):
             self.ws.emit(Message("enclosure.started"))
 
         if "mycroft.stop" in data:
-            create_signal('buttonPress')
-            self.ws.emit(Message("mycroft.stop"))
+            if has_been_paired():
+                create_signal('buttonPress')
+                self.ws.emit(Message("mycroft.stop"))
 
         if "volume.up" in data:
             self.ws.emit(
@@ -100,6 +109,20 @@ class EnclosureReader(Thread):
         if "system.test.end" in data:
             self.ws.emit(Message('recognizer_loop:wake_up'))
 
+        if "mic.test" in data:
+            mixer = Mixer()
+            prev_vol = mixer.getvolume()[0]
+            mixer.setvolume(35)
+            self.ws.emit(Message("speak", {
+                'utterance': "I am testing one two three"}))
+
+            time.sleep(0.5)  # Prevents recording the loud button press
+            record("/tmp/test.wav", 3.0)
+            mixer.setvolume(prev_vol)
+            play_wav("/tmp/test.wav").communicate()
+
+            # Test audio muting on arduino
+            subprocess.call('speaker-test -P 10 -l 0 -s 1', shell=True)
 
         if "unit.shutdown" in data:
             self.ws.emit(
@@ -109,8 +132,7 @@ class EnclosureReader(Thread):
             subprocess.call('systemctl poweroff -i', shell=True)
 
         if "unit.reboot" in data:
-            self.ws.emit(
-                Message("enclosure.eyes.spin"))
+            self.ws.emit(Message("enclosure.eyes.spin"))
             self.ws.emit(Message("enclosure.mouth.reset"))
             subprocess.call('systemctl reboot -i', shell=True)
 
@@ -118,8 +140,7 @@ class EnclosureReader(Thread):
             self.ws.emit(Message("mycroft.wifi.start"))
 
         if "unit.factory-reset" in data:
-            self.ws.emit(
-                Message("enclosure.eyes.spin"))
+            self.ws.emit(Message("enclosure.eyes.spin"))
             subprocess.call(
                 'rm ~/.mycroft/identity/identity2.json',
                 shell=True)
@@ -127,7 +148,9 @@ class EnclosureReader(Thread):
             self.ws.emit(Message("mycroft.disable.ssh"))
             self.ws.emit(Message("speak", {
                 'utterance': mycroft.dialog.get("reset to factory defaults")}))
-            time.sleep(5)
+            wait_while_speaking()
+            self.ws.emit(Message("enclosure.mouth.reset"))
+            self.ws.emit(Message("enclosure.eyes.spin"))
             self.ws.emit(Message("enclosure.mouth.reset"))
             subprocess.call('systemctl reboot -i', shell=True)
 
@@ -208,7 +231,7 @@ class Enclosure(object):
     def __init__(self):
         self.ws = WebsocketClient()
         ConfigurationManager.init(self.ws)
-        self.config = ConfigurationManager.get().get("enclosure")
+        self.config = ConfigurationManager.instance().get("enclosure")
         self.__init_serial()
         self.reader = EnclosureReader(self.serial, self.ws)
         self.writer = EnclosureWriter(self.serial, self.ws)
@@ -245,7 +268,7 @@ class Enclosure(object):
             # clients are up and connected to the messagebus in order to
             # receive the "speak".  This was sometimes happening too
             # quickly and the user wasn't notified what to do.
-            Timer(5, self.on_no_internet).start()
+            Timer(5, self._do_net_check).start()
 
     def on_no_internet(self, event=None):
         if connected():
@@ -259,12 +282,16 @@ class Enclosure(object):
         Enclosure._last_internet_notification = time.time()
 
         # TODO: This should go into EnclosureMark1 subclass of Enclosure.
-        # Handle the translation within that code.
-        self.ws.emit(Message("speak", {
-            'utterance': "This device is not connected to the Internet. "
-                         "Either plug in a network cable or hold the button "
-                         "on top for two seconds, then select wifi from the "
-                         "menu"}))
+        if has_been_paired():
+            # Handle the translation within that code.
+            self.ws.emit(Message("speak", {
+                'utterance': "This device is not connected to the Internet. "
+                             "Either plug in a network cable or hold the "
+                             "button on top for two seconds, then select "
+                             "wifi from the menu"}))
+        else:
+            # enter wifi-setup mode automatically
+            self.ws.emit(Message("mycroft.wifi.start"))
 
     def __init_serial(self):
         try:
@@ -326,3 +353,34 @@ class Enclosure(object):
             self.reader.stop()
             self.serial.close()
             self.ws.close()
+
+    def _do_net_check(self):
+        # TODO: This should live in the derived Enclosure, e.g. Enclosure_Mark1
+        LOG.info("Checking internet connection")
+        if not connected():  # and self.conn_monitor is None:
+            if has_been_paired():
+                # TODO: Enclosure/localization
+                self.ws.emit(Message("speak", {
+                    'utterance': "This unit is not connected to the Internet."
+                                 " Either plug in a network cable or hold the "
+                                 "button on top for two seconds, then select "
+                                 "wifi from the menu"
+                    }))
+            else:
+                # Begin the unit startup process, this is the first time it
+                # is being run with factory defaults.
+
+                # TODO: This logic should be in Enclosure_Mark1
+                # TODO: Enclosure/localization
+
+                # Don't listen to mic during this out-of-box experience
+                self.ws.emit(Message("mycroft.mic.mute", None))
+
+                # Kick off wifi-setup automatically
+                self.ws.emit(Message("mycroft.wifi.start",
+                                     {'msg': "Hello I am Mycroft, your new "
+                                      "assistant.  To assist you I need to be "
+                                      "connected to the internet.  You can "
+                                      "either plug me in with a network cable,"
+                                      " or use wifi.  To setup wifi ",
+                                      'allow_timeout': False}))
