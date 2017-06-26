@@ -327,7 +327,9 @@ class MycroftSkill(object):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
-    def speak(self, utterance, expect_response=False, mute=None, more=False, target=None, metadata={}):
+    def speak(self, utterance, expect_response=False, mute=None, more=False, target=None, metadata=None):
+        if metadata is None:
+            metadata = {}
         metadata["source_skill"] = self.name
         if mute is None:
             mute = self.muted
@@ -341,7 +343,9 @@ class MycroftSkill(object):
                 "metadata": metadata}
         self.emitter.emit(Message("speak", data))
 
-    def speak_dialog(self, key, data={}, expect_response=False, mute=None, more=False, target=None, metadata={}):
+    def speak_dialog(self, key, data={}, expect_response=False, mute=None, more=False, target=None, metadata=None):
+        if metadata is None:
+            metadata = {}
         metadata["source_skill"] = self.name
         if mute is None:
             mute = self.muted

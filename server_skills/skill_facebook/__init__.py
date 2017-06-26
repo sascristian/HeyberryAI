@@ -187,6 +187,9 @@ class FaceChat(fbchat.Client):
         if "fbchat" in target and self.active:
             if "url" in metadata.keys():
                 utterance += "\n url: " + metadata["url"]
+            elif "link" in metadata.keys():
+                utterance += "\n url: " + metadata["link"]
+
             user = target.replace("fbchat_", "")
             if user.isdigit():
                 self.sendMessage(utterance, thread_id=user, thread_type=ThreadType.USER)

@@ -128,7 +128,7 @@ class DreamService(MycroftSkill):
         if user_id is not None:
             if user_id == "unknown":
                 user_id = "all"
-            self.target = user_id
+
         else:
             self.log.warning("no user/target specified")
             user_id = "all"
@@ -145,6 +145,7 @@ class DreamService(MycroftSkill):
         if result is not None:
             data = self.client.upload_from_path(result)
             link = data["link"]
+            self.target = user_id
             self.speak("Here is what i dreamed", metadata={"url": link})
             self.emitter.emit(Message("message_request", {"user_id":user_id, "data":{"dream_url":link}, "type":"deep_dream_result"}))
 
