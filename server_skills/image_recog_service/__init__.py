@@ -325,7 +325,7 @@ class ImageRecognitionSkill(MycroftSkill):
         self.emitter.emit(Message(msg_type,
                                   msg_data))
         self.target = user_id
-        self.speak_dialog("deepdraw", {"class_name": self.label_mapping[imagenet_class]},
+        self.speak_dialog("deepdraw", data={"class_name": self.label_mapping[imagenet_class]},
                           metadata={"url": link, "class_label": imagenet_class,
                                     "class_name": self.label_mapping[imagenet_class]})
 
