@@ -37,7 +37,7 @@ from mycroft.skills.settings import SkillSettings
 __author__ = 'seanfitz'
 
 
-SKILLS_DIR = join(dirname(dirname(dirname(__file__))) ,"jarbas_skills")
+SKILLS_DIR = join(dirname(dirname(dirname(__file__))) ,"server_skills")
 
 skills_config = ConfigurationManager.instance().get("skills")
 BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
