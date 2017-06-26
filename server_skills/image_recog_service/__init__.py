@@ -141,6 +141,7 @@ class ImageRecognitionSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("image_classification_request", self.handle_classify)
         self.emitter.on("image_visualization_request", self.handle_visualize_layer)
+        self.emitter.on("image_visualization_result", self.handle_deep_draw_result)
 
         image_recog_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
             .require("imgstatus").build()
@@ -312,7 +313,7 @@ class ImageRecognitionSkill(MycroftSkill):
         link = data["link"]
         # send result
         msg_type = "class_visualization_result"
-        msg_data = {"url": link, "class_label": imagenet_class, "class_name": self.label_mapping[imagenet_class]}
+        msg_data = {"url": link, "class_label": imagenet_class, "class_name": self.label_mapping[imagenet_class, "target":user_id]}
         # to source socket
         try:
             if user_id.split(":")[1].isdigit():
@@ -326,10 +327,17 @@ class ImageRecognitionSkill(MycroftSkill):
         self.emitter.emit(Message(msg_type,
                                   msg_data))
         self.target = user_id
-        self.speak_dialog("deepdraw", data={"class_name": self.label_mapping[imagenet_class]},
-                          metadata={"url": link, "class_label": imagenet_class,
-                                    "class_name": self.label_mapping[imagenet_class]})
 
+    def handle_deep_draw_result(self, message):
+        link = message.data.get("link")
+        class_label = message.data.get("class_label")
+        class_name = message.data.get("class_name")
+        self.target = message.data.get("target", "all")
+        self.speak_dialog("deepdraw", data={"class_name": class_name},
+                          metadata={"url": link, "class_label": class_label,
+                                    "class_name": class_name})
+        self.speak("deepdraw", metadata={"url": link, "class_label": class_label,
+                                    "class_name": class_name})
     def stop(self):
         pass
 
