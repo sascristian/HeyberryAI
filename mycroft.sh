@@ -128,7 +128,6 @@ case "$1" in
 "start")
   $0 stop
   start-mycroft service
-  start-mycroft audio
   start-mycroft skills
 
   case "$2" in
@@ -166,7 +165,6 @@ case "$1" in
   stop-mycroft cli
   stop-mycroft client
   stop-mycroft server
-  stop-mycroft audio
   ;;
 
 *)
