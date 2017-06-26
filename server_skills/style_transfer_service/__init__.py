@@ -43,11 +43,11 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 try:
-    path = ConfigurationManager.get("caffe_path")
+    caffe_path = ConfigurationManager.get("caffe_path")
 except:
-    path = "../caffe"
+    caffe_path = "../caffe"
 
-sys.path.insert(0, path + '/python')
+sys.path.insert(0, caffe_path + '/python')
 
 import caffe
 # caffe.set_mode_gpu() # uncomment this if gpu processing is available
@@ -95,15 +95,6 @@ class StyleTransferSkill(MycroftSkill):
         self.reload_skill = False
         from caffe.io import load_image
         self.load_image = load_image
-        try:
-            self.path = self.config["caffe_path"]
-        except:
-            self.path = "../caffe"
-        # load model
-        try:
-            self.model = self.config["caffe_model"]
-        except:
-            self.model = "bvlc_googlenet"
 
         try:
             client_id = self.config_core.get("APIS")["ImgurKey"]
@@ -154,13 +145,12 @@ class StyleTransferSkill(MycroftSkill):
         self.log.info("images loaded")
         # prepare style transfer
         # TODO make model configurable
-        model_name = self.model
-        path = self.path + '/models/' + self.model
-
-        model_file = path + '/deploy.prototxt'
-        pretrained_file = path + '/' + self.model + '.caffemodel'
-        mean_file = self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy'
-        weights = GOOGLENET_WEIGHTS
+        model_name = "vgg16"
+        path = dirname(__file__) + '/models/' + model_name
+        model_file = path + '/VGG_ILSVRC_16_layers_deploy.prototxt'
+        pretrained_file = path + '/VGG_ILSVRC_16_layers.caffemodel'
+        mean_file = caffe_path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy'
+        weights = VGG16_WEIGHTS
         self.log.info("preparing net for style transfer")
         st = StyleTransfer(img_style, img_content, model_name, model_file, pretrained_file, mean_file, weights)
 
