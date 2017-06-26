@@ -13,7 +13,7 @@ __author__ = 'jarbas'
 
 
 class ImageRecognitionService():
-    def __init__(self, emitter, timeout=30, logger=None, server=False):
+    def __init__(self, emitter, timeout=120, logger=None, server=False):
         self.emitter = emitter
         self.waiting = False
         self.server = server
@@ -49,7 +49,10 @@ class ImageRecognitionService():
         message_type = "image_visualization_request"
         message_data = {"class": label_num, "source": requester, "user": "unknown"}
         self.emitter.emit(Message(message_type, message_data))
+        t = self.timeout
+        self.timeout = 1000 #shit takes long
         self.wait()
+        self.timeout = t
         result = self.image_visualization_result["url"]
         return result
 
@@ -61,7 +64,10 @@ class ImageRecognitionService():
                                   {"server_msg_type": "result", "requester": requester, "message_type": message_type,
                                    "message_data": message_data}))
 
+        t = self.timeout
+        self.timeout = 1000  # shit takes long
         self.wait()
+        self.timeout = t
         result = self.image_visualization_result["url"]
         return result
 
@@ -276,7 +282,7 @@ class ImageRecognitionSkill(MycroftSkill):
 
         # generate class visualization via octavewise gradient ascent
         gen_image = deepdraw(self.net, gen_image, self.octaves, focus=imagenet_class,
-                             random_crop=True, visualize=False)
+                             random_crop=True, visualize=False, logger=self.log)
 
         # save image
         path = dirname(__file__)+"/deepdraw/"+ str(imagenet_class)+'.png'
@@ -354,7 +360,7 @@ def make_step(net, step_size=1.5, end='inception_4c/output', clip=True, focus=No
 
 
 def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=None,
-             clip=True, **step_params):
+             clip=True, logger=None, **step_params):
     # prepare base image
     image = preprocess(net, base_img)  # (3,224,224)
 
@@ -362,7 +368,8 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
     w = net.blobs['data'].width
     h = net.blobs['data'].height
 
-    print "starting drawing"
+    if logger is not None:
+        logger.info("starting drawing")
     src = net.blobs['data']
     src.reshape(1, 3, h, w)  # resize the network's input image size
     for e, o in enumerate(octaves):
@@ -406,12 +413,14 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
                       sigma=sigma, step_size=step_size)
 
             if i % 10 == 0:
-                print 'finished step %d in octave %d' % (i, e)
+                if logger is not None:
+                    logger.info('finished step %d in octave %d' % (i, e))
 
             # insert modified image back into original image (if necessary)
             image[:, ox:ox + w, oy:oy + h] = src.data[0]
 
-        print "octave %d image:" % e
+        if logger is not None:
+            logger.info("octave %d image:" % e)
 
 
     # returning the resulting image
