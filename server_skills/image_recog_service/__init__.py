@@ -50,7 +50,7 @@ class ImageRecognitionService():
         message_data = {"class": label_num, "source": requester, "user": "unknown"}
         self.emitter.emit(Message(message_type, message_data))
         t = self.timeout
-        self.timeout = 1000 #shit takes long
+        self.timeout = 120 #shit takes long
         self.wait()
         self.timeout = t
         result = self.image_visualization_result["url"]
@@ -65,7 +65,7 @@ class ImageRecognitionService():
                                    "message_data": message_data}))
 
         t = self.timeout
-        self.timeout = 1000  # shit takes long
+        self.timeout = 120  # shit takes long
         self.wait()
         self.timeout = t
         result = self.image_visualization_result["url"]
