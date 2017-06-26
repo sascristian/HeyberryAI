@@ -35,7 +35,7 @@ class ImageRecognitionService():
         else:
             self.logger = getLogger("ImageRecognitionService")
         self.emitter.on("image_classification_result", self.end_wait)
-        self.emitter.on("image_visualization_result", self.end_wait)
+        self.emitter.on("class_visualization_result", self.end_wait)
 
     def end_wait(self, message):
         if message.type == "image_classification_result":
@@ -56,7 +56,7 @@ class ImageRecognitionService():
 
     def local_visualize(self, label_num, user_id="unknown"):
         requester = user_id
-        message_type = "image_visualization_request"
+        message_type = "class_visualization_request"
         message_data = {"class": label_num, "source": requester, "user": "unknown"}
         self.emitter.emit(Message(message_type, message_data))
         t = self.timeout
@@ -68,7 +68,7 @@ class ImageRecognitionService():
 
     def server_visualize(self, label_num, user_id="unknown"):
         requester = user_id
-        message_type = "image_visualization_request"
+        message_type = "class_visualization_request"
         message_data = {"class": label_num, "source": requester, "user": "unknown"}
         self.emitter.emit(Message("server_request",
                                   {"server_msg_type": "result", "requester": requester, "message_type": message_type,
@@ -140,8 +140,8 @@ class ImageRecognitionSkill(MycroftSkill):
 
     def initialize(self):
         self.emitter.on("image_classification_request", self.handle_classify)
-        self.emitter.on("image_visualization_request", self.handle_visualize_layer)
-        self.emitter.on("image_visualization_result", self.handle_deep_draw_result)
+        self.emitter.on("class_visualization_request", self.handle_visualize_layer)
+        self.emitter.on("class_visualization_result", self.handle_deep_draw_result)
 
         image_recog_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
             .require("imgstatus").build()
@@ -282,8 +282,14 @@ class ImageRecognitionSkill(MycroftSkill):
 
         if imagenet_class < 0 or imagenet_class > 1000:
             imagenet_class = random.randint(0, 1000)
-
-        self.speak_dialog("waitdeepdraw",{"class_name": self.label_mapping[imagenet_class]})
+        # cleave first word nxxxxx
+        result = self.label_mapping[imagenet_class]
+        result = result.split(" ")[1:]
+        r = ""
+        for word in result:
+            r += word + " "
+        name = r[:-1].split(",")[0]
+        self.speak_dialog("waitdeepdraw",{"class_name": name})
         # make net
         net_fn = dirname(__file__) + '/deploy_googlenet_updated.prototxt'
         param_fn = self.path + '/models/' + self.model + '/' + self.model + '.caffemodel'
@@ -313,7 +319,7 @@ class ImageRecognitionSkill(MycroftSkill):
         link = data["link"]
         # send result
         msg_type = "class_visualization_result"
-        msg_data = {"url": link, "class_label": imagenet_class, "class_name": self.label_mapping[imagenet_class, "target":user_id]}
+        msg_data = {"url": link, "class_label": imagenet_class, "class_name": name, "target":user_id}
         # to source socket
         try:
             if user_id.split(":")[1].isdigit():
