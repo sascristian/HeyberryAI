@@ -421,7 +421,10 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
                     logger.info('finished step %d in octave %d' % (i, e))
 
             # insert modified image back into original image (if necessary)
-            image[:, ox:ox + w, oy:oy + h] = src.data[0]
+            try:
+                image[:, ox:ox + w, oy:oy + h] = src.data[0]
+            except Exception as e:
+                print e
 
     if logger is not None:
         logger.info("deprocessing image")
