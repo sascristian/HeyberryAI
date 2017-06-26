@@ -6,12 +6,23 @@ it is a skill that keeps a webdriver instance ready to do stuff, helper class ca
 
 if it complains of geckodriver, move it into usr/bin or export it into PATH
 
+# Usage
+
+        import sys
+        from os.path import dirname
+        sys.path.append(dirname(dirname(__file__)))
+
+        from browser_service import BrowserControl
+
+
+
+
 # example, querying cleverbot website
 
             def handle_ask_cleverbot_intent(self, message):
                 ask = message.data.get("Ask")
                 # get a browser control instance, optionally set to auto-start/restart browser
-                browser = BrowserControl(self.emitter)#, autostart=True)
+                browser = BrowserControl(self.emitter)#, autostart=False)
                 # restart webbrowser if it is open (optionally)
                 #started = browser.start_browser()
                 #if not started:

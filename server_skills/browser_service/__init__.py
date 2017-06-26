@@ -27,6 +27,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
 from selenium.common.exceptions import TimeoutException, WebDriverException, RemoteDriverServerException
+import logging
+# disable logs from requests and urllib 3, or there is too much spam from facebook
+logging.getLogger("easyprocess").setLevel(logging.WARNING)
 
 __author__ = 'jarbas'
 
@@ -55,10 +58,30 @@ class BrowserControl():
         self.emitter.on("browser_go_back_result", self.end_wait)
         self.emitter.on("browser_current_url_result", self.end_wait)
         self.emitter.on("browser_url_opened", self.end_wait)
+        self.emitter.on("browser_add_cookies_response", self.end_wait)
+        self.emitter.on("browser_get_cookies_response", self.end_wait)
         if autostart:
             self.start_browser()
 
-    def go_back(self, message):
+    def get_cookies(self):
+        self.waiting_for = "browser_get_cookies_response"
+        self.emitter.emit(Message("browser_get_cookies_request", {}))
+        self.wait()
+        try:
+            return self.result["cookies"]
+        except:
+            return []
+
+    def add_cookies(self, cookies):
+        self.waiting_for = "browser_add_cookies_response"
+        self.emitter.emit(Message("browser_add_cookies_request", {"cookies":cookies}))
+        self.wait()
+        try:
+            return self.result["sucess"]
+        except:
+            return False
+
+    def go_back(self):
         self.waiting_for = "browser_go_back_result"
         self.emitter.emit(Message("browser_go_back_request", {}))
         self.wait()
@@ -198,11 +221,6 @@ class BrowserService(MycroftSkill):
         # start virtual display
         display = Display(visible=0, size=(800, 600))
         display.start()
-        # TODO doesnt seem to be working
-        geckod = dirname(__file__)
-        self.log.info("adding gecko driver to PATH: " + geckod)
-        #os.environ["PATH"] += geckod
-        #os.system("export PATH=$PATH:" + geckod)
         self.driver = None
         self.elements = {}
 
@@ -222,6 +240,8 @@ class BrowserService(MycroftSkill):
         self.emitter.on("browser_reset_elements", self.handle_reset_elements)
         self.emitter.on("browser_click_element", self.handle_click_element)
         self.emitter.on("browser_clear_element", self.handle_clear_element)
+        self.emitter.on("browser_get_cookies_request", self.handle_get_cookies)
+        self.emitter.on("browser_add_cookies_request", self.handle_add_cookies)
         self.build_intents()
 
     def build_intents(self):
@@ -235,7 +255,7 @@ class BrowserService(MycroftSkill):
         # get a browser control instance, optionally set to auto-start/restart browser
         browser = BrowserControl(self.emitter)#, autostart=True)
         # restart webbrowser if it is open (optionally)
-        started = browser.start_browser()
+        #started = browser.start_browser()
         #if not started:
         #    # TODO throw some error
         #    return
@@ -277,6 +297,16 @@ class BrowserService(MycroftSkill):
         # optionally close the browser, but dont or other services may crash or take longer
         #browser.close_browser()
 
+    def handle_get_cookies(self, message):
+        cookies = self.driver.get_cookies()
+        self.emitter.emit(Message("browser_get_cookies_response", {"cookies":cookies}))
+
+    def handle_add_cookies(self, message):
+        cookies = message.data.get("cookies", [])
+        for cookie in cookies:
+            self.driver.add_cookie(cookie)
+        self.emitter.emit(Message("browser_add_cookies_response", {"sucess":True, "cookies":cookies, "cookie_number":len(cookies)}))
+
     def handle_go_back(self, message):
         self.driver.back()
         self.emitter.emit(Message("browser_go_back_result", {"sucess": True, "url": self.driver.current_url}))
@@ -304,7 +334,8 @@ class BrowserService(MycroftSkill):
         try:
             self.elements[name].clear()
             self.emitter.emit(Message("browser_element_cleared", {"sucess": True, "element": name}))
-        except:
+        except Exception as e:
+            self.log.error(e)
             self.emitter.emit(Message("browser_element_cleared", {"sucess": False, "element": name}))
 
     def handle_reset_elements(self, message):
@@ -377,12 +408,13 @@ class BrowserService(MycroftSkill):
                     Message("browser_elements_stored", {"name": name, "type": get_by, "data": data, "sucess": False}))
                 return
             self.emitter.emit(Message("browser_elements_stored", {"name":name, "type":get_by, "data":data, "sucess":True}))
-        except:
+        except Exception as e:
+            self.log.error(e)
             self.emitter.emit(Message("browser_elements_stored", {"name": name, "type": get_by, "data": data, "sucess":False}))
 
     def handle_get_element(self, message):
         get_by = message.data.get("type") #xpath, css, name, id
-        data = message.data.get("data") # name, xpath expression....
+        data = message.data.get("data").encode('ascii', 'ignore').decode('ascii') # name, xpath expression....
         name = message.data.get("element_name")# how to call this element later
         try:
             # todo extra
@@ -408,7 +440,8 @@ class BrowserService(MycroftSkill):
                     Message("browser_element_stored", {"name": name, "type": get_by, "data": data, "sucess": False}))
                 return
             self.emitter.emit(Message("browser_element_stored", {"name":name, "type":get_by, "data":data, "sucess":True}))
-        except:
+        except Exception as e:
+            self.log.error(e)
             self.emitter.emit(Message("browser_element_stored", {"name": name, "type": get_by, "data": data, "sucess":False}))
 
     def handle_get_element_text(self, message):
@@ -422,14 +455,15 @@ class BrowserService(MycroftSkill):
         try:
             self.elements[name].click()
             self.emitter.emit(Message("browser_element_clicked", {"sucess":True, "element": name}))
-        except:
+        except Exception as e:
+            self.log.error(e)
             self.emitter.emit(Message("browser_element_clicked", {"sucess": False, "element": name}))
 
     def handle_close_browser(self, message):
         try:
             self.driver.close()
-        except:
-            pass
+        except Exception as e:
+            self.log.error(e)
         self.emitter.emit(Message("browser_closed", {}))
 
     def handle_restart_browser(self, message):
@@ -440,22 +474,25 @@ class BrowserService(MycroftSkill):
         url = message.data.get("url")
         if "http" not in url:
             url = "http://"+url
-        while True:
+        fails = 0
+        while fails < 5:
             try:
                 self.driver.get(url)
-                self.log.info("url: " + str(self.driver.current_url))
-                self.log.info("title: " + str(self.driver.title))
+                self.log.info(u"url: " + self.driver.current_url)
+                self.log.info(u"title: " + self.driver.title)
                 break
             except Exception as e:
                 self.log.error(e)
             time.sleep(0.5)
+            fails += 1
         self.emitter.emit(Message("browser_url_opened", {"result": self.driver.current_url, "page_title": self.driver.title, "requested_url": url}))
 
     def stop(self):
         try:
             self.driver.quit()
-        except:
-            pass
+            Display.close()
+        except Exception as e:
+            self.log.error(e)
 
 
 def create_skill():
