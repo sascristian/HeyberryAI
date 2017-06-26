@@ -274,7 +274,7 @@ class ImageRecognitionSkill(MycroftSkill):
         if user_id is not None:
             if user_id == "unknown":
                 user_id = "all"
-            self.target = user_id
+
         else:
             self.log.warning("no user/target specified")
             user_id = "all"
@@ -282,7 +282,7 @@ class ImageRecognitionSkill(MycroftSkill):
         if imagenet_class < 0 or imagenet_class > 1000:
             imagenet_class = random.randint(0, 1000)
 
-        self.speak("please wait while i draw a visualization of class " + self.label_mapping[imagenet_class])
+        self.speak("waitdeepdraw",{"class_name": self.label_mapping[imagenet_class]})
         # make net
         net_fn = dirname(__file__) + '/deploy_googlenet_updated.prototxt'
         param_fn = self.path + '/models/' + self.model + '/' + self.model + '.caffemodel'
@@ -324,7 +324,7 @@ class ImageRecognitionSkill(MycroftSkill):
         # to bus
         self.emitter.emit(Message(msg_type,
                                   msg_data))
-
+        self.target = user_id
         self.speak_dialog("deepdraw", {"class_name": self.label_mapping[imagenet_class]},
                           metadata={"url": link, "class_label": imagenet_class,
                                     "class_name": self.label_mapping[imagenet_class]})
@@ -338,7 +338,6 @@ def create_skill():
 
 
 # deep draw https://github.com/auduno/deepdraw
-# a couple of utility functions for converting to and from Caffe's input image layout
 def preprocess(net, img):
     return np.float32(np.rollaxis(img, 2)[::-1]) - net.transformer.mean['data']
 
@@ -363,8 +362,7 @@ def make_step(net, step_size=1.5, end='inception_4c/output', clip=True, focus=No
     try:
         dst = net.blobs[end]
     except Exception as e:
-        print e
-        print "invalid layer"
+        print "invalid layer: " + str(e)
         return
     net.forward(end=end)
 
@@ -388,7 +386,7 @@ def make_step(net, step_size=1.5, end='inception_4c/output', clip=True, focus=No
 
 
 def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=None,
-             clip=True, logger=None, **step_params):
+             clip=True, logger=None, verbose=True, **step_params):
     # prepare base image
     if logger is not None:
         logger.info("pre-processing")
@@ -440,6 +438,9 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
             step_size = o['start_step_size'] + ((o['end_step_size'] - o['start_step_size']) * i) / o['iter_n']
 
             try:
+                if verbose:
+                    if logger is not None:
+                        logger.info("making step " + str(i) + " for octave " + str(e) + " layer " + layer)
                 make_step(net, end=layer, clip=clip, focus=focus,
                       sigma=sigma, step_size=step_size)
             except Exception as e:
