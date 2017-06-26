@@ -50,7 +50,7 @@ class ImageRecognitionService():
         message_data = {"class": label_num, "source": requester, "user": "unknown"}
         self.emitter.emit(Message(message_type, message_data))
         t = self.timeout
-        self.timeout = 120 #shit takes long
+        self.timeout = 250 #shit takes long
         self.wait()
         self.timeout = t
         result = self.image_visualization_result["url"]
@@ -65,7 +65,7 @@ class ImageRecognitionService():
                                    "message_data": message_data}))
 
         t = self.timeout
-        self.timeout = 120  # shit takes long
+        self.timeout = 250  # shit takes long
         self.wait()
         self.timeout = t
         result = self.image_visualization_result["url"]
@@ -206,10 +206,7 @@ class ImageRecognitionSkill(MycroftSkill):
     def handle_deep_draw_intent(self, message):
         imagenet_class = random.randint(0, len(self.label_mapping))
         classifier = ImageRecognitionService(self.emitter)
-        link = classifier.local_visualize(imagenet_class, message.data.get("target"))
-        self.speak_dialog("deepdraw", {"class_name": self.label_mapping[imagenet_class]},
-                          metadata={"url": link, "class_label": imagenet_class,
-                                    "class_name": self.label_mapping[imagenet_class]})
+        classifier.local_visualize(imagenet_class, message.data.get("target"))
 
     def handle_classify(self, message):
         pic = message.data.get("file")
@@ -259,7 +256,7 @@ class ImageRecognitionSkill(MycroftSkill):
     def handle_visualize_layer(self, message):
         user_id = message.data.get("source")
         imagenet_class = message.data.get("class", 13)
-
+        # set target of result
         if user_id is not None:
             if user_id == "unknown":
                 user_id = "all"
@@ -267,7 +264,6 @@ class ImageRecognitionSkill(MycroftSkill):
         else:
             self.log.warning("no user/target specified")
             user_id = "all"
-        # which imagenet class to visualize
 
         if imagenet_class < 0 or imagenet_class > 1000:
             imagenet_class = random.randint(0, 1000)
@@ -307,6 +303,10 @@ class ImageRecognitionSkill(MycroftSkill):
         # to bus
         self.emitter.emit(Message(msg_type,
                                   msg_data))
+
+        self.speak_dialog("deepdraw", {"class_name": self.label_mapping[imagenet_class]},
+                          metadata={"url": link, "class_label": imagenet_class,
+                                    "class_name": self.label_mapping[imagenet_class]})
 
     def stop(self):
         pass
@@ -423,10 +423,8 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
             # insert modified image back into original image (if necessary)
             image[:, ox:ox + w, oy:oy + h] = src.data[0]
 
-        if logger is not None:
-            logger.info("octave %d image, TODO save all octaves")
-
     if logger is not None:
         logger.info("deprocessing image")
+
     # returning the resulting image
     return deprocess(net, image)
