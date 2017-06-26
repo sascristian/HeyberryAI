@@ -339,7 +339,12 @@ def make_step(net, step_size=1.5, end='inception_4c/output', clip=True, focus=No
 
     src = net.blobs['data']  # input image is stored in Net's 'data' blob
 
-    dst = net.blobs[end]
+    try:
+        dst = net.blobs[end]
+    except Exception as e:
+        print e
+        print "invalid layer"
+        return
     net.forward(end=end)
 
     one_hot = np.zeros_like(dst.data)
@@ -385,8 +390,7 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
         # select layer
         layer = o['layer']
 
-        #for i in xrange(o['iter_n']):
-        for i in xrange(140):
+        for i in xrange(o['iter_n']):
             if imw > w:
                 if random_crop:
                     # randomly select a crop
@@ -413,14 +417,13 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
 
             sigma = o['start_sigma'] + ((o['end_sigma'] - o['start_sigma']) * i) / o['iter_n']
             step_size = o['start_step_size'] + ((o['end_step_size'] - o['start_step_size']) * i) / o['iter_n']
-            if logger is not None:
-                logger.info('making step: ' + str(i))
+
             try:
                 make_step(net, end=layer, clip=clip, focus=focus,
                       sigma=sigma, step_size=step_size)
             except Exception as e:
                 if logger is not None:
-                    logger.error(e)
+                    logger.error('error making step: ' + str(i) + " error: " + str(e))
 
             if i % 10 == 0:
                 if logger is not None:
