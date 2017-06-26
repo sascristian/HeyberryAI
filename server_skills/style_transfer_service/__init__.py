@@ -152,8 +152,11 @@ class StyleTransferSkill(MycroftSkill):
         mean_file = caffe_path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy'
         weights = VGG16_WEIGHTS
         self.log.info("preparing net for style transfer")
-        st = StyleTransfer(img_style, img_content, model_name, model_file, pretrained_file, mean_file, weights)
-
+        try:
+            st = StyleTransfer(img_style, img_content, model_name, model_file, pretrained_file, mean_file, weights)
+        except Exception as e:
+            self.log.error(e)
+            return
         # perform style transfer
         start = timeit.default_timer()
         n_iters = st.transfer_style(img_style, img_content, length=512,
