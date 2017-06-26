@@ -94,7 +94,7 @@ class ImageRecognitionSkill(MycroftSkill):
 
     def __init__(self):
         super(ImageRecognitionSkill, self).__init__(name="ImageRecognitionSkill")
-        #self.reload_skill = False
+        self.reload_skill = False
         # load caffe
         try:
             self.path = self.config["caffe_path"]
