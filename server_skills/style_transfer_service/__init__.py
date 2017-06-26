@@ -151,7 +151,7 @@ class StyleTransferSkill(MycroftSkill):
         # load images
         img_style = self.load_image(style_img)
         img_content = self.load_image(target_img)
-
+        self.log.info("images loaded")
         # prepare style transfer
         # TODO make model configurable
         model_name = self.model
@@ -161,7 +161,7 @@ class StyleTransferSkill(MycroftSkill):
         pretrained_file = path + '/' + self.model + '.caffemodel'
         mean_file = self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy'
         weights = GOOGLENET_WEIGHTS
-
+        self.log.info("preparing net for style transfer")
         st = StyleTransfer(img_style, img_content, model_name, model_file, pretrained_file, mean_file, weights)
 
         # perform style transfer
