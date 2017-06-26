@@ -158,6 +158,7 @@ class StyleTransferSkill(MycroftSkill):
             self.log.error(e)
             return
         # perform style transfer
+        self.log.info("starting style transfer")
         start = timeit.default_timer()
         n_iters = st.transfer_style(img_style, img_content, length=512,
                                     init="content", ratio=np.float("1e4"),
