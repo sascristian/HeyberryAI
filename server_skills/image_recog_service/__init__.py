@@ -344,6 +344,7 @@ class ImageRecognitionSkill(MycroftSkill):
                                     "class_name": class_name})
         self.speak("deepdraw", metadata={"url": link, "class_label": class_label,
                                     "class_name": class_name})
+
     def stop(self):
         pass
 
