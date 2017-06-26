@@ -272,6 +272,7 @@ class ImageRecognitionSkill(MycroftSkill):
         if imagenet_class < 0 or imagenet_class > 1000:
             imagenet_class = random.randint(0, 1000)
 
+        self.speak("please wait while i draw a visualization of class " + self.label_mapping[imagenet_class])
         # get original input size of network
         original_w = self.net.blobs['data'].width
         original_h = self.net.blobs['data'].height
@@ -286,6 +287,7 @@ class ImageRecognitionSkill(MycroftSkill):
 
         # save image
         path = dirname(__file__)+"/deepdraw/"+ str(imagenet_class)+'.png'
+        self.log.info("saving image to " + path)
         PIL.Image.fromarray(np.uint8(gen_image)).save(path)
 
         # upload pic
@@ -362,6 +364,8 @@ def make_step(net, step_size=1.5, end='inception_4c/output', clip=True, focus=No
 def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=None,
              clip=True, logger=None, **step_params):
     # prepare base image
+    if logger is not None:
+        logger.info("pre-processing")
     image = preprocess(net, base_img)  # (3,224,224)
 
     # get input dimensions from net
@@ -369,7 +373,7 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
     h = net.blobs['data'].height
 
     if logger is not None:
-        logger.info("starting drawing")
+        logger.info("starting deep drawing")
     src = net.blobs['data']
     src.reshape(1, 3, h, w)  # resize the network's input image size
     for e, o in enumerate(octaves):
@@ -420,8 +424,9 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
             image[:, ox:ox + w, oy:oy + h] = src.data[0]
 
         if logger is not None:
-            logger.info("octave %d image:" % e)
+            logger.info("octave %d image, TODO save all octaves")
 
-
+    if logger is not None:
+        logger.info("deprocessing image")
     # returning the resulting image
     return deprocess(net, image)
