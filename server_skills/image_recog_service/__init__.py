@@ -282,7 +282,7 @@ class ImageRecognitionSkill(MycroftSkill):
         if imagenet_class < 0 or imagenet_class > 1000:
             imagenet_class = random.randint(0, 1000)
 
-        self.speak("waitdeepdraw",{"class_name": self.label_mapping[imagenet_class]})
+        self.speak_dialog("waitdeepdraw",{"class_name": self.label_mapping[imagenet_class]})
         # make net
         net_fn = dirname(__file__) + '/deploy_googlenet_updated.prototxt'
         param_fn = self.path + '/models/' + self.model + '/' + self.model + '.caffemodel'
@@ -320,6 +320,7 @@ class ImageRecognitionSkill(MycroftSkill):
                                           {"user_id": user_id, "data": msg_data,
                                            "type": msg_type}))
         except:
+            # if try fails it wasnt from a socket
             pass
         # to bus
         self.emitter.emit(Message(msg_type,
