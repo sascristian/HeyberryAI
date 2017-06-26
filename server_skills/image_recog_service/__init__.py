@@ -9,6 +9,16 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 
+try:
+    path = ConfigurationManager.get("caffe_path")
+except:
+    path = "../caffe"
+
+sys.path.insert(0, path + '/python')
+
+import caffe
+# caffe.set_mode_gpu() # uncomment this if gpu processing is available
+
 __author__ = 'jarbas'
 
 
@@ -102,63 +112,18 @@ class ImageRecognitionSkill(MycroftSkill):
             self.path = "../caffe"
 
         sys.path.insert(0, self.path + '/python')
-        import caffe
+
         from caffe.io import load_image
         self.load_image = load_image
-        # load net
+        # load model
         try:
-           self.model = self.config["caffe_path"]
+            self.model = self.config["caffe_model"]
         except:
             self.model = "bvlc_googlenet"
-
-        path = self.path + '/models/' + self.model
-
-        self.net = caffe.Classifier(path + '/deploy.prototxt', path + '/' + self.model + '.caffemodel',
-                                    mean=np.load(self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(1).mean(1),
-                                    channel_swap=(2, 1, 0),
-                                    raw_scale=255,
-                                    image_dims=(224, 224))
 
         # output to text
         self.label_mapping = np.loadtxt(dirname(__file__) + "/synset_words.txt", str, delimiter='\t')
 
-        # deep draw, these octaves determine gradient ascent steps
-        self.octaves = [
-            {
-                'layer': 'loss3/classifier',
-                'iter_n': 190,
-                'start_sigma': 2.5,
-                'end_sigma': 0.78,
-                'start_step_size': 11.,
-                'end_step_size': 11.
-            },
-            {
-                'layer': 'loss3/classifier',
-                'scale': 1.2,
-                'iter_n': 150,
-                'start_sigma': 0.78 * 1.2,
-                'end_sigma': 0.78,
-                'start_step_size': 6.,
-                'end_step_size': 6.
-            },
-            {
-                'layer': 'loss2/classifier',
-                'scale': 1.2,
-                'iter_n': 150,
-                'start_sigma': 0.78 * 1.2,
-                'end_sigma': 0.44,
-                'start_step_size': 6.,
-                'end_step_size': 3.
-            },
-            {
-                'layer': 'loss1/classifier',
-                'iter_n': 10,
-                'start_sigma': 0.44,
-                'end_sigma': 0.304,
-                'start_step_size': 3.,
-                'end_step_size': 3.
-            }
-        ]
         try:
             client_id = self.config_core.get("APIS")["ImgurKey"]
             client_secret = self.config_core.get("APIS")["ImgurSecret"]
@@ -225,11 +190,22 @@ class ImageRecognitionSkill(MycroftSkill):
             input_image = self.load_image(pic)
         except Exception as e:
             self.log.error(e)
+            self.speak("an error occured loading image to classify")
+            return
 
         self.log.info("predicting")
         result = []
+        # make net
+        path = self.path + '/models/' + self.model
+        net = caffe.Classifier(path + '/deploy.prototxt', path + '/' + self.model + '.caffemodel',
+                                    mean=np.load(self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(
+                                        1).mean(1),
+                                    channel_swap=(2, 1, 0),
+                                    raw_scale=255,
+                                    image_dims=(224, 224))
+
         try:
-            prediction = self.net.predict([input_image])
+            prediction = net.predict([input_image])
             ind = prediction[0].argsort()[-5:][::-1]  # top-5 predictions
             for i in ind:
                 result.append(self.label_mapping[i])
@@ -254,6 +230,44 @@ class ImageRecognitionSkill(MycroftSkill):
                                   msg_data))
 
     def handle_visualize_layer(self, message):
+        # deep draw, these octaves determine gradient ascent steps
+        octaves = [
+            {
+                'layer': 'loss3/classifier',
+                'iter_n': 190,
+                'start_sigma': 2.5,
+                'end_sigma': 0.78,
+                'start_step_size': 11.,
+                'end_step_size': 11.
+            },
+            {
+                'layer': 'loss3/classifier',
+                'scale': 1.2,
+                'iter_n': 150,
+                'start_sigma': 0.78 * 1.2,
+                'end_sigma': 0.78,
+                'start_step_size': 6.,
+                'end_step_size': 6.
+            },
+            {
+                'layer': 'loss2/classifier',
+                'scale': 1.2,
+                'iter_n': 150,
+                'start_sigma': 0.78 * 1.2,
+                'end_sigma': 0.44,
+                'start_step_size': 6.,
+                'end_step_size': 3.
+            },
+            {
+                'layer': 'loss1/classifier',
+                'iter_n': 10,
+                'start_sigma': 0.44,
+                'end_sigma': 0.304,
+                'start_step_size': 3.,
+                'end_step_size': 3.
+            }
+        ]
+
         user_id = message.data.get("source")
         imagenet_class = message.data.get("class", 13)
         # set target of result
@@ -269,16 +283,23 @@ class ImageRecognitionSkill(MycroftSkill):
             imagenet_class = random.randint(0, 1000)
 
         self.speak("please wait while i draw a visualization of class " + self.label_mapping[imagenet_class])
+        # make net
+        net_fn = dirname(__file__) + '/deploy_googlenet_updated.prototxt'
+        param_fn = self.path + '/models/' + self.model + '/' + self.model + '.caffemodel'
+        mean = np.float32([104.0, 117.0, 123.0])
+        net = caffe.Classifier(net_fn, param_fn,
+                               mean=mean,  # ImageNet mean, training set dependent
+                               channel_swap=(2, 1, 0))  # the reference model has channels in BGR order instead of RGB
         # get original input size of network
-        original_w = self.net.blobs['data'].width
-        original_h = self.net.blobs['data'].height
+        original_w = net.blobs['data'].width
+        original_h = net.blobs['data'].height
         # the background color of the initial image
         background_color = np.float32([200.0, 200.0, 200.0])
         # generate initial random image
         gen_image = np.random.normal(background_color, 8, (original_w, original_h, 3))
 
         # generate class visualization via octavewise gradient ascent
-        gen_image = deepdraw(self.net, gen_image, self.octaves, focus=imagenet_class,
+        gen_image = deepdraw(net, gen_image, octaves, focus=imagenet_class,
                              random_crop=True, visualize=False, logger=self.log)
 
         # save image
