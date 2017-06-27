@@ -675,7 +675,7 @@ class FacebookSkill(MycroftSkill):
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[3]/input", name="login", type="xpath")
 
         self.browser.click_element("login")
-        sleep(5)
+        sleep(2)
         self.get_cookies()
         return self.is_login()
 
@@ -781,7 +781,7 @@ class FacebookSkill(MycroftSkill):
                                             type="xpath"):
                     if self.browser.click_element("like_button"):
                         break
-            sleep(5)
+            sleep(2)
             # check if already liked
             url2 = self.browser.get_current_url()
             if "https://m.facebook.com/reactions" in url2:  # already liked opened reaction page
