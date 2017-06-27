@@ -758,12 +758,12 @@ class FacebookSkill(MycroftSkill):
                            ".//*[@id='root']/div[2]/div[2]/div[1]/ul/li[2]/table/tbody/tr/td/span/a"
                            ]
         # try all xpaths until one is successfully clicked
+        clicked = False
         for xpath in possible_xpaths:
             if self.browser.get_element(data=xpath,
                                         name="profile_photo",
-                                        type="xpath"):
-                self.browser.click_element("profile_photo")
-                break
+                                        type="xpath") and not clicked:
+                clicked = self.browser.click_element("profile_photo")
 
         # click like
         possible_like_xpaths = [".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a", #like box
