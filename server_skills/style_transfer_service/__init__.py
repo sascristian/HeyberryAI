@@ -153,7 +153,7 @@ class StyleTransferSkill(MycroftSkill):
         weights = VGG16_WEIGHTS
         self.log.info("preparing net for style transfer")
         try:
-            st = StyleTransfer(img_style, img_content, model_name, model_file, pretrained_file, mean_file, weights, logger=self.log)
+            st = StyleTransfer(model_name, model_file, pretrained_file, mean_file, weights, logger=self.log)
         except Exception as e:
             self.log.error(e)
             return
@@ -321,7 +321,7 @@ class StyleTransfer(object):
         Style transfer class.
     """
 
-    def __init__(self, style_path, base_path, model_name, model_file, pretrained_file, mean_file, weights, logger=None):
+    def __init__(self, model_name, model_file, pretrained_file, mean_file, weights, logger=None):
         """
             Initialize the model used for style transfer.
             :param str model_name:
@@ -329,6 +329,8 @@ class StyleTransfer(object):
         """
         self.log = logger
         # add model and weights
+        if self.log is not None:
+            self.log.info("Loading model " + model_name)
         self.load_model(model_file, pretrained_file, mean_file)
         self.weights = weights.copy()
         self.layers = []
