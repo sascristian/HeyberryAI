@@ -667,6 +667,7 @@ class FacebookSkill(MycroftSkill):
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[3]/input", name="login", type="xpath")
         self.get_cookies()
         self.browser.click_element("login")
+        sleep(2)
         return self.is_login()
 
     def post_to_wall(self, keys):
