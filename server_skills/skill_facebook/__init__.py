@@ -622,16 +622,18 @@ class FacebookSkill(MycroftSkill):
     def is_login(self):
         # "page_title": "Log into Facebook | Facebook"
         if self.browser.open_url("https://m.facebook.com/"):
+            sleep(1)
             title = self.browser.get_title().lower()
-            print title
-            sleep(60)
             if title is None:
                 self.log.error("No page title received")
                 return False
             if "log in or sign up" in title:
+                self.log.debug("Facebook Log In status: False")
                 return False
             else:
+                self.log.debug("Facebook Log In status: True")
                 return True
+        self.log.debug("Facebook Log In status: False")
         return False
 
     def get_cookies(self, reset=True):
@@ -657,9 +659,7 @@ class FacebookSkill(MycroftSkill):
                     return True
                 else:
                     self.log.warning("cookies set, but not logged_in")
-        self.browser.open_url("m.facebook.com")
-        while "facebook" not in self.browser.get_current_url():
-            sleep(0.2)
+        self.log.info("Performing manual Log In")
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[1]/input", name="input", type="xpath")
         self.browser.send_keys_to_element(text=self.mail, name="input", special=False)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[2]/div/input", name="passwd", type="xpath")
