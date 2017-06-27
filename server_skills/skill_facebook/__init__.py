@@ -472,6 +472,7 @@ class FacebookSkill(MycroftSkill):
         if "session" not in self.fb_settings.keys():
             self.fb_settings["session"] = None
             self.fb_settings.store()
+        self.selenium_cookies = True
         # chat client active
         self.active = self.config.get('chat_client', True)
         # speak when message received
@@ -639,11 +640,14 @@ class FacebookSkill(MycroftSkill):
 
     def login(self):
 
-        if len(self.fb_settings["cookies"]) > 0:
+        if len(self.fb_settings["cookies"]) > 0 and self.selenium_cookies:
             self.log.info("attempting to use last session cookies")
             if self.browser.add_cookies(self.fb_settings["cookies"]):
-                self.log.info("cookies set, not logging in")
-                return True
+                if self.is_login():
+                    self.log.info("cookies set, logged_in")
+                    return True
+                else:
+                    self.log.warning("cookies set, but not logged_in")
         self.browser.open_url("m.facebook.com")
         if self.browser.get_current_url() is None:
             self.log.error("Browser service doesnt seem to be started")
