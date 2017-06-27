@@ -243,7 +243,7 @@ class FaceChat(fbchat.Client):
                 else:
                     last_seen = str(last_seen) + " seconds ago"
                 data[id] = {"name":name, "timestamp":timestamp, "last_seen":last_seen}
-            self.ws.emit(Message("fb_last_seen_timestamps", data))
+            self.ws.emit(Message("fb_last_seen_timestamps", {"timestamps": data}))
 
         else:
             if self.verbose:
@@ -492,7 +492,13 @@ class FacebookSkill(MycroftSkill):
         self.default_comment = self.config.get('default_comment', [":)"])
         self.logged_in = False
         self.warn_on_friend_request = self.config.get('warn_on_friend_request', True)
-
+        if "friend_requests" not in self.fb_settings.keys():
+            self.fb_settings["friend_requests"] = []
+            self.fb_settings.store()
+        self.track_friends = self.config.get('track_friends', True)
+        if "timestamps" not in self.fb_settings.keys():
+            self.fb_settings["timestamps"] = {}
+            self.fb_settings.store()
         # TODO make these a .txt so the corpus can be easily extended
         self.motivational = self.config.get('motivational', ["may the source be with you"])
         self.girlfriend_messages = self.config.get('girlfriend_messages', ["AI can also love"])
@@ -514,6 +520,7 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_chat_message", self.handle_chat_message)
         self.emitter.on("fb_post_request", self.handle_post_request)
         self.emitter.on("fb_friend_request", self.handle_friend_request)
+        self.emitter.on("fb_last_seen_timestamps", self.handle_track_friends)
         self.build_intents()
         self.logged_in = self.login()
 
@@ -592,10 +599,24 @@ class FacebookSkill(MycroftSkill):
         except Exception as e:
             self.log.error(e)
 
+    def handle_track_friends(self, message):
+        timestamps = message.data.get("timestamps", {})
+        for id in timestamps.keys():
+            data = timestamps[id]
+            if id not in self.fb_settings["timestamps"].keys():
+                self.fb_settings["timestamps"][id] = []
+            if data not in self.fb_settings["timestamps"][id]:
+                self.fb_settings["timestamps"][id].append(data)
+                self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
+                self.fb_settings.store()
+
     def handle_friend_request(self, message):
-        friend_id = message.data.get("fiend_id")
+        friend_id = message.data.get("friend_id")
         if self.warn_on_friend_request:
+            self.log.info("New friend request from " + friend_id)
             self.speak("I have a new friend request")
+            self.fb_settings["friend_requests"].append([friend_id, time.time()])
+            self.fb_settings.store()
 
     # browser service methods
     def get_cookies(self, reset=True):
