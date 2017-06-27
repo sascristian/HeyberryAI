@@ -312,7 +312,7 @@ class BrowserService(MycroftSkill):
         self.emitter.emit(Message("browser_go_back_result", {"sucess": True, "url": self.driver.current_url}))
 
     def handle_current_url(self, message):
-        self.emitter.emit(Message("browser_current_url_result", {"sucess": True, "url": self.driver.current_url}))
+        self.emitter.emit(Message("browser_current_url_result", {"sucess": True, "url": self.driver.current_url, "title":self.driver.title}))
 
     def start_browser(self):
 

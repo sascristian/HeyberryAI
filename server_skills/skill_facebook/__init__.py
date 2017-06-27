@@ -522,7 +522,6 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_friend_request", self.handle_friend_request)
         self.emitter.on("fb_last_seen_timestamps", self.handle_track_friends)
         self.build_intents()
-        self.logged_in = self.login()
 
     def build_intents(self):
         # build intents
@@ -619,6 +618,16 @@ class FacebookSkill(MycroftSkill):
             self.fb_settings.store()
 
     # browser service methods
+    def is_login(self):
+        #  {"type": "browser_url_opened", "data": {"page_title": "Log into Facebook | Facebook",
+        if self.browser.open_url("https://m.facebook.com/home.php?ref_component=mbasic_home_header"):
+            title = self.browser.result["page_title"].lower()
+            if "log into facebook" in title:
+                return False
+            else:
+                return True
+        return False
+
     def get_cookies(self, reset=True):
         cookies = self.browser.get_cookies()
         if reset:
@@ -650,8 +659,10 @@ class FacebookSkill(MycroftSkill):
         return self.browser.click_element("login")
 
     def post_to_wall(self, keys):
-        if not self.logged_in:
-            self.logged_in = self.login()
+        if not self.is_login():
+            if not self.login():
+                self.log.error("could not log in in facebook")
+                return
         url = self.browser.get_current_url()
         url2 = url
         self.browser.open_url("m.facebook.com/me")  # profile page
@@ -666,8 +677,10 @@ class FacebookSkill(MycroftSkill):
         self.browser.click_element("post_button")
 
     def add_suggested_friends(self, num=3):
-        if not self.logged_in:
-            self.logged_in = self.login()
+        if not self.is_login():
+            if not self.login():
+                self.log.error("could not log in in facebook")
+                return
         i = 0
         while i <= num:
             fails = 0
@@ -697,8 +710,10 @@ class FacebookSkill(MycroftSkill):
         sleep(60)
 
     def like_photos_from(self, id, num=3):
-        if not self.logged_in:
-            self.logged_in = self.login()
+        if not self.is_login():
+            if not self.login():
+                self.log.error("could not log in in facebook")
+                return
         id = str(id) #in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
@@ -768,7 +783,10 @@ class FacebookSkill(MycroftSkill):
             c1 += 1
 
     def make_friends_off(self, id, num=3):
-        pass
+        if not self.is_login():
+            if not self.login():
+                self.log.error("could not log in in facebook")
+                return
 
     # internal methods
     def get_ids_from_chat(self, message=None):
