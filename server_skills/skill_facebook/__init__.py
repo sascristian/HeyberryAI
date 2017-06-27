@@ -261,11 +261,10 @@ class FaceChat(fbchat.Client):
                                                                          seen_ts / 1000))
         name = self.get_user_name(seen_by) #TODO maybe this fails in friend request, good way to know!
         if seen_by in self.friend_counter.keys():
-            if self.friend_counter[seen_by] == 1:
-                # seen
-                self.ws.emit(
-                    Message("fb_chat_message_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
-                self.friend_counter.pop(seen_by)
+            # seen
+            self.ws.emit(
+                Message("fb_chat_message_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+            self.friend_counter.pop(seen_by)
         else:
             # friend request accepted or reached inbox
             self.friend_counter[seen_by] = 1
