@@ -491,6 +491,7 @@ class FacebookSkill(MycroftSkill):
         # default reply to wall posts
         self.default_comment = self.config.get('default_comment', [":)"])
         self.logged_in = False
+        self.warn_on_friend_request = self.config.get('warn_on_friend_request', True)
 
         # TODO make these a .txt so the corpus can be easily extended
         self.motivational = self.config.get('motivational', ["may the source be with you"])
@@ -512,6 +513,7 @@ class FacebookSkill(MycroftSkill):
         # listen for chat messages
         self.emitter.on("fb_chat_message", self.handle_chat_message)
         self.emitter.on("fb_post_request", self.handle_post_request)
+        self.emitter.on("fb_friend_request", self.handle_friend_request)
         self.build_intents()
         self.logged_in = self.login()
 
@@ -589,6 +591,11 @@ class FacebookSkill(MycroftSkill):
             self.fb_settings.store()
         except Exception as e:
             self.log.error(e)
+
+    def handle_friend_request(self, message):
+        friend_id = message.data.get("fiend_id")
+        if self.warn_on_friend_request:
+            self.speak("I have a new friend request")
 
     # browser service methods
     def get_cookies(self, reset=True):
