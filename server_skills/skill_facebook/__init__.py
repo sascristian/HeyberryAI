@@ -683,7 +683,7 @@ class FacebookSkill(MycroftSkill):
         if not self.is_login():
             if not self.login():
                 self.log.error("could not log in in facebook")
-                return
+                return False
         url = self.browser.get_current_url()
         url2 = url
         self.browser.open_url("m.facebook.com/me")  # profile page
@@ -695,13 +695,13 @@ class FacebookSkill(MycroftSkill):
         self.browser.send_keys_to_element(text=keys, name="post_box", special=False)
         sleep(5)
         self.browser.get_element(data=".//*[@id='timelineBody']/div[1]/div[1]/form/table/tbody/tr/td[2]/div/input", name="post_button", type="xpath")
-        self.browser.click_element("post_button")
+        return self.browser.click_element("post_button")
 
     def add_suggested_friends(self, num=3):
         if not self.is_login():
             if not self.login():
                 self.log.error("could not log in in facebook")
-                return
+                return False
         i = 0
         while i <= num:
             fails = 0
@@ -728,13 +728,13 @@ class FacebookSkill(MycroftSkill):
             else:
                 self.log.error("Could not add friend")
             i += 1
-        sleep(60)
+        return True
 
     def like_photos_from(self, id, num=3):
         if not self.is_login():
             if not self.login():
                 self.log.error("could not log in in facebook")
-                return
+                return False
         id = str(id) #in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
@@ -742,7 +742,7 @@ class FacebookSkill(MycroftSkill):
         self.browser.get_element(data=path, name="photos", type="xpath")
         if not self.browser.click_element("photos"):
             self.log.error("cant find photos link")
-            return
+            return False
 
         while "photos" not in self.browser.get_current_url():
             sleep(0.5)
@@ -809,8 +809,32 @@ class FacebookSkill(MycroftSkill):
                         clicked = True
             if not next:
                 self.log.error("next photo button not found: ")
-                return
+                return False
             c1 += 1
+        return True
+
+    def get_friend_number(self):
+        if not self.is_login():
+            if not self.login():
+                self.log.error("could not log in in facebook")
+                return -1
+
+        if self.browser.open_url("https://m.facebook.com/friends/center/mbasic/") is None:
+            self.log.error("could not open facebook friends url")
+            return -1
+
+        while "friends" not in self.browser.get_title().lower():
+            sleep(0.3)
+        self.browser.get_element(data=".//*[@id='friends_center_main']/a[2]", name="my_friends", type="xpath")
+        text = self.browser.get_element_text(name="my_friends")
+        if text is None:
+            self.log.error("Could not get friend number")
+            return -1
+        else:
+            text = text.lower()
+            text = text.replace("your friends","")
+            text = text.replace("(", "").replace(")", "").replace(" ", "")
+            return int(text)
 
     def make_friends_off(self, id, num=3):
         if not self.is_login():
@@ -863,14 +887,11 @@ class FacebookSkill(MycroftSkill):
         if self.like_back and author_id is not None:
             self.like_photos_from(author_id, self.photo_num)
 
-
     # intents
 
     def handle_friend_number_intent(self, message):
-        #self.add_suggested_friends(1)
-        self.like_photos_from("1218751325")
-        #self.post_to_wall("can i login by re-using cookies intead of mail and passwd?")
-       # self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
+        number = self.get_friend_number()
+        self.speak("I have " + str(number) + " friends")
 
     def handle_who_are_my_friends_intent(self, message):
         text = ""
