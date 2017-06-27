@@ -65,7 +65,7 @@ def checkRequest(r, do_json_check=True):
 
 
 class FaceChat(fbchat.Client):
-    def __init__(self, email, password, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.INFO):
+    def __init__(self, email, password, verbose=False, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.INFO):
         """Initializes and logs in the client
 
         :param email: Facebook `email`, `id` or `phone number`
@@ -122,6 +122,7 @@ class FaceChat(fbchat.Client):
         self.start_threads()
         self.privacy = False
         self.active = active
+        self.verbose = verbose
 
     def activate_client(self):
         self.active = True
@@ -205,9 +206,9 @@ class FaceChat(fbchat.Client):
             self.markAsDelivered(author_id, thread_id)  # mark delivered
             self.markAsRead(author_id)  # mark read
 
-        self.log.info("Message from " + author_id + ": " + message)
-
         if str(author_id) != str(self.uid) and self.ws is not None:
+            if self.verbose:
+                self.log.info("Message from " + author_id + ": " + message)
             author_name = self.get_user_name(author_id)
             author_photo = self.get_user_photo(author_id)
             self.ws.emit(Message("fb_chat_message",
@@ -221,7 +222,8 @@ class FaceChat(fbchat.Client):
         """
         data = {}
         if "buddyList" in msg.keys():
-            self.log.debug("timestamps update received: " + str(msg["buddyList"]))
+            if self.verbose:
+                self.log.debug("timestamps update received: " + str(msg["buddyList"]))
             for id in msg["buddyList"].keys():
                 payload = msg["buddyList"][id]
                 timestamp = payload["lat"]
@@ -244,14 +246,16 @@ class FaceChat(fbchat.Client):
             self.ws.emit(Message("fb_last_seen_timestamps", data))
 
         else:
-            self.log.debug('Unknown message received: {}'.format(msg))
+            if self.verbose:
+                self.log.debug('Unknown message received: {}'.format(msg))
 
     def onLoggingIn(self, email=None):
         """
         Called when the client is logging in
         :param email: The email of the client
         """
-        self.log.info("Logging in {}...".format(email))
+        if self.verbose:
+            self.log.info("Logging in {}...".format(email))
 
     def onLoggedIn(self, email=None):
         """
@@ -262,7 +266,8 @@ class FaceChat(fbchat.Client):
 
     def onListening(self):
         """Called when the client is listening"""
-        self.log.info("Listening...")
+        if self.verbose:
+            self.log.info("Listening...")
 
     def onColorChange(self, mid=None, author_id=None, new_color=None, thread_id=None, thread_type=ThreadType.USER,
                       ts=None, metadata=None, msg={}):
@@ -279,7 +284,8 @@ class FaceChat(fbchat.Client):
         :type new_color: models.ThreadColor
         :type thread_type: models.ThreadType
         """
-        self.log.info("Color change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_color))
+        if self.verbose:
+            self.log.info("Color change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_color))
 
     def onEmojiChange(self, mid=None, author_id=None, new_emoji=None, thread_id=None, thread_type=ThreadType.USER,
                       ts=None, metadata=None, msg={}):
@@ -295,7 +301,8 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         :type thread_type: models.ThreadType
         """
-        self.log.info("Emoji change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_emoji))
+        if self.verbose:
+            self.log.info("Emoji change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_emoji))
 
     def onTitleChange(self, mid=None, author_id=None, new_title=None, thread_id=None, thread_type=ThreadType.USER,
                       ts=None, metadata=None, msg={}):
@@ -311,7 +318,8 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         :type thread_type: models.ThreadType
         """
-        self.log.info("Title change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_title))
+        if self.verbose:
+            self.log.info("Title change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_title))
 
     def onNicknameChange(self, mid=None, author_id=None, changed_for=None, new_nickname=None, thread_id=None,
                          thread_type=ThreadType.USER, ts=None, metadata=None, msg={}):
@@ -328,7 +336,8 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         :type thread_type: models.ThreadType
         """
-        self.log.info(
+        if self.verbose:
+            self.log.info(
             "Nickname change from {} in {} ({}) for {}: {}".format(author_id, thread_id, thread_type.name, changed_for,
                                                                    new_nickname))
 
@@ -345,7 +354,8 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         :type thread_type: models.ThreadType
         """
-        self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name, seen_ts / 1000))
+        if self.verbose:
+            self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name, seen_ts / 1000))
         self.ws.emit(Message("fb_chatmessage_seen", {"friend_id": seen_by, "timestamp":seen_ts}))
 
     def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
@@ -361,7 +371,8 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         :type thread_type: models.ThreadType
         """
-        self.log.info(
+        if self.verbose:
+            self.log.info(
             "Messages {} delivered to {} in {} ({}) at {}s".format(msg_ids, delivered_for, thread_id, thread_type.name,
                                                                    ts / 1000))
 
@@ -376,7 +387,8 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         :type thread_type: models.ThreadType
         """
-        self.log.info(
+        if self.verbose:
+            self.log.info(
             "Marked messages as seen in threads {} at {}s".format([(x[0], x[1].name) for x in threads], seen_ts / 1000))
 
     def onPeopleAdded(self, mid=None, added_ids=None, author_id=None, thread_id=None, ts=None, msg={}):
@@ -389,7 +401,8 @@ class FaceChat(fbchat.Client):
         :param ts: A timestamp of the action
         :param msg: A full set of the data recieved
         """
-        self.log.info("{} added: {}".format(author_id, ', '.join(added_ids)))
+        if self.verbose:
+            self.log.info("{} added: {}".format(author_id, ', '.join(added_ids)))
 
     def onPersonRemoved(self, mid=None, removed_id=None, author_id=None, thread_id=None, ts=None, msg={}):
         """
@@ -401,7 +414,8 @@ class FaceChat(fbchat.Client):
         :param ts: A timestamp of the action
         :param msg: A full set of the data recieved
         """
-        self.log.info("{} removed: {}".format(author_id, removed_id))
+        if self.verbose:
+            self.log.info("{} removed: {}".format(author_id, removed_id))
 
     def onFriendRequest(self, from_id=None, msg={}):
         """
@@ -409,7 +423,8 @@ class FaceChat(fbchat.Client):
         :param from_id: The ID of the person that sent the request
         :param msg: A full set of the data recieved
         """
-        self.log.info("Friend request from {}".format(from_id))
+        if self.verbose:
+            self.log.info("Friend request from {}".format(from_id))
         if from_id is not None:
             self.ws.emit(Message("fb_friend_request", {"friend_id":from_id}))
 
@@ -422,7 +437,8 @@ class FaceChat(fbchat.Client):
         :param recent_unread: --
         :param msg: A full set of the data recieved
         """
-        self.log.info('Inbox event: {}, {}, {}'.format(unseen, unread, recent_unread))
+        if self.verbose:
+            self.log.info('Inbox event: {}, {}, {}'.format(unseen, unread, recent_unread))
 
     def onQprimer(self, ts=None, msg={}):
         """
