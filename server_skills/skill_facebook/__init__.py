@@ -43,27 +43,6 @@ logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
-
-def checkRequest(r, do_json_check=True):
-    if not r.ok:
-        raise Exception('Error when sending request: Got {} response'.format(r.status_code))
-
-    content = get_decoded(r)
-    c = content.replace("for (;;); ","").replace("for (;;);","")
-    if content is None or len(content) == 0:
-        raise Exception('Error when sending request: Got empty response')
-
-    if do_json_check:
-        try:
-            j = json.loads(c)
-        except Exception as e:
-            raise Exception('Error while parsing JSON: {}'.format(repr(content)))
-        check_json(j)
-        return j
-    else:
-        return content
-
-
 class FaceChat(fbchat.Client):
     def __init__(self, email, password, verbose=False, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.WARNING):
         """Initializes and logs in the client
@@ -505,6 +484,9 @@ class FacebookSkill(MycroftSkill):
         self.motivational = self.config.get('motivational', ["may the source be with you"])
         self.girlfriend_messages = self.config.get('girlfriend_messages', ["AI can also love"])
         self.random_chat = self.config.get('random_chat', ["one day AI and humans will drink beer together"])
+        self.face_id = None
+        self.browser = None
+        self.chat = None
 
     def initialize(self):
         # start chat
@@ -525,7 +507,6 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_last_seen_timestamps", self.handle_track_friends)
         self.build_intents()
         self.login()
-
 
     def build_intents(self):
         # build intents
@@ -846,7 +827,7 @@ class FacebookSkill(MycroftSkill):
             return i
         while "friends" not in self.browser.get_current_url().lower():
             sleep(0.1)
-        while i < num:
+        while i <= num:
             i += 1
             self.log.info("adding friend " + str(i))
             path = ".//*[@id='root']/div[1]/div[2]/div[" + str(i) + "]/table/tbody/tr/td[2]/div[2]/a"
@@ -898,7 +879,10 @@ class FacebookSkill(MycroftSkill):
     def get_id_from_name(self, name):
         return self.chat.get_user_id(name)
 
+    # passive stuff
     def handle_post_request(self, message):
+        # TODO redo this old code
+        return
         # TODO get target from message
         #type = message.data["type"]
         text = message.data["text"].encode("utf8")
@@ -987,7 +971,10 @@ class FacebookSkill(MycroftSkill):
 
     # TODO finish these
     def handle_when_was_last_online(self, message):
-        pass
+        person = message.data["person"]
+        id = self.friends[person]
+        last_seen = self.settings["timestamps"][id]["last_seen"]
+        self.speak(person + " was last seen online " + last_seen)
 
     def handle_build_about_me_intent(self, message):
         # TODO use dialog
@@ -1019,14 +1006,18 @@ class FacebookSkill(MycroftSkill):
     def handle_add_friends_of_friend_intent(self, message):
         person = message.data["person"]
         id = self.friends[person]
-       # self.selenium_face.login()
-       # self.selenium_face.add_friends_of(id, self.friend_num)
-       # self.selenium_face.close()
+        self.make_friends_off(id, self.friend_num)
 
     def handle_like_photos_of_intent(self, message):
         person = message.data["person"]
         id = self.friends[person]
         self.like_photos_from(id, self.photo_num)
+
+    def handle_friend_num_of_intent(self, message):
+        person = message.data["person"]
+        id = self.friends[person]
+        num = self.number_of_friends_of(id)
+        self.speak(person + " has " + str(num) + " friends")
 
     def stop(self):
         try:
