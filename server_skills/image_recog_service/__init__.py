@@ -54,7 +54,7 @@ class ImageRecognitionService():
             elapsed = time.time() - start
             time.sleep(0.1)
 
-    def local_visualize(self, label_num, user_id="unknown"):
+    def local_deepdraw(self, label_num, user_id="unknown"):
         requester = user_id
         message_type = "class_visualization_request"
         message_data = {"class": label_num, "source": requester, "user": "unknown"}
@@ -66,7 +66,7 @@ class ImageRecognitionService():
         result = self.image_visualization_result["url"]
         return result
 
-    def server_visualize(self, label_num, user_id="unknown"):
+    def server_deepdraw(self, label_num, user_id="unknown"):
         requester = user_id
         message_type = "class_visualization_request"
         message_data = {"class": label_num, "source": requester, "user": "unknown"}
@@ -140,7 +140,7 @@ class ImageRecognitionSkill(MycroftSkill):
 
     def initialize(self):
         self.emitter.on("image_classification_request", self.handle_classify)
-        self.emitter.on("class_visualization_request", self.handle_visualize_layer)
+        self.emitter.on("class_visualization_request", self.handle_deep_draw)
         self.emitter.on("class_visualization_result", self.handle_deep_draw_result)
 
         image_recog_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
@@ -172,7 +172,7 @@ class ImageRecognitionSkill(MycroftSkill):
     def handle_deep_draw_intent(self, message):
         imagenet_class = random.randint(0, len(self.label_mapping))
         classifier = ImageRecognitionService(self.emitter)
-        classifier.local_visualize(imagenet_class, message.data.get("target"))
+        classifier.local_deepdraw(imagenet_class, message.data.get("target"))
 
     def handle_classify(self, message):
         pic = message.data.get("file")
@@ -230,7 +230,7 @@ class ImageRecognitionSkill(MycroftSkill):
         self.emitter.emit(Message(msg_type,
                                   msg_data))
 
-    def handle_visualize_layer(self, message):
+    def handle_deep_draw(self, message):
         # deep draw, these octaves determine gradient ascent steps
         octaves = [
             {
@@ -289,7 +289,7 @@ class ImageRecognitionSkill(MycroftSkill):
         for word in result:
             r += word + " "
         name = r[:-1].split(",")[0]
-        self.speak_dialog("waitdeepdraw",{"class_name": name})
+        self.speak_dialog("waitdeepdraw", data={"class_name": name})
         # make net
         net_fn = dirname(__file__) + '/deploy_googlenet_updated.prototxt'
         param_fn = self.path + '/models/' + self.model + '/' + self.model + '.caffemodel'
@@ -321,6 +321,7 @@ class ImageRecognitionSkill(MycroftSkill):
         msg_type = "class_visualization_result"
         msg_data = {"url": link, "class_label": imagenet_class, "class_name": name, "target":user_id}
         # to source socket
+        self.target = user_id
         try:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
@@ -332,17 +333,14 @@ class ImageRecognitionSkill(MycroftSkill):
         # to bus
         self.emitter.emit(Message(msg_type,
                                   msg_data))
-        self.target = user_id
 
     def handle_deep_draw_result(self, message):
-        link = message.data.get("link")
+        link = message.data.get("url")
         class_label = message.data.get("class_label")
         class_name = message.data.get("class_name")
         self.target = message.data.get("target", "all")
         self.speak_dialog("deepdraw", data={"class_name": class_name},
                           metadata={"url": link, "class_label": class_label,
-                                    "class_name": class_name})
-        self.speak("deepdraw", metadata={"url": link, "class_label": class_label,
                                     "class_name": class_name})
 
     def stop(self):
@@ -469,7 +467,6 @@ def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=No
 
             # insert modified image back into original image (if necessary)
             image[:, ox:ox + w, oy:oy + h] = src.data[0]
-
 
     if logger is not None:
         logger.info("deprocessing image")
