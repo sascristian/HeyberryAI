@@ -744,7 +744,7 @@ class FacebookSkill(MycroftSkill):
             return
 
         self.browser.click_element("photos")
-        while "=photos" not in self.browser.get_current_url():
+        while "photos" not in self.browser.get_current_url():
             sleep(0.3)
 
         # xpaths change by country! and depend a little on privacy settings
