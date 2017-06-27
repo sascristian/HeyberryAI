@@ -223,8 +223,8 @@ class FaceChat(fbchat.Client):
         if "buddyList" in msg.keys():
             self.log.debug("timestamps update received: " + str(msg["buddyList"]))
             for id in msg["buddyList"].keys():
-                id = msg["buddyList"][id]
-                timestamp = id["lat"]
+                payload = msg["buddyList"][id]
+                timestamp = payload["lat"]
                 self.timestamps[id] = timestamp
                 name = self.get_user_name(id)
                 last_seen = time.time() - timestamp
