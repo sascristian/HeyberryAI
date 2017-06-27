@@ -591,14 +591,16 @@ class FacebookSkill(MycroftSkill):
         for id in timestamps.keys():
             data = timestamps[id]
             if id not in self.fb_settings["timestamps"].keys():
-                self.fb_settings["timestamps"][id] = {"last_seen":"never", "timestamps":[]}
+                self.fb_settings["timestamps"][id] = {"last_seen": "never", "timestamps": []}
 
             self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
             self.fb_settings["timestamps"][id]["last_seen"] = data["last_seen"]
+
             if data["timestamp"] not in self.fb_settings["timestamps"][id]["timestamps"]:
                 self.fb_settings["timestamps"][id]["timestamps"].append(data["timestamp"])
+
+            self.log.info(data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]["timestamps"]))
             self.fb_settings.store()
-            self.log.info(data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]))
 
     def handle_friend_request(self, message):
         friend_id = message.data.get("friend_id")
@@ -895,7 +897,6 @@ class FacebookSkill(MycroftSkill):
             self.like_photos_from(author_id, self.photo_num)
 
     # intents
-
     def handle_friend_number_intent(self, message):
         number = self.get_friend_number()
         self.speak("I have " + str(number) + " friends")
@@ -927,8 +928,7 @@ class FacebookSkill(MycroftSkill):
 
     def handle_make_friends_intent(self, message):
         self.speak_dialog("make_friend")
-        self.make_friends_off("1440846372")
-        #self.add_suggested_friends(self.friend_num)
+        self.add_suggested_friends(self.friend_num)
 
     def handle_chat_girlfriend_intent(self, message):
         # text = message.data["text"]
@@ -946,19 +946,17 @@ class FacebookSkill(MycroftSkill):
         # TODO use dialog
         self.speak("Just sent a text message to " + person + ", i said " + text)
 
-    # TODO finish these
-    def handle_when_was_last_online(self, message):
-        pass
-
     def handle_make_friends_of_friends_intent(self, message):
         # TODO own dialog
         self.speak_dialog("make_friend")
         self.get_ids_from_chat()
         friend = random.choice(self.friends.keys())
         friend = self.friends[friend]
-      #  self.selenium_face.login()
-       # self.selenium_face.add_friends_of(friend, self.friend_num)
-       # self.selenium_face.close()
+        self.make_friends_off(friend, self.friend_num)
+
+    # TODO finish these
+    def handle_when_was_last_online(self, message):
+        pass
 
     def handle_build_about_me_intent(self, message):
         # TODO use dialog
