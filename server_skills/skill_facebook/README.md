@@ -21,6 +21,8 @@ DONT SHARE settings.json, your session cookies are there and are as valuable as 
 this will be updated as more intents are added
 
 
+            Input: post i love AI on facebook
+            2017-06-27 17:54:56,183 - CLIClient - INFO - Speak: posting i love ai in face book
 
             Input: how many friends does jarbas have
             2017-06-27 17:37:08,362 - CLIClient - INFO - Speak: jarbas has 214 friends
@@ -88,14 +90,8 @@ this will be updated as more intents are added
 all info for these is captured and processed, missing dialog/vocab or other minor work
 
     - Generating posts - listen for post requests, helper class being made to be imported and post requests made easy
-    - When was "friend" online last time intent
-    - How many friends does "friend" have intent
     - Motivate your makers - send a thank you / motivational message to one of the mycroft devs
-    - Like photos of "friend" intent
-    - Add friends of "friend" intent
-    - Send "chat message" to "friend" intent
     - Post friend number on wall intent
-    - Post "this" on wall intent
 
 these are early stage/ideas
 
