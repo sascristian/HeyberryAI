@@ -798,6 +798,8 @@ class FacebookSkill(MycroftSkill):
         text = message.data.get("message")
         author_id = message.data.get("author_id")
         author_name = message.data.get("author_name")
+        self.log.info(author_id)
+        time.sleep(60)
         if author_id is None:
             return
         # on chat message speak it
