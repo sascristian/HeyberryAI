@@ -255,6 +255,8 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         :type thread_type: models.ThreadType
         """
+        if seen_by == self.uid:
+            return
 
         if self.verbose:
             self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name,
