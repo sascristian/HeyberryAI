@@ -817,7 +817,7 @@ class FacebookSkill(MycroftSkill):
             return -1
 
         while "friends" not in self.browser.get_title().lower():
-            sleep(0.3)
+            sleep(0.3) #.//*[@id='root']/div[1]/h3
         self.browser.get_element(data=".//*[@id='friends_center_main']/a[2]", name="my_friends", type="xpath")
         text = self.browser.get_element_text(name="my_friends")
         if text is None:
@@ -838,14 +838,14 @@ class FacebookSkill(MycroftSkill):
         id = str(id) #in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
-        while "friends" not in self.browser.get_current_url().lower():
-            sleep(0.1)
+
         path = ".//*[@id='m-timeline-cover-section']/div[4]/a[2]"
         self.browser.get_element(data=path, name="friends", type="xpath")
         if not self.browser.click_element("friends"):
             self.log.error("cant find friends link")
             return i
-
+        while "friends" not in self.browser.get_current_url().lower():
+            sleep(0.1)
         while i < num:
             i += 1
             self.log.info("adding friend " + str(i))
@@ -854,6 +854,33 @@ class FacebookSkill(MycroftSkill):
             if not self.browser.click_element("add_friend"):
                 self.log.error("cant find add friend button")
         return i
+
+    def number_of_friends_of(self, id):
+        if not self.is_login():
+            if not self.login():
+                self.log.error("could not log in in facebook")
+                return -1
+        id = str(id) #in case someone passes int
+        link = "https://m.facebook.com/profile.php?id=" + id
+        self.browser.open_url(link)  # persons profile page
+
+        path = ".//*[@id='m-timeline-cover-section']/div[4]/a[2]"
+        self.browser.get_element(data=path, name="friends", type="xpath")
+        if not self.browser.click_element("friends"):
+            self.log.error("cant find friends link")
+            return -1
+        while "friends" not in self.browser.get_current_url().lower():
+            sleep(0.3)
+        self.browser.get_element(data=".// *[ @ id = 'root'] / div[1] / h3", name="id_friends", type="xpath")
+        text = self.browser.get_element_text(name="id_friends")
+        if text is None:
+            self.log.error("Could not get friend number")
+            return -1
+        else:
+            text = text.lower()
+            text = text.replace("friends", "")
+            text = text.replace("(", "").replace(")", "").replace(" ", "")
+            return int(text)
 
     # internal methods
     def get_ids_from_chat(self, message=None):
