@@ -1,0 +1,8 @@
+(facebook post) (?P<Post>.*)
+(face book post) (?P<Post>.*)
+(post) (?P<Post>.*) (on facebook)
+(post) (?P<Post>.*) (in facebook)
+(post) (?P<Post>.*) (at facebook)
+(post) (?P<Post>.*) (on face book)
+(post) (?P<Post>.*) (in face book)
+(post) (?P<Post>.*) (at face book)

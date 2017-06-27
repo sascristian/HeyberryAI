@@ -32,7 +32,7 @@ from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
 from browser_service import BrowserControl
 from mycroft.skills.settings import SkillSettings
-
+from fuzzywuzzy import fuzz
 __author__ = 'jarbas'
 
 # TODO logs in bots
@@ -274,10 +274,6 @@ class FaceChat(fbchat.Client):
             # seen
             self.ws.emit(
                 Message("fb_chat_message_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
-
-
-
-
 
     def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
                            metadata=None, msg={}):
@@ -624,6 +620,36 @@ class FacebookSkill(MycroftSkill):
         self.register_intent(refresh_friendlist_intent,
                              self.get_ids_from_chat)
 
+        post_intent = IntentBuilder("FbPostIntent"). \
+            require("Post").build()
+        self.register_intent(post_intent,
+                             self.handle_post_this_intent())
+
+        last_online_intent = IntentBuilder("FbLastOnlineIntent"). \
+            require("Person").require("Online_Keyword").build()
+        self.register_intent(last_online_intent,
+                             self.handle_when_was_last_online)
+
+        chat_person_intent = IntentBuilder("FbChatPersonIntent"). \
+            require("Person").require("Chat").build()
+        self.register_intent(chat_person_intent,
+                             self.handle_chat_person_intent)
+
+        friends_of_person_intent = IntentBuilder("FbFriendsofPersonIntent"). \
+            require("Person").require("Friends_Keyword").build()
+        self.register_intent(friends_of_person_intent,
+                             self.handle_add_friends_of_friend_intent)
+
+        num_friends_of_person_intent = IntentBuilder("FbFriendnumofPersonIntent"). \
+            require("Person").require("Num_Friends_Keyword").build()
+        self.register_intent(num_friends_of_person_intent,
+                             self.handle_friend_num_of_intent)
+
+        like_photos_of_person_intent = IntentBuilder("FbLikePhotosofPersonIntent"). \
+            require("Person").require("Like_Photos_Keyword").build()
+        self.register_intent(like_photos_of_person_intent,
+                             self.handle_like_photos_of_intent)
+
     def get_session(self):
         try:
             # get chat session
@@ -631,7 +657,6 @@ class FacebookSkill(MycroftSkill):
             self.fb_settings.store()
         except Exception as e:
             self.log.error(e)
-
 
     # browser service methods
     def is_login(self):
@@ -1035,13 +1060,82 @@ class FacebookSkill(MycroftSkill):
         friend = self.friends[friend]
         self.make_friends_off(friend, self.friend_num)
 
-    # TODO finish these
-    def handle_when_was_last_online(self, message):
-        person = message.data["person"]
-        id = self.friends[person]
-        last_seen = self.settings["timestamps"][id]["last_seen"]
-        self.speak(person + " was last seen online " + last_seen)
+    def handle_post_this_intent(self, message):
+        post = message.data.get("Post")
+        self.speak("posting " + post + " in face book")
+        self.post_to_wall(post)
 
+    def handle_when_was_last_online(self, message):
+        person = message.data.get("Person")
+        best = 0
+        f = person
+        for friend in self.friends.keys():
+            rating = fuzz.ratio(friend, person)
+            if rating > best:
+                best = rating
+                f = friend
+        id = self.friends[f]
+        last_seen = self.settings["timestamps"][id]["last_seen"]
+        self.speak(f + " was last seen online " + last_seen)
+
+    def handle_chat_person_intent(self, message):
+        person = message.data.get("Person")
+        text = message.data.get("Chat")
+        best = 0
+        f = person
+        for friend in self.friends.keys():
+            rating = fuzz.ratio(friend, person)
+            if rating > best:
+                best = rating
+                f = friend
+        id = self.friends[f]
+        try:
+            self.chat.sendMessage(text, id)
+            self.speak("chat message sent to " + f)
+        except Exception as e:
+            self.speak_dialog("unknown_person")
+            self.log.error(e)
+
+    def handle_add_friends_of_friend_intent(self, message):
+        person = message.data.get("Person")
+        best = 0
+        f = person
+        for friend in self.friends.keys():
+            rating = fuzz.ratio(friend, person)
+            if rating > best:
+                best = rating
+                f = friend
+        id = self.friends[f]
+        self.speak("Adding friends of " + f)
+        self.make_friends_off(id, self.friend_num)
+
+    def handle_friend_num_of_intent(self, message):
+        person = message.data.get("Person")
+        best = 0
+        f = person
+        for friend in self.friends.keys():
+            rating = fuzz.ratio(friend, person)
+            if rating > best:
+                best = rating
+                f = friend
+        id = self.friends[f]
+        num = self.number_of_friends_of(id)
+        self.speak(f + " has " + str(num) + " friends")
+
+    def handle_like_photos_of_intent(self, message):
+        person = message.data.get("Person")
+        best = 0
+        f = person
+        for friend in self.friends.keys():
+            rating = fuzz.ratio(friend, person)
+            if rating > best:
+                best = rating
+                f = friend
+        id = self.friends[f]
+        self.speak("liking photos from " + f)
+        self.like_photos_from(id, self.photo_num)
+
+    # TODO finish these
     def handle_build_about_me_intent(self, message):
         # TODO use dialog
         self.speak("Building about me section on facebook")
@@ -1057,33 +1151,6 @@ class FacebookSkill(MycroftSkill):
         self.chat.sendMessage(text, person)
         # TODO use dialog
         self.speak("I said " + message + " to " + self.get_name_from_id(person))
-
-    def handle_chat_person_intent(self, message):
-        # TODO fuzzymatch
-        person = message.data["person"]
-        text = message.data["text"]
-        try:
-            id = self.friends[person]
-            self.chat.sendMessage(text, id)
-        except Exception as e:
-            self.speak_dialog("unknown_person")
-            self.log.error(e)
-
-    def handle_add_friends_of_friend_intent(self, message):
-        person = message.data["person"]
-        id = self.friends[person]
-        self.make_friends_off(id, self.friend_num)
-
-    def handle_like_photos_of_intent(self, message):
-        person = message.data["person"]
-        id = self.friends[person]
-        self.like_photos_from(id, self.photo_num)
-
-    def handle_friend_num_of_intent(self, message):
-        person = message.data["person"]
-        id = self.friends[person]
-        num = self.number_of_friends_of(id)
-        self.speak(person + " has " + str(num) + " friends")
 
     def stop(self):
         try:
