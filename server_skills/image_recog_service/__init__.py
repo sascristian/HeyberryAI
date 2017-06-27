@@ -8,6 +8,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
+from fuzzywuzzy import fuzz
 
 try:
     path = ConfigurationManager.get("caffe_path")
@@ -148,10 +149,10 @@ class ImageRecognitionSkill(MycroftSkill):
         self.register_intent(image_recog_status_intent,
                              self.handle_img_recog_intent)
 
-        deep_draw_intent = IntentBuilder("DeepDrawIntent") \
-            .require("deepdraw").build()
-        self.register_intent(deep_draw_intent,
-                             self.handle_deep_draw_intent)
+        deep_draw_about_intent = IntentBuilder("DeepDrawIntent") \
+            .require("deepdraw").optionally("NetClass").build()
+        self.register_intent(deep_draw_about_intent,
+                             self.handle_deep_draw_about_intent)
 
     def handle_img_recog_intent(self, message):
         self.speak_dialog("imgrecogstatus")
@@ -171,6 +172,29 @@ class ImageRecognitionSkill(MycroftSkill):
 
     def handle_deep_draw_intent(self, message):
         imagenet_class = random.randint(0, len(self.label_mapping))
+        classifier = ImageRecognitionService(self.emitter)
+        classifier.local_deepdraw(imagenet_class, message.data.get("target"))
+
+    def handle_deep_draw_about_intent(self, message):
+        about = message.data.get("NetClass")
+        imagenet_class = -1
+        if about is None:
+            imagenet_class = random.randint(0, len(self.label_mapping))
+        elif about.isdigit():
+            if int(about) > 0 and int(about) < len(self.label_mapping):
+                imagenet_class = about
+            else:
+                imagenet_class = random.randint(0, len(self.label_mapping))
+        else:
+            best = 0
+            i = 0
+            for image_class in self.label_mapping:
+                rating = fuzz.ratio(about,
+                                image_class)
+                if rating > best:
+                    best = rating
+                    imagenet_class = i
+                i += 1
         classifier = ImageRecognitionService(self.emitter)
         classifier.local_deepdraw(imagenet_class, message.data.get("target"))
 
