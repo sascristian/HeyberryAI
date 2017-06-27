@@ -507,8 +507,6 @@ class FacebookSkill(MycroftSkill):
         self.random_chat = self.config.get('random_chat', ["one day AI and humans will drink beer together"])
 
     def initialize(self):
-        self.fb_settings["timestamps"] = {}
-        self.fb_settings.store()
         # start chat
         if self.fb_settings["session"] is None:
             self.chat = FaceChat(self.mail, self.passwd, logger=self.log, emitter=self.emitter, active=self.active)
@@ -840,7 +838,8 @@ class FacebookSkill(MycroftSkill):
         id = str(id) #in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
-
+        while "friends" not in self.browser.get_current_url().lower():
+            sleep(0.1)
         path = ".//*[@id='m-timeline-cover-section']/div[4]/a[2]"
         self.browser.get_element(data=path, name="friends", type="xpath")
         if not self.browser.click_element("friends"):
