@@ -113,3 +113,30 @@ a mechanism to give control to skills will be implemented
 
 
 # config
+
+        self.mail = self.config['mail']
+        self.passwd = self.config['passwd']
+        # chat client active
+        self.active = self.config.get('chat_client', True)
+        # speak when message received
+        self.speak_messages = self.config.get('speak_messages', True)
+        # TODO who to warn?
+        self.default_target = ""
+        # like user photo when user talks on chat
+        self.like_back = self.config.get('like_back', True)
+        # tell user when making a post
+        self.speak_posts = self.config.get('speak_posts', True)
+        # number of friends to add
+        self.friend_num = self.config.get('friend_num', 2)
+        # number of photos to like
+        self.photo_num = self.config.get('photo_num', 2)
+        # pre-defined friend list / nicknames
+        self.friends = self.config.get('friends', {})
+        # friends to track
+        self.friends_to_track = self.config.get('friends_to_track', ["none"])
+        self.warn_on_friend_request = self.config.get('warn_on_friend_request', True)
+        self.track_friends = self.config.get('track_friends', True)
+        # TODO make these a .txt so the corpus can be easily extended
+        self.motivational = self.config.get('motivational', ["may the source be with you"])
+        self.girlfriend_messages = self.config.get('girlfriend_messages', ["AI can also love"])
+        self.random_chat = self.config.get('random_chat', ["one day AI and humans will drink beer together"])
