@@ -757,13 +757,13 @@ class FacebookSkill(MycroftSkill):
                            ".//*[@id='root']/div[2]/div[3]/div/ul/li[2]/table/tbody/tr/td/span/a",
                            ".//*[@id='root']/div[2]/div[2]/div[1]/ul/li[2]/table/tbody/tr/td/span/a"
                            ]
-        # try all xpaths until one is sucefully clicked
+        # try all xpaths until one is successfully clicked
         for xpath in possible_xpaths:
             if self.browser.get_element(data=xpath,
                                         name="profile_photo",
                                         type="xpath"):
-                if self.browser.click_element("profile_photo"):
-                    break
+                self.browser.click_element("profile_photo")
+                break
 
         # click like
         possible_like_xpaths = [".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a", #like box
@@ -778,8 +778,8 @@ class FacebookSkill(MycroftSkill):
                 if self.browser.get_element(data=xpath,
                                             name="like_button",
                                             type="xpath"):
-                    if self.browser.click_element("like_button"):
-                        break
+                    self.browser.click_element("like_button")
+                    break
             sleep(2)
             # check if already liked
             url2 = self.browser.get_current_url()
@@ -793,9 +793,9 @@ class FacebookSkill(MycroftSkill):
                 if self.browser.get_element(data=xpath,
                                             name="next_button",
                                             type="xpath"):
-                    if self.browser.click_element("next_button"):
-                        next = True
-                        break
+                    self.browser.click_element("next_button")
+                    next = True
+                    break
             if not next:
                 self.log.error("next photo button not found: ")
                 break
