@@ -465,7 +465,7 @@ class FacebookSkill(MycroftSkill):
         self.reload_skill = False
         self.mail = self.config['mail']
         self.passwd = self.config['passwd']
-        self.fb_settings = SkillSettings(dirname(__file__) + '/settings.json')
+        self.fb_settings = SkillSettings(dirname(__file__) + '/facebook.json')
         if "cookies" not in self.fb_settings.keys():
             self.fb_settings["cookies"] = []
             self.fb_settings.store()
