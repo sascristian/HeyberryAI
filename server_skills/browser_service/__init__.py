@@ -68,10 +68,7 @@ class BrowserControl():
         self.waiting_for = "browser_get_cookies_response"
         self.emitter.emit(Message("browser_get_cookies_request", {}))
         self.wait()
-        try:
-            return self.result["cookies"]
-        except:
-            return []
+        return self.result.get("cookies", [])
 
     def get_title(self):
         self.waiting_for = "browser_title_response"
@@ -79,33 +76,23 @@ class BrowserControl():
         self.wait()
         return self.result.get("title", None)
 
-
     def add_cookies(self, cookies):
         self.waiting_for = "browser_add_cookies_response"
         self.emitter.emit(Message("browser_add_cookies_request", {"cookies":cookies}))
         self.wait()
-        try:
-            return self.result["sucess"]
-        except:
-            return False
+        return self.result.get("sucess", False)
 
     def go_back(self):
         self.waiting_for = "browser_go_back_result"
         self.emitter.emit(Message("browser_go_back_request", {}))
         self.wait()
-        try:
-            return self.result["sucess"]
-        except:
-            return False
+        return self.result.get("sucess", False)
 
     def get_current_url(self):
         self.waiting_for = "browser_current_url_result"
         self.emitter.emit(Message("browser_current_url_request", {}))
         self.wait()
-        try:
-            return self.result["url"]
-        except:
-            return None
+        return self.result.get("url", None)
 
     def end_wait(self, message):
         if message.type == self.waiting_for:
@@ -134,10 +121,7 @@ class BrowserControl():
         self.waiting_for = "browser_restart_result"
         self.emitter.emit(Message("browser_restart_request", {}))
         self.wait()
-        try:
-            return self.result["sucess"]
-        except:
-            return False
+        return self.result.get("sucess", False)
 
     def close_browser(self):
         self.waiting_for = "browser_closed"
@@ -148,46 +132,31 @@ class BrowserControl():
         self.waiting_for = "browser_url_opened"
         self.emitter.emit(Message("browser_url_request", {"url":url}))
         self.wait()
-        try:
-            return self.result["result"]
-        except:
-            return None
+        return self.result.get("result", None)
 
     def get_element(self, data, name="temp", type="name"):
         self.waiting_for = "browser_element_stored"
         self.emitter.emit(Message("browser_get_element", {"type":type, "data":data, "element_name":name}))
         self.wait()
-        try:
-            return self.result["sucess"]
-        except:
-            return False
+        return self.result.get("sucess", False)
 
     def get_elements(self, data, name="temp", type="name"):
         self.waiting_for = "browser_elements_stored"
         self.emitter.emit(Message("browser_get_elements", {"type":type, "data":data, "element_name":name}))
         self.wait()
-        try:
-            return self.result["sucess"]
-        except:
-            return False
+        return self.result.get("sucess", False)
 
     def get_element_text(self, name="temp"):
         self.waiting_for = "browser_element_text"
         self.emitter.emit(Message("browser_get_element_text", {"element_name":name}))
         self.wait()
-        try:
-            return self.result["text"]
-        except:
-            return None
+        return self.result.get("text", None)
 
     def get_available_elements(self):
         self.waiting_for = "browser_available_elements"
         self.emitter.emit(Message("browser_available_elements_request", {}))
         self.wait()
-        try:
-            return self.result["elements"]
-        except:
-            return {}
+        return self.result.get("elements", {})
 
     def reset_elements(self):
         self.waiting_for = "browser_elements_reset_result"
@@ -198,28 +167,19 @@ class BrowserControl():
         self.waiting_for = "browser_element_cleared"
         self.emitter.emit(Message("browser_clear_element", {"element_name":name}))
         self.wait()
-        try:
-            return self.result["sucess"]
-        except:
-            return False
+        return self.result.get("sucess", False)
 
     def click_element(self, name="temp"):
         self.waiting_for = "browser_element_clicked"
         self.emitter.emit(Message("browser_click_element", {"element_name":name}))
         self.wait()
-        try:
-            return self.result["sucess"]
-        except:
-            return False
+        return self.result.get("sucess", False)
 
     def send_keys_to_element(self, text, name="temp", special=False):
         self.waiting_for = "browser_sent_keys"
         self.emitter.emit(Message("browser_send_keys_to_element", {"element_name": name, "special_key":special, "text":text}))
         self.wait()
-        try:
-            return self.result["sucess"]
-        except:
-            return False
+        return self.result.get("sucess", False)
 
 
 class BrowserService(MycroftSkill):
