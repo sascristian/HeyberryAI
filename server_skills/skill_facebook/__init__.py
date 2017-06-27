@@ -529,6 +529,8 @@ class FacebookSkill(MycroftSkill):
         self.photo_num = self.config.get('photo_num', 2)
         # pre-defined friend list / nicknames
         self.friends = self.config.get('friends', {})
+        # friends to track
+        self.friends_to_track = self.config.get('friends_to_track', ["none"])
         # default reply to wall posts
         self.default_comment = self.config.get('default_comment', [":)"])
         self.logged_in = False
@@ -976,8 +978,14 @@ class FacebookSkill(MycroftSkill):
 
     def handle_track_friends(self, message):
         timestamps = message.data.get("timestamps", {})
+        if "none" in self.friends_to_track:
+            return
         for id in timestamps.keys():
             data = timestamps[id]
+            if "all" not in self.friends_to_track:
+                if data["name"] not in self.friends_to_track:
+                    if id not in self.friends_to_track:
+                        continue
             if id not in self.fb_settings["timestamps"].keys():
                 self.fb_settings["timestamps"][id] = {"last_seen": "never", "timestamps": []}
 
