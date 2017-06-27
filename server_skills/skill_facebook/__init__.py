@@ -262,9 +262,7 @@ class FaceChat(fbchat.Client):
             self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name,
                                                                          seen_ts / 1000))
         name = self.get_user_name(seen_by)
-        self.ws.emit(
-            Message("fb_chat_message_reached_target_inbox", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
-        # TODO if friend_request pending, this means it was accepted
+       # TODO if friend_request pending, this means it was accepted
         if seen_by in self.pending_requests.keys():
             # (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
             self.log.info("friend request accepted by " + name)
