@@ -620,8 +620,8 @@ class FacebookSkill(MycroftSkill):
 
     # browser service methods
     def is_login(self):
-        #  {"type": "browser_url_opened", "data": {"page_title": "Log into Facebook | Facebook",
-        if self.browser.open_url("https://m.facebook.com/home.php?ref_component=mbasic_home_header"):
+        # "page_title": "Log into Facebook | Facebook"
+        if self.browser.open_url("https://m.facebook.com/"):
             title = self.browser.result["page_title"].lower()
             if "log into facebook" in title:
                 return False
@@ -639,6 +639,10 @@ class FacebookSkill(MycroftSkill):
         self.fb_settings.store()
 
     def login(self):
+        self.browser.open_url("m.facebook.com")
+        if self.browser.get_current_url() is None:
+            self.log.error("Browser service doesnt seem to be started")
+            return False
 
         if len(self.fb_settings["cookies"]) > 0 and self.selenium_cookies:
             self.log.info("attempting to use last session cookies")
@@ -649,9 +653,6 @@ class FacebookSkill(MycroftSkill):
                 else:
                     self.log.warning("cookies set, but not logged_in")
         self.browser.open_url("m.facebook.com")
-        if self.browser.get_current_url() is None:
-            self.log.error("Browser service doesnt seem to be started")
-            return False
         while "facebook" not in self.browser.get_current_url():
             sleep(0.2)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[1]/input", name="input", type="xpath")
@@ -660,7 +661,8 @@ class FacebookSkill(MycroftSkill):
         self.browser.send_keys_to_element(text=self.passwd, name="passwd", special=False)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[3]/input", name="login", type="xpath")
         self.get_cookies()
-        return self.browser.click_element("login")
+        self.browser.click_element("login")
+        return self.is_login()
 
     def post_to_wall(self, keys):
         if not self.is_login():
