@@ -800,14 +800,12 @@ class FacebookSkill(MycroftSkill):
         author_name = message.data.get("author_name")
         self.log.info(author_id)
 
-        if author_id is None:
-            return
         # on chat message speak it
         if self.speak_messages:
             text = author_name + " said " + text
             self.speak(text)
         # on chat message like that persons photos
-        if self.like_back:
+        if self.like_back and author_id is not None:
             self.like_photos_from(author_id, self.photo_num)
 
 
