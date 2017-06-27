@@ -210,7 +210,7 @@ def _watch_skills():
                 if skill["shutdown"]:
                     logger.debug("Skill " + skill_folder + " shutdown was requested")
                     skill["shutdown"] = False
-                    if skill["loaded"]:
+                    if skill.get("loaded"):
                         if skill["instance"].external_shutdown:
                             skill["instance"].shutdown()
                             del skill["instance"]
@@ -240,8 +240,9 @@ def _watch_skills():
                         "loaded") and modified <= last_modified_skill and not skill["reload_request"]:
                     continue
                 # checking if skill was modified or reload was requested
-                elif (skill.get(
-                        "instance") and modified > last_modified_skill) or skill["reload_request"]:
+                elif ((skill.get(
+                        "instance") and modified > last_modified_skill)) or (skill.get(
+                        "instance") and skill["reload_request"]):
                     # checking if skill reload was requested
                     if skill["reload_request"]:
                         logger.debug("External reload for " + skill_folder + " requested")
