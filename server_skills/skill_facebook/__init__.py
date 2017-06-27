@@ -229,6 +229,39 @@ class FaceChat(fbchat.Client):
             if self.verbose:
                 self.log.debug('Unknown message received: {}'.format(msg))
 
+    def onFriendRequest(self, from_id=None, msg={}):
+        """
+        Called when the client is listening, and somebody sends a friend request
+        :param from_id: The ID of the person that sent the request
+        :param msg: A full set of the data recieved
+        """
+        if self.verbose:
+            self.log.info("Friend request from {}".format(from_id))
+        if from_id is not None:
+            self.ws.emit(Message("fb_friend_request", {"friend_id": from_id}))
+
+    def onMessageSeen(self, seen_by=None, thread_id=None, thread_type=ThreadType.USER, seen_ts=None, ts=None,
+                      metadata=None, msg={}):
+        """
+        Called when the client is listening, and somebody marks a message as seen
+        :param seen_by: The ID of the person who marked the message as seen
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
+        :param seen_ts: A timestamp of when the person saw the message
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type thread_type: models.ThreadType
+        """
+        # TODO if friend_request pending, this means it was accepted (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
+        if self.verbose:
+            self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name,
+                                                                         seen_ts / 1000))
+        name = self.get_user_name(seen_by)
+        self.ws.emit(
+            Message("fb_chatmessage_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+
+    # just overriding to avoid logs
     def onLoggingIn(self, email=None):
         """
         Called when the client is logging in
@@ -321,24 +354,6 @@ class FaceChat(fbchat.Client):
             "Nickname change from {} in {} ({}) for {}: {}".format(author_id, thread_id, thread_type.name, changed_for,
                                                                    new_nickname))
 
-    def onMessageSeen(self, seen_by=None, thread_id=None, thread_type=ThreadType.USER, seen_ts=None, ts=None,
-                      metadata=None, msg={}):
-        """
-        Called when the client is listening, and somebody marks a message as seen
-        :param seen_by: The ID of the person who marked the message as seen
-        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
-        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
-        :param seen_ts: A timestamp of when the person saw the message
-        :param ts: A timestamp of the action
-        :param metadata: Extra metadata about the action
-        :param msg: A full set of the data recieved
-        :type thread_type: models.ThreadType
-        """
-        if self.verbose:
-            self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name, seen_ts / 1000))
-        name = self.get_user_name(seen_by)
-        self.ws.emit(Message("fb_chatmessage_seen", {"friend_id": seen_by, "friend_name":name, "timestamp":seen_ts}))
-
     def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
                            metadata=None, msg={}):
         """
@@ -398,17 +413,6 @@ class FaceChat(fbchat.Client):
         if self.verbose:
             self.log.info("{} removed: {}".format(author_id, removed_id))
 
-    def onFriendRequest(self, from_id=None, msg={}):
-        """
-        Called when the client is listening, and somebody sends a friend request
-        :param from_id: The ID of the person that sent the request
-        :param msg: A full set of the data recieved
-        """
-        if self.verbose:
-            self.log.info("Friend request from {}".format(from_id))
-        if from_id is not None:
-            self.ws.emit(Message("fb_friend_request", {"friend_id":from_id}))
-
     def onInbox(self, unseen=None, unread=None, recent_unread=None, msg={}):
         """
         .. todo::
@@ -437,6 +441,44 @@ class FaceChat(fbchat.Client):
         """
         self.log.exception('Exception in parsing of {}'.format(msg))
 
+    def _fetchInfo(self, *ids):
+        data = {
+            "ids[{}]".format(i): _id for i, _id in enumerate(ids)
+        }
+        j = checkRequest(self._post(ReqUrl.INFO, data))
+
+        if not j['payload']['profiles']:
+            raise Exception('No users/pages returned')
+
+        entries = {}
+        for _id in j['payload']['profiles']:
+            k = j['payload']['profiles'][_id]
+            if k['type'] in ['user', 'friend']:
+                entries[_id] = {
+                    'id': _id,
+                    'type': ThreadType.USER,
+                    'url': k.get('uri'),
+                    'first_name': k.get('firstName'),
+                    'is_viewer_friend': k.get('is_friend'),
+                    'gender': k.get('gender'),
+                    'profile_picture': {'uri': k.get('thumbSrc')},
+                    'name': k.get('name')
+                }
+            elif k['type'] == 'page':
+                entries[_id] = {
+                    'id': _id,
+                    'type': ThreadType.PAGE,
+                    'url': k.get('uri'),
+                    'profile_picture': {'uri': k.get('thumbSrc')},
+                    'name': k.get('name')
+                }
+            else:
+                raise Exception('{} had an unknown thread type: {}'.format(_id, k))
+
+        if self.verbose:
+            self.log.debug(entries)
+
+        return entries
 
 class FacebookSkill(MycroftSkill):
 
