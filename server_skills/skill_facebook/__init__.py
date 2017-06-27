@@ -228,6 +228,18 @@ class FaceChat(fbchat.Client):
                 self.timestamps[id] = timestamp
                 name = self.get_user_name(id)
                 last_seen = time.time() - timestamp
+                if last_seen >= 60:
+                    last_seen = last_seen/60
+                    if last_seen >= 60:
+                        last_seen = last_seen / 60
+                        if last_seen >= 60:
+                            last_seen = last_seen / 60
+                        else:
+                            last_seen = str(last_seen) + " hours ago"
+                    else:
+                        last_seen = str(last_seen) + " minutes ago"
+                else:
+                    last_seen = str(last_seen) + " seconds ago"
                 data[id] = {"name":name, "timestamp":timestamp, "last_seen":last_seen}
             self.ws.emit(Message("fb_last_seen_timestamps", data))
 
