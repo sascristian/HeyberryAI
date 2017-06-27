@@ -623,7 +623,7 @@ class FacebookSkill(MycroftSkill):
         post_intent = IntentBuilder("FbPostIntent"). \
             require("Post").build()
         self.register_intent(post_intent,
-                             self.handle_post_this_intent())
+                             self.handle_post_this_intent)
 
         last_online_intent = IntentBuilder("FbLastOnlineIntent"). \
             require("Person").require("Online_Keyword").build()
