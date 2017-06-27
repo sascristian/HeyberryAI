@@ -764,7 +764,7 @@ class FacebookSkill(MycroftSkill):
             if not clicked:
                 if self.browser.get_element(data=xpath,
                                             name="profile_photo",
-                                            type="xpath") :
+                                            type="xpath"):
                     clicked = self.browser.click_element("profile_photo")
                     self.log.info("Clicking photos link")
 
@@ -776,7 +776,7 @@ class FacebookSkill(MycroftSkill):
                                 ".//*[@id='root']/div[1]/div/div[1]/div[2]/table/tbody/tr/td[2]/a"  # pt
                                 ]
         c1 = 0
-        while not c1 <= num:
+        while c1 <= num:
             self.log.info("Searching Like Button")
             clicked = False
             for xpath in possible_like_xpaths:
