@@ -25,16 +25,13 @@ this will be updated as more intents are added
             Input: how many friends does jarbas have
             2017-06-27 17:37:08,362 - CLIClient - INFO - Speak: jarbas has 214 friends
 
-            add friends of jarbas
-            Input:
+            Input: add friends of jarbas
             2017-06-27 17:39:05,102 - CLIClient - INFO - Speak: Adding friends of jarbas
 
-            like photos of jarbas
-            Input:
+            Input: like photos of jarbas
             2017-06-27 17:40:05,063 - CLIClient - INFO - Speak: liking photos from jarbas
 
-            when was jarbas last online
-            Input:
+            Input: when was jarbas last online
             2017-06-27 17:44:13,745 - CLIClient - INFO - Speak: jarbas was last seen online 42.2736573656 minutes ago
 
             Input: refresh friendlist
@@ -79,9 +76,12 @@ this will be updated as more intents are added
             2017-06-27 15:59:34,076 - FacebookSkill - INFO - Tracking friend: Jarbas Ai last_seen: 19.2339087168 minutes ago
             2017-06-27 15:59:34,077 - FacebookSkill - INFO - Jarbas Ai online history: [1498590986, 1498592420]
 
-            on facebook chat message seen (may mean friend_request accepted, reached target inbox (not in ignored messages) or seen by person)
+            on facebook chat message seen
             2017-06-27 16:19:01,370 - Skills - DEBUG - {"type": "fb_chatmessage_seen", "data": {"friend_id": "100017774057242", "friend_name": "Jarbas Mycroft", "timestamp": 1498594740376}, "context": null}
 
+            if waiting for friend_request response
+            on facebook chat message seen (may mean friend_request accepted)
+            2017-06-27 16:19:01,370 - Skills - DEBUG - {"type": fb_possible_new_friend", "data": {"friend_id": "100017774057242", "friend_name": "Jarbas Mycroft", "timestamp": 1498594740376}, "context": null}
 
 # WIP
 
