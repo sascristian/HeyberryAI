@@ -65,7 +65,7 @@ def checkRequest(r, do_json_check=True):
 
 
 class FaceChat(fbchat.Client):
-    def __init__(self, email, password, verbose=False, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.INFO):
+    def __init__(self, email, password, verbose=False, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.WARNING):
         """Initializes and logs in the client
 
         :param email: Facebook `email`, `id` or `phone number`
