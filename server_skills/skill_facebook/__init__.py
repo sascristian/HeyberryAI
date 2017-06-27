@@ -765,16 +765,15 @@ class FacebookSkill(MycroftSkill):
                 if self.browser.click_element("profile_photo"):
                     break
 
-        sleep(2)
         # click like
         possible_like_xpaths = [".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a", #like box
                                 ".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a/span" # like text
-                               ]
+                                ]
         possible_next_xpaths = [".//*[@id='root']/div[1]/div/div[1]/div/div[2]/table/tbody/tr/td[2]/a",  # usa
                                 ".//*[@id='root']/div[1]/div/div[1]/div[2]/table/tbody/tr/td[2]/a"  # pt
-                               ]
+                                ]
         c1 = 0
-        while not c1 <= num: #
+        while not c1 <= num:
             for xpath in possible_like_xpaths:
                 if self.browser.get_element(data=xpath,
                                             name="like_button",
