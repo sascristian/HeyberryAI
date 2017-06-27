@@ -44,7 +44,7 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 class FaceChat(fbchat.Client):
-    def __init__(self, email, password, verbose=False, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.WARNING):
+    def __init__(self, email, password, pending_requests = {}, verbose=False, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.WARNING):
         """Initializes and logs in the client
 
         :param email: Facebook `email`, `id` or `phone number`
@@ -58,8 +58,8 @@ class FaceChat(fbchat.Client):
         :type logging_level: int
         :raises: Exception on failed login
         """
-        self.friend_counter = {}
-        self.pending_requests = {}
+
+        self.pending_requests = pending_requests
         self.verbose = verbose
         if logger is not None:
             self.log = logger
@@ -262,24 +262,20 @@ class FaceChat(fbchat.Client):
             self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name,
                                                                          seen_ts / 1000))
         name = self.get_user_name(seen_by)
-        if seen_by in self.friend_counter.keys():
+        self.ws.emit(
+            Message("fb_chat_message_reached_target_inbox", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+        # TODO if friend_request pending, this means it was accepted
+        if seen_by in self.pending_requests.keys():
+            # (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
+            self.log.info("friend request accepted by " + name)
+            self.ws.emit(
+                Message("fb_possible_new_friend",
+                        {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+            self.pending_requests.pop(seen_by)
+        else:
             # seen
             self.ws.emit(
                 Message("fb_chat_message_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
-            self.friend_counter.pop(seen_by)
-        else:
-            # friend request accepted or reached inbox
-            self.friend_counter[seen_by] = 1
-            self.ws.emit(
-                Message("fb_chat_message_reached_target_inbox", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
-            # TODO if friend_request pending, this means it was accepted
-            if seen_by in self.pending_requests.keys():
-                # (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
-                self.log.info("friend request accepted by " + name)
-                self.ws.emit(
-                    Message("fb_possible_new_friend",
-                            {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
-                self.pending_requests.pop(seen_by)
 
 
 
