@@ -79,7 +79,11 @@ class FaceChat(fbchat.Client):
         :type logging_level: int
         :raises: Exception on failed login
         """
-
+        self.verbose = verbose
+        if logger is not None:
+            self.log = logger
+        else:
+            self.log = log
         self.sticky, self.pool = (None, None)
         self._session = requests.session()
         self.req_counter = 1
@@ -106,10 +110,7 @@ class FaceChat(fbchat.Client):
         if not session_cookies or not self.setSession(session_cookies) or not self.isLoggedIn():
             self.login(email, password, max_tries)
 
-        if logger is not None:
-            self.log = logger
-        else:
-            self.log = log
+
         self.ws = emitter
         if self.ws is not None:
             self.ws.on("fb_chat_message", self.handle_chat_request)
@@ -119,10 +120,10 @@ class FaceChat(fbchat.Client):
         self.queue = [] #[[author_id , utterance, name]]
         self.monitor_thread = None
         self.queue_thread = None
-        self.start_threads()
         self.privacy = False
         self.active = active
-        self.verbose = verbose
+
+        self.start_threads()
 
     def activate_client(self):
         self.active = True
@@ -463,9 +464,9 @@ class FacebookSkill(MycroftSkill):
     def __init__(self):
         super(FacebookSkill, self).__init__(name="FacebookSkill")
         self.reload_skill = False
-        self.mail = self.config['mail']
-        self.passwd = self.config['passwd']
-        self.fb_settings = SkillSettings(dirname(__file__) + '/facebook.json')
+        self.mail = "somom@30wave.com"#self.config['mail']
+        self.passwd = "artificialjarbas6"#self.config['passwd']
+        self.fb_settings = SkillSettings(dirname(__file__) + '/settings.json')
         if "cookies" not in self.fb_settings.keys():
             self.fb_settings["cookies"] = []
             self.fb_settings.store()
