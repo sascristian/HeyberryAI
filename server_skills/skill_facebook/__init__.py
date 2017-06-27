@@ -220,6 +220,7 @@ class FaceChat(fbchat.Client):
         if "buddyList" in data.keys():
             self.log.debug("timestamps update received: " + str(data["buddyList"]))
             for id in data["buddyList"].keys():
+                id = dict(id)
                 timestamp = id["lat"]
                 self.timestamps[id] = timestamp
 
