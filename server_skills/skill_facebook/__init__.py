@@ -356,7 +356,8 @@ class FaceChat(fbchat.Client):
         """
         if self.verbose:
             self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name, seen_ts / 1000))
-        self.ws.emit(Message("fb_chatmessage_seen", {"friend_id": seen_by, "timestamp":seen_ts}))
+        name = self.get_user_name(seen_by)
+        self.ws.emit(Message("fb_chatmessage_seen", {"friend_id": seen_by, "friend_name":name, "timestamp":seen_ts}))
 
     def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
                            metadata=None, msg={}):
