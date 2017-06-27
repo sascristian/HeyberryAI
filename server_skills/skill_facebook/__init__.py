@@ -677,13 +677,13 @@ class FacebookSkill(MycroftSkill):
             # ".//*[@id='friends_center_main']/div[2]/div[2]/table/tbody/tr/td[2]/div[2]/a[1]"
             sucess = False
             while not sucess and fails < 5:
-                # possible xpath 1
+                # possible xpath 1 (portugal)
                 if self.browser.get_element(data=".//*[@id='friends_center_main']/div[2]/div[2]/table/tbody/tr/td[2]/div[2]/a[1]",
                                                name="add_friend",
                                                type="xpath"):
                     sucess = True
                 else:
-                    # possible xpath 2
+                    # possible xpath 2 (usa)
                     sucess = self.browser.get_element(data=".//*[@id='friends_center_main']/div[3]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]",
                                                name="add_friend",
                                                type="xpath")
@@ -705,57 +705,64 @@ class FacebookSkill(MycroftSkill):
         path = ".//*[@id='m-timeline-cover-section']/div[4]/a[3]"
         if not self.browser.get_element(data=path, name="photos", type="xpath"):
             self.log.error("cant find photos link")
+            sleep(100)
             return
 
         self.browser.click_element("photos")
         while "m.facebook.com/profile.php?v=photos" not in self.browser.get_current_url():
             sleep(0.3)
-        if self.browser.get_element(data=".//*[@id='u_0_0']/img",
-                                    name="profile_photo",
-                                    type="xpath"):
-            self.browser.click_element("profile_photo")
-        else:
-            self.log.warning("Could not click profile picture")
-            if self.browser.get_element(data=".//*[@id='root']/div[2]/div[3]/div/ul/li[1]/table/tbody/tr/td/span/a",
-                                        name="profile_pics",
-                                         type="xpath"):
-                self.browser.click_element("profile_pics")
-            else:
-                self.log.warning("Could not click profile pictures link")
-                if self.browser.get_element(data=".//*[@id='root']/div[2]/div[3]/div/ul/li[3]/table/tbody/tr/td/span/a",
-                                             name="timeline_photos",
-                                             type="xpath"):
-                    self.browser.click_element("timeline_photos")
-                else:
-                    self.log.warning("Could not click timeline photos")
-                    if self.browser.get_element(data=".//*[@id='root']/div[2]/div[3]/div/ul/li[2]/table/tbody/tr/td/span/a",
-                                                name="mobile",
-                                                type="xpath"):
-                        self.browser.click_element("mobile")
-                    else:
-                        self.log.warning("Could not click mobile uploads")
+
+        # xpaths change by country! and depend a little on privacy settings
+        # profile photo, profile photos link, timeline photos link, mobile uploads link
+        possible_xpaths = [".//*[@id='u_0_0']/img",
+                           ".//*[@id='root']/div[2]/div[3]/div/ul/li[1]/table/tbody/tr/td/span/a",
+                           ".//*[@id='root']/div[2]/div[2]/div[1]/ul/li[1]/table/tbody/tr/td/span/a",
+                           ".//*[@id='root']/div[2]/div[3]/div/ul/li[3]/table/tbody/tr/td/span/a",
+                           ".//*[@id='root']/div[2]/div[2]/div[1]/ul/li[4]/table/tbody/tr/td/span/a",
+                           ".//*[@id='root']/div[2]/div[3]/div/ul/li[2]/table/tbody/tr/td/span/a",
+                           ".//*[@id='root']/div[2]/div[2]/div[1]/ul/li[2]/table/tbody/tr/td/span/a"
+                           ]
+        # try all xpaths until one is sucefully clicked
+        for xpath in possible_xpaths:
+            if self.browser.get_element(data=xpath,
+                                        name="profile_photo",
+                                        type="xpath"):
+                if self.browser.click_element("profile_photo"):
+                    break
+
         sleep(3)
         # click like
+        possible_like_xpaths = [".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a", #like box
+                                ".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a/span" # like text
+                               ]
+        possible_next_xpaths = [".//*[@id='root']/div[1]/div/div[1]/div/div[2]/table/tbody/tr/td[2]/a",  # usa
+                                ".//*[@id='root']/div[1]/div/div[1]/div[2]/table/tbody/tr/td[2]/a"  # pt
+                               ]
         c1 = 0
-        while not c1 <= num:
-            if not self.browser.get_element(data=".//*[@id='root']/div[1]/div/div[2]/div/table/tbody/tr/td[1]/a", name="like_button",
-                                     type="xpath"):
-                self.browser.get_element(data=".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a/span",
-                                         name="like_button",
-                                         type="xpath")
-            self.browser.click_element("like_button")
+        while not c1 <= num: #
+            for xpath in possible_like_xpaths:
+                if self.browser.get_element(data=xpath,
+                                            name="like_button",
+                                            type="xpath"):
+                    if self.browser.click_element("like_button"):
+                        break
             sleep(5)
+            # check if already liked
             url2 = self.browser.get_current_url()
             if "https://m.facebook.com/reactions" in url2:  # already liked opened reaction page
                 self.browser.go_back()
             while "https://m.facebook.com/reactions" in self.browser.get_current_url():
                 sleep(0.3)
-            if self.browser.get_element(data=".//*[@id='root']/div[1]/div/div[1]/div[2]/table/tbody/tr/td[2]/a",
-                                         name="next_button",
-                                         type="xpath"):
-                self.browser.click_element("next_button")
-                sleep(2)
-            else:
+            # click next
+            next = False
+            for xpath in possible_next_xpaths:
+                if self.browser.get_element(data=xpath,
+                                            name="next_button",
+                                            type="xpath"):
+                    if self.browser.click_element("next_button"):
+                        next = True
+                        break
+            if not next:
                 self.log.error("next photo button not found: ")
                 break
             c1 += 1
@@ -813,7 +820,7 @@ class FacebookSkill(MycroftSkill):
 
     def handle_friend_number_intent(self, message):
         #self.add_suggested_friends(1)
-        self.like_photos_from("100009535576189")
+        self.like_photos_from("1218751325")
         #self.post_to_wall("can i login by re-using cookies intead of mail and passwd?")
        # self.speak_dialog("friend_number", {"number": self.face.get_friend_num()})
 
