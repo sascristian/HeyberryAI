@@ -78,12 +78,15 @@ this will be updated as more intents are added
             2017-06-27 15:59:34,076 - FacebookSkill - INFO - Tracking friend: Jarbas Ai last_seen: 19.2339087168 minutes ago
             2017-06-27 15:59:34,077 - FacebookSkill - INFO - Jarbas Ai online history: [1498590986, 1498592420]
 
+            on facebook chat delivered
+            2017-06-27 18:06:13,307 - Skills - DEBUG - {"type": "fb_chatmessage_delivered", "data": {"friend_id": "100014741746063", "friend_name": "Jarbas Ai", "timestamp": 1498601156543}, "context": null}
+
             on facebook chat message seen
-            2017-06-27 16:19:01,370 - Skills - DEBUG - {"type": "fb_chatmessage_seen", "data": {"friend_id": "100017774057242", "friend_name": "Jarbas Mycroft", "timestamp": 1498594740376}, "context": null}
+            2017-06-27 16:19:01,370 - Skills - DEBUG - {"type": "fb_chatmessage_seen", "data": {"friend_id": "100014741746063", "friend_name": "Jarbas Ai", "timestamp": 1498594740376}, "context": null}
 
             if waiting for friend_request response
             on facebook chat message seen (may mean friend_request accepted)
-            2017-06-27 16:19:01,370 - Skills - DEBUG - {"type": fb_possible_new_friend", "data": {"friend_id": "100017774057242", "friend_name": "Jarbas Mycroft", "timestamp": 1498594740376}, "context": null}
+            2017-06-27 16:19:01,370 - Skills - DEBUG - {"type": fb_possible_new_friend", "data": {"friend_id": "100014741746063", "friend_name": "Jarbas Ai", "timestamp": 1498594740376}, "context": null}
 
 # WIP
 
