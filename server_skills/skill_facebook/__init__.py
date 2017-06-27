@@ -216,11 +216,10 @@ class FaceChat(fbchat.Client):
         Called when the client is listening, and some unknown data was recieved
         :param msg: A full set of the data recieved
         """
-        data = dict(msg)
         if "buddyList" in data.keys():
             self.log.debug("timestamps update received: " + str(data["buddyList"]))
-            for id in data["buddyList"].keys():
-                id = dict(id)
+            for id in msg["buddyList"].keys():
+                id = msg["buddyList"][id]
                 timestamp = id["lat"]
                 self.timestamps[id] = timestamp
 
