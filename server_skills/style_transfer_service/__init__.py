@@ -153,7 +153,7 @@ class StyleTransferSkill(MycroftSkill):
         weights = VGG16_WEIGHTS
         self.log.info("preparing net for style transfer")
         try:
-            st = StyleTransfer(img_style, img_content, model_name, model_file, pretrained_file, mean_file, weights)
+            st = StyleTransfer(img_style, img_content, model_name, model_file, pretrained_file, mean_file, weights, logger=self.log)
         except Exception as e:
             self.log.error(e)
             return
@@ -321,13 +321,13 @@ class StyleTransfer(object):
         Style transfer class.
     """
 
-    def __init__(self, style_path, base_path, model_name, model_file, pretrained_file, mean_file, weights):
+    def __init__(self, style_path, base_path, model_name, model_file, pretrained_file, mean_file, weights, logger=None):
         """
             Initialize the model used for style transfer.
             :param str model_name:
                 Model to use.
         """
-
+        self.log = logger
         # add model and weights
         self.load_model(model_file, pretrained_file, mean_file)
         self.weights = weights.copy()
@@ -438,6 +438,8 @@ class StyleTransfer(object):
         orig_dim = min(self.net.blobs["data"].shape[2:])
 
         # rescale the images
+        if self.log is not None:
+            self.log.info("Rescaling images")
         scale = max(length / float(max(img_style.shape[:2])),
                     orig_dim / float(min(img_style.shape[:2])))
         img_style = rescale(img_style, STYLE_SCALE * scale)
@@ -446,6 +448,8 @@ class StyleTransfer(object):
         img_content = rescale(img_content, scale)
 
         # compute style representations
+        if self.log is not None:
+            self.log.info("computing style representations")
         self._rescale_net(img_style)
         layers = self.weights["style"].keys()
         net_in = self.transformer.preprocess("data", img_style)
@@ -454,6 +458,8 @@ class StyleTransfer(object):
                                  gram_scale=1)[0]
 
         # compute content representations
+        if self.log is not None:
+            self.log.info("computing content representations")
         self._rescale_net(img_content)
         layers = self.weights["content"].keys()
         net_in = self.transformer.preprocess("data", img_content)
@@ -461,6 +467,8 @@ class StyleTransfer(object):
 
         # generate initial net input
         # "content" = content image, see kaishengtai/neuralart
+        if self.log is not None:
+            self.log.info("Generating initial net input")
         if isinstance(init, np.ndarray):
             img0 = self.transformer.preprocess("data", init)
         elif init == "content":
@@ -472,6 +480,8 @@ class StyleTransfer(object):
             img0 = self._make_noise_input(init)
 
         # compute data bounds
+        if self.log is not None:
+            self.log.info("Computing data bounds")
         data_min = -self.transformer.mean["data"][:, 0, 0]
         data_max = data_min + self.transformer.raw_scale["data"]
         data_bounds = [(data_min[0], data_max[0])] * (img0.size / 3) + \
@@ -488,6 +498,8 @@ class StyleTransfer(object):
         }
 
         # optimize
+        if self.log is not None:
+            self.log.info("Optimizing")
         self._callback = callback
         minfn_args["callback"] = self.callback
         res = minimize(style_optfn, img0.flatten(), **minfn_args).nit
