@@ -663,21 +663,20 @@ class FacebookSkill(MycroftSkill):
             return False
 
         self.log.info("Performing manual Log In")
-        sleep(10)
+
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[1]/input", name="input", type="xpath")
-        sleep(10)
+
         self.browser.send_keys_to_element(text=self.mail, name="input", special=False)
-        sleep(10)
+
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[2]/div/input", name="passwd", type="xpath")
-        sleep(10)
+
         self.browser.send_keys_to_element(text=self.passwd, name="passwd", special=False)
-        sleep(10)
+
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[3]/input", name="login", type="xpath")
-        sleep(10)
+
         self.browser.click_element("login")
-        sleep(10)
+        sleep(5)
         self.get_cookies()
-        sleep(10)
         return self.is_login()
 
     def post_to_wall(self, keys):
@@ -742,11 +741,10 @@ class FacebookSkill(MycroftSkill):
         path = ".//*[@id='m-timeline-cover-section']/div[4]/a[3]"
         if not self.browser.get_element(data=path, name="photos", type="xpath"):
             self.log.error("cant find photos link")
-            sleep(100)
             return
 
         self.browser.click_element("photos")
-        while "m.facebook.com/profile.php?v=photos" not in self.browser.get_current_url():
+        while "=photos" not in self.browser.get_current_url():
             sleep(0.3)
 
         # xpaths change by country! and depend a little on privacy settings
