@@ -795,15 +795,18 @@ class FacebookSkill(MycroftSkill):
             self.speak(speech)
 
     def handle_chat_message(self, message):
-        text = message.data["message"]
-        author = message.data["author_id"]
+        text = message.data.get("message")
+        author_id = message.data.get("author_id")
+        author_name = message.data.get("author_name")
+        if author_id is None:
+            return
         # on chat message speak it
         if self.speak_messages:
-            text = self.get_name_from_id(author) + " said " + text
+            text = author_name + " said " + text
             self.speak(text)
         # on chat message like that persons photos
         if self.like_back:
-            self.like_photos_from(author, self.photo_num)
+            self.like_photos_from(author_id, self.photo_num)
 
 
     # intents
