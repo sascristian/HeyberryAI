@@ -60,6 +60,7 @@ class BrowserControl():
         self.emitter.on("browser_url_opened", self.end_wait)
         self.emitter.on("browser_add_cookies_response", self.end_wait)
         self.emitter.on("browser_get_cookies_response", self.end_wait)
+        self.emitter.on("browser_title_response", self.end_wait)
         if autostart:
             self.start_browser()
 
@@ -71,6 +72,13 @@ class BrowserControl():
             return self.result["cookies"]
         except:
             return []
+
+    def get_title(self):
+        self.waiting_for = "browser_title_response"
+        self.emitter.emit(Message("browser_title_request", {}))
+        self.wait()
+        return self.result.get("title", None)
+
 
     def add_cookies(self, cookies):
         self.waiting_for = "browser_add_cookies_response"
@@ -230,6 +238,7 @@ class BrowserService(MycroftSkill):
         self.emitter.on("browser_restart_request", self.handle_restart_browser)
         self.emitter.on("browser_close_request", self.handle_close_browser)
         self.emitter.on("browser_url_request", self.handle_go_to_url)
+        self.emitter.on("browser_title_request", self.handle_title_request)
         self.emitter.on("browser_go_back_request", self.handle_go_back)
         self.emitter.on("browser_current_url_request", self.handle_current_url)
         self.emitter.on("browser_get_element", self.handle_get_element)
@@ -301,8 +310,15 @@ class BrowserService(MycroftSkill):
         cookies = self.driver.get_cookies()
         self.emitter.emit(Message("browser_get_cookies_response", {"cookies":cookies}))
 
+    def handle_title_request(self, message):
+        self.emitter.emit(Message("browser_title_response", {"title": self.driver.title}))
+
     def handle_add_cookies(self, message):
         cookies = message.data.get("cookies", [])
+        if len(cookies) == 0:
+            self.emitter.emit(Message("browser_add_cookies_response",
+                                      {"sucess": False, "cookies": cookies, "cookie_number": len(cookies)}))
+            return
         for cookie in cookies:
             self.driver.add_cookie(cookie)
         self.emitter.emit(Message("browser_add_cookies_response", {"sucess":True, "cookies":cookies, "cookie_number":len(cookies)}))

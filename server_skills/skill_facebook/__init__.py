@@ -622,8 +622,11 @@ class FacebookSkill(MycroftSkill):
     def is_login(self):
         # "page_title": "Log into Facebook | Facebook"
         if self.browser.open_url("https://m.facebook.com/"):
-            title = self.browser.result["page_title"].lower()
-            if "log into facebook" in title:
+            title = self.browser.get_title().lower()
+            if title is None:
+                self.log.error("No page title received")
+                return False
+            if "log into" in title:
                 return False
             else:
                 return True
