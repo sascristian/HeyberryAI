@@ -826,12 +826,11 @@ class FacebookSkill(MycroftSkill):
                         clicked = True
                         self.log.info("Clicked Like Button")
             # check if already liked
-            url2 = self.browser.get_current_url()
-            if "https://m.facebook.com/reactions" in url2:  # already liked opened reaction page
+            sleep(0.5)
+            while "https://m.facebook.com/reactions" in self.browser.get_current_url():
                 self.browser.go_back()
                 self.log.info("Already liked")
-            while "https://m.facebook.com/reactions" in self.browser.get_current_url():
-                sleep(0.3)
+                sleep(0.5)
             # click next
             next = False
             self.log.info("Searching next button")
