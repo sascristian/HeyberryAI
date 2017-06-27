@@ -646,11 +646,6 @@ class FacebookSkill(MycroftSkill):
         self.fb_settings.store()
 
     def login(self):
-        self.browser.open_url("m.facebook.com")
-        if self.browser.get_current_url() is None:
-            self.log.error("Browser service doesnt seem to be started")
-            return False
-
         if len(self.fb_settings["cookies"]) > 0 and self.selenium_cookies:
             self.log.info("attempting to use last session cookies")
             if self.browser.add_cookies(self.fb_settings["cookies"]):
@@ -659,6 +654,12 @@ class FacebookSkill(MycroftSkill):
                     return True
                 else:
                     self.log.warning("cookies set, but not logged_in")
+
+        self.browser.open_url("m.facebook.com")
+        if self.browser.get_current_url() is None:
+            self.log.error("Browser service doesnt seem to be started")
+            return False
+
         self.log.info("Performing manual Log In")
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[1]/input", name="input", type="xpath")
         self.browser.send_keys_to_element(text=self.mail, name="input", special=False)
