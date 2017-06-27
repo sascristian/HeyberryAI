@@ -513,7 +513,7 @@ class FacebookSkill(MycroftSkill):
             self.chat = FaceChat(self.mail, self.passwd, logger=self.log, emitter=self.emitter, active=self.active, session_cookies=self.fb_settings["session"])
 
         self.face_id = self.chat.uid
-        self.browser = BrowserControl(self.emitter, autostart=True)
+        self.browser = BrowserControl(self.emitter)
         # populate friend ids
         self.get_ids_from_chat() # TODO make an intent for this?
         # listen for chat messages
@@ -799,7 +799,7 @@ class FacebookSkill(MycroftSkill):
         author_id = message.data.get("author_id")
         author_name = message.data.get("author_name")
         self.log.info(author_id)
-        time.sleep(60)
+
         if author_id is None:
             return
         # on chat message speak it
