@@ -597,8 +597,6 @@ class FacebookSkill(MycroftSkill):
                 self.fb_settings["timestamps"][id] = {"last_seen": "never", "timestamps": []}
 
             self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
-            print self.fb_settings["timestamps"]
-            print self.fb_settings["timestamps"][id]
             self.fb_settings["timestamps"][id]["last_seen"] = data["last_seen"]
 
             try:
