@@ -403,7 +403,7 @@ def make_step(net, step_size=1.5, end='inception_4c/output', clip=True, focus=No
 
 
 def deepdraw(net, base_img, octaves, random_crop=True, visualize=False, focus=None,
-             clip=True, logger=None, verbose=True, **step_params):
+             clip=True, logger=None, verbose=False, **step_params):
     # prepare base image
     if logger is not None:
         logger.info("pre-processing")
