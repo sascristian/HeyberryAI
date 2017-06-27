@@ -767,7 +767,7 @@ class FacebookSkill(MycroftSkill):
                                             type="xpath") :
                     clicked = self.browser.click_element("profile_photo")
                     self.log.info("Clicking photos link")
-        sleep(20)
+
         # click like
         possible_like_xpaths = [".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a", #like box
                                 ".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a/span" # like text
@@ -778,13 +778,15 @@ class FacebookSkill(MycroftSkill):
         c1 = 0
         while not c1 <= num:
             self.log.info("Searching Like Button")
+            clicked = False
             for xpath in possible_like_xpaths:
-                if self.browser.get_element(data=xpath,
-                                            name="like_button",
-                                            type="xpath"):
-                    self.browser.click_element("like_button")
-                    break
-            self.log.info("Clicked Like Button")
+                if not clicked:
+                    if self.browser.get_element(data=xpath,
+                                                name="like_button",
+                                                type="xpath"):
+                        self.browser.click_element("like_button")
+                        clicked = True
+                        self.log.info("Clicked Like Button")
             # check if already liked
             url2 = self.browser.get_current_url()
             if "https://m.facebook.com/reactions" in url2:  # already liked opened reaction page
@@ -795,17 +797,19 @@ class FacebookSkill(MycroftSkill):
             # click next
             next = False
             self.log.info("Searching next button")
+            clicked = False
             for xpath in possible_next_xpaths:
-                if self.browser.get_element(data=xpath,
-                                            name="next_button",
-                                            type="xpath"):
-                    self.browser.click_element("next_button")
-                    next = True
-                    self.log.info("Clicked Next Button")
-                    break
+                if not clicked:
+                    if self.browser.get_element(data=xpath,
+                                                name="next_button",
+                                                type="xpath"):
+                        self.browser.click_element("next_button")
+                        next = True
+                        self.log.info("Clicked Next Button")
+                        clicked = True
             if not next:
                 self.log.error("next photo button not found: ")
-                break
+                return
             c1 += 1
 
     def make_friends_off(self, id, num=3):
