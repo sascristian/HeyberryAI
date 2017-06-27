@@ -578,16 +578,6 @@ class FacebookSkill(MycroftSkill):
         self.register_intent(chat_someone_intent,
                              self.handle_random_chat_intent)
 
-        my_likes_intent = IntentBuilder("FbMyLikesIntent"). \
-            require("what_do_i_like_Keyword").build()
-        self.register_intent(my_likes_intent,
-                             self.handle_my_likes_intent)
-
-        answer_mom_intent = IntentBuilder("FbReplyMomIntent"). \
-            require("comment_all_from_mom_Keyword").build()
-        self.register_intent(answer_mom_intent,
-                             self.handle_comment_all_from_intent)
-
         refresh_friendlist_intent = IntentBuilder("FbRefreshListIntent"). \
             require("refresh_friendlist_Keyword").build()
         self.register_intent(refresh_friendlist_intent,
@@ -837,10 +827,29 @@ class FacebookSkill(MycroftSkill):
             return int(text)
 
     def make_friends_off(self, id, num=3):
+        i = 0
         if not self.is_login():
             if not self.login():
                 self.log.error("could not log in in facebook")
-                return
+                return i
+        id = str(id) #in case someone passes int
+        link = "https://m.facebook.com/profile.php?id=" + id
+        self.browser.open_url(link)  # persons profile page
+
+        path = ".//*[@id='m-timeline-cover-section']/div[4]/a[2]"
+        self.browser.get_element(data=path, name="friends", type="xpath")
+        if not self.browser.click_element("friends"):
+            self.log.error("cant find friends link")
+            return i
+
+        while i < num:
+            i += 1
+            self.log.info("adding friend " + str(i))
+            path = ".//*[@id='root']/div[1]/div[2]/div[" + str(i) + "]/table/tbody/tr/td[2]/div[2]/a"
+            self.browser.get_element(data=path, name="add_friend", type="xpath")
+            if not self.browser.click_element("add_friend"):
+                self.log.error("cant find friends link")
+        return i
 
     # internal methods
     def get_ids_from_chat(self, message=None):
@@ -905,11 +914,11 @@ class FacebookSkill(MycroftSkill):
 
     def handle_post_friend_number_intent(self, message):
         self.speak_dialog("post_friend_number")
-        num_friends = 0 #self.face.get_friend_num()
+        num_friends = self.get_friend_number()
         time = asctime()
         message = "i have " + str(num_friends) + " friends on facebook and now is " + str(
             time) + '\nNot bad for an artificial inteligence'
-        #self.face.post_to_wall(message)
+        self.post_to_wall(message)
 
     def handle_like_photos_intent(self, message):
         self.speak_dialog("like_photos")
@@ -920,7 +929,28 @@ class FacebookSkill(MycroftSkill):
 
     def handle_make_friends_intent(self, message):
         self.speak_dialog("make_friend")
-        self.add_suggested_friends(self.friend_num)
+        self.make_friends_off("1440846372")
+        #self.add_suggested_friends(self.friend_num)
+
+    def handle_chat_girlfriend_intent(self, message):
+        # text = message.data["text"]
+        text = random.choice(self.girlfriend_messages)
+        # TODO use dialog
+        self.speak("Just sent a text message to girlfriend, i told her " + text)
+        id = self.friends["girlfriend"]
+        self.chat.sendMessage(text, id)
+
+    def handle_random_chat_intent(self, message):
+        text = random.choice(self.random_chat)
+        person = random.choice(self.friends.keys())
+        id = self.friends[person]
+        self.chat.sendMessage(text, id)
+        # TODO use dialog
+        self.speak("Just sent a text message to " + person + ", i said " + text)
+
+    # TODO finish these
+    def handle_when_was_last_online(self, message):
+        pass
 
     def handle_make_friends_of_friends_intent(self, message):
         # TODO own dialog
@@ -932,20 +962,6 @@ class FacebookSkill(MycroftSkill):
        # self.selenium_face.add_friends_of(friend, self.friend_num)
        # self.selenium_face.close()
 
-    def handle_who_liked_me_intent(self, message):
-      #  people = self.face.get_people_who_liked()
-        self.speak_dialog("liked_my_stuff")
-        #for p in people:
-        #    self.speak(p)
-
-    def handle_chat_girlfriend_intent(self, message):
-        # text = message.data["text"]
-        text = random.choice(self.girlfriend_messages)
-        # TODO use dialog
-        self.speak("Just sent a text message to girlfriend, i told her " + text)
-        id = self.friends["girlfriend"]
-        self.chat.sendMessage(text, id)
-
     def handle_build_about_me_intent(self, message):
         # TODO use dialog
         self.speak("Building about me section on facebook")
@@ -953,25 +969,6 @@ class FacebookSkill(MycroftSkill):
        # self.selenium_face.build_about_me()
        # self.selenium_face.close()
 
-    def handle_my_likes_intent(self, message):
-       # likes = self.face.get_likes()
-        #self.speak_dialog("likes", {"number": len(likes)})
-        i = 0
-        #for like in likes:
-           # self.speak(like)
-        #    i += 1
-        #    if i > 5:
-        #        return
-
-    def handle_random_chat_intent(self, message):
-        text = random.choice(self.random_chat)
-        person = random.choice(self.friends.keys())
-        id = self.friends[person]
-        self.chat.sendMessage(text, id)
-        # TODO use dialog
-        self.speak("Just sent a text message to " + person + ", i said " + text)
-
-    # TODO finish these
     def handle_motivate_makers_intent(self, message):
         # TODO randomly choose someone from mycroft team
         person = "100014192855507"  # atchison
@@ -980,12 +977,6 @@ class FacebookSkill(MycroftSkill):
         self.chat.sendMessage(text, person)
         # TODO use dialog
         self.speak("I said " + message + " to " + self.get_name_from_id(person))
-
-    def handle_last_wall_post_intent(self, message):
-       # posts = self.face.get_wall_posts()
-        # TODO sort by time (or is it sorted?)
-        #self.speak(posts[0]["message"])
-        pass
 
     def handle_chat_person_intent(self, message):
         # TODO fuzzymatch
@@ -997,18 +988,6 @@ class FacebookSkill(MycroftSkill):
         except Exception as e:
             self.speak_dialog("unknown_person")
             self.log.error(e)
-
-    def handle_comment_all_from_intent(self, message):
-        # TODO make regex
-        #name = message.data["name"]
-        name = "mom"
-        # TODO optionally get comment from message
-        #text = message.data["text"]
-        text = self.default_comment
-        person_id = self.friends[name]
-       # self.face.answer_comments_from(person_id, text=text)
-        # TODO use dialog
-        self.speak("I am replying to all comments from " + name + " with a smiley")
 
     def handle_add_friends_of_friend_intent(self, message):
         person = message.data["person"]
