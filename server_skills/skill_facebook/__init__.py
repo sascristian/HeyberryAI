@@ -739,13 +739,13 @@ class FacebookSkill(MycroftSkill):
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
         path = ".//*[@id='m-timeline-cover-section']/div[4]/a[3]"
-        if not self.browser.get_element(data=path, name="photos", type="xpath"):
+        self.browser.get_element(data=path, name="photos", type="xpath")
+        if not self.browser.click_element("photos"):
             self.log.error("cant find photos link")
             return
 
-        self.browser.click_element("photos")
         while "photos" not in self.browser.get_current_url():
-            sleep(0.3)
+            sleep(0.5)
 
         # xpaths change by country! and depend a little on privacy settings
         # profile photo, profile photos link, timeline photos link, mobile uploads link
@@ -759,11 +759,13 @@ class FacebookSkill(MycroftSkill):
                            ]
         # try all xpaths until one is successfully clicked
         clicked = False
+        self.log.info("Searching Photos link")
         for xpath in possible_xpaths:
             if self.browser.get_element(data=xpath,
                                         name="profile_photo",
                                         type="xpath") and not clicked:
                 clicked = self.browser.click_element("profile_photo")
+                self.log.info("Clicking photos link")
 
         # click like
         possible_like_xpaths = [".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a", #like box
