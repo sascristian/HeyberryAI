@@ -261,6 +261,27 @@ class FaceChat(fbchat.Client):
         self.ws.emit(
             Message("fb_chatmessage_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
 
+    def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
+                           metadata=None, msg={}):
+        """
+        Called when the client is listening, and somebody marks messages as delivered
+        :param msg_ids: The messages that are marked as delivered
+        :param delivered_for: The person that marked the messages as delivered
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type thread_type: models.ThreadType
+        """
+        if self.verbose:
+            self.log.info(
+            "Messages {} delivered to {} in {} ({}) at {}s".format(msg_ids, delivered_for, thread_id, thread_type.name,
+                                                                   ts / 1000))
+        name = self.get_user_name(delivered_for)
+        self.ws.emit(
+            Message("fb_chatmessage_delivered", {"friend_id": delivered_for, "friend_name": name, "timestamp": ts}))
+
     # just overriding to avoid logs
     def onLoggingIn(self, email=None):
         """
@@ -353,24 +374,6 @@ class FaceChat(fbchat.Client):
             self.log.info(
             "Nickname change from {} in {} ({}) for {}: {}".format(author_id, thread_id, thread_type.name, changed_for,
                                                                    new_nickname))
-
-    def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
-                           metadata=None, msg={}):
-        """
-        Called when the client is listening, and somebody marks messages as delivered
-        :param msg_ids: The messages that are marked as delivered
-        :param delivered_for: The person that marked the messages as delivered
-        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
-        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
-        :param ts: A timestamp of the action
-        :param metadata: Extra metadata about the action
-        :param msg: A full set of the data recieved
-        :type thread_type: models.ThreadType
-        """
-        if self.verbose:
-            self.log.info(
-            "Messages {} delivered to {} in {} ({}) at {}s".format(msg_ids, delivered_for, thread_id, thread_type.name,
-                                                                   ts / 1000))
 
     def onMarkedSeen(self, threads=None, seen_ts=None, ts=None, metadata=None, msg={}):
         """
@@ -479,6 +482,7 @@ class FaceChat(fbchat.Client):
             self.log.debug(entries)
 
         return entries
+
 
 class FacebookSkill(MycroftSkill):
 
@@ -610,31 +614,6 @@ class FacebookSkill(MycroftSkill):
         except Exception as e:
             self.log.error(e)
 
-    def handle_track_friends(self, message):
-        timestamps = message.data.get("timestamps", {})
-        for id in timestamps.keys():
-            data = timestamps[id]
-            if id not in self.fb_settings["timestamps"].keys():
-                self.fb_settings["timestamps"][id] = {"last_seen": "never", "timestamps": []}
-
-            self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
-            self.fb_settings["timestamps"][id]["last_seen"] = data["last_seen"]
-
-            try:
-                if data["timestamp"] not in self.fb_settings["timestamps"][id]["timestamps"]:
-                    self.fb_settings["timestamps"][id]["timestamps"].append(data["timestamp"])
-            except Exception as e:
-                self.log.error(e)
-            self.log.info(data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]["timestamps"]))
-            self.fb_settings.store()
-
-    def handle_friend_request(self, message):
-        friend_id = message.data.get("friend_id")
-        if self.warn_on_friend_request:
-            self.log.info("New friend request from " + friend_id)
-            self.speak("I have a new friend request")
-            self.fb_settings["friend_requests"].append([friend_id, time.time()])
-            self.fb_settings.store()
 
     # browser service methods
     def is_login(self):
@@ -952,6 +931,33 @@ class FacebookSkill(MycroftSkill):
         # on chat message like that persons photos
         if self.like_back and author_id is not None:
             self.like_photos_from(author_id, self.photo_num)
+
+    def handle_track_friends(self, message):
+        timestamps = message.data.get("timestamps", {})
+        for id in timestamps.keys():
+            data = timestamps[id]
+            if id not in self.fb_settings["timestamps"].keys():
+                self.fb_settings["timestamps"][id] = {"last_seen": "never", "timestamps": []}
+
+            self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
+            self.fb_settings["timestamps"][id]["last_seen"] = data["last_seen"]
+
+            try:
+                if data["timestamp"] not in self.fb_settings["timestamps"][id]["timestamps"]:
+                    self.fb_settings["timestamps"][id]["timestamps"].append(data["timestamp"])
+            except Exception as e:
+                self.log.error(e)
+            self.log.info(
+                data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]["timestamps"]))
+            self.fb_settings.store()
+
+    def handle_friend_request(self, message):
+        friend_id = message.data.get("friend_id")
+        if self.warn_on_friend_request:
+            self.log.info("New friend request from " + friend_id)
+            self.speak("I have a new friend request")
+            self.fb_settings["friend_requests"].append([friend_id, time.time()])
+            self.fb_settings.store()
 
     # intents
     def handle_friend_number_intent(self, message):

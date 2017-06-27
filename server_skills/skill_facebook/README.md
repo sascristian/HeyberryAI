@@ -1,10 +1,20 @@
-# mycroft-facebook-skill
+# mycroft facebook skill and client
 
-FaceBot using graph api, does most things
+facebook skill emulating a real person (no apis, may get you banned), requires browser service
 
-FaceBot using selenium web browser, takes care of adding friends and liking photos
+tries to use previous session cookies to log in, in case of fail uses email and password
 
-FaceChat handles chat messages, friend id, and soon maybe inbox notifications and such
+listens for facebook chat messages and answers them
+
+# WARNINGS
+
+facebook chat control MEANS ANYONE CAN CONTROL YOUR MYCROFT
+
+a authorization per user mechanism is being implemented, intent parser will check a blacklist for non-authorized skills
+
+password and email will be in your logs, DONT SHARE LOGS, a mechanism to censor these must be implemented
+
+DONT SHARE settings.json, your session cookies are there and are as valuable as your password
 
 # usage
 
@@ -29,20 +39,6 @@ this will be updated as more intents are added
             Input: how many friend
             2017-05-02 19:03:38,308 - CLIClient - INFO - Speak: i have 197 friends
 
-            Input: who liked you
-            2017-05-02 19:06:30,287 - CLIClient - INFO - Speak: The following persons liked stuff on my profile. Diogo Costa, Ginha Gonçalves, Paulo Pimenta, ...
-
-            Input: what do you like
-            2017-05-02 19:09:05,448 - CLIClient - INFO - Speak: I have liked 5 things
-            2017-05-02 19:09:05,453 - CLIClient - INFO - Speak: Sara Angel
-            2017-05-02 19:09:05,453 - CLIClient - INFO - Speak: Arianna Grant
-            2017-05-02 19:09:05,453 - CLIClient - INFO - Speak: Mycroft AI
-            2017-05-02 19:09:05,454 - CLIClient - INFO - Speak: Omee LiLa
-            2017-05-02 19:09:05,454 - CLIClient - INFO - Speak: Khmeng Sre
-
-            Input: reply to mom
-            2017-05-02 19:10:12,833 - CLIClient - INFO - Speak: I am replying to all comments from mom with a smiley
-
             Input: add suggested friends
             2017-05-02 19:10:45,911 - CLIClient - INFO - Speak: Making friends on face book
 
@@ -55,81 +51,50 @@ this will be updated as more intents are added
             on chat message
             Speak: author said message
             *like photos of author
+            *send utterance to messagebus and reply to user
+            *if url in metadata of message append it to message
+
+            on friend_request
+            Speak: I have a new friend request
+
+            on facebook chat timestamp update
+            2017-06-27 15:59:34,046 - Skills - DEBUG - {"type": "fb_last_seen_timestamps", "data": {"timestamps": {"some ones id": {"timestamp": 1498593561, "name": "someones name", "last_seen": "10.1155600548 seconds ago"}
+            2017-06-27 15:59:34,076 - FacebookSkill - INFO - Tracking friend: Jarbas Ai last_seen: 19.2339087168 minutes ago
+            2017-06-27 15:59:34,077 - FacebookSkill - INFO - Jarbas Ai online history: [1498590986, 1498592420]
+
+            on facebook chat message seen
+            2017-06-27 16:19:01,370 - Skills - DEBUG - {"type": "fb_chatmessage_seen", "data": {"friend_id": "100017774057242", "friend_name": "Jarbas Mycroft", "timestamp": 1498594740376}, "context": null}
 
 
-look here for example of use of old skill, 90% mycroft skill constructed (except profile picture and cover photo and profile creation and app creation...):
 
-https://www.facebook.com/profile.php?id=100014741746063
+# WIP
 
+all info for these is captured and processed, missing dialog/vocab or other minor work
 
-# install :
+    - Generating posts - listen for post requests, helper class being made to be imported and post requests made easy
+    - When was "friend" online last time intent
+    - How many friends does "friend" have intent
+    - Motivate your makers - send a thank you / motivational message to one of the mycroft devs
+    - Like photos of "friend" intent
+    - Add friends of "friend" intent
+    - Send "chat message" to "friend" intent
+    - Post friend number on wall intent
+    - Post "this" on wall intent
 
-- pip install selenium , fb and fbchat
-- i had some trouble getting selenium to run, not sure if it works out of the box (firefox binary path hard-coded)
-- work in progress, you need to hack the code a bit (in skill init, firefox binary path for selenium bot and friends dict)
-- you must create a facebook app and give post permissions
-- get a graph_api token here -> https://developers.facebook.com/tools/explorer
-- add stuff to config
+these are early stage/ideas
 
-"FacebookSkill": { "graph_api_key": "xxx", "mail": "sxxx", "passwd": "arbbb"},
+    - add "person" as friend (idea)
+    - build about me profile intent (working in previous skill incarnation)
+    - clone profile intent (idea)
+    - create account intent (idea, temp mail, create and throw out)
+    - map friend network intent (idea)
+    - track friend online patterns (data is there)
 
-# FbChat
+# trouble
 
-interface with fbchat is a work in progress
+if other skill requests actions from browser service there will be trouble since the browser is shared
 
-listening for chat commands will perform actions, chat-bot will be triggered when no specific action is requested
-
-implemented:
-- from chat map names to ids
-- on chat message speak it loud
-- on chat message have mycroft like that users photos
-
-future usage:
-- on chat message have mycroft make a post on that users wall
-- listen for messages of any kind "post a joke in my wall"
-
-# features of the facebots
-
-these are currently being expanded and made into intents, classes can be used outside of this skill for other purposes
-
-most of these work for any fb id, but privacy settings make it so you have no data returned at all it is supposed to be used on own wall and not as a "friend crawler"
-
-currently ignores graph api paging, doesnt get next results
-
-    tell number of friends
-    randomly add suggested friends
-    randomly like photos of friends
-    add friends of friend ID
-    like photos of friend ID
-    reply to all comments from person ID on own wall
-    get list of persons who liked stuff on wall (photos or status)
-    get posts in wall
-    get comments in posts of wall
-    get "storys" from wall
-    get pages i like and detailed info of pages
-    post comments
-    build about me section in profile
-    get liked pages (nearly useless except for self and pages due to privacy settings)
-    get albums from a person (nearly useless except for self and pages due to privacy settings)
-    send a chat message
-    get profile info (nearly useless except for self and pages due to privacy settings
-
-# Generating posts
+a mechanism to give control to skills will be implemented
 
 
-Generate posts, this was using code from several skills and was a mess, now has a listener instead so any skill can send posts to facebook skill
-
-This means that joke skill will have a method to post a joke on facebook for example, so any skill will be able to use this to post
-
-available: (will add links soon)
-
-
-            post joke
-            post btc price
-            post astronomy picture of the day
-            post EPIC satellite imagery
-            post a quote
-            post a fact
-            post a pick up line
-            post a movie recommendation
-            post a metal band recommendation
+# config
