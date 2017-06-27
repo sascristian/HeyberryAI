@@ -59,6 +59,7 @@ class FaceChat(fbchat.Client):
         :raises: Exception on failed login
         """
         self.friend_counter = {}
+        self.pending_requests = {}
         self.verbose = verbose
         if logger is not None:
             self.log = logger
@@ -254,12 +255,11 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         :type thread_type: models.ThreadType
         """
-        # TODO if friend_request pending, this means it was accepted (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
 
         if self.verbose:
             self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name,
                                                                          seen_ts / 1000))
-        name = self.get_user_name(seen_by) #TODO maybe this fails in friend request, good way to know!
+        name = self.get_user_name(seen_by)
         if seen_by in self.friend_counter.keys():
             # seen
             self.ws.emit(
@@ -269,7 +269,16 @@ class FaceChat(fbchat.Client):
             # friend request accepted or reached inbox
             self.friend_counter[seen_by] = 1
             self.ws.emit(
-                Message("fb_chat_message_reached_target", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+                Message("fb_chat_message_reached_target_inbox", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+            # TODO if friend_request pending, this means it was accepted
+            if seen_by in self.pending_requests.keys():
+                # (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
+                self.log.info("friend request accepted by " + name)
+                self.ws.emit(
+                    Message("fb_possible_new_friend",
+                            {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+                self.pending_requests.pop(seen_by)
+
 
 
 
