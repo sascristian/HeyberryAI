@@ -523,6 +523,7 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_friend_request", self.handle_friend_request)
         self.emitter.on("fb_last_seen_timestamps", self.handle_track_friends)
         self.build_intents()
+        self.login()
 
     def build_intents(self):
         # build intents
@@ -661,14 +662,21 @@ class FacebookSkill(MycroftSkill):
             return False
 
         self.log.info("Performing manual Log In")
+        sleep(10)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[1]/input", name="input", type="xpath")
+        sleep(10)
         self.browser.send_keys_to_element(text=self.mail, name="input", special=False)
+        sleep(10)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[2]/div/input", name="passwd", type="xpath")
+        sleep(10)
         self.browser.send_keys_to_element(text=self.passwd, name="passwd", special=False)
+        sleep(10)
         self.browser.get_element(data=".//*[@id='login_form']/ul/li[3]/input", name="login", type="xpath")
+        sleep(10)
         self.browser.click_element("login")
         sleep(10)
         self.get_cookies()
+        sleep(10)
         return self.is_login()
 
     def post_to_wall(self, keys):
