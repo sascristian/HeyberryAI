@@ -65,7 +65,7 @@ def checkRequest(r, do_json_check=True):
 
 
 class FaceChat(fbchat.Client):
-    def __init__(self, email, password, emitter=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.INFO):
+    def __init__(self, email, password, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.INFO):
         """Initializes and logs in the client
 
         :param email: Facebook `email`, `id` or `phone number`
@@ -106,7 +106,10 @@ class FaceChat(fbchat.Client):
         if not session_cookies or not self.setSession(session_cookies) or not self.isLoggedIn():
             self.login(email, password, max_tries)
 
-        self.log = log
+        if logger is not None:
+            self.log = logger
+        else:
+            self.log = log
         self.ws = emitter
         if self.ws is not None:
             self.ws.on("fb_chat_message", self.handle_chat_request)
@@ -420,6 +423,7 @@ class FaceChat(fbchat.Client):
         """
         self.log.exception('Exception in parsing of {}'.format(msg))
 
+
 class FacebookSkill(MycroftSkill):
 
     def __init__(self):
@@ -462,10 +466,10 @@ class FacebookSkill(MycroftSkill):
     def initialize(self):
         # start chat
         if self.fb_settings["session"] is None:
-            self.chat = FaceChat(self.mail, self.passwd, emitter=self.emitter, active=self.active)
+            self.chat = FaceChat(self.mail, self.passwd, logger=self.log, emitter=self.emitter, active=self.active)
             self.get_session()
         else:
-            self.chat = FaceChat(self.mail, self.passwd, emitter=self.emitter, active=self.active, session_cookies=self.fb_settings["session"])
+            self.chat = FaceChat(self.mail, self.passwd, logger=self.log, emitter=self.emitter, active=self.active, session_cookies=self.fb_settings["session"])
 
         self.face_id = self.chat.uid
         self.browser = BrowserControl(self.emitter)
