@@ -339,6 +339,9 @@ class ImageRecognitionSkill(MycroftSkill):
         class_label = message.data.get("class_label")
         class_name = message.data.get("class_name")
         self.target = message.data.get("target", "all")
+        self.speak("deepdraw",
+                          metadata={"url": link, "class_label": class_label,
+                                    "class_name": class_name})
         self.speak_dialog("deepdraw", data={"class_name": class_name},
                           metadata={"url": link, "class_label": class_label,
                                     "class_name": class_name})

@@ -88,7 +88,7 @@ class FaceChat(fbchat.Client):
         self.client = 'mercury'
         self.default_thread_id = None
         self.default_thread_type = None
-
+        self.timestamps = {}
         if not user_agent:
             user_agent = random.choice(USER_AGENTS)
 
@@ -211,6 +211,20 @@ class FaceChat(fbchat.Client):
                                  {"author_id": author_id, "author_name": author_name, "message": message,
                                       "photo": author_photo}))
 
+    def onUnknownMesssageType(self, msg={}):
+        """
+        Called when the client is listening, and some unknown data was recieved
+        :param msg: A full set of the data recieved
+        """
+        data = dict(msg)
+        if "buddyList" in data.keys():
+            self.log.debug("timestamps update received: " + str(data["buddyList"]))
+            for id in data["buddyList"].keys():
+                timestamp = id["lat"]
+                self.timestamps[id] = timestamp
+
+        else:
+            self.log.debug('Unknown message received: {}'.format(msg))
 
 class FacebookSkill(MycroftSkill):
 
