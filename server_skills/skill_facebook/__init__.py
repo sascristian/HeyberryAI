@@ -553,11 +553,6 @@ class FacebookSkill(MycroftSkill):
         self.register_intent(friends_of_friends_intent,
                              self.handle_make_friends_of_friends_intent)
 
-        who_liked_intent = IntentBuilder("FbWhoLikedMeIntent"). \
-            require("who_liked_me_Keyword").build()
-        self.register_intent(who_liked_intent,
-                             self.handle_who_liked_me_intent)
-
         motivate_mycroft_intent = IntentBuilder("FbMotivateMycroftIntent"). \
             require("motivate_mycroft_Keyword").build()
         self.register_intent(motivate_mycroft_intent,
@@ -596,11 +591,14 @@ class FacebookSkill(MycroftSkill):
         for id in timestamps.keys():
             data = timestamps[id]
             if id not in self.fb_settings["timestamps"].keys():
-                self.fb_settings["timestamps"][id] = []
-            if data not in self.fb_settings["timestamps"][id]:
-                self.fb_settings["timestamps"][id].append(data)
-                self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
-                self.fb_settings.store()
+                self.fb_settings["timestamps"][id] = {"last_seen":"never", "timestamps":[]}
+
+            self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
+            self.fb_settings["timestamps"][id]["last_seen"] = data["last_seen"]
+            if data["timestamp"] not in self.fb_settings["timestamps"][id]["timestamps"]:
+                self.fb_settings["timestamps"][id]["timestamps"].append(data["timestamp"])
+            self.fb_settings.store()
+            self.log.info(data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]))
 
     def handle_friend_request(self, message):
         friend_id = message.data.get("friend_id")
