@@ -774,27 +774,31 @@ class FacebookSkill(MycroftSkill):
                                 ]
         c1 = 0
         while not c1 <= num:
+            self.log.info("Searching Like Button")
             for xpath in possible_like_xpaths:
                 if self.browser.get_element(data=xpath,
                                             name="like_button",
                                             type="xpath"):
                     self.browser.click_element("like_button")
                     break
-            sleep(2)
+            self.log.info("Clicked Like Button")
             # check if already liked
             url2 = self.browser.get_current_url()
             if "https://m.facebook.com/reactions" in url2:  # already liked opened reaction page
                 self.browser.go_back()
+                self.log.info("Already liked")
             while "https://m.facebook.com/reactions" in self.browser.get_current_url():
                 sleep(0.3)
             # click next
             next = False
+            self.log.info("Searching next button")
             for xpath in possible_next_xpaths:
                 if self.browser.get_element(data=xpath,
                                             name="next_button",
                                             type="xpath"):
                     self.browser.click_element("next_button")
                     next = True
+                    self.log.info("Clicked Next Button")
                     break
             if not next:
                 self.log.error("next photo button not found: ")
