@@ -507,6 +507,8 @@ class FacebookSkill(MycroftSkill):
         self.random_chat = self.config.get('random_chat', ["one day AI and humans will drink beer together"])
 
     def initialize(self):
+        self.fb_settings["timestamps"] = {}
+        self.fb_settings.store()
         # start chat
         if self.fb_settings["session"] is None:
             self.chat = FaceChat(self.mail, self.passwd, logger=self.log, emitter=self.emitter, active=self.active)
@@ -525,6 +527,7 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_last_seen_timestamps", self.handle_track_friends)
         self.build_intents()
         self.login()
+
 
     def build_intents(self):
         # build intents
@@ -848,7 +851,7 @@ class FacebookSkill(MycroftSkill):
             path = ".//*[@id='root']/div[1]/div[2]/div[" + str(i) + "]/table/tbody/tr/td[2]/div[2]/a"
             self.browser.get_element(data=path, name="add_friend", type="xpath")
             if not self.browser.click_element("add_friend"):
-                self.log.error("cant find friends link")
+                self.log.error("cant find add friend button")
         return i
 
     # internal methods
