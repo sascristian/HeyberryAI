@@ -20,6 +20,23 @@ DONT SHARE settings.json, your session cookies are there and are as valuable as 
 
 this will be updated as more intents are added
 
+
+
+            Input: how many friends does jarbas have
+            2017-06-27 17:37:08,362 - CLIClient - INFO - Speak: jarbas has 214 friends
+
+            add friends of jarbas
+            Input:
+            2017-06-27 17:39:05,102 - CLIClient - INFO - Speak: Adding friends of jarbas
+
+            like photos of jarbas
+            Input:
+            2017-06-27 17:40:05,063 - CLIClient - INFO - Speak: liking photos from jarbas
+
+            when was jarbas last online
+            Input:
+            2017-06-27 17:44:13,745 - CLIClient - INFO - Speak: jarbas was last seen online 42.2736573656 minutes ago
+
             Input: refresh friendlist
             2017-05-02 18:57:21,392 - CLIClient - INFO - Speak: Updating friend list from chat
 

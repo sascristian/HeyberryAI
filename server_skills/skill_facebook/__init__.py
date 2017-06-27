@@ -1087,8 +1087,9 @@ class FacebookSkill(MycroftSkill):
             if rating > best:
                 best = rating
                 f = friend
-        id = self.friends[f]
         try:
+            id = self.friends[f]
+            text = text.replace("message","").replace("to","").replace("chat","")
             self.chat.sendMessage(text, id)
             self.speak("chat message sent to " + f)
         except Exception as e:
