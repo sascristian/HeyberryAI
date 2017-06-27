@@ -62,9 +62,8 @@ this will be updated as more intents are added
             2017-06-27 15:59:34,076 - FacebookSkill - INFO - Tracking friend: Jarbas Ai last_seen: 19.2339087168 minutes ago
             2017-06-27 15:59:34,077 - FacebookSkill - INFO - Jarbas Ai online history: [1498590986, 1498592420]
 
-            on facebook chat message seen
+            on facebook chat message seen (may mean friend_request accepted, reached target inbox (not in ignored messages) or seen by person)
             2017-06-27 16:19:01,370 - Skills - DEBUG - {"type": "fb_chatmessage_seen", "data": {"friend_id": "100017774057242", "friend_name": "Jarbas Mycroft", "timestamp": 1498594740376}, "context": null}
-
 
 
 # WIP

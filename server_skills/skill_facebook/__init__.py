@@ -58,6 +58,7 @@ class FaceChat(fbchat.Client):
         :type logging_level: int
         :raises: Exception on failed login
         """
+        self.friend_counter = {}
         self.verbose = verbose
         if logger is not None:
             self.log = logger
@@ -254,12 +255,25 @@ class FaceChat(fbchat.Client):
         :type thread_type: models.ThreadType
         """
         # TODO if friend_request pending, this means it was accepted (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
+
         if self.verbose:
             self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name,
                                                                          seen_ts / 1000))
-        name = self.get_user_name(seen_by)
-        self.ws.emit(
-            Message("fb_chatmessage_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+        name = self.get_user_name(seen_by) #TODO maybe this fails in friend request, good way to know!
+        if seen_by in self.friend_counter.keys():
+            if self.friend_counter[seen_by] == 1:
+                # seen
+                self.ws.emit(
+                    Message("fb_chat_message_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+                self.friend_counter.pop(seen_by)
+        else:
+            # friend request accepted or reached inbox
+            self.friend_counter[seen_by] = 1
+            self.ws.emit(
+                Message("fb_chat_message_reached_target", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+
+
+
 
     def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
                            metadata=None, msg={}):
