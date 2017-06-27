@@ -226,6 +226,200 @@ class FaceChat(fbchat.Client):
         else:
             self.log.debug('Unknown message received: {}'.format(msg))
 
+    def onLoggingIn(self, email=None):
+        """
+        Called when the client is logging in
+        :param email: The email of the client
+        """
+        self.log.info("Logging in {}...".format(email))
+
+    def onLoggedIn(self, email=None):
+        """
+        Called when the client is successfully logged in
+        :param email: The email of the client
+        """
+        self.log.info("Login of {} successful.".format(email))
+
+    def onListening(self):
+        """Called when the client is listening"""
+        self.log.info("Listening...")
+
+    def onColorChange(self, mid=None, author_id=None, new_color=None, thread_id=None, thread_type=ThreadType.USER,
+                      ts=None, metadata=None, msg={}):
+        """
+        Called when the client is listening, and somebody changes a thread's color
+        :param mid: The action ID
+        :param author_id: The ID of the person who changed the color
+        :param new_color: The new color
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type new_color: models.ThreadColor
+        :type thread_type: models.ThreadType
+        """
+        self.log.info("Color change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_color))
+
+    def onEmojiChange(self, mid=None, author_id=None, new_emoji=None, thread_id=None, thread_type=ThreadType.USER,
+                      ts=None, metadata=None, msg={}):
+        """
+        Called when the client is listening, and somebody changes a thread's emoji
+        :param mid: The action ID
+        :param author_id: The ID of the person who changed the emoji
+        :param new_emoji: The new emoji
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type thread_type: models.ThreadType
+        """
+        self.log.info("Emoji change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_emoji))
+
+    def onTitleChange(self, mid=None, author_id=None, new_title=None, thread_id=None, thread_type=ThreadType.USER,
+                      ts=None, metadata=None, msg={}):
+        """
+        Called when the client is listening, and somebody changes the title of a thread
+        :param mid: The action ID
+        :param author_id: The ID of the person who changed the title
+        :param new_title: The new title
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type thread_type: models.ThreadType
+        """
+        self.log.info("Title change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_title))
+
+    def onNicknameChange(self, mid=None, author_id=None, changed_for=None, new_nickname=None, thread_id=None,
+                         thread_type=ThreadType.USER, ts=None, metadata=None, msg={}):
+        """
+        Called when the client is listening, and somebody changes the nickname of a person
+        :param mid: The action ID
+        :param author_id: The ID of the person who changed the nickname
+        :param changed_for: The ID of the person whom got their nickname changed
+        :param new_nickname: The new nickname
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type thread_type: models.ThreadType
+        """
+        self.log.info(
+            "Nickname change from {} in {} ({}) for {}: {}".format(author_id, thread_id, thread_type.name, changed_for,
+                                                                   new_nickname))
+
+    def onMessageSeen(self, seen_by=None, thread_id=None, thread_type=ThreadType.USER, seen_ts=None, ts=None,
+                      metadata=None, msg={}):
+        """
+        Called when the client is listening, and somebody marks a message as seen
+        :param seen_by: The ID of the person who marked the message as seen
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
+        :param seen_ts: A timestamp of when the person saw the message
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type thread_type: models.ThreadType
+        """
+        self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name, seen_ts / 1000))
+        self.ws.emit(Message("fb_chatmessage_seen", {"friend_id": seen_by, "timestamp":seen_ts}))
+
+    def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
+                           metadata=None, msg={}):
+        """
+        Called when the client is listening, and somebody marks messages as delivered
+        :param msg_ids: The messages that are marked as delivered
+        :param delivered_for: The person that marked the messages as delivered
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param thread_type: Type of thread that the action was sent to. See :ref:`intro_threads`
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type thread_type: models.ThreadType
+        """
+        self.log.info(
+            "Messages {} delivered to {} in {} ({}) at {}s".format(msg_ids, delivered_for, thread_id, thread_type.name,
+                                                                   ts / 1000))
+
+    def onMarkedSeen(self, threads=None, seen_ts=None, ts=None, metadata=None, msg={}):
+        """
+        Called when the client is listening, and the client has successfully marked threads as seen
+        :param threads: The threads that were marked
+        :param author_id: The ID of the person who changed the emoji
+        :param seen_ts: A timestamp of when the threads were seen
+        :param ts: A timestamp of the action
+        :param metadata: Extra metadata about the action
+        :param msg: A full set of the data recieved
+        :type thread_type: models.ThreadType
+        """
+        self.log.info(
+            "Marked messages as seen in threads {} at {}s".format([(x[0], x[1].name) for x in threads], seen_ts / 1000))
+
+    def onPeopleAdded(self, mid=None, added_ids=None, author_id=None, thread_id=None, ts=None, msg={}):
+        """
+        Called when the client is listening, and somebody adds people to a group thread
+        :param mid: The action ID
+        :param added_ids: The IDs of the people who got added
+        :param author_id: The ID of the person who added the people
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param ts: A timestamp of the action
+        :param msg: A full set of the data recieved
+        """
+        self.log.info("{} added: {}".format(author_id, ', '.join(added_ids)))
+
+    def onPersonRemoved(self, mid=None, removed_id=None, author_id=None, thread_id=None, ts=None, msg={}):
+        """
+        Called when the client is listening, and somebody removes a person from a group thread
+        :param mid: The action ID
+        :param removed_id: The ID of the person who got removed
+        :param author_id: The ID of the person who removed the person
+        :param thread_id: Thread ID that the action was sent to. See :ref:`intro_threads`
+        :param ts: A timestamp of the action
+        :param msg: A full set of the data recieved
+        """
+        self.log.info("{} removed: {}".format(author_id, removed_id))
+
+    def onFriendRequest(self, from_id=None, msg={}):
+        """
+        Called when the client is listening, and somebody sends a friend request
+        :param from_id: The ID of the person that sent the request
+        :param msg: A full set of the data recieved
+        """
+        self.log.info("Friend request from {}".format(from_id))
+        if from_id is not None:
+            self.ws.emit(Message("fb_friend_request", {"friend_id":from_id}))
+
+    def onInbox(self, unseen=None, unread=None, recent_unread=None, msg={}):
+        """
+        .. todo::
+            Documenting this
+        :param unseen: --
+        :param unread: --
+        :param recent_unread: --
+        :param msg: A full set of the data recieved
+        """
+        self.log.info('Inbox event: {}, {}, {}'.format(unseen, unread, recent_unread))
+
+    def onQprimer(self, ts=None, msg={}):
+        """
+        Called when the client just started listening
+        :param ts: A timestamp of the action
+        :param msg: A full set of the data recieved
+        """
+        pass
+
+    def onMessageError(self, exception=None, msg={}):
+        """
+        Called when an error was encountered while parsing recieved data
+        :param exception: The exception that was encountered
+        :param msg: A full set of the data recieved
+        """
+        self.log.exception('Exception in parsing of {}'.format(msg))
+
 class FacebookSkill(MycroftSkill):
 
     def __init__(self):
