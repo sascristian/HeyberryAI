@@ -165,11 +165,13 @@ def load_priority():
                 # checking if skill is loaded
                 if skill.get("loaded"):
                     continue
-                skill["loaded"] = True
+
                 skill["instance"] = load_skill(
                     create_skill_descriptor(skill["path"]), ws, skill["id"])
-                skill["external_reload"] = skill["instance"].external_reload
-                skill["external_shutdown"] = skill["instance"].external_shutdown
+                if skill["instance"]:
+                    skill["loaded"] = True
+                    skill["external_reload"] = skill["instance"].external_reload
+                    skill["external_shutdown"] = skill["instance"].external_shutdown
             except TypeError:
                 logger.error(skill_folder + " does not seem to exist")
 
