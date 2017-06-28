@@ -164,14 +164,17 @@ class StyleTransferSkill(MycroftSkill):
         start = timeit.default_timer()
         n_iters = st.transfer_style(img_style, img_content, length=512,
                                     init="content", ratio=np.float("1e4"),
-                                    n_iter=5, verbose=True)
+                                    n_iter=2, verbose=True)
         end = timeit.default_timer()
         self.log.info("Ran {0} iterations in {1:.0f}s.".format(n_iters, end - start))
         img_out = st.get_generated()
 
         # save image
-        out_path = dirname(__file__) + "/style_transfer/" + time.asctime() + '.jpg'
-        self.log.info("saving image to " + path)
+        save_path = dirname(__file__) + "/style_transfer"
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+        out_path = save_path + "/" + time.asctime() + '.jpg'
+        self.log.info("saving image to " + out_path)
         imsave(out_path, img_as_ubyte(img_out))
 
         self.log.info("Output saved to {0}.".format(out_path))
