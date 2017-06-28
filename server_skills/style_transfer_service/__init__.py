@@ -93,6 +93,8 @@ class StyleTransferSkill(MycroftSkill):
     def __init__(self):
         super(StyleTransferSkill, self).__init__(name="StyleTransferSkill")
         self.reload_skill = False
+        self.external_reload = False
+        self.external_shutdown = False
         from caffe.io import load_image
         self.load_image = load_image
 
