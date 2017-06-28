@@ -22,6 +22,7 @@ from mycroft.skills.core import MycroftSkill
 import requests
 import fbchat
 from fbchat.utils import *
+from fb.chat.graphql import *
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 import random
@@ -42,6 +43,27 @@ import logging
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
+# disable this log that polutes skills log a lot
+def graphql_response_to_json(content):
+    j = json.loads(content, cls=ConcatJSONDecoder)
+
+    rtn = [None]*(len(j))
+    for x in j:
+        if 'error_results' in x:
+            del rtn[-1]
+            continue
+        check_json(x)
+        [(key, value)] = x.items()
+        check_json(value)
+        if 'response' in value:
+            rtn[int(key[1:])] = value['response']
+        else:
+            rtn[int(key[1:])] = value['data']
+
+    #log.debug(rtn)
+
+    return rtn
+
 
 class FaceChat(fbchat.Client):
     def __init__(self, email, password, pending_requests = {}, verbose=False, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.WARNING):
@@ -58,7 +80,8 @@ class FaceChat(fbchat.Client):
         :type logging_level: int
         :raises: Exception on failed login
         """
-
+        self.mail = email
+        self.passwd = password
         self.pending_requests = pending_requests
         self.verbose = verbose
         if logger is not None:
@@ -295,6 +318,22 @@ class FaceChat(fbchat.Client):
         name = self.get_user_name(delivered_for)
         self.ws.emit(
             Message("fb_chatmessage_delivered", {"friend_id": delivered_for, "friend_name": name, "timestamp": ts}))
+
+    # re-log in
+    def listen(self, markAlive=True):
+        """
+        Initializes and runs the listening loop continually
+        :param markAlive: Whether this should ping the Facebook server each time the loop runs
+        :type markAlive: bool
+        """
+        self.startListening()
+        self.onListening()
+
+        while self.listening and self.doOneListen(markAlive):
+            if not self.isLoggedIn():
+                self.login(self.mail, self.passwd)
+
+        self.stopListening()
 
     # just overriding to avoid logs
     def onLoggingIn(self, email=None):
