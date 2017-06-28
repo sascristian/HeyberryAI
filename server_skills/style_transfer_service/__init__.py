@@ -164,7 +164,7 @@ class StyleTransferSkill(MycroftSkill):
         start = timeit.default_timer()
         n_iters = st.transfer_style(img_style, img_content, length=512,
                                     init="content", ratio=np.float("1e4"),
-                                    n_iter=2, verbose=True)
+                                    n_iter=512, verbose=True)
         end = timeit.default_timer()
         self.log.info("Ran {0} iterations in {1:.0f}s.".format(n_iters, end - start))
         img_out = st.get_generated()
@@ -200,7 +200,7 @@ class StyleTransferSkill(MycroftSkill):
         self.emitter.emit(Message(msg_type,
                                   msg_data))
         self.target = user_id
-        self.speak_dialog("styletransfer",
+        self.speak("style transfer complete",
                           metadata={"url": link})
 
     def stop(self):
