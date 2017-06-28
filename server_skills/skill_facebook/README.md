@@ -120,8 +120,7 @@ a mechanism to give control to skills will be implemented
         self.active = self.config.get('chat_client', True)
         # speak when message received
         self.speak_messages = self.config.get('speak_messages', True)
-        # TODO who to warn?
-        self.default_target = ""
+
         # like user photo when user talks on chat
         self.like_back = self.config.get('like_back', True)
         # tell user when making a post
