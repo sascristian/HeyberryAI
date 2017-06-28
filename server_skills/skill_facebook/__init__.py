@@ -22,7 +22,7 @@ from mycroft.skills.core import MycroftSkill
 import requests
 import fbchat
 from fbchat.utils import *
-from fb.chat.graphql import *
+from fbchat.graphql import *
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 import random
