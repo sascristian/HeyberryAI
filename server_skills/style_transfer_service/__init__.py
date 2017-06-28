@@ -58,7 +58,7 @@ sys.path.insert(0, caffe_path + '/python')
 import caffe
 # caffe.set_mode_gpu() # uncomment this if gpu processing is available
 
-
+from time import sleep
 
 
 # numeric constants
@@ -117,14 +117,26 @@ class StyleTransferSkill(MycroftSkill):
                 client_secret = 'yyyyyyyyy'
 
         self.client = ImgurClient(client_id, client_secret)
+        self.waiting = False
 
     def initialize(self):
         self.emitter.on("style_transfer_request", self.handle_style_transfer)
+        self.emitter.on("style_transfer_result", self.handle_receive_transfer_result)
 
         style_transfer_intent = IntentBuilder("StyleTransferIntent") \
             .require("styletransfer").build()
         self.register_intent(style_transfer_intent,
-                             self.handle_style_transfer_intent)
+                             self.handle_detailed_style_transfer_intent)
+
+    def wait(self, time_to_sleep=10):
+        self.waiting = True
+        while self.waiting:
+            sleep(time_to_sleep)
+
+    def handle_receive_transfer_result(self, message):
+        self.log.info("Style transfer result received " + message.data.get("url"))
+        if self.waiting:
+            self.waiting = False
 
     def handle_style_transfer_intent(self, message):
         style_img = dirname(__file__)+"/starry_night.jpg"
@@ -133,11 +145,26 @@ class StyleTransferSkill(MycroftSkill):
         self.speak("testing style transfer")
         self.emitter.emit(Message("style_transfer_request", {"source":user_id, "style_img":style_img, "target_img":target_img}))
 
+    def handle_detailed_style_transfer_intent(self, message):
+        style_img = dirname(__file__) + "/starry_night.jpg"
+        target_img = dirname(__file__) + "/obama.jpg"
+        user_id = message.data.get("target")
+        self.speak("testing recursive style transfer")
+        iter = 51
+        for i in range(0, iter):
+
+            self.emitter.emit(
+                Message("style_transfer_request", {"source": user_id, "style_img": style_img, "target_img": target_img, "iter_num":10, "name":"test_iter_"+str(i*10)}))
+            self.wait()
+            self.log.info("iter num " + str(i*10) + " saved")
+        self.log.info("Recursive Style Transfer Test Finish")
+
     def handle_style_transfer(self, message):
         user_id = message.data.get("source")
+        name = message.data.get("name")
         style_img = message.data.get("style_img")
         target_img = message.data.get("target_img")
-
+        iter_num = message.data.get("iter_num", 512)
         # set target of result
         if user_id is not None:
             if user_id == "unknown":
@@ -171,7 +198,7 @@ class StyleTransferSkill(MycroftSkill):
         start = timeit.default_timer()
         n_iters = st.transfer_style(img_style, img_content, length=512,
                                     init="content", ratio=np.float("1e4"),
-                                    n_iter=512, verbose=True)
+                                    n_iter=iter_num, verbose=True)
         end = timeit.default_timer()
         self.log.info("Ran {0} iterations in {1:.0f}s.".format(n_iters, end - start))
         img_out = st.get_generated()
@@ -180,7 +207,9 @@ class StyleTransferSkill(MycroftSkill):
         save_path = dirname(__file__) + "/style_transfer"
         if not os.path.exists(save_path):
             os.makedirs(save_path)
-        out_path = save_path + "/" + time.asctime() + '.jpg'
+        if name is None:
+            name = time.asctime()
+        out_path = save_path + "/" + name + '.jpg'
         self.log.info("saving image to " + out_path)
         imsave(out_path, img_as_ubyte(img_out))
 
@@ -208,7 +237,7 @@ class StyleTransferSkill(MycroftSkill):
                                   msg_data))
         self.target = user_id
         self.speak("style transfer complete",
-                          metadata={"url": link})
+                          metadata={"url": link, "file":out_path})
 
     def stop(self):
         pass
