@@ -118,6 +118,9 @@ class StyleTransferSkill(MycroftSkill):
 
         self.client = ImgurClient(client_id, client_secret)
         self.waiting = False
+        self.save_path = dirname(__file__) + "/style_transfer"
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
 
     def initialize(self):
         self.emitter.on("style_transfer_request", self.handle_style_transfer)
@@ -151,8 +154,13 @@ class StyleTransferSkill(MycroftSkill):
         user_id = message.data.get("target")
         self.speak("testing recursive style transfer")
         iter = 51
-        for i in range(0, iter):
-
+        self.emitter.emit(
+            Message("style_transfer_request",
+                    {"source": user_id, "style_img": style_img, "target_img": target_img, "iter_num": 10,
+                     "name": "test_iter_" + str(10)}))
+        self.wait()
+        self.log.info("iter num " + str(10) + " saved")
+        for i in range(2, iter):
             self.emitter.emit(
                 Message("style_transfer_request", {"source": user_id, "style_img": style_img, "target_img": target_img, "iter_num":10, "name":"test_iter_"+str(i*10)}))
             self.wait()
@@ -204,12 +212,10 @@ class StyleTransferSkill(MycroftSkill):
         img_out = st.get_generated()
 
         # save image
-        save_path = dirname(__file__) + "/style_transfer"
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
+
         if name is None:
             name = time.asctime()
-        out_path = save_path + "/" + name + '.jpg'
+        out_path = self.save_path + "/" + name + '.jpg'
         self.log.info("saving image to " + out_path)
         imsave(out_path, img_as_ubyte(img_out))
 
