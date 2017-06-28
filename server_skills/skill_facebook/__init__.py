@@ -340,6 +340,22 @@ class FaceChat(fbchat.Client):
         self.stopListening()
 
     # just overriding to avoid logs
+    def graphql_requests(self, *queries):
+        """
+        .. todo::
+            Documenting this
+        :raises: Exception if request failed
+        """
+        payload = {
+            'method': 'GET',
+            'response_format': 'json',
+            'queries': graphql_queries_to_json(*queries)
+        }
+
+        j = graphql_response_to_json(checkRequest(self._post(ReqUrl.GRAPHQL, payload), do_json_check=False), verbose=self.verbose, logger=self.log)
+
+        return tuple(j)
+
     def onLoggingIn(self, email=None):
         """
         Called when the client is logging in
