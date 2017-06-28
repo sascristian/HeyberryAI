@@ -25,6 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
+# Service skill that performs style transfer, adapted from: https://github.com/fzliu/style-transfer
+# May take up to 7 hours
+
+__author__ = 'jarbas'
+
+
 import os
 import timeit
 
@@ -52,7 +58,7 @@ sys.path.insert(0, caffe_path + '/python')
 import caffe
 # caffe.set_mode_gpu() # uncomment this if gpu processing is available
 
-__author__ = 'jarbas'
+
 
 
 # numeric constants
