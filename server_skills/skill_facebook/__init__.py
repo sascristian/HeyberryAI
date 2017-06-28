@@ -321,7 +321,7 @@ class FaceChat(fbchat.Client):
                                                                    ts / 1000))
         name = self.get_user_name(delivered_for)
         self.ws.emit(
-            Message("fb_chatmessage_delivered", {"friend_id": delivered_for, "friend_name": name, "timestamp": ts}))
+            Message("fb_chat_message_delivered", {"friend_id": delivered_for, "friend_name": name, "timestamp": ts}))
 
     # re-log in
     def listen(self, markAlive=True):
@@ -571,6 +571,9 @@ class FacebookSkill(MycroftSkill):
         if "session" not in self.fb_settings.keys():
             self.fb_settings["session"] = None
             self.fb_settings.store()
+        if "friends" not in self.fb_settings.keys():
+            self.fb_settings["friends"] = {}
+            self.fb_settings.store()
         self.selenium_cookies = True
         # chat client active
         self.active = self.config.get('chat_client', True)
@@ -587,7 +590,7 @@ class FacebookSkill(MycroftSkill):
         # number of photos to like
         self.photo_num = self.config.get('photo_num', 2)
         # pre-defined friend list / nicknames
-        self.friends = self.config.get('friends', {})
+        self.nicknames = self.config.get('friends', {}) #name : id
         # friends to track
         self.friends_to_track = self.config.get('friends_to_track', ["none"])
         # default reply to wall posts
@@ -995,13 +998,34 @@ class FacebookSkill(MycroftSkill):
         # map ids to names from chat
         users = self.chat.fetchAllUsers()
         for user in users:
-            self.friends.setdefault(user.name, user.uid)
+            self.fb_settings["friends"].setdefault(user.name, user.uid)
+            self.fb_settings.store()
 
     def get_name_from_id(self, id):
         return self.chat.get_user_name(str(id))
 
     def get_id_from_name(self, name):
         return self.chat.get_user_id(name)
+
+    def fuzzy_friend_match(self, person):
+        best =0
+        id = None
+        f = None
+        # check nickanmes
+        for friend in self.nicknames.keys():
+            rating = fuzz.ratio(friend, person)
+            if rating > best and rating > 45:
+                best = rating
+                f = friend
+                id = self.nicknames[f]
+        # check friend fb names
+        for friend in self.fb_settings["friends"].keys():
+            rating = fuzz.ratio(friend, person)
+            if rating > best and rating > 45:
+                best = rating
+                f = friend
+                id = self.fb_settings["friends"][f]
+        return id, f
 
     # passive stuff
     def handle_post_request(self, message):
@@ -1075,7 +1099,7 @@ class FacebookSkill(MycroftSkill):
 
     def handle_who_are_my_friends_intent(self, message):
         text = ""
-        for friend in self.friends.keys():
+        for friend in self.fb_settings["friends"].keys():
             text += friend + ",\n"
         if text != "":
             self.speak_dialog("who_friends")
@@ -1094,8 +1118,8 @@ class FacebookSkill(MycroftSkill):
     def handle_like_photos_intent(self, message):
         self.speak_dialog("like_photos")
         self.get_ids_from_chat()
-        friend = random.choice(self.friends.keys())
-        friend = self.friends[friend]
+        friend = random.choice(self.fb_settings["friends"].keys())
+        friend = self.fb_settings["friends"][friend]
         self.like_photos_from(friend, self.photo_num)
 
     def handle_make_friends_intent(self, message):
@@ -1107,13 +1131,13 @@ class FacebookSkill(MycroftSkill):
         text = random.choice(self.girlfriend_messages)
         # TODO use dialog
         self.speak("Just sent a text message to girlfriend, i told her " + text)
-        id = self.friends["girlfriend"]
+        id = self.nicknames["girlfriend"]
         self.chat.sendMessage(text, id)
 
     def handle_random_chat_intent(self, message):
         text = random.choice(self.random_chat)
-        person = random.choice(self.friends.keys())
-        id = self.friends[person]
+        person = random.choice(self.fb_settings["friends"].keys())
+        id = self.fb_settings["friends"][person]
         self.chat.sendMessage(text, id)
         # TODO use dialog
         self.speak("Just sent a text message to " + person + ", i said " + text)
@@ -1122,8 +1146,8 @@ class FacebookSkill(MycroftSkill):
         # TODO own dialog
         self.speak_dialog("make_friend")
         self.get_ids_from_chat()
-        friend = random.choice(self.friends.keys())
-        friend = self.friends[friend]
+        friend = random.choice(self.fb_settings["friends"].keys())
+        friend = self.fb_settings["friends"][friend]
         self.make_friends_off(friend, self.friend_num)
 
     def handle_post_this_intent(self, message):
@@ -1133,29 +1157,21 @@ class FacebookSkill(MycroftSkill):
 
     def handle_when_was_last_online(self, message):
         person = message.data.get("Person")
-        best = 0
-        f = person
-        for friend in self.friends.keys():
-            rating = fuzz.ratio(friend, person)
-            if rating > best:
-                best = rating
-                f = friend
-        id = self.friends[f]
+        id, f = self.fuzzy_friend_match(person)
+        if id is None:
+            self.speak_dialog("unknown_person")
+            return
         last_seen = self.settings["timestamps"][id]["last_seen"]
         self.speak(f + " was last seen online " + last_seen)
 
     def handle_chat_person_intent(self, message):
         person = message.data.get("Person")
         text = message.data.get("Chat")
-        best = 0
-        f = person
-        for friend in self.friends.keys():
-            rating = fuzz.ratio(friend, person)
-            if rating > best:
-                best = rating
-                f = friend
+        id, f = self.fuzzy_friend_match(person)
+        if id is None:
+            self.speak_dialog("unknown_person")
+            return
         try:
-            id = self.friends[f]
             text = text.replace("message","").replace("to","").replace("chat","")
             self.chat.sendMessage(text, id)
             self.speak("chat message sent to " + f)
@@ -1165,40 +1181,28 @@ class FacebookSkill(MycroftSkill):
 
     def handle_add_friends_of_friend_intent(self, message):
         person = message.data.get("Person")
-        best = 0
-        f = person
-        for friend in self.friends.keys():
-            rating = fuzz.ratio(friend, person)
-            if rating > best:
-                best = rating
-                f = friend
-        id = self.friends[f]
+        id, f = self.fuzzy_friend_match(person)
+        if id is None:
+            self.speak_dialog("unknown_person")
+            return
         self.speak("Adding friends of " + f)
         self.make_friends_off(id, self.friend_num)
 
     def handle_friend_num_of_intent(self, message):
         person = message.data.get("Person")
-        best = 0
-        f = person
-        for friend in self.friends.keys():
-            rating = fuzz.ratio(friend, person)
-            if rating > best:
-                best = rating
-                f = friend
-        id = self.friends[f]
+        id, f = self.fuzzy_friend_match(person)
+        if id is None:
+            self.speak_dialog("unknown_person")
+            return
         num = self.number_of_friends_of(id)
         self.speak(f + " has " + str(num) + " friends")
 
     def handle_like_photos_of_intent(self, message):
         person = message.data.get("Person")
-        best = 0
-        f = person
-        for friend in self.friends.keys():
-            rating = fuzz.ratio(friend, person)
-            if rating > best:
-                best = rating
-                f = friend
-        id = self.friends[f]
+        id, f = self.fuzzy_friend_match(person)
+        if id is None:
+            self.speak_dialog("unknown_person")
+            return
         self.speak("liking photos from " + f)
         self.like_photos_from(id, self.photo_num)
 
