@@ -230,7 +230,7 @@ class FaceChat(fbchat.Client):
         :param msg: A full set of the data recieved
         """
         data = {}
-        if "buddyList" in msg.keys():
+        if "chatproxy-presence" == msg["type"]:
             if self.verbose:
                 self.log.debug("timestamps update received: " + str(msg["buddyList"]))
             for id in msg["buddyList"].keys():
