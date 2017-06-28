@@ -28,11 +28,11 @@ from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
 from selenium.common.exceptions import TimeoutException, WebDriverException, RemoteDriverServerException
 import logging
-# disable logs fromeasyprocess, or there is too much spam from display init
+# disable logs from easyprocess, or there is too much spam from display init
 logging.getLogger("easyprocess").setLevel(logging.WARNING)
 # disable selenium logger
-from selenium.webdriver.remote.remote_connection import LOGGER
-LOGGER.setLevel(logging.WARNING)
+from selenium.webdriver.remote.remote_connection import LOGGER as selenium_log
+selenium_log.setLevel(logging.WARNING)
 
 __author__ = 'jarbas'
 
