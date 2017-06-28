@@ -162,7 +162,7 @@ class StyleTransferSkill(MycroftSkill):
         self.log.info("iter num " + str(10) + " saved")
         for i in range(2, iter):
             self.emitter.emit(
-                Message("style_transfer_request", {"source": user_id, "style_img": style_img, "target_img": self.save_path+"/"+"test_iter_"+str((i-1)*10)+".jpg", "iter_num":10, "name":"test_iter_"+str(i*10)}))
+                Message("style_transfer_request", {"speak":False, "source": user_id, "style_img": style_img, "target_img": self.save_path+"/"+"test_iter_"+str((i-1)*10)+".jpg", "iter_num":10, "name":"test_iter_"+str(i*10)}))
             self.wait()
             self.log.info("iter num " + str(i*10) + " saved")
         self.log.info("Recursive Style Transfer Test Finish")
@@ -173,6 +173,7 @@ class StyleTransferSkill(MycroftSkill):
         style_img = message.data.get("style_img")
         target_img = message.data.get("target_img")
         iter_num = message.data.get("iter_num", 512)
+        speak = message.data.get("speak", True)
         # set target of result
         if user_id is not None:
             if user_id == "unknown":
@@ -195,7 +196,8 @@ class StyleTransferSkill(MycroftSkill):
         mean_file = caffe_path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy'
         weights = VGG16_WEIGHTS
         self.log.info("preparing net for style transfer")
-        self.speak("Starting style transfer, this may take up to 7 hours, i will let you know when ready")
+        if speak:
+            self.speak("Starting style transfer, this may take up to 7 hours, i will let you know when ready")
         try:
             st = StyleTransfer(model_name, model_file, pretrained_file, mean_file, weights, logger=self.log)
         except Exception as e:
@@ -242,7 +244,7 @@ class StyleTransferSkill(MycroftSkill):
         self.emitter.emit(Message(msg_type,
                                   msg_data))
         self.target = user_id
-        self.speak("style transfer complete",
+        self.speak("style transfer result:",
                           metadata={"url": link, "file":out_path})
 
     def stop(self):
