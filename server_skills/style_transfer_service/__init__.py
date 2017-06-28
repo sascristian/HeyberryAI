@@ -162,7 +162,7 @@ class StyleTransferSkill(MycroftSkill):
         self.log.info("iter num " + str(10) + " saved")
         for i in range(2, iter):
             self.emitter.emit(
-                Message("style_transfer_request", {"source": user_id, "style_img": style_img, "target_img": target_img, "iter_num":10, "name":"test_iter_"+str(i*10)}))
+                Message("style_transfer_request", {"source": user_id, "style_img": style_img, "target_img": self.save_path+"/"+"test_iter_"+str((i-1)*10)+".jpg", "iter_num":10, "name":"test_iter_"+str(i*10)}))
             self.wait()
             self.log.info("iter num " + str(i*10) + " saved")
         self.log.info("Recursive Style Transfer Test Finish")
