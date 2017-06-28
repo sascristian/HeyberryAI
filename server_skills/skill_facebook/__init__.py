@@ -44,7 +44,7 @@ logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # disable this log that polutes skills log a lot
-def graphql_response_to_json(content):
+def graphql_response_to_json(content, verbose=False, logger=None):
     j = json.loads(content, cls=ConcatJSONDecoder)
 
     rtn = [None]*(len(j))
@@ -60,7 +60,11 @@ def graphql_response_to_json(content):
         else:
             rtn[int(key[1:])] = value['data']
 
-    #log.debug(rtn)
+    if verbose:
+        if logger is None:
+            log.debug(rtn)
+        else:
+            logger.debug(rtn)
 
     return rtn
 
