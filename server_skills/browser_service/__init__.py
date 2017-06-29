@@ -310,15 +310,21 @@ class BrowserService(MycroftSkill):
 
         # wait until you find pic
         fails = 0
-        while fails < 5 and not browser.get_element(data=pic, name="pic", type="xpath"):
-            fails += 1
-            sleep(0.5)
-        if fails >= 5:
+        sucess = False
+        while fails < 5 and not sucess:
+            browser.get_element(data="generated_image", name="pic", type="class")
+            src = browser.get_attribute('src', 'pic')
+            if "generated.inspirobot" not in src:
+                fails += 1
+                sleep(0.5)
+            else:
+                sucess = True
+        if not sucess:
             self.speak("could not get inspirobot generated picture")
             return
 
         out_path = self.save_path + "/" + time.asctime() + ".jpg"
-        src = browser.get_attribute('src', 'pic')
+
         # download the image
         urlretrieve(src, out_path )
 
