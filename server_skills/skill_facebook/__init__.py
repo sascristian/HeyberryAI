@@ -323,6 +323,32 @@ class FaceChat(fbchat.Client):
         self.ws.emit(
             Message("fb_chat_message_delivered", {"friend_id": delivered_for, "friend_name": name, "timestamp": ts}))
 
+    def sendMessage(self, message, thread_id=None, thread_type=ThreadType.USER):
+        """
+        Sends a message to a thread
+        :param message: Message to send
+        :param thread_id: User/Group ID to send to. See :ref:`intro_threads`
+        :param thread_type: See :ref:`intro_threads`
+        :type thread_type: models.ThreadType
+        :return: :ref:`Message ID <intro_message_ids>` of the sent message
+        :raises: Exception if request failed
+        """
+        thread_id, thread_type = self._getThread(thread_id, thread_type)
+        data = self._getSendData(thread_id, thread_type)
+
+        data['action_type'] = 'ma-type:user-generated-message'
+        data['body'] = message or ''
+        data['has_attachment'] = False
+        data['specific_to_list[0]'] = 'fbid:' + thread_id
+        data['specific_to_list[1]'] = 'fbid:' + self.uid
+
+        message_id = self._doSendRequest(data)
+        if self.verbose:
+            self.log.info("Sending message {} to {}".format(message, thread_id))
+
+        self.ws.emit(Message("fb_chat_message_sent", {"friend_id": thread_id, "message":message, "message_id": message_id}))
+        return message_id
+
     # re-log in
     def listen(self, markAlive=True):
         """
@@ -565,15 +591,6 @@ class FacebookSkill(MycroftSkill):
         self.mail = self.config['mail']
         self.passwd = self.config['passwd']
         self.fb_settings = SkillSettings(dirname(__file__) + '/settings.json')
-        if "cookies" not in self.fb_settings.keys():
-            self.fb_settings["cookies"] = []
-            self.fb_settings.store()
-        if "session" not in self.fb_settings.keys():
-            self.fb_settings["session"] = None
-            self.fb_settings.store()
-        if "friends" not in self.fb_settings.keys():
-            self.fb_settings["friends"] = {}
-            self.fb_settings.store()
         self.selenium_cookies = True
         # chat client active
         self.active = self.config.get('chat_client', True)
@@ -597,13 +614,7 @@ class FacebookSkill(MycroftSkill):
         self.default_comment = self.config.get('default_comment', [":)"])
         self.logged_in = False
         self.warn_on_friend_request = self.config.get('warn_on_friend_request', True)
-        if "friend_requests" not in self.fb_settings.keys():
-            self.fb_settings["friend_requests"] = []
-            self.fb_settings.store()
         self.track_friends = self.config.get('track_friends', True)
-        if "timestamps" not in self.fb_settings.keys():
-            self.fb_settings["timestamps"] = {}
-            self.fb_settings.store()
         # TODO make these a .txt so the corpus can be easily extended
         self.motivational = self.config.get('motivational', ["may the source be with you"])
         self.girlfriend_messages = self.config.get('girlfriend_messages', ["AI can also love"])
@@ -611,6 +622,19 @@ class FacebookSkill(MycroftSkill):
         self.face_id = None
         self.browser = None
         self.chat = None
+        if "friend_requests" not in self.fb_settings.keys():
+            self.fb_settings["friend_requests"] = []
+        if "timestamps" not in self.fb_settings.keys():
+            self.fb_settings["timestamps"] = {}
+        if "chat_messages" not in self.fb_settings.keys():
+            self.fb_settings["chat_messages"] = {}
+        if "cookies" not in self.fb_settings.keys():
+            self.fb_settings["cookies"] = []
+        if "session" not in self.fb_settings.keys():
+            self.fb_settings["session"] = None
+        if "friends" not in self.fb_settings.keys():
+            self.fb_settings["friends"] = {}
+        self.fb_settings.store()
 
     def initialize(self):
         # start chat
@@ -629,6 +653,9 @@ class FacebookSkill(MycroftSkill):
         self.emitter.on("fb_post_request", self.handle_post_request)
         self.emitter.on("fb_friend_request", self.handle_friend_request)
         self.emitter.on("fb_last_seen_timestamps", self.handle_track_friends)
+        self.emitter.on("fb_chat_message_delivered", self.handle_message_delivered)
+        self.emitter.on("fb_chat_message_seen", self.handle_message_seen)
+        self.emitter.on("fb_chat_message_sent", self.handle_message_sent)
         self.build_intents()
         self.login()
 
@@ -1033,6 +1060,29 @@ class FacebookSkill(MycroftSkill):
         return id, f
 
     # passive stuff
+    def handle_message_sent(self, message):
+        chat = message.data.get("message")
+        id = message.data.get("friend_id")
+        self.fb_settings["chat_messages"][id] = {"message":chat, "friend_id":id, "seen":False, "delivered":False,
+                                                 "sent_ts":time.time(), "delivered_ts":0, "seen_ts":0}
+        self.fb_settings.store()
+
+    def handle_message_delivered(self, message):
+        id = message.data.get("friend_id")
+        timestamp = message.data.get("timestamp")
+        if id in self.fb_settings["chat_messages"].keys():
+            self.fb_settings["chat_messages"][id]["delivered"] = True
+            self.fb_settings["chat_messages"][id]["delivered_ts"] = timestamp
+            self.fb_settings.store()
+
+    def handle_message_seen(self, message):
+        id = message.data.get("friend_id")
+        timestamp = message.data.get("timestamp")
+        if id in self.fb_settings["chat_messages"].keys():
+            self.fb_settings["chat_messages"][id]["seen"] = True
+            self.fb_settings["chat_messages"][id]["seen_ts"] = timestamp
+            self.fb_settings.store()
+
     def handle_post_request(self, message):
         # TODO redo this old code
         return
@@ -1054,7 +1104,6 @@ class FacebookSkill(MycroftSkill):
         text = message.data.get("message")
         author_id = message.data.get("author_id")
         author_name = message.data.get("author_name")
-        self.log.info(author_id)
 
         # on chat message speak it
         if self.speak_messages:
