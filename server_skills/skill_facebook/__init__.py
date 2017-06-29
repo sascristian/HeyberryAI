@@ -740,12 +740,14 @@ class FacebookSkill(MycroftSkill):
         self.log.debug("Facebook Log In status: False")
         return False
 
-    def get_cookies(self, reset=True):
+    def get_cookies(self, reset=False):
         cookies = self.browser.get_cookies()
         if reset:
             self.fb_settings["cookies"] = []
+            self.log.info("Deleting saved cookies")
         for cookie in cookies:
             if "facebook" in cookie["domain"] and cookie not in self.fb_settings["cookies"]:
+                self.log.info("Saving cookie: " + str(cookie))
                 self.fb_settings["cookies"].append(cookie)
         self.fb_settings.store()
 
@@ -757,7 +759,10 @@ class FacebookSkill(MycroftSkill):
                     self.log.info("cookies set, logged_in")
                     return True
                 else:
-                    self.log.warning("cookies set, but not logged_in")
+                    self.log.warning("cookies were set, but not logged_in, deleting saved cookies")
+                    self.fb_settings["cookies"] = []
+                    self.fb_settings.store()
+
 
         self.browser.open_url("m.facebook.com")
         if self.browser.get_current_url() is None:
