@@ -324,7 +324,9 @@ class ImageRecognitionSkill(MycroftSkill):
         # get original input size of network
         original_w = net.blobs['data'].width
         original_h = net.blobs['data'].height
+
         # the background color of the initial image
+        # TODO make configurable
         background_color = np.float32([200.0, 200.0, 200.0])
         # generate initial random image
         gen_image = np.random.normal(background_color, 8, (original_w, original_h, 3))
