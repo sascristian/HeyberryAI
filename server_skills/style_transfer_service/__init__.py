@@ -129,7 +129,7 @@ class StyleTransferSkill(MycroftSkill):
         style_transfer_intent = IntentBuilder("StyleTransferIntent") \
             .require("styletransfer").build()
         self.register_intent(style_transfer_intent,
-                             self.handle_detailed_style_transfer_intent)
+                             self.handle_style_transfer_intent)
 
     def wait(self, time_to_sleep=10):
         self.waiting = True
