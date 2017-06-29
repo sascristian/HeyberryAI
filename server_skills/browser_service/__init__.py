@@ -312,7 +312,7 @@ class BrowserService(MycroftSkill):
         fails = 0
         sucess = False
         while fails < 5 and not sucess:
-            browser.get_element(data="generated_image", name="pic", type="class")
+            browser.get_element(data="generated-image", name="pic", type="class")
             src = browser.get_attribute('src', 'pic')
             if "generated.inspirobot" not in src:
                 fails += 1
