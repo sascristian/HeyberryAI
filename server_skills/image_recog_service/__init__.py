@@ -154,6 +154,13 @@ class ImageRecognitionSkill(MycroftSkill):
         self.register_intent(deep_draw_about_intent,
                              self.handle_deep_draw_about_intent)
 
+    def make_pretty(self, imagenet_class_name):
+        imagenet_class_name = imagenet_class_name.split(" ")[1:]
+        r = ""
+        for word in imagenet_class_name:
+            r += word + " "
+        return r[:-1].split(",")[0]
+
     def handle_img_recog_intent(self, message):
         self.speak_dialog("imgrecogstatus")
         classifier = ImageRecognitionService(self.emitter)
@@ -187,6 +194,9 @@ class ImageRecognitionSkill(MycroftSkill):
                                     self.make_pretty(image_class))
                 if rating > best:
                     best = rating
+                    imagenet_class = i
+                if about in image_class:
+                    best = best + 15
                     imagenet_class = i
                 i += 1
         classifier = ImageRecognitionService(self.emitter)
@@ -247,13 +257,6 @@ class ImageRecognitionSkill(MycroftSkill):
         # to bus
         self.emitter.emit(Message(msg_type,
                                   msg_data))
-
-    def make_pretty(self, imagenet_class_name):
-        imagenet_class_name = imagenet_class_name.split(" ")[1:]
-        r = ""
-        for word in imagenet_class_name:
-            r += word + " "
-        return r[:-1].split(",")[0]
 
     def handle_deep_draw(self, message):
         # deep draw, these octaves determine gradient ascent steps
