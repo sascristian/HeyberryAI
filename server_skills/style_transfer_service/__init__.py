@@ -184,9 +184,14 @@ class StyleTransferSkill(MycroftSkill):
             user_id = "all"
 
         # load images
-        img_style = self.load_image(style_img)
-        img_content = self.load_image(target_img)
-        self.log.info("images loaded")
+        try:
+            img_style = self.load_image(style_img)
+            img_content = self.load_image(target_img)
+            self.log.info("images loaded")
+        except:
+            self.log.error("Could not load images: " + style_img + " | " + target_img)
+            self.send_result("could not save file", user_id)
+            return
         # prepare style transfer
         # TODO make model configurable
         model_name = "vgg16"
@@ -202,6 +207,7 @@ class StyleTransferSkill(MycroftSkill):
             st = StyleTransfer(model_name, model_file, pretrained_file, mean_file, weights, logger=self.log)
         except Exception as e:
             self.log.error(e)
+            self.send_result(str(e), user_id)
             return
         # perform style transfer
         self.log.info("starting style transfer")
@@ -222,30 +228,33 @@ class StyleTransferSkill(MycroftSkill):
         imsave(out_path, img_as_ubyte(img_out))
 
         self.log.info("Output saved to {0}.".format(out_path))
+        self.send_result(out_path, user_id)
 
-        # upload pic
-        data = self.client.upload_from_path(out_path)
-        link = data["link"]
+    def send_result(self, out_path=None, user_id=None):
+        msg_type = "style_transfer_result"
+        msg_data = {}
+        if out_path is not None:
+            # upload pic
+            data = self.client.upload_from_path(out_path)
+            msg_data["url"] = data["link"]
 
         # send result
-        msg_type = "style_transfer_result"
-        msg_data = {"url": link}
-
         # to source socket
-        try:
-            if user_id.split(":")[1].isdigit():
-                self.emitter.emit(Message("message_request",
-                                          {"user_id": user_id, "data": msg_data,
-                                           "type": msg_type}))
-        except:
-            pass
+        if user_id is not None:
+            self.target = user_id
+            try:
+                if user_id.split(":")[1].isdigit():
+                    self.emitter.emit(Message("message_request",
+                                              {"user_id": user_id, "data": msg_data,
+                                               "type": msg_type}))
+            except:
+                pass
         # to bus
         msg_data["file"] = out_path
         self.emitter.emit(Message(msg_type,
                                   msg_data))
-        self.target = user_id
         self.speak("style transfer result:",
-                          metadata={"url": link, "file":out_path})
+                   metadata=msg_data)
 
     def stop(self):
         pass

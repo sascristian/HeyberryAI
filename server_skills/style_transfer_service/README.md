@@ -20,7 +20,7 @@ takes up to 7 hours, still testing
         Input: style transfer
         2017-06-28 13:52:46,483 - CLIClient - INFO - Speak: testing style transfer
         2017-06-28 13:52:46,680 - CLIClient - INFO - Speak: Starting style transfer, this may take up to 7 hours, i will let you know when ready
-
+        2017-06-28 19:39:32,127 - CLIClient - INFO - Speak: style transfer result url: http://i.imgur.com/cVRpafO.jpg
  # logs
 
 
