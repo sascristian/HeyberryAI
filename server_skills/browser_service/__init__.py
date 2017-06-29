@@ -26,8 +26,9 @@ socket.setdefaulttimeout(300)
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
-from selenium.common.exceptions import TimeoutException, WebDriverException, RemoteDriverServerException
 import logging
+from time import sleep
+from urllib import urlretrieve
 # disable logs from easyprocess, or there is too much spam from display init
 logging.getLogger("easyprocess").setLevel(logging.WARNING)
 # disable selenium logger
@@ -64,8 +65,15 @@ class BrowserControl():
         self.emitter.on("browser_add_cookies_response", self.end_wait)
         self.emitter.on("browser_get_cookies_response", self.end_wait)
         self.emitter.on("browser_title_response", self.end_wait)
+        self.emitter.on("browser_get_atr_response", self.end_wait)
         if autostart:
             self.start_browser()
+
+    def get_attribute(self, atr, element):
+        self.waiting_for = "browser_get_atr_response"
+        self.emitter.emit(Message("browser_get_atr_request", {"atr":atr, "element_name":element}))
+        self.wait()
+        return self.result.get("result")
 
     def get_cookies(self):
         self.waiting_for = "browser_get_cookies_response"
@@ -194,6 +202,9 @@ class BrowserService(MycroftSkill):
         display.start()
         self.driver = None
         self.elements = {}
+        self.save_path = dirname(__file__) + "/inspirobot"
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
 
     def initialize(self):
         started = self.start_browser()
@@ -214,6 +225,7 @@ class BrowserService(MycroftSkill):
         self.emitter.on("browser_clear_element", self.handle_clear_element)
         self.emitter.on("browser_get_cookies_request", self.handle_get_cookies)
         self.emitter.on("browser_add_cookies_request", self.handle_add_cookies)
+        self.emitter.on("browser_get_atr_request", self.handle_get_attribute)
         self.build_intents()
 
     def build_intents(self):
@@ -221,6 +233,11 @@ class BrowserService(MycroftSkill):
             .require("Ask").build()
         self.register_intent(ask_cleverbot_intent,
                              self.handle_ask_cleverbot_intent)
+
+        inspirobot_intent = IntentBuilder("InspirobotIntent") \
+            .require("inspirobot").build()
+        self.register_intent(inspirobot_intent,
+                             self.handle_inspirobot_intent)
 
     def handle_ask_cleverbot_intent(self, message):
         ask = message.data.get("Ask")
@@ -268,6 +285,58 @@ class BrowserService(MycroftSkill):
         browser.reset_elements()
         # optionally close the browser, but dont or other services may crash or take longer
         #browser.close_browser()
+
+    def handle_inspirobot_intent(self, message):
+        # get a browser control instance, optionally set to auto-start/restart browser
+        browser = BrowserControl(self.emitter)  # , autostart=True)
+        # restart webbrowser if it is open (optionally)
+        # started = browser.start_browser()
+        # if not started:
+        #    # TODO throw some error
+        #    return
+        browser.reset_elements()
+        # get clevebot url
+        open = browser.open_url("http://inspirobot.me/")
+        if open is None:
+            return
+        inspirobot = ".//*[@id='bot-dark']" #when this is gone pic is ready
+        generate = ".//*[@id='top']/div[1]/div[2]/div/div[2]"
+        pic = ".//*[@id='top']/div[1]/div[1]/img"
+
+        # search generate button
+        browser.get_element(data=generate, name="generate", type="xpath")
+        # click generate button
+        browser.click_element("generate")
+
+        # wait until you find pic
+        fails = 0
+        while fails < 5 and not browser.get_element(data=pic, name="pic", type="xpath"):
+            fails += 1
+            sleep(0.5)
+        if fails >= 5:
+            self.speak("could not get inspirobot generated picture")
+            return
+
+        out_path = self.save_path + "/" + time.asctime() + ".jpg"
+        src = browser.get_attribute('src', 'pic')
+        # download the image
+        urlretrieve(src, out_path )
+
+        self.speak("Inspirobot picture saved to " + out_path)
+        # clean the used elements for this session
+        browser.reset_elements()
+        # optionally close the browser, but dont or other services may crash or take longer
+        # browser.close_browser()
+
+    def handle_get_attribute(self, message):
+        atr = message.data.get("atr")
+        elem = message.data.get("element_name")
+        if elem not in self.elements.keys():
+            self.log.error("No such element")
+            self.emitter.emit(Message("browser_get_atr_response", {"atr": atr, "result":None, "error":"No such element"}))
+            return
+        result = self.elements[elem].get_attribute(atr)
+        self.emitter.emit(Message("browser_get_atr_response", {"atr": atr, "result":result}))
 
     def handle_get_cookies(self, message):
         cookies = self.driver.get_cookies()
