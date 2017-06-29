@@ -160,13 +160,7 @@ class ImageRecognitionSkill(MycroftSkill):
         results = classifier.local_image_classification(dirname(__file__)+"/obama.jpg", message.data.get("target"))
         i = 0
         for result in list(results):
-            # cleave first word nxxxxx
-            result = result.split(" ")[1:]
-            r = ""
-            for word in result:
-                r += word + " "
-            result = r[:-1].split(",")[0]
-            results[i] = result
+            results[i] = self.make_pretty(result)
             i += 1
         self.speak("in test image i see " + results[0] + ", or maybe it is " + results[1])
 
@@ -190,7 +184,7 @@ class ImageRecognitionSkill(MycroftSkill):
             i = 0
             for image_class in self.label_mapping:
                 rating = fuzz.ratio(about,
-                                image_class)
+                                    self.make_pretty(image_class))
                 if rating > best:
                     best = rating
                     imagenet_class = i
@@ -254,6 +248,13 @@ class ImageRecognitionSkill(MycroftSkill):
         self.emitter.emit(Message(msg_type,
                                   msg_data))
 
+    def make_pretty(self, imagenet_class_name):
+        imagenet_class_name = imagenet_class_name.split(" ")[1:]
+        r = ""
+        for word in imagenet_class_name:
+            r += word + " "
+        return r[:-1].split(",")[0]
+
     def handle_deep_draw(self, message):
         # deep draw, these octaves determine gradient ascent steps
         octaves = [
@@ -306,13 +307,9 @@ class ImageRecognitionSkill(MycroftSkill):
 
         if imagenet_class < 0 or imagenet_class > 1000:
             imagenet_class = random.randint(0, 1000)
-        # cleave first word nxxxxx
+
         result = self.label_mapping[imagenet_class]
-        result = result.split(" ")[1:]
-        r = ""
-        for word in result:
-            r += word + " "
-        name = r[:-1].split(",")[0]
+        name = self.make_pretty(result)
         self.speak_dialog("waitdeepdraw", data={"class_name": name})
         # make net
         net_fn = dirname(__file__) + '/deploy_googlenet_updated.prototxt'
