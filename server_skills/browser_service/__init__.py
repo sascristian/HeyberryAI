@@ -328,7 +328,7 @@ class BrowserService(MycroftSkill):
         # download the image
         urlretrieve(src, out_path.replace(" ", "_"))
 
-        self.speak("Inspirobot picture saved to " + out_path, metadata={"file":out_path, "url":src})
+        self.speak("Here is your Inspirobot picture", metadata={"file":out_path, "url":src})
         # clean the used elements for this session
         browser.reset_elements()
         # optionally close the browser, but dont or other services may crash or take longer
