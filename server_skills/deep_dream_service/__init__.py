@@ -123,15 +123,12 @@ class DreamService(MycroftSkill):
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
-        user_id = message.data.get("source")
+        user_id = message.context.get("destinatary", "all")
 
-        if user_id is not None:
-            if user_id == "unknown":
-                user_id = "all"
-
-        else:
-            self.log.warning("no user/target specified")
+        if user_id == "unknown":
             user_id = "all"
+        if user_id == "all":
+            self.log.warning("no user/target specified")
 
         if name is None:
             name = time.asctime().replace(" ","_") + ".jpg"
@@ -145,9 +142,9 @@ class DreamService(MycroftSkill):
         if result is not None:
             data = self.client.upload_from_path(result)
             link = data["link"]
-            self.target = user_id
+            self.context["destinatary"] = user_id
             self.speak("Here is what i dreamed", metadata={"url": link})
-            self.emitter.emit(Message("message_request", {"user_id":user_id, "data":{"dream_url":link}, "type":"deep_dream_result"}))
+            self.emitter.emit(Message("message_request", {"context":self.context, "data":{"dream_url":link}, "type":"deep_dream_result"}, self.context))
 
     #### dreaming functions
     def dream(self, imagepah, name):

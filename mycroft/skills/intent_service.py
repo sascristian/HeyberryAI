@@ -134,7 +134,7 @@ class IntentService(object):
 
     def handle_utterance(self, message):
         # Check if this message is for us
-        destinatary =  message.context.get("destinatary", "skills")
+        destinatary = message.context.get("destinatary", "skills")
         if destinatary != "skills" and destinatary != "all":
             return
         # Get language of the utterance

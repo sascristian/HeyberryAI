@@ -29,15 +29,15 @@ class FaceRecService(MycroftSkill):
 
     def handle_recog(self, message):
         face = message.data.get("file")
-        user_id = message.data.get("source")
+        user_id = message.data.get("source", "all")
         self.log.info(user_id + " request facerecog for " + face)
-        if user_id is not None:
-            if user_id == "unknown":
-                user_id = "all"
-            self.target = user_id
-        else:
-            self.log.warning("no user/target specified")
+
+        if user_id == "unknown":
             user_id = "all"
+
+        if user_id == "all":
+            self.log.warning("no user/destinatary specified")
+
 
         result = "unknown person"
         # read unknown image
@@ -58,17 +58,16 @@ class FaceRecService(MycroftSkill):
         except:
             self.log.error("no face detected in provided image")
 
+        self.context["destinatary"] = user_id
         self.emitter.emit(Message("face_recognition_result",
-                                  {"result": result}))
+                                  {"result": result}, self.context))
         try:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"user_id": user_id, "data": {"result": result}, "type": "face_recognition_result"}))
+                                          {"context": self.context, "data": {"result": result}, "type": "face_recognition_result"}, self.context))
         except:
             # .split failed
             pass
-
-
 
     def stop(self):
         pass

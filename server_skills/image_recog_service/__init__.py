@@ -55,11 +55,10 @@ class ImageRecognitionService():
             elapsed = time.time() - start
             time.sleep(0.1)
 
-    def local_deepdraw(self, label_num, user_id="unknown"):
-        requester = user_id
+    def local_deepdraw(self, label_num, context=None):
         message_type = "class_visualization_request"
-        message_data = {"class": label_num, "source": requester, "user": "unknown"}
-        self.emitter.emit(Message(message_type, message_data))
+        message_data = {"class": label_num}
+        self.emitter.emit(Message(message_type, message_data, context))
         t = self.timeout
         self.timeout = 250 #shit takes long
         self.wait()
@@ -67,13 +66,15 @@ class ImageRecognitionService():
         result = self.image_visualization_result["url"]
         return result
 
-    def server_deepdraw(self, label_num, user_id="unknown"):
-        requester = user_id
+    def server_deepdraw(self, label_num, context=None):
+        if context is None:
+            context = {}
+        requester = context.get("destinatary", "all")
         message_type = "class_visualization_request"
-        message_data = {"class": label_num, "source": requester, "user": "unknown"}
+        message_data = {"class": label_num}
         self.emitter.emit(Message("server_request",
                                   {"server_msg_type": "result", "requester": requester, "message_type": message_type,
-                                   "message_data": message_data}))
+                                   "message_data": message_data}, context))
 
         t = self.timeout
         self.timeout = 250  # shit takes long
@@ -82,20 +83,21 @@ class ImageRecognitionService():
         result = self.image_visualization_result["url"]
         return result
 
-    def local_image_classification(self, picture_path, user_id="unknown"):
-        requester = user_id
+    def local_image_classification(self, picture_path, context=None):
         message_type = "image_classification_request"
-        message_data = {"file": picture_path, "source": requester, "user":"unknown"}
-        self.emitter.emit(Message(message_type, message_data))
+        message_data = {"file": picture_path}
+        self.emitter.emit(Message(message_type, message_data, context))
         self.wait()
         result = self.image_classification_result["classification"]
         return result
 
-    def server_image_classification(self, picture_path, user_id="unknown"):
-        requester = user_id
+    def server_image_classification(self, picture_path, context=None):
+        if context is None:
+            context = {}
+        requester = context.get("destinatary", "all")
         message_type = "image_classification_request"
-        message_data = {"file": picture_path, "source": requester, "user":"unknown"}
-        self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data}))
+        message_data = {"file": picture_path}
+        self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data},context))
         self.wait()
         result = self.image_classification_result["classification"]
         return result
@@ -163,18 +165,20 @@ class ImageRecognitionSkill(MycroftSkill):
 
     def handle_img_recog_intent(self, message):
         self.speak_dialog("imgrecogstatus")
+        dest = message.context.get("destinatary", "all")
         classifier = ImageRecognitionService(self.emitter)
-        results = classifier.local_image_classification(dirname(__file__)+"/obama.jpg", message.data.get("target"))
+        results = classifier.local_image_classification(dirname(__file__)+"/obama.jpg", self.context)
         i = 0
         for result in list(results):
             results[i] = self.make_pretty(result)
             i += 1
+        self.context["destinatary"] = dest
         self.speak("in test image i see " + results[0] + ", or maybe it is " + results[1])
 
     def handle_deep_draw_intent(self, message):
         imagenet_class = random.randint(0, len(self.label_mapping))
         classifier = ImageRecognitionService(self.emitter)
-        classifier.local_deepdraw(imagenet_class, message.data.get("target"))
+        classifier.local_deepdraw(imagenet_class, self.context)
 
     def handle_deep_draw_about_intent(self, message):
         about = message.data.get("NetClass")
@@ -200,19 +204,17 @@ class ImageRecognitionSkill(MycroftSkill):
                     imagenet_class = i
                 i += 1
         classifier = ImageRecognitionService(self.emitter)
-        classifier.local_deepdraw(imagenet_class, message.data.get("target"))
+        classifier.local_deepdraw(imagenet_class, self.context)
 
     def handle_classify(self, message):
         pic = message.data.get("file")
-        user_id = message.data.get("source")
+        user_id = message.context.get("destinatary", "all")
 
-        if user_id is not None:
-            if user_id == "unknown":
-                user_id = "all"
-            self.target = user_id
-        else:
-            self.log.warning("no user/target specified")
+        if user_id == "unknown":
             user_id = "all"
+
+        if user_id == "all":
+            self.log.warning("no user/destinatary specified")
 
         self.log.info("loading image: " + pic)
         try:
@@ -245,18 +247,19 @@ class ImageRecognitionSkill(MycroftSkill):
 
         # send result
         msg_type = "image_classification_result"
-        msg_data = {"classification":result}
+        msg_data = {"classification": result}
+        self.context["destinatary"] = user_id
         # to source socket
         try:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"user_id": user_id, "data":msg_data,
-                                           "type": msg_type}))
+                                          {"data":msg_data,
+                                           "type": msg_type, "context": self.context}, self.context))
         except:
             pass
         # to bus
         self.emitter.emit(Message(msg_type,
-                                  msg_data))
+                                  msg_data, self.context))
 
     def handle_deep_draw(self, message):
         # deep draw, these octaves determine gradient ascent steps
@@ -297,7 +300,7 @@ class ImageRecognitionSkill(MycroftSkill):
             }
         ]
 
-        user_id = message.data.get("source")
+        user_id = message.context.get("destinatary")
         imagenet_class = message.data.get("class", 13)
         # set target of result
         if user_id is not None:
@@ -345,29 +348,28 @@ class ImageRecognitionSkill(MycroftSkill):
         link = data["link"]
         # send result
         msg_type = "class_visualization_result"
-        msg_data = {"url": link, "class_label": imagenet_class, "class_name": name, "target":user_id}
+        msg_data = {"url": link, "class_label": imagenet_class, "class_name": name}
         # to source socket
-        self.target = user_id
+        self.context["destinatary"] = user_id
         try:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"user_id": user_id, "data": msg_data,
-                                           "type": msg_type}))
+                                          {"data": msg_data,
+                                           "type": msg_type, "context": self.context}, self.context))
         except:
             # if try fails it wasnt from a socket
             pass
         # to bus
         self.emitter.emit(Message(msg_type,
-                                  msg_data))
+                                  msg_data, self.context))
 
     def handle_deep_draw_result(self, message):
         link = message.data.get("url")
         class_label = message.data.get("class_label")
         class_name = message.data.get("class_name")
-        self.target = message.data.get("target", "all")
         self.speak("Here is how i visualize " + class_name,
                           metadata={"url": link, "class_label": class_label,
-                                    "class_name": class_name})
+                                    "class_name": class_name}, context=message.context)
 
     def stop(self):
         pass

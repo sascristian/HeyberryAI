@@ -50,24 +50,16 @@ def handle_failure(event):
 
 def handle_speak(event):
     global message_queue
-    utterance = event.data.get('utterance')
-    target = event.data.get('target')
-    metadata = event.data.get('metadata')
-    more = event.data.get('more')
-    mute = event.data.get('mute')
-    expect_response = event.data.get('expect_response')
-
-    if metadata is None:
-        metadata = {}
-
+    target = event.context.get('destinatary', "all")
+    if ":" not in target:
+        return
+    utterance = event.data.get('utterance', "")
     logger.debug("Answer: " + utterance + " Target: " + target)
     target, sock_num = target.split(":")
-    answer_data = {"utterance": utterance, 'target': target, "mute": mute, "more": more, "expect_response": expect_response, "metadata":metadata}
     answer_type = "speak"
-
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
-    message_queue[sock_num].append([answer_type, answer_data])
+    message_queue[sock_num].append([answer_type, event.data, event.context])
 
 
 
@@ -153,25 +145,28 @@ def get_msg(message):
         return json.dumps(message.__dict__)
 
 
-def send_message(sock, type="speak", data=None):
+def send_message(sock, type="speak", data=None, context=None):
     if data is None:
         data = {}
-    message = get_msg(Message(type, data))
+    message = get_msg(Message(type, data, context))
     answer_data(sock, message)
 
 
 def handle_message_request(event):
     global message_queue
-
-    user_id = event.data.get("user_id")
+    user_id = event.context.get("destinatary", "")
+    if ":" not in user_id:
+        logger.error("invalid user_id: " + user_id)
+        return
     type = event.data.get("type")
     data = event.data.get("data")
-    data["target"] = "server"
+    context = event.data.get("context", {})
+    context["destinatary"] = "server"
     sock_num = user_id.split(":")[1]
     logger.info("Received message request for sock:" + sock_num + " with type: " + type)
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
-    message_queue[sock_num].append([type, data])
+    message_queue[sock_num].append([type, data, context])
 
 
 def main():
@@ -207,8 +202,8 @@ def main():
             ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
             if sock_num in message_queue.keys():
                 i = 0
-                for type, data in message_queue[sock_num]:
-                    send_message(sock, type, data)
+                for type, data, context in message_queue[sock_num]:
+                    send_message(sock, type, data, context)
                     message_queue[sock_num].pop(i)
                     # TODO remove empty sock num in queue
                     i += 1

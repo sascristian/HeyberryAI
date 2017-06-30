@@ -64,8 +64,9 @@ class UserIdService():
     def local_face_recog(self, picture_path, user_id):
         requester = user_id
         message_type = "face_recognition_request"
+        context = {"destinatary": user_id}
         message_data = {"file": picture_path, "source": requester, "user":"unknown"}
-        self.emitter.emit(Message(message_type, message_data))
+        self.emitter.emit(Message(message_type, message_data, context))
         self.wait()
         result = self.face_recog_result
         return result
@@ -73,8 +74,9 @@ class UserIdService():
     def server_face_recog(self, picture_path, user_id):
         requester = user_id
         message_type = "face_recognition_request"
-        message_data = {"file": picture_path}
-        self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data}))
+        message_data = {"file": picture_path, "source": requester}
+        context = {"destinatary": user_id}
+        self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data}, context))
         self.wait()
         result = self.face_recog_result
         return result
@@ -161,11 +163,11 @@ class UserIdSkill(MycroftSkill):
         self.userid = UserIdService(self.emitter, server=self.server)
 
     def handle_set_fb_photo(self, message):
-        if "fbchat" in message.data.get("source"):
-            self.photo = message.data.get("photo")
+        if "fbchat" in message.context.get("source"):
+            self.photo = message.context.get("photo")
 
     def handle_who_am_i_intent(self, message):
-        user_id = message.data.get("target")
+        user_id = message.data.get("destinatary")
         user = ""
         if "fbchat" in user_id:
             url = self.photo
@@ -191,18 +193,18 @@ class UserIdSkill(MycroftSkill):
 
         usr = message.data.get("user")
         if usr is None or usr == "unknown":
-            usr = "unknown " + message.data.get("target") + " user"
+            usr = "unknown " + message.context.get("destinatary") + " user"
         user += usr + ", according to source of message\n"
         self.speak_dialog("who.user.is", {"username": user})
 
     def handle_what_am_i_intent(self, message):
         try:
             # server
-            target, sock_num = message.data.get("target").split(":")
+            target, sock_num = message.context.get("destinatary").split(":")
         except:
             # non server
-            target = message.data.get("target")
-            self.log.debug("could not get socket from " + str(message.data.get("target")))
+            target = message.context.get("destinatary")
+            self.log.debug("could not get socket from " + str(target))
         self.speak_dialog("what.user.is", {"usertype": target})
 
     def stop(self):

@@ -144,20 +144,20 @@ class StyleTransferSkill(MycroftSkill):
     def handle_style_transfer_intent(self, message):
         style_img = dirname(__file__)+"/giger.jpg"
         target_img = dirname(__file__)+"/dariusz.jpg"
-        user_id = message.data.get("target")
+        user_id = message.context.get("destinatary")
         self.speak("testing style transfer")
-        self.emitter.emit(Message("style_transfer_request", {"source":user_id, "style_img":style_img, "target_img":target_img}))
+        self.emitter.emit(Message("style_transfer_request", {"source":user_id, "style_img":style_img, "target_img":target_img}, self.context))
 
     def handle_detailed_style_transfer_intent(self, message):
         style_img = dirname(__file__) + "/starry_night.jpg"
         target_img = dirname(__file__) + "/obama.jpg"
-        user_id = message.data.get("target")
+        user_id = message.context.get("destinatary")
         self.speak("testing recursive style transfer")
         iter = 51
         self.emitter.emit(
             Message("style_transfer_request",
                     {"source": user_id, "style_img": style_img, "target_img": target_img, "iter_num": 10,
-                     "name": "test_iter_" + str(10)}))
+                     "name": "test_iter_" + str(10)}, self.context))
         self.wait()
         self.log.info("iter num " + str(10) + " saved")
         for i in range(2, iter):
@@ -178,7 +178,6 @@ class StyleTransferSkill(MycroftSkill):
         if user_id is not None:
             if user_id == "unknown":
                 user_id = "all"
-
         else:
             self.log.warning("no user/target specified")
             user_id = "all"
@@ -241,18 +240,18 @@ class StyleTransferSkill(MycroftSkill):
         # send result
         # to source socket
         if user_id is not None:
-            self.target = user_id
+            self.context["destinatary"] = user_id
             try:
                 if user_id.split(":")[1].isdigit():
                     self.emitter.emit(Message("message_request",
                                               {"user_id": user_id, "data": msg_data,
-                                               "type": msg_type}))
+                                               "type": msg_type}, self.context))
             except:
                 pass
         # to bus
         msg_data["file"] = out_path
         self.emitter.emit(Message(msg_type,
-                                  msg_data))
+                                  msg_data, self.context))
         self.speak("style transfer result:",
                    metadata=msg_data)
 

@@ -149,9 +149,10 @@ class FaceChat(fbchat.Client):
                 self.log.debug("Processing utterance " + chat[1] + " for user " + str(chat[0]))
                 chatmsg = chat[1]
                 # NOTE user id skill checks for photo param
+                context = {'source': 'fbchat_'+chat[0], "mute": True, "user":chat[2], "photo":chat[3]}
                 self.ws.emit(
                     Message("recognizer_loop:utterance",
-                            {'utterances': [chatmsg], 'source': 'fbchat_'+chat[0], "mute": True, "user":chat[2], "photo":chat[3]}))
+                            {'utterances': [chatmsg]}, context))
                 # remove from queue
                 self.log.debug("Removing item from queue")
                 self.queue.pop(0)
@@ -195,7 +196,7 @@ class FaceChat(fbchat.Client):
 
     def handle_speak(self, message):
         utterance = message.data.get("utterance")
-        target = message.data.get("target")
+        target = message.context.get("destinatary")
         metadata = message.data.get("metadata")
         if "fbchat" in target and self.active:
             if "url" in metadata.keys():
