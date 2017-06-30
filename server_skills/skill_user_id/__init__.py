@@ -186,7 +186,7 @@ class UserIdSkill(MycroftSkill):
         if bluetooth_user != "unknown":
             user += bluetooth_user + ", according to bluetooth service\n"
 
-        usr = message.data.get("user", "unknown")
+        usr = message.context.get("user", "unknown")
         if usr == "unknown":
             usr = "unknown " + message.context.get("destinatary") + " user"
         user += usr + ", according to source of message\n"
