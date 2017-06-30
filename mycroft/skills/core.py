@@ -263,7 +263,7 @@ class MycroftSkill(object):
         if handler:
             self.emitter.on(intent_parser.name, receive_handler)
             self.events.append((intent_parser.name, receive_handler))
-    
+
     def handle_enable_intent(self, message):
         intent_name = message.data["intent_name"]
         self.enable_intent(intent_name)
@@ -271,9 +271,9 @@ class MycroftSkill(object):
     def handle_disable_intent(self, message):
         intent_name = message.data["intent_name"]
         self.disable_intent(intent_name)
-        
+
     def disable_intent(self, intent_name):
-         """Disable a registered intent"""
+        """Disable a registered intent"""
         for (name, intent) in self.registered_intents:
             if name == intent_name:
                 logger.debug('Disabling intent ' + intent_name)
