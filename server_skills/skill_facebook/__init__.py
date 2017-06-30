@@ -149,7 +149,7 @@ class FaceChat(fbchat.Client):
                 self.log.debug("Processing utterance " + chat[1] + " for user " + str(chat[0]))
                 chatmsg = chat[1]
                 # NOTE user id skill checks for photo param
-                context = {'source': 'fbchat_'+chat[0], "mute": True, "user":chat[2], "photo":chat[3]}
+                context = {'source': 'fbchat_'+chat[0], "mute": True, "user": chat[2], "photo": chat[3]}
                 self.ws.emit(
                     Message("recognizer_loop:utterance",
                             {'utterances': [chatmsg]}, context))

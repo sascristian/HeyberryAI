@@ -126,10 +126,10 @@ class IntentService(object):
     def get_context(self, context=None):
         if context is None:
             context = {}
-        context["source"] = "skills"
         # by default set destinatary of reply to source of this message
         context["destinatary"] = context.get("source", "all")
         context["mute"] = context.get("mute", False)
+        context["source"] = "skills"
         return context
 
     def handle_utterance(self, message):
