@@ -123,13 +123,27 @@ class IntentService(object):
             "skill_id": 0, "utterance": utterance, "lang": lang, "intent_name": ""}))
         return False
 
+    def get_context(self, context=None):
+        if context is None:
+            context = {}
+        context["source"] = "skills"
+        # by default set destinatary of reply to source of this message
+        context["destinatary"] = context.get("source", "all")
+        context["mute"] = context.get("mute", False)
+        return context
+
     def handle_utterance(self, message):
+        # Check if this message is for us
+        destinatary =  message.context.get("destinatary", "skills")
+        if destinatary != "skills" and destinatary != "all":
+            return
         # Get language of the utterance
         lang = message.data.get('lang', None)
         if not lang:
             lang = "en-us"
 
         utterances = message.data.get('utterances', '')
+        context = self.get_context(message.context)
         # check for conversation time-out
         self.active_skills = [skill for skill in self.active_skills
                               if time.time() - skill[1] <= self.converse_timeout * 60]
@@ -143,16 +157,6 @@ class IntentService(object):
                 return
                 # no skill wants to handle utterance, proceed
 
-        source = message.data.get("source")
-        target = message.data.get("target")
-        mute = message.data.get("mute")
-        user = message.data.get("user")
-        if target is None:
-            target = source
-        if mute is None:
-            mute = False
-        if user is None:
-            user = "unknown"
         best_intent = None
         for utterance in utterances:
             try:
@@ -167,11 +171,8 @@ class IntentService(object):
                 continue
 
         if best_intent and best_intent.get('confidence', 0.0) > 0.0:
-            best_intent["target"] = target
-            best_intent["mute"] = mute
-            best_intent["user"] = user
             reply = message.reply(
-                best_intent.get('intent_type'), best_intent)
+                best_intent.get('intent_type'), best_intent, context)
             self.emitter.emit(reply)
             # update active skills
             skill_id = int(best_intent['intent_type'].split(":")[0])
@@ -180,17 +181,13 @@ class IntentService(object):
         elif len(utterances) == 1:
             self.emitter.emit(Message("intent_failure", {
                 "utterance": utterances[0],
-                "lang": lang,
-                "target": target,
-                "mute": mute
-            }))
+                "lang": lang
+            }, context))
         else:
             self.emitter.emit(Message("multi_utterance_intent_failure", {
                 "utterances": utterances,
-                "lang": lang,
-                "target": target,
-                "mute": mute
-            }))
+                "lang": lang
+            }, context))
 
     def handle_register_vocab(self, message):
         start_concept = message.data.get('start')

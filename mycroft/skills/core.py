@@ -184,10 +184,9 @@ class MycroftSkill(object):
         self.reload_skill = True
         self.external_reload = True
         self.external_shutdown = True
-        self.muted = False
-        self.target = "all"
         self.events = []
         self.skill_id = 0
+        self.context = self.get_context()
 
     @property
     def location(self):
@@ -279,17 +278,15 @@ class MycroftSkill(object):
                     self.name, exc_info=True)
 
         if handler:
-            self.emitter.on(intent_parser.name, self.set_target)
+            self.emitter.on(intent_parser.name, self.handle_update_context)
             self.emitter.on(intent_parser.name, receive_handler)
             self.events.append((intent_parser.name, receive_handler))
 
-    def set_target(self, message):
-        self.target = message.data.get("target")
-        self.muted = message.data.get("mute")
-        if not self.target:
-            self.target = "all"
-        if not self.muted:
-            self.muted = False
+    def handle_update_context(self, message):
+        context = {}
+        context["destinatary"] = message.context.get("destinatary", "all")
+        context["mute"] = message.context.get("mute", False)
+        self.context = self.get_context(context)
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
@@ -327,35 +324,32 @@ class MycroftSkill(object):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
-    def speak(self, utterance, expect_response=False, mute=None, more=False, target=None, metadata=None):
-        if metadata is None:
-            metadata = {}
+    def get_context(self, context=None):
+        if context is None:
+            context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False}
+        else:
+            if "destinatary" not in context.keys():
+                context["destinatary"] = self.context.get("destinatary", "all")
+            if "source" not in context.keys():
+                context["source"] = self.name
+            if "mute" not in context.keys():
+                context["mute"] = self.context.get("mute", False)
+            if "more_speech" not in context.keys():
+                context["more_speech"] = self.context.get("more_speech", False)
+        return context
+
+    def speak(self, utterance, expect_response=False, metadata={}, context=None):
         metadata["source_skill"] = self.name
-        if mute is None:
-            mute = self.muted
-        if target is None:
-            target = self.target
         data = {'utterance': utterance,
                 'expect_response': expect_response,
-                'mute': mute,
-                'more': more,
-                'target': target,
                 "metadata": metadata}
-        self.emitter.emit(Message("speak", data))
+        self.emitter.emit(Message("speak", data, self.get_context(context)))
 
-    def speak_dialog(self, key, data={}, expect_response=False, mute=None, more=False, target=None, metadata=None):
-        if metadata is None:
-            metadata = {}
+    def speak_dialog(self, key, data={}, expect_response=False, metadata={}, context=None):
         metadata["source_skill"] = self.name
-        if mute is None:
-            mute = self.muted
-        if target is None:
-            data["target"] = self.target
         data['expect_response'] = expect_response
-        data['mute'] = mute
-        data['more'] = more
         data["metadata"] = metadata
-        self.speak(self.dialog_renderer.render(key, data))
+        self.speak(self.dialog_renderer.render(key, data), context=self.get_context(context))
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)
