@@ -249,6 +249,8 @@ def main():
                             if deserialized_message.type in allowed_bus_messages:
                                 data = deserialized_message.data
                                 context = deserialized_message.context
+                                if context is None:
+                                    context = {}
                                 if "source" not in context.keys():
                                     data["source"] = "unknown"
                                 if deserialized_message.type == "names_response":
