@@ -167,7 +167,7 @@ class UserIdSkill(MycroftSkill):
             self.photo = message.context.get("photo")
 
     def handle_who_am_i_intent(self, message):
-        user_id = message.data.get("destinatary")
+        user_id = message.context.get("destinatary")
         user = ""
         if "fbchat" in user_id:
             url = self.photo
@@ -191,8 +191,8 @@ class UserIdSkill(MycroftSkill):
         if bluetooth_user != "unknown":
             user += bluetooth_user + ", according to bluetooth service\n"
 
-        usr = message.data.get("user")
-        if usr is None or usr == "unknown":
+        usr = message.data.get("user", "unknown")
+        if usr == "unknown":
             usr = "unknown " + message.context.get("destinatary") + " user"
         user += usr + ", according to source of message\n"
         self.speak_dialog("who.user.is", {"username": user})
