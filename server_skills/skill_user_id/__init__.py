@@ -148,7 +148,6 @@ class UserIdSkill(MycroftSkill):
         self.photo = None
 
     def initialize(self):
-        self.emitter.on("recognizer_loop:utterance", self.handle_set_fb_photo)
 
         who_am_i_intent = IntentBuilder("WhoAmIIntent")\
             .require("WhoAmIKeyword").build()
@@ -162,15 +161,11 @@ class UserIdSkill(MycroftSkill):
 
         self.userid = UserIdService(self.emitter, server=self.server)
 
-    def handle_set_fb_photo(self, message):
-        if "fbchat" in message.context.get("source"):
-            self.photo = message.context.get("photo")
-
     def handle_who_am_i_intent(self, message):
         user_id = message.context.get("destinatary")
         user = ""
         if "fbchat" in user_id:
-            url = self.photo
+            url = message.context.get("photo")
             vision_user = self.userid.face_recog_from_url(url, user_id)
         else:
             vision_user = self.userid.request_vision_id(user_id)
