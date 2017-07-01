@@ -35,6 +35,7 @@ from browser_service import BrowserControl
 from mycroft.skills.settings import SkillSettings
 from fuzzywuzzy import fuzz
 from threading import Thread
+from random import choice
 
 __author__ = 'jarbas'
 
@@ -109,7 +110,7 @@ class FaceChat(fbchat.Client):
         self.default_thread_type = None
 
         if not user_agent:
-            user_agent = random.choice(USER_AGENTS)
+            user_agent = choice(USER_AGENTS)
 
         self._header = {
             'Content-Type': 'application/x-www-form-urlencoded',
