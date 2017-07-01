@@ -228,39 +228,38 @@ class FaceChat(fbchat.Client):
                                  {"author_id": author_id, "author_name": author_name, "message": message,
                                   "photo": author_photo}))
 
-    def onUnknownMesssageType(self, msg={}):
+
+    def onChatTimestamp(self, buddylist={}, msg={}):
         """
-        Called when the client is listening, and some unknown data was recieved
+        Called when the client receives chat online presence update
+        :param buddylist: A list of dicts with friend id and last seen timestamp
         :param msg: A full set of the data recieved
         """
+
+        if self.verbose:
+            self.log.debug('Chat Timestamps received: {}'.format(buddylist))
+
         data = {}
-        if "chatproxy-presence" == msg["type"]:
-            if self.verbose:
-                self.log.debug("timestamps update received: " + str(msg["buddyList"]))
-            for id in msg["buddyList"].keys():
-                payload = msg["buddyList"][id]
-                timestamp = payload["lat"]
-                self.timestamps[id] = timestamp
-                name = self.get_user_name(id)
-                last_seen = time.time() - timestamp
+        for id in buddylist.keys():
+            timestamp = buddylist[id]
+            self.timestamps[id] = timestamp
+            name = self.get_user_name(id)
+            last_seen = time.time() - timestamp
+            if last_seen >= 60:
+                last_seen = last_seen / 60
                 if last_seen >= 60:
                     last_seen = last_seen / 60
                     if last_seen >= 60:
                         last_seen = last_seen / 60
-                        if last_seen >= 60:
-                            last_seen = last_seen / 60
-                        else:
-                            last_seen = str(last_seen) + " hours ago"
                     else:
-                        last_seen = str(last_seen) + " minutes ago"
+                        last_seen = str(last_seen) + " hours ago"
                 else:
-                    last_seen = str(last_seen) + " seconds ago"
-                data[id] = {"name": name, "timestamp": timestamp, "last_seen": last_seen}
-            self.ws.emit(Message("fb_last_seen_timestamps", {"timestamps": data}))
+                    last_seen = str(last_seen) + " minutes ago"
+            else:
+                last_seen = str(last_seen) + " seconds ago"
+            data[id] = {"name": name, "timestamp": timestamp, "last_seen": last_seen}
+        self.ws.emit(Message("fb_last_seen_timestamps", {"timestamps": data}))
 
-        else:
-            if self.verbose:
-                self.log.debug('Unknown message received: {}'.format(msg))
 
     def onFriendRequest(self, from_id=None, msg={}):
         """
@@ -355,7 +354,7 @@ class FaceChat(fbchat.Client):
             Message("fb_chat_message_sent", {"friend_id": thread_id, "message": message, "message_id": message_id}))
         return message_id
 
-    # re-log in
+    # add re-log in
     def listen(self, markAlive=True):
         """
         Initializes and runs the listening loop continually
@@ -371,7 +370,37 @@ class FaceChat(fbchat.Client):
 
         self.stopListening()
 
-    # just overriding to avoid logs
+    # overriding to increase timeout
+    def _get(self, url, query=None, timeout=90):
+        payload = self._generatePayload(query)
+        return self._session.get(url, headers=self._header, params=payload, timeout=timeout)
+
+    def _post(self, url, query=None, timeout=90):
+        payload = self._generatePayload(query)
+        return self._session.post(url, headers=self._header, data=payload, timeout=timeout)
+
+    def _cleanGet(self, url, query=None, timeout=90):
+        return self._session.get(url, headers=self._header, params=query, timeout=timeout)
+
+    def _cleanPost(self, url, query=None, timeout=90):
+        self.req_counter += 1
+        return self._session.post(url, headers=self._header, data=query, timeout=timeout)
+
+    def _postFile(self, url, files=None, query=None, timeout=90):
+        payload = self._generatePayload(query)
+        # Removes 'Content-Type' from the header
+        headers = dict((i, self._header[i]) for i in self._header if i != 'Content-Type')
+        return self._session.post(url, headers=headers, data=payload, timeout=timeout, files=files)
+
+    #  overriding to avoid logs
+    def onUnknownMesssageType(self, msg={}):
+        """
+        Called when the client is listening, and some unknown data was recieved
+        :param msg: A full set of the data recieved
+        """
+        if self.verbose:
+            self.log.debug('Unknown message received: {}'.format(msg))
+
     def graphql_requests(self, *queries):
         """
         .. todo::

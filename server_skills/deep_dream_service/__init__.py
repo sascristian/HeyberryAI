@@ -160,7 +160,7 @@ class DreamService(MycroftSkill):
         if source is None:
             self.log.error("No dream source")
         elif guide is not None:
-            result = self.guided_dream(source, guide, name)
+            result = self.guided_dream(source, guide, name, iter)
         else:
             start = time.time()
             try:
@@ -186,7 +186,7 @@ class DreamService(MycroftSkill):
                                   message.context))
 
     #### dreaming functions
-    def dream(self, imagepah, name, iter=25):
+    def dream(self, imagepah, name=None, iter=25):
         self.speak("please wait while the dream is processed")
         layer = random.choice(self.layers)
         # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
@@ -213,7 +213,7 @@ class DreamService(MycroftSkill):
         bc.cleanup()
         return outpath
 
-    def guided_dream(self, sourcepath, guidepath, name):
+    def guided_dream(self, sourcepath, guidepath, name=None, iter=25):
         self.log.error("Guided dream not implemented")
         return None
 
