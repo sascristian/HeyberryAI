@@ -18,8 +18,6 @@
 
 import abc
 import imp
-import time
-
 import os.path
 import re
 import time
@@ -32,8 +30,9 @@ from mycroft.configuration import ConfigurationManager
 from mycroft.dialog import DialogLoader
 from mycroft.filesystem import FileSystemAccess
 from mycroft.messagebus.message import Message
-from mycroft.util.log import getLogger
 from mycroft.skills.settings import SkillSettings
+from mycroft.util.log import getLogger
+
 __author__ = 'seanfitz'
 
 BLACKLISTED_SKILLS = ["send_sms", "media"]
@@ -263,7 +262,7 @@ class MycroftSkill(object):
         if handler:
             self.emitter.on(intent_parser.name, receive_handler)
             self.events.append((intent_parser.name, receive_handler))
-    
+
     def handle_enable_intent(self, message):
         intent_name = message.data["intent_name"]
         self.enable_intent(intent_name)
@@ -271,9 +270,9 @@ class MycroftSkill(object):
     def handle_disable_intent(self, message):
         intent_name = message.data["intent_name"]
         self.disable_intent(intent_name)
-        
+
     def disable_intent(self, intent_name):
-         """Disable a registered intent"""
+        """Disable a registered intent"""
         for (name, intent) in self.registered_intents:
             if name == intent_name:
                 logger.debug('Disabling intent ' + intent_name)
