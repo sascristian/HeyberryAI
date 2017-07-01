@@ -19,7 +19,7 @@ import random
 import sys
 import time
 from os.path import dirname
-from threading import Thread
+
 from time import sleep, asctime
 
 import fbchat
@@ -34,6 +34,8 @@ sys.path.append(dirname(dirname(__file__)))
 from browser_service import BrowserControl
 from mycroft.skills.settings import SkillSettings
 from fuzzywuzzy import fuzz
+from threading import Thread
+
 __author__ = 'jarbas'
 
 # TODO logs in bots
@@ -70,7 +72,7 @@ def graphql_response_to_json(content, verbose=False, logger=None):
 
 
 class FaceChat(fbchat.Client):
-    def __init__(self, email, password, pending_requests={}, verbose=False, emitter=None, logger=None, active=True,
+    def __init__(self, email, password, pending_requests=None, verbose=False, emitter=None, logger=None, active=True,
                  user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.WARNING):
         """Initializes and logs in the client
 
@@ -85,8 +87,11 @@ class FaceChat(fbchat.Client):
         :type logging_level: int
         :raises: Exception on failed login
         """
+
         self.mail = email
         self.passwd = password
+        if pending_requests is None:
+            pending_requests = {}
         self.pending_requests = pending_requests
         self.verbose = verbose
         if logger is not None:
@@ -94,7 +99,34 @@ class FaceChat(fbchat.Client):
         else:
             self.log = log
 
-        super(FaceChat, self).__init__(email=email, password=password)
+        self.sticky, self.pool = (None, None)
+        self._session = requests.session()
+        self.req_counter = 1
+        self.seq = "0"
+        self.payloadDefault = {}
+        self.client = 'mercury'
+        self.default_thread_id = None
+        self.default_thread_type = None
+
+        if not user_agent:
+            user_agent = random.choice(USER_AGENTS)
+
+        self._header = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Referer': ReqUrl.BASE,
+            'Origin': ReqUrl.BASE,
+            'User-Agent': user_agent,
+            'Connection': 'keep-alive',
+        }
+
+        handler.setLevel(logging_level)
+
+        # If session cookies aren't set, not properly loaded or gives us an invalid session, then do the login
+        if not session_cookies or not self.setSession(session_cookies) or not self.isLoggedIn():
+            self.login(email, password, max_tries)
+        else:
+            self.email = email
+            self.password = password
 
         self.ws = emitter
         if self.ws is not None:
@@ -103,8 +135,8 @@ class FaceChat(fbchat.Client):
         else:
             self.log.error("No emitter was provided to facebook chat")
         self.queue = []  # [[author_id , utterance, name]]
-        self.monitor_thread = None
-        self.queue_thread = None
+        #self.monitor_thread = None
+        #self.queue_thread = None
         self.privacy = False
         self.active = active
 
