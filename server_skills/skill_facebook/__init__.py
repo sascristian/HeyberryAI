@@ -93,31 +93,8 @@ class FaceChat(fbchat.Client):
             self.log = logger
         else:
             self.log = log
-        self.sticky, self.pool = (None, None)
-        self._session = requests.session()
-        self.req_counter = 1
-        self.seq = "0"
-        self.payloadDefault = {}
-        self.client = 'mercury'
-        self.default_thread_id = None
-        self.default_thread_type = None
-        self.timestamps = {}
-        if not user_agent:
-            user_agent = random.choice(USER_AGENTS)
 
-        self._header = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Referer': ReqUrl.BASE,
-            'Origin': ReqUrl.BASE,
-            'User-Agent': user_agent,
-            'Connection': 'keep-alive',
-        }
-
-        handler.setLevel(logging_level)
-
-        # If session cookies aren't set, not properly loaded or gives us an invalid session, then do the login
-        if not session_cookies or not self.setSession(session_cookies) or not self.isLoggedIn():
-            self.login(email, password, max_tries)
+        super(FaceChat, self).__init__(email=email, password=password)
 
         self.ws = emitter
         if self.ws is not None:
