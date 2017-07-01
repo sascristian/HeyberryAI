@@ -122,20 +122,13 @@ def answer_id(sock):
                 offline_client(sock)
 
 
-def get_answer(utterance, user_id):
+def get_answer(utterance, context):
     logger.debug("emitting utterance to bus: " + utterance)
-    source, sock_num = user_id.split(":")
-    # check if we know who is the user of this socket
-    if sock_num in users.keys():
-        user = users[sock_num]
-    else:
-        user = sock_num
-
     ws.emit(
        Message("recognizer_loop:utterance",
-               {'utterances': [utterance.strip()], 'source': user_id, "user": user, "mute": True}))
+               {'utterances': [utterance.strip()]}, context))
 
-    logger.debug("Waiting answer for user " + user_id)
+    logger.debug("Waiting answer for user " + context["source"])
 
 
 def get_msg(message):
@@ -248,11 +241,22 @@ def main():
                             deserialized_message = Message.deserialize(utterance)
                             if deserialized_message.type in allowed_bus_messages:
                                 data = deserialized_message.data
+                                # build context
                                 context = deserialized_message.context
                                 if context is None:
                                     context = {}
                                 if "source" not in context.keys():
-                                    data["source"] = "unknown"
+                                    context["source"] = "unknown"
+                                if "mute" not in context.keys():
+                                    context["mute"] = True
+                                context["source"] += ":" + sock_num
+                                # TODO authorize user
+                                if sock_num in users.keys():
+                                    user = users[sock_num]
+                                else:
+                                    user = sock_num
+                                context["user"] = user
+                                # handle message
                                 if deserialized_message.type == "names_response":
                                     for name in data["names"]:
                                         logger.debug("Setting alias: " + name + " for socket: " + sock_num)
@@ -262,46 +266,23 @@ def main():
                                 elif deserialized_message.type == "recognizer_loop:utterance":
                                     utterance = data["utterances"][0]
                                     # get answer
-                                    user_id = context["source"] + ":" + sock_num
-                                    get_answer(utterance, user_id)
+                                    get_answer(utterance, context)
                                 elif deserialized_message.type == "incoming_file":
                                     logger.info("started receiving file for " + str(sock_num))
                                     file_socks[sock_num] = open("../tmp_file.jpg", 'wb')
                                 elif deserialized_message.type == "face_recognition_request":
-                                    # TODO authorize user
-                                    if sock_num in users.keys():
-                                        user = users[sock_num]
-                                    else:
-                                        user = sock_num
-                                    user_id = context["source"] + ":" + sock_num
-                                    deserialized_message.context["source"] = user_id
-                                    deserialized_message.context["user"] = user
                                     deserialized_message.data["file"] = "../tmp_file.jpg"
-                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
+                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
                                 elif deserialized_message.type == "vision_result":
-                                    if sock_num in users.keys():
-                                        user = users[sock_num]
-                                    else:
-                                        user = sock_num
-                                    user_id = context["source"] + ":" + sock_num
-                                    deserialized_message.context["source"] = user_id
-                                    deserialized_message.context["user"] = user
                                     deserialized_message.data["feed_path"] = "../tmp_file.jpg"
-                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
+                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
                                 elif deserialized_message.type == "image_classification_request":
-                                    if sock_num in users.keys():
-                                        user = users[sock_num]
-                                    else:
-                                        user = sock_num
-                                    user_id = context["source"] + ":" + sock_num
-                                    deserialized_message.context["source"] = user_id
-                                    deserialized_message.context["user"] = user
                                     deserialized_message.data["file"] = "../tmp_file.jpg"
-                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
+                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
                                 else:
                                     logger.info("no special handling provided for " + deserialized_message.type)
                                     # message is whitelisted and no special handling was provided
-                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
+                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
 
 
                         else:
