@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.ndimage as nd
 import PIL.Image
-import sys, time, random
+import sys, time, random, os
 from os.path import dirname
 from imgurpython import ImgurClient
 from adapt.intent import IntentBuilder
@@ -140,6 +140,10 @@ class ImageRecognitionSkill(MycroftSkill):
                 client_secret = 'yyyyyyyyy'
 
         self.client = ImgurClient(client_id, client_secret)
+
+        self.save_path = dirname(__file__) + "/deepdraw/"
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
 
     def initialize(self):
         self.emitter.on("image_classification_request", self.handle_classify)
@@ -339,7 +343,7 @@ class ImageRecognitionSkill(MycroftSkill):
                              random_crop=True, visualize=False, logger=self.log)
 
         # save image
-        path = dirname(__file__)+"/deepdraw/"+ str(imagenet_class)+'.png'
+        path = self.save_path + str(imagenet_class)+'.png'
         self.log.info("saving image to " + path)
         PIL.Image.fromarray(np.uint8(gen_image)).save(path)
 
