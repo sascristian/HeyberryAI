@@ -1,3 +1,4 @@
+
 # Time-stamp: <2017-04-06 15:55:05 dmendyke>   -*- mode: python; -*-
 
 # Copyright 2016 Mycroft AI, Inc.
@@ -17,10 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-import os  # Operating System functions
 #
 # Required Modules
 from signal import getsignal, signal, SIGKILL, SIGINT, SIGTERM  # signals
+import os  # Operating System functions
+
 
 #
 # Written by Daniel Mendyke [dmendyke@jaguarlandrover.com]
@@ -81,7 +83,7 @@ class Signal(object):  # python 3+ class Signal
         '''
         signal(self.__sig_value, self.__previous_func)
 
-        # End class Signal
+    # End class Signal
 
 
 # ----------------------------------------------------------------------------
@@ -189,4 +191,4 @@ class Lock(object):  # python 3+ 'class Lock'
             if self.__pid == L.read():
                 os.unlink(self.path)
 
-                # End class Lock
+    # End class Lock

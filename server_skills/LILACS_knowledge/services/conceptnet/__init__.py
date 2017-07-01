@@ -1,11 +1,10 @@
-import sys
 from os.path import abspath
-from os.path import dirname
 
 import requests
 
 from mycroft.messagebus.message import Message
-
+import sys
+from os.path import dirname
 sys.path.append(dirname(dirname(dirname(dirname(__file__)))))
 from LILACS_knowledge.services import KnowledgeBackend
 from mycroft.util.log import getLogger
@@ -77,14 +76,14 @@ class ConceptNetService(KnowledgeBackend):
                     if usage is not None:
                         examples.append(usage)
                 # id info source
-                dict.setdefault("concept net",
-                                {"RelatedNodes": other, "IsA": parents, "CapableOf": capable, "HasA": has,
-                                 "Desires": desires, "UsedFor": used, "RelatedTo": related,
-                                 "AtLocation": location, "surfaceText": examples})
+                dict.setdefault("concept net", {"RelatedNodes": other, "IsA": parents, "CapableOf": capable, "HasA": has,
+                                               "Desires": desires, "UsedFor": used, "RelatedTo": related,
+                                               "AtLocation": location, "surfaceText": examples})
 
             except:
                 logger.error("Could not parse concept net for " + str(subject))
             self.send_result(dict)
+
 
     def adquire(self, subject):
         logger.info('Call ConceptNetKnowledgeAdquire')
@@ -98,6 +97,7 @@ class ConceptNetService(KnowledgeBackend):
         if self.process:
             self.process.terminate()
             self.process = None
+
 
 
 def load_service(base_config, emitter):

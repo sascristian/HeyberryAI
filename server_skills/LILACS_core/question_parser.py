@@ -1,8 +1,8 @@
+
 import re
 
 import spotlight
 from requests import ConnectionError, HTTPError
-
 
 class EnglishQuestionParser():
     """
@@ -13,9 +13,10 @@ class EnglishQuestionParser():
     
     """
 
+
     def __init__(self):
         self.regexes = [
-            # re.compile(
+            #re.compile(
             #    ".*(?P<QuestionWord>are) "
             #    "(?P<Query>.*)"),
             re.compile(
@@ -73,7 +74,7 @@ class LILACSQuestionParser():
                 center_node = node
 
         target = 666
-        # TODO better select target mechanism
+        #TODO better select target mechanism
         target_node = ""
         for node in subjects:
             if subjects[node] < target and node != center_node:
@@ -115,14 +116,13 @@ class LILACSQuestionParser():
                     p = []
                     types = annotation["types"].split(",")
                     for type in types:
-                        type = type.replace("DBpedia:", "").replace("Schema:", "").replace("Http://xmlns.com/foaf/0.1/",
-                                                                                           "").lower()
+                        type = type.replace("DBpedia:", "").replace("Schema:", "").replace("Http://xmlns.com/foaf/0.1/", "").lower()
                         if type not in p:
                             p.append(type)
                     parents.setdefault(subject, p)
                 # dbpedia link
                 url = annotation["URI"]
-                # print "link: " + url
+                #print "link: " + url
                 dbpedia_name = url.replace("http://dbpedia.org/resource/", "").replace("_", " ")
                 if dbpedia_name.lower() not in subject:
                     synonims.setdefault(subject, dbpedia_name.lower())
@@ -137,8 +137,7 @@ class LILACSQuestionParser():
 def test_qp():
     parser = LILACSQuestionParser()
 
-    questions = ["how to kill animals ( a cow ) and make meat", "what is a living being",
-                 "why are humans living beings", "give examples of animals"]
+    questions = ["how to kill animals ( a cow ) and make meat", "what is a living being", "why are humans living beings", "give examples of animals"]
 
     for text in questions:
         center_node, target_node, parents, synonims, midle, question = parser.process_entitys(text)

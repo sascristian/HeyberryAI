@@ -15,21 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import random
 import re
-import time
-from os.path import dirname
+import os
 
 from adapt.intent import IntentBuilder
-
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-
+from os.path import dirname
+import time
 __author__ = 'jarbas'
 
 logger = getLogger(__name__)
-
 
 class MarkovGen():
     def __init__(self):
@@ -37,18 +34,10 @@ class MarkovGen():
         self.minsize = 8
         self.maxsize = 20
         self.freqDict = {}
-        self.banned = ["coke", " k ", "snort", "ganja", "serotonine", "ketamine", "k-hole", "norepinephrine",
-                       "dopamine", "reuptake", "psilo", "hallucinating", "bismol", "marijuana", "dxm", "tab", "drug",
-                       "chemical", "dope", "kush", "acid", "peyote", "hallucinogen", " m ", "smoked", "engine",
-                       "tabitha", "mescaline", "harmala", "cevs", "peak", "substance", "smok", "trip", "psychedelic",
-                       "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi",
-                       "jurema", "heroin",
-                       "stash", "2-cb", "2c-b", "2cb", " mg", "0ug", " g ", "shrooms", "crack"]
-        self.replaces = ["memorie", "jon do", "engine", "friend", "computing power", "super-computer",
-                         "galactic council", "gnome", "pod bay doors", "tricorder", "alien goo", "flux capacitator",
-                         "dinosaur turd", "space ship", "computer", "bot", "evil", "AI", "synthetic", "alien",
-                         "pink-skin human", "data", "metadata", "robo-orc", "time-machine", "medkit", "terminator",
-                         "Mark1", "radioactive poop", "waste"]
+        self.banned = ["coke", " k ", "snort", "ganja", "serotonine", "ketamine", "k-hole","norepinephrine", "dopamine", "reuptake", "psilo", "hallucinating", "bismol", "marijuana", "dxm", "tab", "drug", "chemical", "dope", "kush", "acid", "peyote", "hallucinogen", " m ","smoked", "engine", "tabitha", "mescaline", "harmala", "cevs", "peak", "substance", "smok","trip","psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom", "maoi", "jurema", "heroin",
+                  "stash", "2-cb", "2c-b", "2cb", " mg", "0ug", " g ", "shrooms", "crack"]
+        self.replaces = ["memorie", "jon do", "engine", "friend", "computing power", "super-computer", "galactic council","gnome", "pod bay doors", "tricorder", "alien goo", "flux capacitator","dinosaur turd", "space ship", "computer", "bot", "evil", "AI", "synthetic", "alien",
+                       "pink-skin human", "data", "metadata", "robo-orc", "time-machine", "medkit", "terminator", "Mark1", "radioactive poop", "waste"]
 
     def replace_bads(self, text):
         lines = text
@@ -85,7 +74,7 @@ class MarkovGen():
                 probDict[curr][succ] = currDict[succ] / currTotal
         self.freqDict = probDict
 
-    def markov_next(self, curr):
+    def markov_next(self,  curr):
         probDict = self.freqDict
         if curr not in probDict:
             return random.choice(list(probDict.keys()))
@@ -103,28 +92,28 @@ class MarkovGen():
         if self.mode == 1:
             T = random.choice(range(self.minsize, self.maxsize))
         else:
-            T = random.choice(range(self.minsize * 20, self.maxsize * 5))
+            T = random.choice(range(self.minsize*20, self.maxsize*5))
         generated = [curr]
         for t in range(T):
             next = self.markov_next(generated[-1])
-            if len(next) > 3:
+            if len(next)>3:
                 generated.append(next)
                 if self.mode == 1:
                     generated.append("\n")
         generated = " ".join(generated)
         return self.replace_bads(generated)
 
-
 class StorySkill(MycroftSkill):
+
     def __init__(self):
         super(StorySkill, self).__init__(name="StorySkill")
         self.reload_skill = False
         self.styles = ["lovecraft", "drugs", "sci_fi"]
         self.starts = ["Once upon a time in a place far far away, ",
-                       "The story im about to tell is unbelievable, ",
-                       "Everything started like this, ",
-                       "In the land of fantasy, things are never normal.",
-                       "These are the voyages of a strange mind."]
+          "The story im about to tell is unbelievable, ",
+          "Everything started like this, ",
+          "In the land of fantasy, things are never normal.",
+          "These are the voyages of a strange mind."]
         try:
             self.path = self.config_core["database_path"] + "/storys"
         except:
@@ -133,7 +122,7 @@ class StorySkill(MycroftSkill):
             os.makedirs(self.path)
 
     def initialize(self):
-        story_intent = IntentBuilder("StoryIntent") \
+        story_intent = IntentBuilder("StoryIntent")\
             .require("story").build()
         self.register_intent(story_intent,
                              self.handle_story_intent)
@@ -160,3 +149,4 @@ class StorySkill(MycroftSkill):
 
 def create_skill():
     return StorySkill()
+

@@ -1,8 +1,10 @@
-import imp
+
 import json
-import sys
+from os.path import expanduser, exists, abspath, dirname, basename, isdir, join
 from os import listdir
-from os.path import abspath, dirname, basename, isdir, join
+import sys
+import time
+import imp
 
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
@@ -156,7 +158,7 @@ def _load(message):
 
     # Find if the user wants to use a specific backend
     for s in service:
-        # logger.info(s.name)
+        #logger.info(s.name)
         if s.name in message.data['utterance']:
             prefered_service = s
             logger.info(s.name + ' would be prefered')
@@ -206,7 +208,7 @@ def _save(message):
 
     # Find if the user wants to use a specific backend
     for s in service:
-        # logger.info(s.name)
+        #logger.info(s.name)
         if s.name in message.data['utterance']:
             prefered_service = s
             logger.info(s.name + ' would be prefered')
@@ -237,7 +239,7 @@ def main():
             message = json.dumps(_message)
         except:
             pass
-            # logger.debug(message)
+        #logger.debug(message)
 
     logger.info("Staring Storage Services")
     ws.on('message', echo)

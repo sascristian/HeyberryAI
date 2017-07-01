@@ -15,16 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
-import select
-import socket
-import ssl
+import ssl, socket, select, json
 from os.path import dirname
 from threading import Thread
 
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
+
 
 ws = None
 logger = getLogger("Mycroft_Server")
@@ -37,13 +35,12 @@ server_socket = None
 
 blacklisted_ips = []
 # TODO maybe add deep dream request, but i want the utterance handled internally for now /more control
-allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "vision_result",
-                        "image_classification_request", "face_recognition_request"]
-names = {}  # name, sock this name refers to
-users = {}  # sock, [current user of sock]
+allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "vision_result", "image_classification_request", "face_recognition_request"]
+names = {}#name, sock this name refers to
+users = {}#sock, [current user of sock]
 
 message_queue = {}
-file_socks = {}  # sock num: file object
+file_socks = {} #sock num: file object
 
 
 def handle_failure(event):
@@ -63,6 +60,7 @@ def handle_speak(event):
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     message_queue[sock_num].append([answer_type, event.data, event.context])
+
 
 
 def connect():
@@ -127,8 +125,8 @@ def answer_id(sock):
 def get_answer(utterance, context):
     logger.debug("emitting utterance to bus: " + utterance)
     ws.emit(
-        Message("recognizer_loop:utterance",
-                {'utterances': [utterance.strip()]}, context))
+       Message("recognizer_loop:utterance",
+               {'utterances': [utterance.strip()]}, context))
 
     logger.debug("Waiting answer for user " + context["source"])
 
@@ -216,16 +214,16 @@ def main():
                                              keyfile=key,
                                              ssl_version=ssl.PROTOCOL_TLSv1)
                     CONNECTION_LIST.append(sockfd)
-                    logger.debug("Client (%s, %s) connected" % addr)
+                    logger.debug( "Client (%s, %s) connected" % addr )
                     ip, sock_num = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
                     # see if blacklisted
                     if ip not in blacklisted_ips:
                         # tell other clients this is available
-                        # broadcast_data(sockfd, "[%s:%s] is available\n" % addr, addr)
+                        #broadcast_data(sockfd, "[%s:%s] is available\n" % addr, addr)
                         # tell client it's id
                         answer_id(sockfd)
                     else:
-                        #  if blacklisted kick
+                    #  if blacklisted kick
                         offline_client(sockfd)
                 except Exception as e:
                     logger.error(e)

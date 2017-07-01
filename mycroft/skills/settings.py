@@ -29,6 +29,7 @@
 """
 
 import json
+import sys
 from os.path import isfile
 
 
@@ -40,7 +41,6 @@ class SkillSettings(dict):
         Args:
             settings_file (str): Path to storage file
     """
-
     def __init__(self, settings_file):
         super(SkillSettings, self).__init__()
         self._path = settings_file

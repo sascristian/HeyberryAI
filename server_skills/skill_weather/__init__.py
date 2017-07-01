@@ -18,6 +18,7 @@ import time
 
 from adapt.intent import IntentBuilder
 from multi_key_dict import multi_key_dict
+from os.path import dirname
 from pyowm import OWM
 from pyowm.webapi25.forecaster import Forecaster
 from pyowm.webapi25.forecastparser import ForecastParser
@@ -150,7 +151,7 @@ class WeatherSkill(MycroftSkill):
             dialog_name = "current"
             if pretty_location == self.location_pretty:
                 dialog_name += ".local"
-            self.speak_dialog(dialog_name + ".weather", data)
+            self.speak_dialog(dialog_name+".weather", data)
 
             time.sleep(5)
             self.enclosure.activate_mouth_events()
@@ -215,7 +216,7 @@ class WeatherSkill(MycroftSkill):
                 city = location["city"]
                 state = city["state"]
                 return city["name"] + ", " + state["name"] + ", " + \
-                       state["country"]["name"], self.location_pretty
+                    state["country"]["name"], self.location_pretty
 
             return None
         except:

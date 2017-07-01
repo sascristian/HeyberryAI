@@ -1,12 +1,11 @@
-import os
-import urllib2
-
-import unirest
 from adapt.intent import IntentBuilder
-
-from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+from mycroft.messagebus.message import Message
+
+import unirest
+import urllib2
+import os
 
 __author__ = 'jarbas'
 
@@ -17,16 +16,15 @@ class FbPost():
     def __init__(self, emitter):
         self.emitter = emitter
 
-    def post_text(self, text, id="me", speech="Making a post on face book", link=None):
-        self.emitter.emit(
-            Message("fb_post_request", {"type": "text", "id": id, "link": link, "text": text, "speech": speech}))
+    def post_text(self, text, id="me", speech= "Making a post on face book", link= None):
+        self.emitter.emit(Message("fb_post_request", {"type":"text", "id":id, "link":link, "text":text, "speech":speech}))
 
-    def post_link(self, link, text="", id="me", speech="Sharing a link on face book"):
-        self.emitter.emit(
-            Message("fb_post_request", {"type": "link", "id": id, "link": link, "text": text, "speech": speech}))
+    def post_link(self, link,  text="", id="me", speech= "Sharing a link on face book"):
+        self.emitter.emit(Message("fb_post_request", {"type":"link", "id":id, "link":link, "text":text, "speech":speech}))
 
 
 class AstronomyPicSkill(MycroftSkill):
+
     def __init__(self):
         super(AstronomyPicSkill, self).__init__(name="AstronomyPicSkill")
         try:
@@ -38,7 +36,7 @@ class AstronomyPicSkill(MycroftSkill):
                 try:
                     self.key = self.config_core.get("APIS")["NASAAPI"]
                 except:
-                    self.key = "DEMO_KEY"
+                   self.key = "DEMO_KEY"
         self.save = True
         try:
             self.save_path = self.config_core["database_path"] + "/astronomy_picture_of_the_day"
@@ -51,6 +49,7 @@ class AstronomyPicSkill(MycroftSkill):
                 self.save_path = os.path.dirname(__file__) + "/apod"
                 self.txt_save_path = os.path.dirname(__file__) + "/apod"
 
+
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
         if not os.path.exists(self.txt_save_path):
@@ -58,8 +57,8 @@ class AstronomyPicSkill(MycroftSkill):
         self.use_browser = False
 
     def initialize(self):
-        apod_intent = IntentBuilder("ApodIntent"). \
-            require("APODKeyword").build()
+        apod_intent = IntentBuilder("ApodIntent").\
+                require("APODKeyword").build()
 
         self.register_intent(apod_intent, self.handle_apod_intent)
 
@@ -87,7 +86,7 @@ class AstronomyPicSkill(MycroftSkill):
         self.speak(title, more=True)
         if "fbchat" in message.data.get("target"):
             summary += " " + url
-        self.speak(summary, metadata={"url": url})
+        self.speak(summary, metadata={"url":url})
 
         if self.save:
             save_path = self.txt_save_path + "/" + title.replace(" ", "_") + ".txt"

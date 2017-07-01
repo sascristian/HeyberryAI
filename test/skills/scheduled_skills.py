@@ -1,5 +1,5 @@
-import unittest
 from datetime import datetime, timedelta
+import unittest
 
 from mycroft.skills.scheduled_skills import ScheduledSkill
 from mycroft.util.log import getLogger

@@ -15,18 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
+import subprocess
 import hashlib
 import os
 import os.path
-import subprocess
 from time import time, sleep
+import unicodedata
 
-import mycroft.util
 from mycroft import MYCROFT_ROOT_PATH
 from mycroft.configuration import ConfigurationManager
 from mycroft.tts import TTS, TTSValidator
+import mycroft.util
 from mycroft.util.log import getLogger
-
 LOGGER = getLogger(__name__)
 
 __author__ = 'jdorleans', 'spenrod'
@@ -38,7 +38,6 @@ BIN = config.get("path", os.path.join(MYCROFT_ROOT_PATH, 'mimic', 'bin',
 if not os.path.isfile(BIN):
     # Search for mimic on the path
     import distutils.spawn
-
     BIN = distutils.spawn.find_executable("mimic")
 
 
@@ -77,7 +76,7 @@ class Mimic(TTS):
         cache_dir = mycroft.util.get_cache_directory("tts")
         mycroft.util.curate_cache(cache_dir)
 
-        pho_file = os.path.join(cache_dir, key + ".pho")
+        pho_file = os.path.join(cache_dir, key+".pho")
         try:
             with open(pho_file, "w") as cachefile:
                 cachefile.write(phonemes)
@@ -87,7 +86,7 @@ class Mimic(TTS):
 
     def load_phonemes(self, key):
         pho_file = os.path.join(mycroft.util.get_cache_directory("tts"),
-                                key + ".pho")
+                                key+".pho")
         if os.path.exists(pho_file):
             try:
                 with open(pho_file, "r") as cachefile:

@@ -20,3 +20,4 @@ class KnowledgeService():
     def get_result(self, message):
         self.result = message.data["data"]
         self.waiting = False
+

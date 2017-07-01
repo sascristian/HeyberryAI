@@ -17,8 +17,8 @@
 
 
 import abc
-import re
 
+import re
 from requests_futures.sessions import FuturesSession
 
 from mycroft.tts import TTS

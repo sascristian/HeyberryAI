@@ -15,15 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from time import asctime
-
 import pyjokes
 import requests
-from adapt.intent import IntentBuilder
+from time import asctime
 
-from mycroft.messagebus.message import Message
+from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+from mycroft.messagebus.message import Message
 
 __author__ = 'jarbas'
 
@@ -32,7 +31,7 @@ LOGGER = getLogger(__name__)
 
 def get_soup(url):
     try:
-        return BeautifulSoup(requests.get(url).text, "html.parser")
+        return BeautifulSoup(requests.get(url).text,"html.parser")
     except Exception as SockException:
         print SockException
         sys.exit(1)
@@ -42,13 +41,11 @@ class FbPost():
     def __init__(self, emitter):
         self.emitter = emitter
 
-    def post_text(self, text, id="me", speech="Making a post on face book", link=None):
-        self.emitter.emit(
-            Message("fb_post_request", {"type": "text", "id": id, "link": link, "text": text, "speech": speech}))
+    def post_text(self, text, id="me", speech= "Making a post on face book", link= None):
+        self.emitter.emit(Message("fb_post_request", {"type":"text", "id":id, "link":link, "text":text, "speech":speech}))
 
-    def post_link(self, link, text="", id="me", speech="Sharing a link on face book"):
-        self.emitter.emit(
-            Message("fb_post_request", {"type": "link", "id": id, "link": link, "text": text, "speech": speech}))
+    def post_link(self, link,  text="", id="me", speech= "Sharing a link on face book"):
+        self.emitter.emit(Message("fb_post_request", {"type":"link", "id":id, "link":link, "text":text, "speech":speech}))
 
 
 class FacebookPostsSkill(MycroftSkill):

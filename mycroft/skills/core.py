@@ -18,6 +18,8 @@
 
 import abc
 import imp
+import time
+
 import os.path
 import re
 import time
@@ -30,15 +32,16 @@ from mycroft.configuration import ConfigurationManager
 from mycroft.dialog import DialogLoader
 from mycroft.filesystem import FileSystemAccess
 from mycroft.messagebus.message import Message
-from mycroft.skills.settings import SkillSettings
 from mycroft.util.log import getLogger
-
+from mycroft.skills.settings import SkillSettings
 __author__ = 'seanfitz'
 
-SKILLS_DIR = join(dirname(dirname(dirname(__file__))), "server_skills")
+
+SKILLS_DIR = join(dirname(dirname(dirname(__file__))) ,"server_skills")
 
 skills_config = ConfigurationManager.instance().get("skills")
 BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
+
 
 MainModule = '__init__'
 
@@ -254,7 +257,7 @@ class MycroftSkill(object):
     def make_active(self):
         # bump skill to active_skill list in intent_service
         # this ensures converse method is called
-        self.emitter.emit(Message('active_skill_request', {"skill_id": self.skill_id}))
+        self.emitter.emit(Message('active_skill_request', {"skill_id":self.skill_id}))
 
     def register_intent(self, intent_parser, handler):
         name = intent_parser.name

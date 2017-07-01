@@ -34,17 +34,14 @@ sys.path.append(dirname(dirname(__file__)))
 from browser_service import BrowserControl
 from mycroft.skills.settings import SkillSettings
 from fuzzywuzzy import fuzz
-
 __author__ = 'jarbas'
 
 # TODO logs in bots
 
 import logging
-
 # disable logs from requests and urllib 3, or there is too much spam from facebook
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
-
 
 # disable this log that polutes skills log a lot
 def graphql_response_to_json(content, verbose=False, logger=None):
@@ -226,7 +223,7 @@ class FaceChat(fbchat.Client):
             author_photo = self.get_user_photo(author_id)
             self.ws.emit(Message("fb_chat_message",
                                  {"author_id": author_id, "author_name": author_name, "message": message,
-                                  "photo": author_photo}))
+                                      "photo": author_photo}))
 
 
     def onChatTimestamp(self, buddylist={}, msg={}):
@@ -260,6 +257,13 @@ class FaceChat(fbchat.Client):
             data[id] = {"name": name, "timestamp": timestamp, "last_seen": last_seen}
         self.ws.emit(Message("fb_last_seen_timestamps", {"timestamps": data}))
 
+    def onUnknownMesssageType(self, msg={}):
+        """
+        Called when the client is listening, and some unknown data was recieved
+        :param msg: A full set of the data recieved
+        """
+        if self.verbose:
+            self.log.debug('Unknown message received: {}'.format(msg))
 
     def onFriendRequest(self, from_id=None, msg={}):
         """
@@ -354,7 +358,7 @@ class FaceChat(fbchat.Client):
             Message("fb_chat_message_sent", {"friend_id": thread_id, "message": message, "message_id": message_id}))
         return message_id
 
-    # add re-log in
+    # re-log in
     def listen(self, markAlive=True):
         """
         Initializes and runs the listening loop continually

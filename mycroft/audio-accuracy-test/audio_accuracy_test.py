@@ -5,11 +5,11 @@ from glob import glob
 from os.path import dirname, join
 
 import pyee
+from speech_recognition import AudioSource
+
 from mycroft.client.speech.listener import RecognizerLoop
 from mycroft.client.speech.mic import ResponsiveRecognizer
 from mycroft.client.speech.mic import logger as speech_logger
-from speech_recognition import AudioSource
-
 from mycroft.util.log import getLogger
 
 __author__ = 'wolfgange3311999'

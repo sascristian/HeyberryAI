@@ -128,6 +128,7 @@ class StyleTransfer():
 
 
 class StyleTransferSkill(MycroftSkill):
+
     def __init__(self):
         super(StyleTransferSkill, self).__init__(name="StyleTransferSkill")
         self.reload_skill = False
@@ -190,7 +191,6 @@ class StyleTransferSkill(MycroftSkill):
             img_content = self.load_image(target_img)
             self.log.info("images loaded")
         except:
-
             self.log.error("Could not load images: " + style_img + " | " + target_img)
             self.send_result()
             return

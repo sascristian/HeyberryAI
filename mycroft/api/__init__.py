@@ -75,7 +75,7 @@ class Api(object):
         data = self.get_data(response)
         if 200 <= response.status_code < 300:
             return data
-        elif response.status_code == 401 \
+        elif response.status_code == 401\
                 and not response.url.endswith("auth/token"):
             self.refresh_token()
             return self.send(self.old_params)
@@ -251,7 +251,7 @@ def is_paired():
         api = DeviceApi()
         device = api.get()
         __paired_cache = api.identity.uuid is not None and \
-                         api.identity.uuid != ""
+            api.identity.uuid != ""
         return __paired_cache
     except:
         return False

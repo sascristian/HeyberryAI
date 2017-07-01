@@ -16,11 +16,14 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import pyjokes
-from adapt.intent import IntentBuilder
+from os.path import dirname, join
 
+import pyjokes
+
+from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+from mycroft.messagebus.message import Message
 
 __author__ = 'crios'
 

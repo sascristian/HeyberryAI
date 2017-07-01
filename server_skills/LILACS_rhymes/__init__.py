@@ -17,19 +17,18 @@
 
 
 import random
-import sys
-from os.path import dirname
 
 from adapt.intent import IntentBuilder
-
+import sys
+from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
 
+from mycroft.messagebus.message import Message
 from LILACS_core.question_parser import LILACSQuestionParser
 from LILACS_knowledge.knowledgeservice import KnowledgeService
 from mycroft.skills.core import MycroftSkill
 
 __author__ = 'jarbas'
-
 
 class LILACSRhymesSkill(MycroftSkill):
     # https://github.com/ElliotTheRobot/LILACS-mycroft-core/issues/19
@@ -61,7 +60,7 @@ class LILACSRhymesSkill(MycroftSkill):
         self.log.info("nodes: " + str(nodes))
         try:
             rhymes = self.service.adquire(nodes.keys()[0], "wordnik")["wordnik"]["relations"]["rhyme"]
-            self.speak_dialog("rhyme", {"subject": nodes.keys()[0], "word": random.choice(rhymes)})
+            self.speak_dialog("rhyme", {"subject":nodes.keys()[0], "word": random.choice(rhymes)})
         except:
             self.speak("i dont know...")
 

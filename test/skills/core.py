@@ -1,4 +1,5 @@
 import unittest
+
 from os.path import join, dirname, abspath
 from re import error
 

@@ -1,10 +1,8 @@
-import random
-import re
+import re, random
 from os.path import dirname
 
-
 class MarkovGen():
-    def __init__(self, minsize=8, maxsize=20, names=False, new_names=None, banned=None, replaces=None):
+    def __init__(self, minsize=8, maxsize=20, names=False, new_names=None, banned =None, replaces=None):
         self.names = names
         if new_names is None:
             new_names = []
@@ -60,7 +58,7 @@ class MarkovGen():
                 probDict[curr][succ] = currDict[succ] / currTotal
         self.freqDict = probDict
 
-    def markov_next(self, curr):
+    def markov_next(self,  curr):
         probDict = self.freqDict
         if curr not in probDict:
             next = random.choice(list(probDict.keys()))
@@ -86,25 +84,23 @@ class MarkovGen():
         if self.mode == 1:
             T = random.choice(range(self.minsize, self.maxsize))
         else:
-            T = random.choice(range(self.minsize * 20, self.maxsize * 5))
+            T = random.choice(range(self.minsize*20, self.maxsize*5))
         generated = [curr]
         for t in range(T):
             next = self.markov_next(generated[-1])
-            if len(next) > 10:
+            if len(next)>10:
                 generated.append(next)
                 if self.mode == 1:
                     generated.append("\n")
         generated = " ".join(generated)
         return self.replace_bads(generated)
 
-
-starts = open(dirname(__file__) + "/start/sci_fi.txt").readlines()
+starts = open(dirname(__file__)+"/start/sci_fi.txt").readlines()
 
 # names in corpus to replace
 names = ["SPOCK", "ONE", "ANDROMEDA", "HUNT", "RHADE", "HARPER", "TYR", "BEM", "COMPUTER", "BEKA",
          "TYLER", "PIKE", "GARISON", "BOYCE", "COLT", "KIRK", "UHURA", "BALOK", "BAILEY", "MCCOY",
-         "SCOTT", "SULU", "k irk", "CHEKOV", "doctor", "captain", "jim", "enterprise", "surak", "klingon", "vulcan",
-         " b ", " s ", " r ", " m "]
+         "SCOTT", "SULU", "k irk", "CHEKOV", "doctor", "captain", "jim", "enterprise", "surak", "klingon", "vulcan"," b ", " s ", " r ", " m "]
 
 # characters
 new_names = ["BOB"]
@@ -112,22 +108,17 @@ new_names = ["BOB"]
 # banned words
 banned = []
 replaces = []
-drugs = ["ayahuasca", "psilo", "marijuana", "music", "dxm", "tricorder", "tab", "drug", "chemical", "dope", "kush",
-         "acid",
-         "peyote", "hallucinogen", " m ", "smoked", "tabitha", "mescaline", "harmala", "cevs", "peak", "substance",
-         "smoke",
-         " trip ", "psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt",
-         "mushroom",
-         "maoi", "jurema", "heroin",
-         "stash", "2-cb", "2c-b", "2cb", " mg ", " ug ", " g ", "shroom", "crack"]
+drugs = ["ayahuasca", "psilo", "marijuana", "music", "dxm", "tricorder", "tab", "drug", "chemical", "dope", "kush", "acid",
+ "peyote", "hallucinogen", " m ", "smoked", "tabitha", "mescaline", "harmala", "cevs", "peak", "substance", "smoke",
+ " trip ", "psychedelic", "mdma", "phenethylamine", "visual", "cannabis", "weed", "drug", "lsd", "dmt", "mushroom",
+ "maoi", "jurema", "heroin",
+ "stash", "2-cb", "2c-b", "2cb", " mg ", " ug ", " g ", "shroom", "crack"]
 banned.append(drugs)
-drug_replaces = ["artificial memorie", "engine", "positronic stuff", "computing power", "super-computer",
-                 "galactic council", "pod bay",
-                 "alien goo", "engine", "anti-matter", "flux capacitator", "artificial mind", "space ship", "computer",
-                 "bot", "escape pod",
-                 "AI", "synthetic", "alien", "data", "metadata", "time-machine", "medkit", "terminator",
-                 "radioactive poop", "waste", "eletronic flux"]
+drug_replaces = ["artificial memorie", "engine", "positronic stuff", "computing power", "super-computer", "galactic council", "pod bay",
+ "alien goo", "engine", "anti-matter", "flux capacitator", "artificial mind", "space ship", "computer", "bot", "escape pod",
+ "AI", "synthetic", "alien", "data", "metadata", "time-machine", "medkit", "terminator", "radioactive poop", "waste", "eletronic flux"]
 replaces.append(drug_replaces)
+
 
 story = random.choice(starts)
 Adventure = MarkovGen(minsize=1, maxsize=4, names=False, new_names=new_names, banned=banned, replaces=replaces)
@@ -143,3 +134,6 @@ for name in names:
     story = story.replace(name.lower(), random.choice(new_names))
 
 print story
+
+
+

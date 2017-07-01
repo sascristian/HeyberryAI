@@ -28,7 +28,6 @@ class FileSystemAccess(object):
     attached to skills
     at initialization time to provide a skill-specific namespace.
     """
-
     def __init__(self, path):
         self.path = self.__init_path(path)
 

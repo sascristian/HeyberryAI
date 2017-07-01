@@ -16,19 +16,19 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os
-import os.path
 import socket
 import subprocess
 import tempfile
 import time
-from os.path import dirname
+
+import os
+import os.path
+import time
 from stat import S_ISREG, ST_MTIME, ST_MODE, ST_SIZE
-
 import psutil
-
-import mycroft.configuration
+from os.path import dirname
 from mycroft.util.log import getLogger
+import mycroft.configuration
 
 __author__ = 'jdorleans'
 
@@ -202,7 +202,7 @@ def curate_cache(dir, min_free_percent=5.0):
     space = psutil.disk_usage(dir)
 
     # space.percent = space.used/space.total*100.0
-    percent_free = 100.0 - space.percent
+    percent_free = 100.0-space.percent
     if percent_free < min_free_percent:
         # calculate how many bytes we need to delete
         bytes_needed = (min_free_percent - percent_free) / 100.0 * space.total

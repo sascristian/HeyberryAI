@@ -36,11 +36,6 @@ from mycroft.skills.core import load_skill, create_skill_descriptor, \
 from mycroft.skills.intent_service import IntentService
 from mycroft.util import connected
 from mycroft.util.log import getLogger
-from mycroft.api import is_paired
-import mycroft.dialog
-
-# ignore DIGCHLD to terminate subprocesses correctly
-signal.signal(signal.SIGCHLD, signal.SIG_IGN)
 
 logger = getLogger("Skills")
 
@@ -76,16 +71,15 @@ def install_default_skills(speak=True):
         res = subprocess.call(MSM_BIN + " default", stderr=subprocess.STDOUT,
                               stdout=subprocess.PIPE, shell=True)
         if res == 0 and speak:
-            # ws.emit(Message("speak", {
-            #     'utterance': mycroft.dialog.get("skills updated")}))
-            pass
+            ws.emit(Message("speak", {
+                'utterance': mycroft.dialog.get("skills updated")}))
         elif not connected():
             ws.emit(Message("speak", {
                 'utterance': mycroft.dialog.get("no network connection")}))
         elif res != 0:
             ws.emit(Message("speak", {
                 'utterance': mycroft.dialog.get(
-                             "sorry I couldn't install default skills")}))
+                    "sorry I couldn't install default skills")}))
 
     else:
         logger.error("Unable to invoke Mycroft Skill Manager: " + MSM_BIN)
@@ -139,14 +133,6 @@ def _load_skills():
 def check_connection():
     if connected():
         ws.emit(Message('mycroft.internet.connected'))
-        # check for pairing, if not automatically start pairing
-        if not is_paired():
-            # begin the process
-            payload = {
-                'utterances': ["pair my device"],
-                'lang': "en-us"
-            }
-            ws.emit(Message("recognizer_loop:utterance", payload))
     else:
         thread = Timer(1, check_connection)
         thread.daemon = True

@@ -1,5 +1,4 @@
 import requests
-
 subject = "satan"
 
 parents = []
@@ -12,7 +11,7 @@ examples = []
 location = []
 other = []
 
-obj = requests.get('http://api.conceptnet.io/c/en/' + subject).json()
+obj = requests.get('http://api.conceptnet.io/c/en/'+subject).json()
 for edge in obj["edges"]:
     rel = edge["rel"]["label"]
     node = edge["end"]["label"].lower().replace("a ", "").replace("an ", "").replace("the ", "")
@@ -46,8 +45,9 @@ for edge in obj["edges"]:
     if usage is not None:
         examples.append(usage)
 
+
 print "node: " + subject
-print "is a: " + str(parents)  #
+print "is a: " + str(parents)#
 print "has a: " + str(has)
 print "used for: " + str(used)
 print "related to: " + str(related)

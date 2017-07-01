@@ -20,6 +20,7 @@ from os.path import dirname, exists, isdir
 
 from mycroft.client.enclosure.api import EnclosureAPI
 from mycroft.configuration import ConfigurationManager
+from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.util.log import getLogger
 
 __author__ = 'jdorleans'

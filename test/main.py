@@ -1,7 +1,7 @@
 import sys
-from os.path import dirname
 from unittest import TestLoader
 
+from os.path import dirname
 from xmlrunner import XMLTestRunner
 
 from mycroft.configuration import ConfigurationManager

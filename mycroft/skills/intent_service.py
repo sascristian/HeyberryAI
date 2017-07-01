@@ -16,12 +16,10 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import time
-from threading import Timer
-from time import sleep
-
 from adapt.engine import IntentDeterminationEngine
-
+import time
+from time import sleep
+from threading import Timer
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import open_intent_envelope
 from mycroft.util.log import getLogger
@@ -270,7 +268,7 @@ class IntentParser():
 
 
 class IntentLayers():
-    def __init__(self, emitter, layers=[], timer=500):
+    def __init__(self, emitter, layers = [], timer = 500):
         self.emitter = emitter
         # make intent tree for N layers
         self.layers = []
@@ -345,7 +343,7 @@ class IntentLayers():
         logger.info("Removing layer number " + str(layer_num) + " from tree ")
         self.layers.pop(layer_num)
         self.layers[layer_num] = intent_list
-        logger.info("Adding layer" + str(intent_list) + " to tree in position " + str(layer_num))
+        logger.info("Adding layer" + str(intent_list) + " to tree in position " + str(layer_num) )
 
     def remove_layer(self, layer_num):
         self.layers.pop(layer_num)

@@ -1,16 +1,16 @@
-import names
 from adapt.intent import IntentBuilder
-
 from mycroft.skills.core import MycroftSkill
 
-__author__ = 'jarbas'
+import names
 
+__author__ = 'jarbas'
 
 class NamesSkill(MycroftSkill):
     def __init__(self):
         super(NamesSkill, self).__init__(name="NamesSkill")
 
     def initialize(self):
+
         name_intent = IntentBuilder("SuggestNameIntent").require("name").build()
         self.register_intent(name_intent, self.handle_name_intent)
 

@@ -16,15 +16,12 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import time
-import urllib
-from os.path import dirname
-
 from adapt.intent import IntentBuilder
-
-from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+import time, urllib
+from mycroft.messagebus.message import Message
+from os.path import dirname
 
 __author__ = 'jarbas'
 
@@ -68,7 +65,7 @@ class UserIdService():
         requester = user_id
         message_type = "face_recognition_request"
         context = {"destinatary": user_id}
-        message_data = {"file": picture_path, "source": requester, "user": "unknown"}
+        message_data = {"file": picture_path, "source": requester, "user":"unknown"}
         self.emitter.emit(Message(message_type, message_data, context))
         self.wait()
         result = self.face_recog_result
@@ -79,9 +76,7 @@ class UserIdService():
         message_type = "face_recognition_request"
         message_data = {"file": picture_path, "source": requester}
         context = {"destinatary": user_id}
-        self.emitter.emit(Message("server_request",
-                                  {"server_msg_type": "file", "requester": requester, "message_type": message_type,
-                                   "message_data": message_data}, context))
+        self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data}, context))
         self.wait()
         result = self.face_recog_result
         return result
@@ -122,7 +117,7 @@ class UserIdService():
         self.face_recog_result = None
         if self.server:
             self.logger.info("Requesting local face recognition service")
-            saved_url = dirname(__file__) + "/temp.jpg"
+            saved_url = dirname(__file__)+"/temp.jpg"
             f = open(saved_url, 'wb')
             f.write(urllib.urlopen(url).read())
             f.close()
@@ -146,6 +141,7 @@ class UserIdService():
 
 
 class UserIdSkill(MycroftSkill):
+
     def __init__(self):
         super(UserIdSkill, self).__init__(name="User Identification Skill")
         self.server = True
@@ -153,7 +149,7 @@ class UserIdSkill(MycroftSkill):
 
     def initialize(self):
 
-        who_am_i_intent = IntentBuilder("WhoAmIIntent") \
+        who_am_i_intent = IntentBuilder("WhoAmIIntent")\
             .require("WhoAmIKeyword").build()
         self.register_intent(who_am_i_intent,
                              self.handle_who_am_i_intent)

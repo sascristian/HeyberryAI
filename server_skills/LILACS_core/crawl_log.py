@@ -18,13 +18,13 @@
 
 import logging
 
+
 __author__ = 'seanfitz'
 
-# TODO read from config
+#TODO read from config
 # for some reason log files are always empty, look at this later
 
 path = "/home/user/mycroft-core/mycroft/skills/LILACS/crawl_logs"
-
 
 def getLogger(name="Crawler", crawl_type="Drunk"):
     """
@@ -40,4 +40,4 @@ def getLogger(name="Crawler", crawl_type="Drunk"):
     FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     crawler_log_path = path + "/" + crawl_type + "_" + name + ".log"
     logging.basicConfig(filename=crawler_log_path, format=FORMAT, level=logging.DEBUG)
-    return logging.getLogger(crawl_type + " " + name)
+    return logging.getLogger(crawl_type+" "+name)

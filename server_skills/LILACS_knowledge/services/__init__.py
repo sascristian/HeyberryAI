@@ -17,7 +17,7 @@ class KnowledgeBackend():
         pass
 
     @abstractmethod
-    def send_result(self, result={}):
+    def send_result(self, result = {}):
         pass
 
     @abstractmethod
