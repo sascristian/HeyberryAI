@@ -15,17 +15,17 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-import random
-import sys
-import time
+
+
+import fbchat
+from fbchat.graphql import *
+import requests
+from adapt.intent import IntentBuilder
+
+import random, sys, time
 from os.path import dirname
 from threading import Thread
 from time import sleep, asctime
-
-import fbchat
-import requests
-from adapt.intent import IntentBuilder
-from fbchat.graphql import *
 
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
@@ -156,7 +156,7 @@ class FaceChat(fbchat.Client):
                 # remove from queue
                 self.log.debug("Removing item from queue")
                 self.queue.pop(0)
-            time.sleep(2)
+            sleep(2)
 
     def start_threads(self):
         self.log.debug("Starting chat listener thread")
