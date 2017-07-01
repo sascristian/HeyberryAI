@@ -1,8 +1,9 @@
-import requests
 import bs4
+import requests
+
 
 def search_wikihow(search_term):
-    #print "Seaching wikihow for " + search_term
+    # print "Seaching wikihow for " + search_term
     search_url = "http://www.wikihow.com/wikiHowTo?search="
     search_term_query = search_term.replace(" ", "+")
     search_url += search_term_query
@@ -55,7 +56,7 @@ def get_steps(url):
 
         trash_i = ex_step.find("//<![CDATA[")
         trash_e = ex_step.find(">")
-        trash = ex_step[trash_i:trash_e+1]
+        trash = ex_step[trash_i:trash_e + 1]
         ex_step = ex_step.replace(trash, "")
 
         trash_i = ex_step.find("http://")
@@ -105,6 +106,7 @@ def get_how_tos(subject):
 
     return how_tos
 
+
 def random_how_to():
     link = "http://www.wikihow.com/Special:Randomizer"
     # get steps and pics
@@ -134,7 +136,7 @@ def main(text):
         print "\nDetailed description of : " + how
         i = 0
         for step in how_tos[how]["steps"]:
-            print "\nstep " + str(i+1) + " : " + step
+            print "\nstep " + str(i + 1) + " : " + step
             print how_tos[how]["detailed"][i]
             # TODO check pic link, some steps dont have pics!, parsing is wrong
             try:

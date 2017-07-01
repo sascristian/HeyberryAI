@@ -1,12 +1,13 @@
+import sys
 from os.path import abspath
+from os.path import dirname
+
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.message import Message
-import sys
-from os.path import dirname
+
 sys.path.append(dirname(dirname(dirname(dirname(__file__)))))
 from LILACS_knowledge.services import KnowledgeBackend
 from mycroft.util.log import getLogger
-from wordnik import *
 
 __author__ = 'jarbas'
 
@@ -32,8 +33,6 @@ class Wordnik(KnowledgeBackend):
         self.wordApi = WordApi.WordApi(client)
         self.limit = 5
 
-
-
     def _adquire(self, message=None):
         logger.info('WordnikKnowledge_Adquire')
         subject = message.data["subject"]
@@ -54,7 +53,6 @@ class Wordnik(KnowledgeBackend):
                 logger.error("Could not parse wordnik for " + str(subject))
             self.send_result(dict)
 
-
     def adquire(self, subject):
         logger.info('Call WordnikAdquire')
         self.emitter.emit(Message('WordnikKnowledgeAdquire', {"subject": subject}))
@@ -64,9 +62,9 @@ class Wordnik(KnowledgeBackend):
 
     def get_definitions(self, subject):
         definitions = self.wordApi.getDefinitions(subject,
-                                             partOfSpeech='noun',
-                                             sourceDictionaries='all',
-                                             limit=self.limit)
+                                                  partOfSpeech='noun',
+                                                  sourceDictionaries='all',
+                                                  limit=self.limit)
         defs = []
         try:
             for defi in definitions:
@@ -85,13 +83,11 @@ class Wordnik(KnowledgeBackend):
             pass
         return words
 
-
     def stop(self):
         logger.info('WordnikKnowledge_Stop')
         if self.process:
             self.process.terminate()
             self.process = None
-
 
 
 def load_service(base_config, emitter):

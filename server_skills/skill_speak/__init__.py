@@ -17,7 +17,6 @@
 
 
 from adapt.intent import IntentBuilder
-from os.path import dirname, join
 
 from mycroft.skills.core import MycroftSkill
 

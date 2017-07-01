@@ -1,9 +1,8 @@
+import os
 import unittest
 
-import os
-from speech_recognition import WavFile
-
 from mycroft.client.speech.listener import RecognizerLoop
+from speech_recognition import WavFile
 
 __author__ = 'seanfitz'
 

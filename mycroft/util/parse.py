@@ -1,4 +1,3 @@
-
 # -*- coding: iso-8859-15 -*-
 
 # Copyright 2017 Mycroft AI, Inc.
@@ -107,14 +106,14 @@ def extractnumber_en(text):
                 val = 10
             if val:
                 if count < (len(aWords) - 1):
-                    wordNext = aWords[count+1]
+                    wordNext = aWords[count + 1]
                 else:
                     wordNext = ""
                 valNext = isFractional(wordNext)
 
                 if valNext:
                     val = val * valNext
-                    aWords[count+1] = ""
+                    aWords[count + 1] = ""
 
         # if val == False:
         if not val:
@@ -135,15 +134,15 @@ def extractnumber_en(text):
         aWords[count] = ""
 
         if (andPass):
-            aWords[count-1] = ''    # remove "and"
+            aWords[count - 1] = ''  # remove "and"
             val += valPreAnd
-        elif count+1 < len(aWords) and aWords[count+1] == 'and':
+        elif count + 1 < len(aWords) and aWords[count + 1] == 'and':
             andPass = True
             valPreAnd = val
             val = False
             count += 2
             continue
-        elif count+2 < len(aWords) and aWords[count+2] == 'and':
+        elif count + 2 < len(aWords) and aWords[count + 2] == 'and':
             andPass = True
             valPreAnd = val
             val = False
@@ -193,17 +192,18 @@ def isFractional(input_str):
 
     """
     if input_str.endswith('s', -1):
-        input_str = input_str[:len(input_str)-1]		# e.g. "fifths"
+        input_str = input_str[:len(input_str) - 1]  # e.g. "fifths"
 
     aFrac = ["whole", "half", "third", "fourth", "fifth", "sixth",
              "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"]
 
     if input_str.lower() in aFrac:
-        return 1.0/(aFrac.index(input_str)+1)
+        return 1.0 / (aFrac.index(input_str) + 1)
     if input_str == "quarter":
-        return 1.0/4
+        return 1.0 / 4
 
     return False
+
 
 # ==============================================================
 
@@ -372,14 +372,14 @@ es_numbers_xlat = {
 def es_parse(words, i):
     def es_cte(i, s):
         if i < len(words) and s == words[i]:
-            return s, i+1
+            return s, i + 1
         return None
 
     def es_number_word(i, mi, ma):
         if i < len(words):
             v = es_numbers_xlat.get(words[i])
             if v and v >= mi and v <= ma:
-                return v, i+1
+                return v, i + 1
         return None
 
     def es_number_1_99(i):
@@ -396,7 +396,7 @@ def es_parse(words, i):
                 r3 = es_number_word(i2, 1, 9)
                 if r3:
                     v3, i3 = r3
-                    return v1+v3, i3
+                    return v1 + v3, i3
             return r1
         return None
 
@@ -408,7 +408,7 @@ def es_parse(words, i):
             r2 = es_number_1_99(i1)
             if r2:
                 v2, i2 = r2
-                return v1+v2, i2
+                return v1 + v2, i2
             else:
                 return r1
 
@@ -435,9 +435,9 @@ def es_parse(words, i):
                 r3 = es_number_1_999(i2)
                 if r3:
                     v3, i3 = r3
-                    return v1*1000+v3, i3
+                    return v1 * 1000 + v3, i3
                 else:
-                    return v1*1000, i2
+                    return v1 * 1000, i2
             else:
                 return r1
         return None

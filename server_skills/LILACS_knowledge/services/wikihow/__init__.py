@@ -1,11 +1,12 @@
-import bs4
+import sys
 from os.path import abspath
+from os.path import dirname
 
+import bs4
 import requests
 
 from mycroft.messagebus.message import Message
-import sys
-from os.path import dirname
+
 sys.path.append(dirname(dirname(dirname(dirname(__file__)))))
 from LILACS_knowledge.services import KnowledgeBackend
 from mycroft.util.log import getLogger
@@ -151,7 +152,7 @@ class WikiHowService(KnowledgeBackend):
         logger.info('Call WikihowKnowledgeAdquire')
         self.emitter.emit(Message('WikihowKnowledgeAdquire', {"subject": subject}))
 
-    def send_result(self, result = {}):
+    def send_result(self, result={}):
         self.emitter.emit(Message("LILACS_result", {"data": result}))
 
     def stop(self):
@@ -159,7 +160,6 @@ class WikiHowService(KnowledgeBackend):
         if self.process:
             self.process.terminate()
             self.process = None
-
 
 
 def load_service(base_config, emitter):

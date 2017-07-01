@@ -1,12 +1,10 @@
-from os.path import dirname
-from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
-from mycroft.util.log import getLogger
-
 import arrow
 import tzlocal
-
+from adapt.intent import IntentBuilder
 from solartime import SolarTime
+
+from mycroft.skills.core import MycroftSkill
+from mycroft.util.log import getLogger
 
 __author__ = 'msev'
 
@@ -14,12 +12,13 @@ LOGGER = getLogger(__name__)
 # TODO make origin configurable
 from geopy.geocoders import Nominatim
 
+
 class SunSkill(MycroftSkill):
     def __init__(self):
         super(SunSkill, self).__init__(name="SunSkill")
 
     def initialize(self):
-        #self.load_data_files(dirname(__file__))
+        # self.load_data_files(dirname(__file__))
         sunrise_intent = IntentBuilder("SunRiseIntent"). \
             require("SunRiseKeyword").build()
         sunset_intent = IntentBuilder("SunSetIntent"). \
@@ -39,14 +38,14 @@ class SunSkill(MycroftSkill):
 
         today = arrow.now().date()
         self.localtz = tzlocal.get_localzone()
-        
+
         city = self.config_core.get("location")
-        if isinstance(city, str): # city is city name
+        if isinstance(city, str):  # city is city name
             geolocator = Nominatim()
             location = geolocator.geocode(city)
             lat = location.latitude
             lon = location.longitude
-        else: # city is a dict of location information
+        else:  # city is a dict of location information
             lat = city['coordinate']['latitude']
             lon = city['coordinate']['longitude']
 
@@ -56,7 +55,6 @@ class SunSkill(MycroftSkill):
     def handle_sunrise_intent(self, message):
         sunrise = self.schedule['sunrise'].astimezone(self.localtz)
         self.speak_dialog("sunrise", {"sunrise": str(sunrise)[10:16]})
-
 
     def handle_sunset_intent(self, message):
         sunset = self.schedule['sunset'].astimezone(self.localtz)

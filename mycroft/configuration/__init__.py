@@ -16,13 +16,14 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
-import inflection
 import re
 from genericpath import exists, isfile
 from os.path import join, dirname, expanduser
 
-from mycroft.util.log import getLogger
+import inflection
+
 from mycroft.util.json_helper import load_commented_json
+from mycroft.util.log import getLogger
 
 __author__ = 'seanfitz, jdorleans'
 

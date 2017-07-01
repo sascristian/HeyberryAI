@@ -67,17 +67,20 @@ def get_result(res):
         except:
             return result
 
+
 def __find_pod_id(pods, pod_id):
     for pod in pods:
         if pod_id in pod.id:
             return pod.text
     return None
 
+
 def __find_num(pods, pod_num):
     for pod in pods:
         if pod.node.attrib['position'] == pod_num:
             return pod.text
     return None
+
 
 def _find_did_you_mean(res):
     value = []
@@ -86,6 +89,7 @@ def _find_did_you_mean(res):
         for result in root:
             value.append(result.text)
     return value
+
 
 def process_wolfram_string(text, lang):
     # Remove extra whitespace
@@ -108,6 +112,7 @@ def process_wolfram_string(text, lang):
         text = match.group('Definition')
 
     return text
+
 
 def ask_wolfram(query, lang="en-us"):
     others = []
@@ -136,7 +141,7 @@ def ask_wolfram(query, lang="en-us"):
         response = "%s %s %s" % (input_interpretation, verb, result)
         i = response.find("?")
         if i != -1:
-            response = response[i+1:].replace("is ", "").replace("(", "\n").replace(")", " ")
+            response = response[i + 1:].replace("is ", "").replace("(", "\n").replace(")", " ")
         response = [response]
 
     else:
@@ -146,19 +151,20 @@ def ask_wolfram(query, lang="en-us"):
 
     return response
 
-def parse_is(txt):
 
-   # if center_node:
-   #     parent = parse_is(txt)
-   #     if parent:
-   #         parents.setdefault(center_node, [parent])
+def parse_is(txt):
+    # if center_node:
+    #     parent = parse_is(txt)
+    #     if parent:
+    #         parents.setdefault(center_node, [parent])
 
     txt = txt.lower()
     parent = None
     if " is " in txt:
         i = txt.find("is ")
-        parent = txt[i+3:]
+        parent = txt[i + 3:]
     return parent
+
 
 def wolfram_to_nodes(query, lang="en-us"):
     parser = LILACSQuestionParser()
@@ -168,10 +174,9 @@ def wolfram_to_nodes(query, lang="en-us"):
 
     response = responses[0]
 
-
     txt = response.lower().replace("the ", "").replace("an ", "").replace("a ", "")
     if txt != "no answer":
-        midle2, parents2, synonims2= parser.tag_from_dbpedia(txt)
+        midle2, parents2, synonims2 = parser.tag_from_dbpedia(txt)
 
         for parent in parents2:
             if parent not in parents:
@@ -180,12 +185,12 @@ def wolfram_to_nodes(query, lang="en-us"):
         for synonim in synonims2:
             synonims.setdefault(synonim, synonims2[synonim])
 
-
     print "\nquestion: " + query
     print "answer: " + response
     print "parents: " + str(parents)
     print "relevant_nodes: " + str(midle)
     print "synonims: " + str(synonims)
+
 
 wolfram_to_nodes("frog")
 wolfram_to_nodes("do aliens exist?")

@@ -1,6 +1,7 @@
-import os
 import glob
+import os
 import unittest
+
 from test.skills.skill_tester import MockSkillsLoader, SkillTest
 
 __author__ = 'seanfitz'
@@ -32,6 +33,7 @@ class IntentTestSequenceMeta(type):
         def gen_test(a, b):
             def test(self):
                 SkillTest(a, b, self.emitter).run()
+
             return test
 
         tests = discover_tests()

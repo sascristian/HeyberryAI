@@ -1,15 +1,14 @@
-import face_recognition
 import os
-from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
-from mycroft.messagebus.message import Message
 
+import face_recognition
+
+from mycroft.messagebus.message import Message
+from mycroft.skills.core import MycroftSkill
 
 __author__ = 'jarbas'
 
 
 class FaceRecService(MycroftSkill):
-
     def __init__(self):
         super(FaceRecService, self).__init__(name="FaceRecogSkill")
         self.reload_skill = False
@@ -22,7 +21,8 @@ class FaceRecService(MycroftSkill):
             # Since there could be more than one face in each image, it returns a list of encordings.
             # But since i assume each image only has one face, I only care about the first encoding in each image, so I grab index 0.
             self.log.info("loading face encodings for " + face)
-            self.known_faces[face] = face_recognition.face_encodings(face_recognition.load_image_file(os.path.dirname(__file__) + "/known faces/" + face))[0]
+            self.known_faces[face] = face_recognition.face_encodings(
+                face_recognition.load_image_file(os.path.dirname(__file__) + "/known faces/" + face))[0]
 
     def initialize(self):
         self.emitter.on("face_recognition_request", self.handle_recog)
@@ -37,7 +37,6 @@ class FaceRecService(MycroftSkill):
 
         if user_id == "all":
             self.log.warning("no user/destinatary specified")
-
 
         result = "unknown person"
         # read unknown image
@@ -64,7 +63,8 @@ class FaceRecService(MycroftSkill):
         try:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"context": self.context, "data": {"result": result}, "type": "face_recognition_result"}, self.context))
+                                          {"context": self.context, "data": {"result": result},
+                                           "type": "face_recognition_result"}, self.context))
         except:
             # .split failed
             pass

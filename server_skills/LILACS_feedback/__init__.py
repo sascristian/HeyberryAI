@@ -16,10 +16,10 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 from adapt.intent import IntentBuilder
+
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-
 
 __author__ = 'jarbas'
 
@@ -27,14 +27,12 @@ logger = getLogger(__name__)
 
 
 class FeedbackSkill(MycroftSkill):
-
     def __init__(self):
         super(FeedbackSkill, self).__init__(name="FeedbackSkill")
         self.reload_skill = False
 
     def initialize(self):
-
-        positive_feedback_intent = IntentBuilder("PositiveFeedbackIntent")\
+        positive_feedback_intent = IntentBuilder("PositiveFeedbackIntent") \
             .require("PositiveFeedbackKeyword").build()
         self.register_intent(positive_feedback_intent,
                              self.handle_positive_feedback_intent)

@@ -19,10 +19,9 @@ import tornado.ioloop as ioloop
 import tornado.web as web
 
 from mycroft.configuration import ConfigurationManager
+from mycroft.lock import Lock  # creates/supports PID locking file
 from mycroft.messagebus.service.ws import WebsocketEventHandler
 from mycroft.util import validate_param
-from mycroft.lock import Lock  # creates/supports PID locking file
-
 
 __author__ = 'seanfitz', 'jdorleans'
 

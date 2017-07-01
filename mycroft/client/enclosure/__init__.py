@@ -33,7 +33,7 @@ from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util import play_wav, create_signal, connected
-#from mycroft.util.audio_test import record
+# from mycroft.util.audio_test import record
 from mycroft.util.log import getLogger
 
 __author__ = 'aatchison', 'jdorleans', 'iward'
@@ -110,7 +110,7 @@ class EnclosureReader(Thread):
                 'utterance': "I am testing one two three"}))
 
             time.sleep(0.5)  # Prevents recording the loud button press
-            #record("/tmp/test.wav", 3.0)
+            # record("/tmp/test.wav", 3.0)
             mixer.setvolume(prev_vol)
             play_wav("/tmp/test.wav").communicate()
 
@@ -268,7 +268,7 @@ class Enclosure(object):
             # One last check to see if connection was established
             return
 
-        if time.time()-Enclosure._last_internet_notification < 30:
+        if time.time() - Enclosure._last_internet_notification < 30:
             # don't bother the user with multiple notifications with 30 secs
             return
 

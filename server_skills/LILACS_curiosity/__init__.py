@@ -16,12 +16,13 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import sys
+from os.path import dirname
 from threading import Thread
 from time import sleep
 
 from adapt.intent import IntentBuilder
-import sys
-from os.path import dirname
+
 sys.path.append(dirname(dirname(__file__)))
 from mycroft.messagebus.message import Message
 from LILACS_core.question_parser import LILACSQuestionParser
@@ -60,8 +61,8 @@ class LILACSCuriositySkill(MycroftSkill):
             i = 0
             if self.active:
                 self.emitter.emit(Message("recognizer_loop:utterance", {"source": "LILACS_curiosity_skill",
-                                                                    "utterances": [
-                                                                        "bump curiosity to active skill list"]}))
+                                                                        "utterances": [
+                                                                            "bump curiosity to active skill list"]}))
             while i < 60 * self.TIMEOUT:
                 i += 1
                 sleep(1)
@@ -76,7 +77,7 @@ class LILACSCuriositySkill(MycroftSkill):
         # build intents
         deactivate_intent = IntentBuilder("DeactivateCuriosityIntent") \
             .require("deactivateCuriosityKeyword").build()
-        activate_intent=IntentBuilder("ActivateCuriosityIntent") \
+        activate_intent = IntentBuilder("ActivateCuriosityIntent") \
             .require("activateCuriosityKeyword").build()
 
         bump_intent = IntentBuilder("BumpCuriositySkillIntent"). \
@@ -118,7 +119,7 @@ class LILACSCuriositySkill(MycroftSkill):
                     node_info = self.service.adquire(node, backend)
                     print node_info
 
-            #signal core to create nodes
+            # signal core to create nodes
             for node in nodes:
                 node_dict = {}
                 node_dict.setdefault("node_name", node)
@@ -149,6 +150,7 @@ class LILACSCuriositySkill(MycroftSkill):
 
         # tell intent skill you did not handle intent
         return False
+
 
 def create_skill():
     return LILACSCuriositySkill()

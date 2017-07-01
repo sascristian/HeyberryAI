@@ -14,10 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
-import json
 import logging
-
 from os.path import isfile
+
 from mycroft.util.json_helper import load_commented_json
 
 SYSTEM_CONFIG = '/etc/mycroft/mycroft.conf'

@@ -1,13 +1,13 @@
-import urllib2
-import os
-import random
 import json
-from bs4 import BeautifulSoup
-from mycroft.messagebus.message import Message
+import random
+import urllib2
+
 from adapt.intent import IntentBuilder
+from bs4 import BeautifulSoup
+
+from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-
 
 __author__ = 'jarbas'
 
@@ -15,19 +15,20 @@ logger = getLogger(__name__)
 
 
 class DreamSkill(MycroftSkill):
-
     def __init__(self):
         super(DreamSkill, self).__init__(name="DreamSkill")
 
     def initialize(self):
 
-        dream_intent = IntentBuilder("DreamIntent")\
+        dream_intent = IntentBuilder("DreamIntent") \
             .require("dream").optionally("Subject").build()
         self.register_intent(dream_intent,
                              self.handle_dream_intent)
 
     def dream(self, dream_pic, dream_guide=None, dream_name=None):
-        self.emitter.emit(Message("deep_dream_request", {"dream_source": dream_pic, "dream_guide": dream_guide, "dream_name": dream_name}, self.context))
+        self.emitter.emit(Message("deep_dream_request",
+                                  {"dream_source": dream_pic, "dream_guide": dream_guide, "dream_name": dream_name},
+                                  self.context))
 
     def handle_dream_intent(self, message):
         search = message.data.get("Subject")

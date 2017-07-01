@@ -1,13 +1,13 @@
-from os.path import dirname
-from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
-from mycroft.util.log import getLogger
-from mycroft.messagebus.message import Message
 import random
+import sys
 
 import requests
+from adapt.intent import IntentBuilder
 from bs4 import BeautifulSoup
-import sys
+
+from mycroft.messagebus.message import Message
+from mycroft.skills.core import MycroftSkill
+from mycroft.util.log import getLogger
 
 __author__ = 'jarbas'
 
@@ -18,16 +18,18 @@ class FbPost():
     def __init__(self, emitter):
         self.emitter = emitter
 
-    def post_text(self, text, id="me", speech= "Making a post on face book", link= None):
-        self.emitter.emit(Message("fb_post_request", {"type":"text", "id":id, "link":link, "text":text, "speech":speech}))
+    def post_text(self, text, id="me", speech="Making a post on face book", link=None):
+        self.emitter.emit(
+            Message("fb_post_request", {"type": "text", "id": id, "link": link, "text": text, "speech": speech}))
 
-    def post_link(self, link,  text="", id="me", speech= "Sharing a link on face book"):
-        self.emitter.emit(Message("fb_post_request", {"type":"link", "id":id, "link":link, "text":text, "speech":speech}))
+    def post_link(self, link, text="", id="me", speech="Sharing a link on face book"):
+        self.emitter.emit(
+            Message("fb_post_request", {"type": "link", "id": id, "link": link, "text": text, "speech": speech}))
 
 
 def get_soup(url):
     try:
-        return BeautifulSoup(requests.get(url).text,"html.parser")
+        return BeautifulSoup(requests.get(url).text, "html.parser")
     except Exception as SockException:
         print SockException
         sys.exit(1)
@@ -36,18 +38,19 @@ def get_soup(url):
 class PickupLine(object):
     def get_line(self, type="random"):
 
-        if type=="random":
+        if type == "random":
             self.url = "http://www.pickuplinegen.com/"
         else:
             self.url = "http://www.pickuplinesgalore.com/"
-            self.url+=type+".html"
+            self.url += type + ".html"
 
-
-        if type=="random":
+        if type == "random":
             return get_soup(self.url).select("body > section > div#content")[0].text.strip(" ")
         else:
             soup = get_soup(self.url)
-            lines = "".join([i.text for i in soup.select("main > p.action-paragraph.paragraph > span.paragraph-text-7")]).split("\n\n")
+            lines = "".join(
+                [i.text for i in soup.select("main > p.action-paragraph.paragraph > span.paragraph-text-7")]).split(
+                "\n\n")
             return random.choice(lines)
 
 
@@ -95,7 +98,7 @@ class PickupLineSkill(MycroftSkill):
 
         self.register_intent(scifi_line_intent, self.handle_scifi_line_intent)
 
-    def get_pickup(self, type = "random"):
+    def get_pickup(self, type="random"):
         return self.pickupliner.get_line(type)
 
     def handle_fb(self, message):
@@ -126,7 +129,7 @@ class PickupLineSkill(MycroftSkill):
         line = self.get_pickup("scifi")
         self.speak(line)
 
-### todo results and vocab for these
+    ### todo results and vocab for these
     def handle_cheesy_line_intent(self, message):
         self.speak(self.pickupliner.get_line(type="cheesy"))
 
@@ -211,4 +214,3 @@ class PickupLineSkill(MycroftSkill):
 
 def create_skill():
     return PickupLineSkill()
-

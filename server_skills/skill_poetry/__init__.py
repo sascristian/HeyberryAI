@@ -15,14 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import random
 import re
-import os
+from os.path import dirname
 
 from adapt.intent import IntentBuilder
+
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from os.path import dirname
 
 __author__ = 'jarbas'
 
@@ -30,11 +31,11 @@ logger = getLogger(__name__)
 
 
 class PoetrySkill(MycroftSkill):
-
     def __init__(self):
         super(PoetrySkill, self).__init__(name="PoetrySkill")
         # TODO read from config, fparse folders?
-        self.styles = ["blackmetal", "deathmetal","scifi","viking","love","family","friends","inspirational","life"]
+        self.styles = ["blackmetal", "deathmetal", "scifi", "viking", "love", "family", "friends", "inspirational",
+                       "life"]
         self.minsize = 10
         self.maxsize = 20
         self.mode = 1
@@ -94,7 +95,7 @@ class PoetrySkill(MycroftSkill):
         self.register_intent(family_poetry_intent,
                              self.handle_family_poetry_intent)
 
-        poetry_intent = IntentBuilder("RecitePoetryIntent")\
+        poetry_intent = IntentBuilder("RecitePoetryIntent") \
             .require("poetry").optionally("style").build()
         self.register_intent(poetry_intent,
                              self.handle_poetry_intent)
@@ -158,12 +159,12 @@ class PoetrySkill(MycroftSkill):
     def handle_satanic_poetry_intent(self, message):
         style = "blackmetal"
         poem = self.poetry(style)
-        self.save(style,poem)
+        self.save(style, poem)
         # speak
         self.speak(poem)
 
     def handle_poetry_intent(self, message):
-        #self.speak_dialog("poetry")
+        # self.speak_dialog("poetry")
         # choose style (black metal, death metal, trash metal)
         try:
             style = message.data.get["Style"]
@@ -202,8 +203,9 @@ class PoetrySkill(MycroftSkill):
 def create_skill():
     return PoetrySkill()
 
+
 # freqDict is a dict of dict containing frequencies
-def addToDict(fileName, freqDict, mode = 1):
+def addToDict(fileName, freqDict, mode=1):
     f = open(fileName, 'r')
     # phrases
     if mode == 1:
@@ -231,7 +233,8 @@ def addToDict(fileName, freqDict, mode = 1):
             probDict[curr][succ] = currDict[succ] / currTotal
     return probDict
 
-def markov_next( curr, probDict):
+
+def markov_next(curr, probDict):
     if curr not in probDict:
         return random.choice(list(probDict.keys()))
     else:
@@ -244,15 +247,16 @@ def markov_next( curr, probDict):
                 return succ
         return random.choice(list(probDict.keys()))
 
+
 def makepoem(curr, probDict, mode=1, minsize=8, maxsize=20):
     if mode == 1:
-        T = random.choice(range(minsize,maxsize))
+        T = random.choice(range(minsize, maxsize))
     else:
-        T = random.choice(range(minsize*20, maxsize*5))
+        T = random.choice(range(minsize * 20, maxsize * 5))
     poem = [curr]
     for t in range(T):
         next = markov_next(poem[-1], probDict)
-        if len(next)>3:
+        if len(next) > 3:
             poem.append(next)
             if mode == 1:
                 poem.append("\n")

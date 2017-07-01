@@ -1,12 +1,13 @@
 import json
+import sys
 from os.path import abspath
+from os.path import dirname
 
 import spotlight
 import urlfetch
 
 from mycroft.messagebus.message import Message
-import sys
-from os.path import dirname
+
 sys.path.append(dirname(dirname(dirname(dirname(__file__)))))
 from LILACS_knowledge.services import KnowledgeBackend
 from mycroft.util.log import getLogger
@@ -91,7 +92,9 @@ class DBpediaService(KnowledgeBackend):
             elif "subject" in j:
                 # relevant nodes
                 for entry in json_data[link][j]:
-                    value = entry["value"].replace("http://dbpedia.org/resource/Category:", "").replace("_", " ").encode("utf8")
+                    value = entry["value"].replace("http://dbpedia.org/resource/Category:", "").replace("_",
+                                                                                                        " ").encode(
+                        "utf8")
                     if value not in dbpedia["related_subjects"]:
                         dbpedia["related_subjects"].append(value)
             elif "abstract" in j:
@@ -127,7 +130,7 @@ class DBpediaService(KnowledgeBackend):
         logger.info('Call DBpediaKnowledgeAdquire')
         self.emitter.emit(Message('DBpediaKnowledgeAdquire', {"subject": subject}))
 
-    def send_result(self, result = {}):
+    def send_result(self, result={}):
         self.emitter.emit(Message("LILACS_result", {"data": result}))
 
     def stop(self):
@@ -135,7 +138,6 @@ class DBpediaService(KnowledgeBackend):
         if self.process:
             self.process.terminate()
             self.process = None
-
 
 
 def load_service(base_config, emitter):

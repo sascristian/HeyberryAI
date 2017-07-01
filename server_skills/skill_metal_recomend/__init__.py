@@ -15,13 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
+import bs4
+import requests
 from adapt.intent import IntentBuilder
+from lxml import html
+
+from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from mycroft.messagebus.message import Message
-import requests
-from lxml import html
-import bs4
 
 __author__ = 'jarbas'
 
@@ -32,15 +33,16 @@ class FbPost():
     def __init__(self, emitter):
         self.emitter = emitter
 
-    def post_text(self, text, id="me", speech= "Making a post on face book", link= None):
-        self.emitter.emit(Message("fb_post_request", {"type":"text", "id":id, "link":link, "text":text, "speech":speech}))
+    def post_text(self, text, id="me", speech="Making a post on face book", link=None):
+        self.emitter.emit(
+            Message("fb_post_request", {"type": "text", "id": id, "link": link, "text": text, "speech": speech}))
 
-    def post_link(self, link,  text="", id="me", speech= "Sharing a link on face book"):
-        self.emitter.emit(Message("fb_post_request", {"type":"link", "id":id, "link":link, "text":text, "speech":speech}))
+    def post_link(self, link, text="", id="me", speech="Sharing a link on face book"):
+        self.emitter.emit(
+            Message("fb_post_request", {"type": "link", "id": id, "link": link, "text": text, "speech": speech}))
 
 
 class MetalSkill(MycroftSkill):
-
     def __init__(self):
         super(MetalSkill, self).__init__(name="MetalSkill")
         self.Name = ""
@@ -82,17 +84,17 @@ class MetalSkill(MycroftSkill):
         if not self.get_band():
             self.speak("Could not reach metal archives")
             return
-        #"Tell name"
-        self.speak_dialog("metal_recommend", {"band":self.Name})
-        self.speak_dialog("origin", {"country":self.Country})
-        #tell style
-        self.speak_dialog("styledialog", {"style":self.Style})
-        #tell band status
+        # "Tell name"
+        self.speak_dialog("metal_recommend", {"band": self.Name})
+        self.speak_dialog("origin", {"country": self.Country})
+        # tell style
+        self.speak_dialog("styledialog", {"style": self.Style})
+        # tell band status
         if self.Status != "active":
             self.speak_dialog("splitup")
         else:
-            #how long been playing
-            self.speak_dialog("active", {"date":self.Date})
+            # how long been playing
+            self.speak_dialog("active", {"date": self.Date})
 
     def get_band(self):
         fails = 0
@@ -117,7 +119,6 @@ class MetalSkill(MycroftSkill):
             except:
                 fails += 1
         return False
-
 
     def stop(self):
         pass

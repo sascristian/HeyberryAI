@@ -15,39 +15,42 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
+import random
+import sys
+import time
+from os.path import dirname
+from threading import Thread
+from time import sleep, asctime
+
+import fbchat
+import requests
 from adapt.intent import IntentBuilder
+from fbchat.graphql import *
+
+from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 
-
-import requests
-import fbchat
-from fbchat.utils import *
-from fbchat.graphql import *
-from mycroft.util.log import getLogger
-from mycroft.messagebus.message import Message
-import random
-from time import sleep, asctime
-from threading import Thread
-import time, sys
-from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
 from browser_service import BrowserControl
 from mycroft.skills.settings import SkillSettings
 from fuzzywuzzy import fuzz
+
 __author__ = 'jarbas'
 
 # TODO logs in bots
 
 import logging
+
 # disable logs from requests and urllib 3, or there is too much spam from facebook
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 
 # disable this log that polutes skills log a lot
 def graphql_response_to_json(content, verbose=False, logger=None):
     j = json.loads(content, cls=ConcatJSONDecoder)
 
-    rtn = [None]*(len(j))
+    rtn = [None] * (len(j))
     for x in j:
         if 'error_results' in x:
             del rtn[-1]
@@ -70,7 +73,8 @@ def graphql_response_to_json(content, verbose=False, logger=None):
 
 
 class FaceChat(fbchat.Client):
-    def __init__(self, email, password, pending_requests = {}, verbose=False, emitter=None, logger=None, active=True, user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.WARNING):
+    def __init__(self, email, password, pending_requests={}, verbose=False, emitter=None, logger=None, active=True,
+                 user_agent=None, max_tries=5, session_cookies=None, logging_level=logging.WARNING):
         """Initializes and logs in the client
 
         :param email: Facebook `email`, `id` or `phone number`
@@ -118,14 +122,13 @@ class FaceChat(fbchat.Client):
         if not session_cookies or not self.setSession(session_cookies) or not self.isLoggedIn():
             self.login(email, password, max_tries)
 
-
         self.ws = emitter
         if self.ws is not None:
             self.ws.on("fb_chat_message", self.handle_chat_request)
             self.ws.on("speak", self.handle_speak)
         else:
             self.log.error("No emitter was provided to facebook chat")
-        self.queue = [] #[[author_id , utterance, name]]
+        self.queue = []  # [[author_id , utterance, name]]
         self.monitor_thread = None
         self.queue_thread = None
         self.privacy = False
@@ -149,7 +152,7 @@ class FaceChat(fbchat.Client):
                 self.log.debug("Processing utterance " + chat[1] + " for user " + str(chat[0]))
                 chatmsg = chat[1]
                 # NOTE user id skill checks for photo param
-                context = {'source': 'fbchat_'+chat[0], "mute": True, "user": chat[2], "photo": chat[3]}
+                context = {'source': 'fbchat_' + chat[0], "mute": True, "user": chat[2], "photo": chat[3]}
                 self.ws.emit(
                     Message("recognizer_loop:utterance",
                             {'utterances': [chatmsg]}, context))
@@ -223,7 +226,7 @@ class FaceChat(fbchat.Client):
             author_photo = self.get_user_photo(author_id)
             self.ws.emit(Message("fb_chat_message",
                                  {"author_id": author_id, "author_name": author_name, "message": message,
-                                      "photo": author_photo}))
+                                  "photo": author_photo}))
 
     def onUnknownMesssageType(self, msg={}):
         """
@@ -241,7 +244,7 @@ class FaceChat(fbchat.Client):
                 name = self.get_user_name(id)
                 last_seen = time.time() - timestamp
                 if last_seen >= 60:
-                    last_seen = last_seen/60
+                    last_seen = last_seen / 60
                     if last_seen >= 60:
                         last_seen = last_seen / 60
                         if last_seen >= 60:
@@ -252,7 +255,7 @@ class FaceChat(fbchat.Client):
                         last_seen = str(last_seen) + " minutes ago"
                 else:
                     last_seen = str(last_seen) + " seconds ago"
-                data[id] = {"name":name, "timestamp":timestamp, "last_seen":last_seen}
+                data[id] = {"name": name, "timestamp": timestamp, "last_seen": last_seen}
             self.ws.emit(Message("fb_last_seen_timestamps", {"timestamps": data}))
 
         else:
@@ -290,7 +293,7 @@ class FaceChat(fbchat.Client):
             self.log.info("Messages seen by {} in {} ({}) at {}s".format(seen_by, thread_id, thread_type.name,
                                                                          seen_ts / 1000))
         name = self.get_user_name(seen_by)
-       # TODO if friend_request pending, this means it was accepted
+        # TODO if friend_request pending, this means it was accepted
         if seen_by in self.pending_requests.keys():
             # (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
             self.log.info("friend request accepted by " + name)
@@ -318,8 +321,9 @@ class FaceChat(fbchat.Client):
         """
         if self.verbose:
             self.log.info(
-            "Messages {} delivered to {} in {} ({}) at {}s".format(msg_ids, delivered_for, thread_id, thread_type.name,
-                                                                   ts / 1000))
+                "Messages {} delivered to {} in {} ({}) at {}s".format(msg_ids, delivered_for, thread_id,
+                                                                       thread_type.name,
+                                                                       ts / 1000))
         name = self.get_user_name(delivered_for)
         self.ws.emit(
             Message("fb_chat_message_delivered", {"friend_id": delivered_for, "friend_name": name, "timestamp": ts}))
@@ -347,7 +351,8 @@ class FaceChat(fbchat.Client):
         if self.verbose:
             self.log.info("Sending message {} to {}".format(message, thread_id))
 
-        self.ws.emit(Message("fb_chat_message_sent", {"friend_id": thread_id, "message":message, "message_id": message_id}))
+        self.ws.emit(
+            Message("fb_chat_message_sent", {"friend_id": thread_id, "message": message, "message_id": message_id}))
         return message_id
 
     # re-log in
@@ -379,7 +384,8 @@ class FaceChat(fbchat.Client):
             'queries': graphql_queries_to_json(*queries)
         }
 
-        j = graphql_response_to_json(checkRequest(self._post(ReqUrl.GRAPHQL, payload), do_json_check=False), verbose=self.verbose, logger=self.log)
+        j = graphql_response_to_json(checkRequest(self._post(ReqUrl.GRAPHQL, payload), do_json_check=False),
+                                     verbose=self.verbose, logger=self.log)
 
         return tuple(j)
 
@@ -419,7 +425,8 @@ class FaceChat(fbchat.Client):
         :type thread_type: models.ThreadType
         """
         if self.verbose:
-            self.log.info("Color change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_color))
+            self.log.info(
+                "Color change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_color))
 
     def onEmojiChange(self, mid=None, author_id=None, new_emoji=None, thread_id=None, thread_type=ThreadType.USER,
                       ts=None, metadata=None, msg={}):
@@ -436,7 +443,8 @@ class FaceChat(fbchat.Client):
         :type thread_type: models.ThreadType
         """
         if self.verbose:
-            self.log.info("Emoji change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_emoji))
+            self.log.info(
+                "Emoji change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_emoji))
 
     def onTitleChange(self, mid=None, author_id=None, new_title=None, thread_id=None, thread_type=ThreadType.USER,
                       ts=None, metadata=None, msg={}):
@@ -453,7 +461,8 @@ class FaceChat(fbchat.Client):
         :type thread_type: models.ThreadType
         """
         if self.verbose:
-            self.log.info("Title change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_title))
+            self.log.info(
+                "Title change from {} in {} ({}): {}".format(author_id, thread_id, thread_type.name, new_title))
 
     def onNicknameChange(self, mid=None, author_id=None, changed_for=None, new_nickname=None, thread_id=None,
                          thread_type=ThreadType.USER, ts=None, metadata=None, msg={}):
@@ -472,8 +481,9 @@ class FaceChat(fbchat.Client):
         """
         if self.verbose:
             self.log.info(
-            "Nickname change from {} in {} ({}) for {}: {}".format(author_id, thread_id, thread_type.name, changed_for,
-                                                                   new_nickname))
+                "Nickname change from {} in {} ({}) for {}: {}".format(author_id, thread_id, thread_type.name,
+                                                                       changed_for,
+                                                                       new_nickname))
 
     def onMarkedSeen(self, threads=None, seen_ts=None, ts=None, metadata=None, msg={}):
         """
@@ -488,7 +498,8 @@ class FaceChat(fbchat.Client):
         """
         if self.verbose:
             self.log.info(
-            "Marked messages as seen in threads {} at {}s".format([(x[0], x[1].name) for x in threads], seen_ts / 1000))
+                "Marked messages as seen in threads {} at {}s".format([(x[0], x[1].name) for x in threads],
+                                                                      seen_ts / 1000))
 
     def onPeopleAdded(self, mid=None, added_ids=None, author_id=None, thread_id=None, ts=None, msg={}):
         """
@@ -585,7 +596,6 @@ class FaceChat(fbchat.Client):
 
 
 class FacebookSkill(MycroftSkill):
-
     def __init__(self):
         super(FacebookSkill, self).__init__(name="FacebookSkill")
         self.reload_skill = False
@@ -608,7 +618,7 @@ class FacebookSkill(MycroftSkill):
         # number of photos to like
         self.photo_num = self.config.get('photo_num', 2)
         # pre-defined friend list / nicknames
-        self.nicknames = self.config.get('friends', {}) #name : id
+        self.nicknames = self.config.get('friends', {})  # name : id
         # friends to track
         self.friends_to_track = self.config.get('friends_to_track', ["all"])
         # default reply to wall posts
@@ -643,12 +653,13 @@ class FacebookSkill(MycroftSkill):
             self.chat = FaceChat(self.mail, self.passwd, logger=self.log, emitter=self.emitter, active=self.active)
             self.get_session()
         else:
-            self.chat = FaceChat(self.mail, self.passwd, logger=self.log, emitter=self.emitter, active=self.active, session_cookies=self.fb_settings["session"])
+            self.chat = FaceChat(self.mail, self.passwd, logger=self.log, emitter=self.emitter, active=self.active,
+                                 session_cookies=self.fb_settings["session"])
 
         self.face_id = self.chat.uid
         self.browser = BrowserControl(self.emitter)
         # populate friend ids
-        self.get_ids_from_chat() # TODO make an intent for this?
+        self.get_ids_from_chat()  # TODO make an intent for this?
         # listen for chat messages
         self.emitter.on("fb_chat_message", self.handle_chat_message)
         self.emitter.on("fb_post_request", self.handle_post_request)
@@ -662,7 +673,7 @@ class FacebookSkill(MycroftSkill):
 
     def build_intents(self):
         # build intents
-        friend_number_intent = IntentBuilder("FbGetFriendNumberIntent").\
+        friend_number_intent = IntentBuilder("FbGetFriendNumberIntent"). \
             require("friend_numberKeyword").build()
         self.register_intent(friend_number_intent,
                              self.handle_friend_number_intent)
@@ -791,7 +802,6 @@ class FacebookSkill(MycroftSkill):
                     self.fb_settings["cookies"] = []
                     self.fb_settings.store()
 
-
         self.browser.open_url("m.facebook.com")
         if self.browser.get_current_url() is None:
             self.log.error("Browser service doesnt seem to be started")
@@ -829,7 +839,8 @@ class FacebookSkill(MycroftSkill):
         self.browser.click_element("post_box")
         self.browser.send_keys_to_element(text=keys, name="post_box", special=False)
         sleep(5)
-        self.browser.get_element(data=".//*[@id='timelineBody']/div[1]/div[1]/form/table/tbody/tr/td[2]/div/input", name="post_button", type="xpath")
+        self.browser.get_element(data=".//*[@id='timelineBody']/div[1]/div[1]/form/table/tbody/tr/td[2]/div/input",
+                                 name="post_button", type="xpath")
         return self.browser.click_element("post_button")
 
     def add_suggested_friends(self, num=3):
@@ -840,22 +851,24 @@ class FacebookSkill(MycroftSkill):
         i = 0
         while i <= num:
             fails = 0
-            self.browser.open_url("https://m.facebook.com/friends/center/mbasic/") # people you may now page
+            self.browser.open_url("https://m.facebook.com/friends/center/mbasic/")  # people you may now page
             self.log.info(self.browser.get_current_url())
             # .//*[@id='friends_center_main']/div[3]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]
             # ".//*[@id='friends_center_main']/div[2]/div[2]/table/tbody/tr/td[2]/div[2]/a[1]"
             sucess = False
             while not sucess and fails < 5:
                 # possible xpath 1 (portugal)
-                if self.browser.get_element(data=".//*[@id='friends_center_main']/div[2]/div[2]/table/tbody/tr/td[2]/div[2]/a[1]",
-                                               name="add_friend",
-                                               type="xpath"):
+                if self.browser.get_element(
+                        data=".//*[@id='friends_center_main']/div[2]/div[2]/table/tbody/tr/td[2]/div[2]/a[1]",
+                        name="add_friend",
+                        type="xpath"):
                     sucess = True
                 else:
                     # possible xpath 2 (usa)
-                    sucess = self.browser.get_element(data=".//*[@id='friends_center_main']/div[3]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]",
-                                               name="add_friend",
-                                               type="xpath")
+                    sucess = self.browser.get_element(
+                        data=".//*[@id='friends_center_main']/div[3]/div[1]/table/tbody/tr/td[2]/div[2]/a[1]",
+                        name="add_friend",
+                        type="xpath")
                 fails += 1
 
             if self.browser.click_element("add_friend"):
@@ -870,7 +883,7 @@ class FacebookSkill(MycroftSkill):
             if not self.login():
                 self.log.error("could not log in in facebook")
                 return False
-        id = str(id) #in case someone passes int
+        id = str(id)  # in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
         path = ".//*[@id='m-timeline-cover-section']/div[4]/a[3]"
@@ -904,8 +917,8 @@ class FacebookSkill(MycroftSkill):
                     self.log.info("Clicking photos link")
 
         # click like
-        possible_like_xpaths = [".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a", #like box
-                                ".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a/span" # like text
+        possible_like_xpaths = [".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a",  # like box
+                                ".//*[@id='MPhotoActionbar']/div/table/tbody/tr/td[1]/a/span"  # like text
                                 ]
         possible_next_xpaths = [".//*[@id='root']/div[1]/div/div[1]/div/div[2]/table/tbody/tr/td[2]/a",  # usa
                                 ".//*[@id='root']/div[1]/div/div[1]/div[2]/table/tbody/tr/td[2]/a"  # pt
@@ -958,7 +971,7 @@ class FacebookSkill(MycroftSkill):
             return -1
 
         while "friends" not in self.browser.get_title().lower():
-            sleep(0.3) #.//*[@id='root']/div[1]/h3
+            sleep(0.3)  # .//*[@id='root']/div[1]/h3
         self.browser.get_element(data=".//*[@id='friends_center_main']/a[2]", name="my_friends", type="xpath")
         text = self.browser.get_element_text(name="my_friends")
         if text is None:
@@ -966,7 +979,7 @@ class FacebookSkill(MycroftSkill):
             return -1
         else:
             text = text.lower()
-            text = text.replace("your friends","")
+            text = text.replace("your friends", "")
             text = text.replace("(", "").replace(")", "").replace(" ", "")
             return int(text)
 
@@ -976,7 +989,7 @@ class FacebookSkill(MycroftSkill):
             if not self.login():
                 self.log.error("could not log in in facebook")
                 return i
-        id = str(id) #in case someone passes int
+        id = str(id)  # in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
 
@@ -1001,7 +1014,7 @@ class FacebookSkill(MycroftSkill):
             if not self.login():
                 self.log.error("could not log in in facebook")
                 return -1
-        id = str(id) #in case someone passes int
+        id = str(id)  # in case someone passes int
         link = "https://m.facebook.com/profile.php?id=" + id
         self.browser.open_url(link)  # persons profile page
 
@@ -1025,7 +1038,7 @@ class FacebookSkill(MycroftSkill):
 
     # internal methods
     def get_ids_from_chat(self, message=None):
-        if message is not None: #user triggered
+        if message is not None:  # user triggered
             # TODO use dialog
             self.speak("Updating friend list from chat")
         # map ids to names from chat
@@ -1041,7 +1054,7 @@ class FacebookSkill(MycroftSkill):
         return self.chat.get_user_id(name)
 
     def fuzzy_friend_match(self, person):
-        best =0
+        best = 0
         id = None
         f = None
         # check nickanmes
@@ -1064,8 +1077,8 @@ class FacebookSkill(MycroftSkill):
     def handle_message_sent(self, message):
         chat = message.data.get("message")
         id = message.data.get("friend_id")
-        self.fb_settings["chat_messages"][id] = {"message":chat, "friend_id":id, "seen":False, "delivered":False,
-                                                 "sent_ts":time.time(), "delivered_ts":0, "seen_ts":0}
+        self.fb_settings["chat_messages"][id] = {"message": chat, "friend_id": id, "seen": False, "delivered": False,
+                                                 "sent_ts": time.time(), "delivered_ts": 0, "seen_ts": 0}
         self.fb_settings.store()
 
     def handle_message_delivered(self, message):
@@ -1088,15 +1101,15 @@ class FacebookSkill(MycroftSkill):
         # TODO redo this old code
         return
         # TODO get target from message
-        #type = message.data["type"]
+        # type = message.data["type"]
         text = message.data["text"].encode("utf8")
         link = message.data["link"]
         speech = message.data["speech"]
         id = message.data["id"]
-        #if type == "text" or type == "link":
+        # if type == "text" or type == "link":
         self.face.post_to_wall(text=text, id=id, link=link)
-        #else:
-            # TODO more formatted post types
+        # else:
+        # TODO more formatted post types
         #    pass
         if self.speak_posts:
             self.speak(speech)
@@ -1135,8 +1148,8 @@ class FacebookSkill(MycroftSkill):
                     self.fb_settings["timestamps"][id]["timestamps"].append(data["timestamp"])
             except Exception as e:
                 self.log.error(e)
-           # self.log.info(
-           #     data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]["timestamps"]))
+                # self.log.info(
+                #     data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]["timestamps"]))
             self.fb_settings.store()
 
     def handle_friend_request(self, message):
@@ -1227,7 +1240,7 @@ class FacebookSkill(MycroftSkill):
             self.speak_dialog("unknown_person")
             return
         try:
-            text = text.replace("message","").replace("to","").replace("chat","")
+            text = text.replace("message", "").replace("to", "").replace("chat", "")
             self.chat.sendMessage(text, id)
             self.speak("chat message sent to " + f)
         except Exception as e:
@@ -1265,9 +1278,9 @@ class FacebookSkill(MycroftSkill):
     def handle_build_about_me_intent(self, message):
         # TODO use dialog
         self.speak("Building about me section on facebook")
-       # self.selenium_face.login()
-       # self.selenium_face.build_about_me()
-       # self.selenium_face.close()
+        # self.selenium_face.login()
+        # self.selenium_face.build_about_me()
+        # self.selenium_face.close()
 
     def handle_motivate_makers_intent(self, message):
         # TODO randomly choose someone from mycroft team

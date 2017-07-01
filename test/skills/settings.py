@@ -1,8 +1,8 @@
-from mycroft.skills.settings import SkillSettings
-
-from os.path import join, dirname, abspath
-from os import remove
 import unittest
+from os import remove
+from os.path import join, dirname
+
+from mycroft.skills.settings import SkillSettings
 
 
 class SkillSettingsTest(unittest.TestCase):

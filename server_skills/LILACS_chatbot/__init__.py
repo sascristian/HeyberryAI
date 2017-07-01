@@ -16,13 +16,14 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from threading import Thread
-from time import sleep
 import random
-
-from adapt.intent import IntentBuilder
 import sys
 from os.path import dirname
+from threading import Thread
+from time import sleep
+
+from adapt.intent import IntentBuilder
+
 sys.path.append(dirname(dirname(__file__)))
 from mycroft.messagebus.message import Message
 from LILACS_core.question_parser import LILACSQuestionParser
@@ -60,8 +61,8 @@ class LILACSChatbotSkill(MycroftSkill):
             i = 0
             if self.active:
                 self.emitter.emit(Message("recognizer_loop:utterance", {"source": "LILACS_chatbot_skill",
-                                                                    "utterances": [
-                                                                        "bump chat to active skill list"]}))
+                                                                        "utterances": [
+                                                                            "bump chat to active skill list"]}))
             while i < 60 * self.TIMEOUT:
                 i += 1
                 sleep(1)
@@ -76,7 +77,7 @@ class LILACSChatbotSkill(MycroftSkill):
         # build intents
         deactivate_intent = IntentBuilder("DeactivateChatbotIntent") \
             .require("deactivateChatBotKeyword").build()
-        activate_intent=IntentBuilder("ActivateChatbotIntent") \
+        activate_intent = IntentBuilder("ActivateChatbotIntent") \
             .require("activateChatBotKeyword").build()
 
         bump_intent = IntentBuilder("BumpChatBotSkillIntent"). \
@@ -105,7 +106,7 @@ class LILACSChatbotSkill(MycroftSkill):
 
     def stop(self):
         if self.active:
-           self.handle_deactivate_intent("global stop")
+            self.handle_deactivate_intent("global stop")
 
     def converse(self, transcript, lang="en-us"):
         # TODO check if intent would be handled by some skill and dont ove-ride
@@ -148,12 +149,12 @@ class LILACSChatbotSkill(MycroftSkill):
             except:
                 # dont know what to say
                 # TODO consider ask user a question and play dumb / cleverbot / other ? backends everywhere??
-                #try:
+                # try:
                 #    self.log.info("asking brobot to generate a random response")
                 #    reply = broback(transcript[0])
-                #except:
+                # except:
                 self.log.error("Could not get chatbot response for: " + transcript[0])
-                #self.speak("Use teach skill to input correct chatbot answer")
+                # self.speak("Use teach skill to input correct chatbot answer")
                 return False
 
             self.speak(reply)

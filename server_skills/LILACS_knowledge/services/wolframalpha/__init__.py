@@ -1,19 +1,19 @@
-from os.path import abspath, dirname
-from requests import HTTPError
-from StringIO import StringIO
 import re
-import wolframalpha
+import sys
+from StringIO import StringIO
+from os.path import abspath, dirname
 
+import wolframalpha
+from requests import HTTPError
+
+from mycroft.api import Api
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.message import Message
-from mycroft.api import Api
 from mycroft.util.log import getLogger
 
-import sys
 sys.path.append(dirname(dirname(dirname(dirname(__file__)))))
 from LILACS_knowledge.services import KnowledgeBackend
 from LILACS_core.question_parser import LILACSQuestionParser
-
 
 PIDS = ['Value', 'NotableFacts:PeopleData', 'BasicInformation:PeopleData',
         'Definition', 'DecimalApproximation']
@@ -21,6 +21,7 @@ PIDS = ['Value', 'NotableFacts:PeopleData', 'BasicInformation:PeopleData',
 __author__ = 'jarbas'
 
 logger = getLogger(abspath(__file__).split('/')[-2])
+
 
 class WAApi(Api):
     def __init__(self):
@@ -63,7 +64,7 @@ class WolframAlpha(KnowledgeBackend):
             # TODO exceptions for erros
             try:
                 response, parents, synonims, midle = self.wolfram_to_nodes(subject)
-                node_data = {"answer":response, "parents":parents, "synonims":synonims, "relevant":midle}
+                node_data = {"answer": response, "parents": parents, "synonims": synonims, "relevant": midle}
                 # id info source
                 dict["wolfram alpha"] = node_data
             except:
@@ -199,7 +200,6 @@ class WolframAlpha(KnowledgeBackend):
         if self.process:
             self.process.terminate()
             self.process = None
-
 
 
 def load_service(base_config, emitter):

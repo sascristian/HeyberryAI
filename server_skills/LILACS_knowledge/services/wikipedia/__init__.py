@@ -1,10 +1,11 @@
+import sys
 from os.path import abspath
+from os.path import dirname
 
 import wptools
 
 from mycroft.messagebus.message import Message
-import sys
-from os.path import dirname
+
 sys.path.append(dirname(dirname(dirname(dirname(__file__)))))
 from LILACS_knowledge.services import KnowledgeBackend
 from mycroft.util.log import getLogger
@@ -54,17 +55,16 @@ class WikipediaService(KnowledgeBackend):
         data = {}
         # TODO decent parsing, info is messy
         for entry in page.infobox:
-            #print entry + " : " + page.infobox[entry]
+            # print entry + " : " + page.infobox[entry]
             data[entry] = page.infobox[entry]
 
         return data
-
 
     def adquire(self, subject):
         logger.info('Call WikipediaKnowledgeAdquire')
         self.emitter.emit(Message('WikipediaKnowledgeAdquire', {"subject": subject}))
 
-    def send_result(self, result = {}):
+    def send_result(self, result={}):
         self.emitter.emit(Message("LILACS_result", {"data": result}))
 
     def stop(self):
@@ -72,7 +72,6 @@ class WikipediaService(KnowledgeBackend):
         if self.process:
             self.process.terminate()
             self.process = None
-
 
 
 def load_service(base_config, emitter):

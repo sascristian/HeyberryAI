@@ -1,6 +1,7 @@
-from os.path import dirname, join, exists, isfile
 import unittest
+from os.path import exists, isfile
 from shutil import rmtree
+
 from mycroft.util import create_signal, check_for_signal
 
 

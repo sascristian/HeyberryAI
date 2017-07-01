@@ -2,6 +2,7 @@ import math
 import random
 import sys
 from os.path import dirname
+
 sys.path.append(dirname(dirname(__file__)))
 
 from LILACS_core.crawl_log import getLogger as CrawlLogger
@@ -234,7 +235,6 @@ class ConceptCrawler():
 
         next_node = self.choose_next_node(center_node, direction)
 
-
         crawl_depth = 1
         while True:
             # check if we found answer
@@ -245,18 +245,18 @@ class ConceptCrawler():
                 # choose next node
                 if len(self.uncrawled) == 0:
                     self.logger.info("No more nodes to crawl")
-                    #no more nodes to crawl
+                    # no more nodes to crawl
                     return False
                 # reached a dead end, pic next unchecked node
                 # chose last uncrawled node (keep on this path)
                 next_node = self.uncrawled[-1]
                 # TODO check crawl_depth threshold
-                #if crawl_depth >= self.depth:
+                # if crawl_depth >= self.depth:
                 #    # do not crawl further
                 #    self.logger.info("Maximum crawl depth reached: " + str(crawl_depth))
                 #    return False
-            self.logger.info( "next: " + next_node)
-            self.logger.info( "depth: " + str(crawl_depth))
+            self.logger.info("next: " + next_node)
+            self.logger.info("depth: " + str(crawl_depth))
             # see if we already crawled this
             if next_node in self.crawled:
                 self.logger.info("crawling this node again: " + next_node)

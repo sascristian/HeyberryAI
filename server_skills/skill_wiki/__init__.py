@@ -16,12 +16,12 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import re
+from os.path import join, dirname
 from random import randrange
 
-import re
 import wikipedia as wiki
 from adapt.intent import IntentBuilder
-from os.path import join, dirname
 
 from mycroft.skills.core import MycroftSkill
 from mycroft.util import read_stripped_lines

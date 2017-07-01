@@ -16,10 +16,12 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from mycroft.skills.core import MycroftSkill
-from mycroft.util.log import getLogger
 import sys
 from os.path import dirname
+
+from mycroft.skills.core import MycroftSkill
+from mycroft.util.log import getLogger
+
 sys.path.append(dirname(dirname(__file__)))
 from LILACS_storage.main import main as service
 

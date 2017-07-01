@@ -1,5 +1,5 @@
 import json
-from pprint import pprint
+
 
 class ConceptStorage():
     _dataStorageDB = ""
@@ -14,16 +14,16 @@ class ConceptStorage():
         self.datastore_connect()
 
     def datastore_connect(self):
-            #with open(self._storagepath + self._dataStorageDB) \
-            #        as datastore:
-            with open(self._storagepath + self._dataStorageDB, 'r') as myfile:
-                file_content = myfile.read().replace("{}", "")
-                self._dataJSON = json.loads(file_content)
+        # with open(self._storagepath + self._dataStorageDB) \
+        #        as datastore:
+        with open(self._storagepath + self._dataStorageDB, 'r') as myfile:
+            file_content = myfile.read().replace("{}", "")
+            self._dataJSON = json.loads(file_content)
 
-            if (self._dataJSON):
-                self._dataConnStatus = 1
-            else:
-                self._dataConnStatus = 0
+        if (self._dataJSON):
+            self._dataConnStatus = 1
+        else:
+            self._dataConnStatus = 0
 
     def get_nodes_names(self):
         returnVal = {}
@@ -68,8 +68,6 @@ class ConceptStorage():
         returnVal = {}
         if (self._dataConnStatus == 1):
             for node in self._dataJSON[conceptname]:
-                if(len(node["attrib"]) > 0):
+                if (len(node["attrib"]) > 0):
                     for attribnodes in node["attrib"]:
                         returnVal = attribnodes;
-
-

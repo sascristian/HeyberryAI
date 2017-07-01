@@ -30,7 +30,7 @@ def examples_of_this(this, crawler=None):
     return examples
 
 
-def common_this_and_that( this, that, crawler=None):
+def common_this_and_that(this, that, crawler=None):
     if crawler is None:
         return None
     crawler.drunk_crawl(this, "no target crawl")

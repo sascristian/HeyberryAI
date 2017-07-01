@@ -18,13 +18,13 @@
 
 import unittest
 from Queue import Queue
+from os.path import dirname, join
 
 import speech_recognition
-from os.path import dirname, join
-from speech_recognition import WavFile, AudioData
-
 from mycroft.client.speech.listener import AudioConsumer, RecognizerLoop
 from mycroft.client.speech.local_recognizer import LocalRecognizer
+from speech_recognition import WavFile, AudioData
+
 from mycroft.stt import MycroftSTT
 
 __author__ = 'seanfitz'

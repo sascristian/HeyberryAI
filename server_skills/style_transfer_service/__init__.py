@@ -30,10 +30,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 __author__ = 'jarbas'
 
-
 import os
+import sys
+import time
 import timeit
+from os.path import dirname
 
+import numpy as np
+from adapt.intent import IntentBuilder
+from imgurpython import ImgurClient
 from scipy.fftpack import ifftn
 from scipy.linalg.blas import sgemm
 from scipy.misc import imsave
@@ -41,13 +46,9 @@ from scipy.optimize import minimize
 from skimage import img_as_ubyte
 from skimage.transform import rescale
 
-import numpy as np
-import sys, time
-from os.path import dirname
-from imgurpython import ImgurClient
-from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
+from mycroft.skills.core import MycroftSkill
+
 try:
     caffe_path = ConfigurationManager.get("caffe_path")
 except:
@@ -59,7 +60,6 @@ import caffe
 # caffe.set_mode_gpu() # uncomment this if gpu processing is available
 
 from time import sleep
-
 
 # numeric constants
 INF = np.float32(np.inf)
@@ -95,7 +95,6 @@ CAFFENET_WEIGHTS = {"content": {"conv4": 1},
 
 
 class StyleTransferSkill(MycroftSkill):
-
     def __init__(self):
         super(StyleTransferSkill, self).__init__(name="StyleTransferSkill")
         self.reload_skill = False
@@ -142,10 +141,11 @@ class StyleTransferSkill(MycroftSkill):
             self.waiting = False
 
     def handle_style_transfer_intent(self, message):
-        style_img = dirname(__file__)+"/giger.jpg"
-        target_img = dirname(__file__)+"/obama.jpg"
+        style_img = dirname(__file__) + "/giger.jpg"
+        target_img = dirname(__file__) + "/obama.jpg"
         self.speak("testing style transfer")
-        self.emitter.emit(Message("style_transfer_request", {"style_img": style_img, "target_img": target_img}, message.context))
+        self.emitter.emit(
+            Message("style_transfer_request", {"style_img": style_img, "target_img": target_img}, message.context))
 
     def handle_recursive_style_transfer_intent(self, message):
         style_img = dirname(__file__) + "/starry_night.jpg"
@@ -160,15 +160,18 @@ class StyleTransferSkill(MycroftSkill):
         self.log.info("iter num " + str(10) + " saved")
         for i in range(2, iter):
             self.emitter.emit(
-                Message("style_transfer_request", {"speak": False, "style_img": style_img, "target_img": self.save_path+"/"+"test_iter_"+str((i-1)*10)+".jpg", "iter_num":10, "name":"test_iter_"+str(i*10)}))
+                Message("style_transfer_request", {"speak": False, "style_img": style_img,
+                                                   "target_img": self.save_path + "/" + "test_iter_" + str(
+                                                       (i - 1) * 10) + ".jpg", "iter_num": 10,
+                                                   "name": "test_iter_" + str(i * 10)}))
             self.wait()
-            self.log.info("iter num " + str(i*10) + " saved")
+            self.log.info("iter num " + str(i * 10) + " saved")
         self.log.info("Recursive Style Transfer Test Finish")
 
     def handle_style_transfer(self, message):
         self.context = message.context
         name = message.data.get("name", time.asctime().replace(" ", "_"))
-        style_img = message.data.get("style_img", dirname(__file__)+"/giger.jpg")
+        style_img = message.data.get("style_img", dirname(__file__) + "/giger.jpg")
         target_img = message.data.get("target_img")
         iter_num = message.data.get("iter_num", 512)
         speak = message.data.get("speak", True)
@@ -226,9 +229,9 @@ class StyleTransferSkill(MycroftSkill):
         # to source socket
         if ":" in self.context["destinatary"]:
             if self.context["destinatary"].split(":")[1].isdigit():
-                    self.emitter.emit(Message("message_request",
-                                              {"context": self.context, "data": msg_data,
-                                               "type": msg_type}, self.context))
+                self.emitter.emit(Message("message_request",
+                                          {"context": self.context, "data": msg_data,
+                                           "type": msg_type}, self.context))
         # to bus
         msg_data["file"] = out_path
         self.emitter.emit(Message(msg_type,
@@ -375,11 +378,13 @@ class StyleTransfer(object):
         for layer in self.net.blobs:
             if layer in self.weights["style"] or layer in self.weights["content"]:
                 self.layers.append(layer)
+
         # set the callback function
         def callback(xk):
             if self._callback is not None:
                 net_in = xk.reshape(self.net.blobs["data"].data.shape[1:])
                 self._callback(self.transformer.deprocess("data", net_in))
+
         self.callback = callback
 
     def load_model(self, model_file, pretrained_file, mean_file):

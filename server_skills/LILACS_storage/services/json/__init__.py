@@ -1,10 +1,11 @@
 import json
+import sys
 from os import listdir
-from os.path import abspath, dirname
+from os.path import abspath
+from os.path import dirname
 
 from mycroft.messagebus.message import Message
-import sys
-from os.path import dirname
+
 sys.path.append(dirname(dirname(dirname(dirname(__file__)))))
 from LILACS_storage.services import StorageBackend
 from mycroft.util.log import getLogger
@@ -15,7 +16,6 @@ logger = getLogger(abspath(__file__).split('/')[-2])
 
 
 class JsonService(StorageBackend):
-
     def __init__(self, config, emitter, name='json'):
         self.config = config
         self.process = None
@@ -61,7 +61,7 @@ class JsonService(StorageBackend):
             logger.error("No node to save")
             return
         else:
-            #TODO save node here
+            # TODO save node here
             pass
 
     def load(self, node):
@@ -73,7 +73,7 @@ class JsonService(StorageBackend):
         self.emitter.emit(Message('JsonStorageSave', {"node": node}))
 
     def datastore_connect(self, data_format="json", data_source=""):
-        if(data_format == "json"):
+        if (data_format == "json"):
             with open(data_source, 'r') as myfile:
                 file_content = myfile.read().replace("{}", "")
                 self._dataJSON = json.loads(file_content)
@@ -81,9 +81,9 @@ class JsonService(StorageBackend):
                 self._dataConnStatus = 1
             else:
                 self._dataConnStatus = 0
-        # if(data_format == "xml"):
-        # if(data_format == "sql"):
-        # if(data_format == "xmlhttp"):
+                # if(data_format == "xml"):
+                # if(data_format == "sql"):
+                # if(data_format == "xmlhttp"):
 
     def stop(self):
         logger.info('JsonStorage_Stop')

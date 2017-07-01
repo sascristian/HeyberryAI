@@ -1,5 +1,4 @@
 import unittest
-
 from os.path import dirname, join
 
 from mycroft.configuration import ConfigurationLoader, ConfigurationManager, \

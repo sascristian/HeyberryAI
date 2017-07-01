@@ -1,6 +1,5 @@
 from mycroft.util.log import getLogger
 
-
 __authors__ = ["jarbas", "heinzschmidt"]
 
 
@@ -34,9 +33,9 @@ class ConceptNode():
     '''
 
     def __init__(self, name, data=None, parent_concepts=None,
-        child_concepts=None, synonims=None, antonims=None, cousins = None,
-        spawns = None, spawned_by = None, consumes = None, consumed_by = None,
-        parts = None, part_off=None, type="info"):
+                 child_concepts=None, synonims=None, antonims=None, cousins=None,
+                 spawns=None, spawned_by=None, consumes=None, consumed_by=None,
+                 parts=None, part_off=None, type="info"):
         self.name = name
         self.type = type
         self.data = data
@@ -136,7 +135,7 @@ class ConceptNode():
         else:
             self.data.setdefault(key, data)
 
-    def add_parent(self, parent_name, gen = 1, update = True):
+    def add_parent(self, parent_name, gen=1, update=True):
 
         # a node cannot be a parent  of itself
         if parent_name == self.name:
@@ -151,7 +150,7 @@ class ConceptNode():
         elif parent_name in self.connections["parents"] and update:
             self.connections["parents"][parent_name] = gen
 
-    def add_child(self, child_name, gen=1, update = True):
+    def add_child(self, child_name, gen=1, update=True):
         # a node cannot be a child of itself
         if child_name == self.name:
             return
@@ -167,15 +166,15 @@ class ConceptNode():
     def add_cousin(self, cousin):
 
         # dont add self or plural forms to related
-        cousin_p = cousin+"s" #add an s
-        cousin_s = cousin[0:len(cousin)] #remove last letter
+        cousin_p = cousin + "s"  # add an s
+        cousin_s = cousin[0:len(cousin)]  # remove last letter
         if cousin == self.name or cousin_p in self.name or cousin_s in self.name:
             return
 
         # dont add synonims
         for s in self.connections["synonims"]:
 
-            if cousin == s or cousin_p in s+"s" or cousin_s in s+"s":
+            if cousin == s or cousin_p in s + "s" or cousin_s in s + "s":
                 return
 
         if cousin not in self.connections["cousins"]:
@@ -288,8 +287,7 @@ class ConceptNode():
 
 
 class ConceptConnector():
-
-    def __init__(self, concepts = {}, emitter=None):
+    def __init__(self, concepts={}, emitter=None):
         self.concepts = concepts
         self.logger = getLogger("ConceptConnector")
         self.emitter = emitter
@@ -309,7 +307,8 @@ class ConceptConnector():
         synonims = message.data["synonims"]
         antonims = message.data["antonims"]
         data = message.data["data"]
-        self.create_concept(new_concept_name=node_name, parent_concepts=parents, child_concepts=childs, synonims=synonims, antonims=antonims, data=data)
+        self.create_concept(new_concept_name=node_name, parent_concepts=parents, child_concepts=childs,
+                            synonims=synonims, antonims=antonims, data=data)
         # TODO other fields
         # TODO if configured gather node info from knowledge service?
         # TODO update node in storage
@@ -432,7 +431,7 @@ class ConceptConnector():
         self.concepts[concept_name].add_consumed_by(consumed_by)
 
     def create_concept(self, new_concept_name, data={},
-                           child_concepts={}, parent_concepts={}, synonims=[], antonims=[]):
+                       child_concepts={}, parent_concepts={}, synonims=[], antonims=[]):
 
         # safe - checking
         if new_concept_name in parent_concepts:
@@ -445,7 +444,8 @@ class ConceptConnector():
         else:
             self.logger.info("updating concept " + new_concept_name)
         # handle new concept
-        concept = ConceptNode(name=new_concept_name, data=data, child_concepts=child_concepts, parent_concepts=parent_concepts,
+        concept = ConceptNode(name=new_concept_name, data=data, child_concepts=child_concepts,
+                              parent_concepts=parent_concepts,
                               synonims=synonims, antonims=antonims)
 
         self.add_concept(new_concept_name, concept)
@@ -456,8 +456,9 @@ class ConceptConnector():
             gen = parent_concepts[concept_name]
             # create parent if it doesnt exist
             if concept_name not in self.concepts:
-                self.logger.info("creating node: " + concept_name )
-                concept = ConceptNode(concept_name, data={}, child_concepts={}, parent_concepts={}, synonims=[], antonims=[])
+                self.logger.info("creating node: " + concept_name)
+                concept = ConceptNode(concept_name, data={}, child_concepts={}, parent_concepts={}, synonims=[],
+                                      antonims=[])
                 self.add_concept(concept_name, concept)
             # add child to parent
             self.logger.info("adding child: " + new_concept_name + " to parent: " + concept_name)
@@ -470,9 +471,10 @@ class ConceptConnector():
             # create child if it doesnt exist
             if concept_name not in self.concepts:
                 self.logger.info("creating node: " + concept_name)
-                concept = ConceptNode(concept_name, data={}, child_concepts={}, parent_concepts={}, synonims=[], antonims=[])
+                concept = ConceptNode(concept_name, data={}, child_concepts={}, parent_concepts={}, synonims=[],
+                                      antonims=[])
                 self.add_concept(concept_name, concept)
-            #add parent to child
+            # add parent to child
             self.logger.info("adding parent: " + new_concept_name + " to child: " + concept_name)
             self.concepts[concept_name].add_parent(new_concept_name, gen=gen)
 

@@ -1,30 +1,30 @@
 #!/usr/bin/env python
 # forked from: https://github.com/byt3bl33d3r/dumpmon
 
-from os.path import dirname
-from StringIO import StringIO
-from lxml import html
-from time import sleep
-
-import random
-import os
-import re
-import sys
 import datetime
 import logging
-import requests
+import os
+import random
+import re
+import sys
+from StringIO import StringIO
+from os.path import dirname
 from threading import Thread
+from time import sleep
 
+import requests
 from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
+from lxml import html
+
 from mycroft.messagebus.message import Message
+from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
 __author__ = "jarbas"
 
 regexes = {
     'email': re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}', re.I),
-    #'ssn' : re.compile(r'\d{3}-?\d{2}-?\d{4}'),
+    # 'ssn' : re.compile(r'\d{3}-?\d{2}-?\d{4}'),
     'hash32': re.compile(r'[^<A-F\d/]([A-F\d]{32})[^A-F\d]', re.I),
     'FFF': re.compile(r'FBI\s*Friday', re.I),  # will need to work on this to not match CSS
     'lulz': re.compile(r'(lulzsec|antisec)', re.I),
@@ -35,9 +35,12 @@ regexes = {
     'pgp_private': re.compile(r'BEGIN PGP PRIVATE', re.I),
     'ssh_private': re.compile(r'BEGIN RSA PRIVATE', re.I),
     'db_keywords': [
-        re.compile(r'((customers?|email|users?|members?|acc(?:oun)?ts?)([-_|/\s]?(address|name|id[^")a-zA-Z0-9_]|[-_:|/\\])))', re.I),
+        re.compile(
+            r'((customers?|email|users?|members?|acc(?:oun)?ts?)([-_|/\s]?(address|name|id[^")a-zA-Z0-9_]|[-_:|/\\])))',
+            re.I),
         re.compile(r'((\W?pass(wor)?d|hash)[\s|:])', re.I),
-        re.compile(r'((\btarget|\bsite)\s*?:?\s*?(([a-z][\w-]+:/{1,3})?([-\w\s_/]+\.)*[\w=/?%]+))', re.I),  # very basic URL check - may be improved later
+        re.compile(r'((\btarget|\bsite)\s*?:?\s*?(([a-z][\w-]+:/{1,3})?([-\w\s_/]+\.)*[\w=/?%]+))', re.I),
+        # very basic URL check - may be improved later
         re.compile(r'(my\s?sql[^i_\.]|sql\s*server)', re.I),
         re.compile(r'((host|target)[-_\s]+ip:)', re.I),
         re.compile(r'(data[-_\s]*base|\Wdb)', re.I),  # added the non-word char before db.. we'll see if that helps
@@ -114,13 +117,13 @@ class DumpStats(object):
         for regex in regexes['db_keywords']:
             if regex.search(self.text):
                 logging.debug('\t[+] ' + regex.search(self.text).group(1))
-                self.db_keywords += round(1/float(
+                self.db_keywords += round(1 / float(
                     len(regexes['db_keywords'])), 2)
         for regex in regexes['blacklist']:
             if regex.search(self.text):
                 logging.debug('\t[-] ' + regex.search(self.text).group(1))
                 self.db_keywords -= round(1.25 * (
-                    1/float(len(regexes['db_keywords']))), 2)
+                    1 / float(len(regexes['db_keywords']))), 2)
 
         self.type = 'db_dump'
         if regexes['cisco_hash'].search(self.text) or regexes['cisco_pass'].search(self.text):
@@ -168,7 +171,7 @@ class DumpMon(object):
     def stop(self):
         if self.monitor_thread is not None:
             # TODO need to search syntax for this
-            #self.monitor_thread.terminate()
+            # self.monitor_thread.terminate()
             pass
 
     def monitor(self):
@@ -194,7 +197,7 @@ class DumpMon(object):
                             dump_buffer = StringIO(dump)
                             dump_name = id[23:]
 
-                            if id in os.listdir(dirname(__file__) +'/dumps'):
+                            if id in os.listdir(dirname(__file__) + '/dumps'):
                                 self.logger.info('Dump id {} is present in directory'.format(id))
                                 with open(dirname(__file__) + '/dumps/' + id, 'r') as file:
                                     d_buffer = file.read(500)
@@ -205,7 +208,7 @@ class DumpMon(object):
                                     else:
                                         self.logger.info('Contents of dump id {} differ! dumping...'.format(id))
                                         dump_name = '{}_{}'.format(id,
-                                                                           datetime.strftime('%Y-%m-%d_%H:%M:%S:%s'))
+                                                                   datetime.strftime('%Y-%m-%d_%H:%M:%S:%s'))
 
                             Stats.text = dump
                             dump_type = Stats.match()
@@ -214,7 +217,7 @@ class DumpMon(object):
 
                             if dump_type == 'db_dump':
                                 log_output += ' Emails: %s Hashes: %s Keywords: %s' % (
-                                Stats.num_emails, Stats.num_hashes, Stats.db_keywords)
+                                    Stats.num_emails, Stats.num_hashes, Stats.db_keywords)
                                 self.db_dump_num += 1
                                 self.mail_num += int(Stats.num_emails)
                                 self.mails += Stats.emails
@@ -253,7 +256,8 @@ class DumpMon(object):
                                 self.emitter.emit(
                                     Message("leak_found",
                                             {'type': [dump_type], 'source': [link], 'path': [path]}))
-                            new_dump = {dump_name: {'stats': Stats, 'type': [dump_type], 'source': [link], 'path': [path]}}
+                            new_dump = {
+                                dump_name: {'stats': Stats, 'type': [dump_type], 'source': [link], 'path': [path]}}
                             self.dumps.append(new_dump)
                 self.prev_links = links
                 sleep(10)
@@ -267,7 +271,7 @@ class DumpMon(object):
         requests_log.setLevel(logging.WARNING)
 
         formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
-        fileHandler = logging.FileHandler(dirname(__file__)+'/dumpmon.log')
+        fileHandler = logging.FileHandler(dirname(__file__) + '/dumpmon.log')
         fileHandler.setFormatter(formatter)
         self.logger = getLogger('dumpmon')
         self.logger.addHandler(fileHandler)
@@ -400,7 +404,8 @@ class DumpmonSkill(MycroftSkill):
         self.speak("Number of possible pgp keys found since startup is " + str(self.dumpmon.get_pgp_num()))
 
     def handle_honeypot_num_intent(self, message):
-        self.speak("Number of possible Dionaea honeypots found since startup is " + str(self.dumpmon.get_honeypot_num()))
+        self.speak(
+            "Number of possible Dionaea honeypots found since startup is " + str(self.dumpmon.get_honeypot_num()))
 
     def handle_cisco_num_intent(self, message):
         self.speak("Number of possible cisco found since startup is " + str(self.dumpmon.get_cisco_num()))
@@ -416,8 +421,7 @@ class DumpmonSkill(MycroftSkill):
 def create_skill():
     return DumpmonSkill()
 
-
-#if __name__ == '__main__':
+# if __name__ == '__main__':
 #    d = DumpMon()
 #    while True:
 #        pass

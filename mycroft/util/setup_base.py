@@ -17,11 +17,12 @@
 
 
 import os
-import subprocess
-from setuptools import find_packages
 import shutil
-from mycroft.util.log import getLogger
+import subprocess
 
+from setuptools import find_packages
+
+from mycroft.util.log import getLogger
 
 __author__ = 'seanfitz'
 
@@ -59,5 +60,5 @@ def required(requirements_file):
 def find_all_packages(where):
     packages = find_packages(where=where, exclude=["*test*"])
     return [
-        os.path.join(where, pkg.replace(".", os.sep))
-        for pkg in packages] + [where]
+               os.path.join(where, pkg.replace(".", os.sep))
+               for pkg in packages] + [where]

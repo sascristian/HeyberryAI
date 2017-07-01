@@ -1,8 +1,7 @@
-import os
 import subprocess
-from os.path import dirname
 
 from adapt.intent import IntentBuilder
+
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 

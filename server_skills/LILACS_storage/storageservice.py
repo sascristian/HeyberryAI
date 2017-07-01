@@ -14,4 +14,3 @@ class StorageService():
         self.emitter.emit(Message('LILACS_StorageService_save',
                                   data={'node': node,
                                         'utterance': utterance}))
-

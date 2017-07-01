@@ -16,12 +16,12 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
+import sys
 import webbrowser
+from os.path import dirname
 
 from adapt.intent import IntentBuilder
 
-import sys
-from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
 from LILACS_core.concept import ConceptConnector
 from LILACS_core.crawler import ConceptCrawler
@@ -184,7 +184,7 @@ class LilacsCoreSkill(MycroftSkill):
         center_node, target_node, parents, synonims, midle, question = self.parse_utterance(utterance)
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
-            #self.speak("i dont understand the question")
+            # self.speak("i dont understand the question")
             self.answered = self.handle_learning(utterance)
             return
 
@@ -210,7 +210,7 @@ class LilacsCoreSkill(MycroftSkill):
         nodes.append(target_node)
         for node in midle:
             nodes.append(node)
-        #nodes += midle
+        # nodes += midle
         childs = {}
         antonims = {}
         self.log.info("utterance : " + utterance)
@@ -246,11 +246,11 @@ class LilacsCoreSkill(MycroftSkill):
             self.answered = self.handle_think_about(center_node)
         elif question == "in common":
             self.answered = self.handle_relation(center_node, target_node)
-        elif question == "is" or question == "are" :
+        elif question == "is" or question == "are":
             self.answered = self.handle_compare_intent(center_node, target_node)
         elif question == "examples":
             self.answered = self.handle_examples_intent(center_node)
-        else:# question == "unknown":
+        else:  # question == "unknown":
             self.answered = self.handle_unknown_intent(utterance)
 
         # if no answer ask user
@@ -276,7 +276,8 @@ class LilacsCoreSkill(MycroftSkill):
         for node in nodes:
             self.log.info("processing node: " + node)
             if node is not None and node != "" and node != " ":
-                self.connector.create_concept(node, parent_concepts={}, child_concepts= {},synonims= [], antonims=[], data={} )
+                self.connector.create_concept(node, parent_concepts={}, child_concepts={}, synonims=[], antonims=[],
+                                              data={})
         # make all nodes with parents
         for node in parents:
             self.log.info("processing parents of node: " + node)
@@ -285,7 +286,8 @@ class LilacsCoreSkill(MycroftSkill):
                 for p in parents[node]:
                     self.log.info("parent: " + p)
                     pdict.setdefault(p, 5)  # gen 5 for auto-adquire
-                self.connector.create_concept(node, parent_concepts=pdict, child_concepts= {},synonims= [], antonims=[], data={})
+                self.connector.create_concept(node, parent_concepts=pdict, child_concepts={}, synonims=[], antonims=[],
+                                              data={})
         # make all nodes with childs
         for node in childs:
             self.log.info("processing childs of node: " + node)
@@ -294,22 +296,26 @@ class LilacsCoreSkill(MycroftSkill):
                 for c in childs[node]:
                     self.log.info("child: " + c)
                     cdict.setdefault(c, 5)  # gen 5 for auto-adquire
-                self.connector.create_concept(node, child_concepts=cdict, parent_concepts= {}, synonims= [], antonims=[], data={})
+                self.connector.create_concept(node, child_concepts=cdict, parent_concepts={}, synonims=[], antonims=[],
+                                              data={})
         # make all nodes with synonims
         for node in synonims:
             self.log.info("processing synonims of node: " + node)
             if node is not None and node != "" and node != " ":
-                self.connector.create_concept(node, synonims=[synonims[node]], child_concepts={}, parent_concepts={}, antonims=[], data={})
+                self.connector.create_concept(node, synonims=[synonims[node]], child_concepts={}, parent_concepts={},
+                                              antonims=[], data={})
         # make all nodes with antonims
         for node in antonims:
             self.log.info("processing antonims of node: " + node)
             if node is not None and node != "" and node != " ":
-                self.connector.create_concept(node, synonims=[], child_concepts={}, parent_concepts={}, antonims=[antonims[node]], data={})
+                self.connector.create_concept(node, synonims=[], child_concepts={}, parent_concepts={},
+                                              antonims=[antonims[node]], data={})
         # make all nodes with data
         for node in data:
             self.log.info("processing data of node: " + node)
             if node is not None and node != "" and node != " ":
-                self.connector.create_concept(node, data=data[node], synonims=[], child_concepts= {}, parent_concepts={}, antonims=[])
+                self.connector.create_concept(node, data=data[node], synonims=[], child_concepts={}, parent_concepts={},
+                                              antonims=[])
 
         # update crawler
         self.crawler.update_connector(self.connector)
@@ -349,9 +355,9 @@ class LilacsCoreSkill(MycroftSkill):
             wordnik = self.connector.get_data(node, "wordnik")
         except:
             wordnik = self.service.adquire(node, "wordnik")["wordnik"]
-            #self.connector.add_data(node, "wordnik", wordnik)
-            #definition = wordnik["definitions"][0]
-            #self.connector.add_data(node, "definition", definition)
+            # self.connector.add_data(node, "wordnik", wordnik)
+            # definition = wordnik["definitions"][0]
+            # self.connector.add_data(node, "definition", definition)
 
         w_dict = wordnik
         wordnik = wordnik["relations"]
@@ -398,7 +404,6 @@ class LilacsCoreSkill(MycroftSkill):
         if not talked:
             # no what ask wolfram
             talked = self.handle_unknown_intent(node)
-
 
         # check wordnik backend for more related nodes
         if self.focus < 15:
@@ -677,7 +682,7 @@ class LilacsCoreSkill(MycroftSkill):
                                 self.speak("no results from wordnik")
                             self.log.info("no results from wordnik")
 
-           # debug available data
+                            # debug available data
 
             if self.debug:
                 self.speak("dbpedia data: " + str(dbpedia))
@@ -703,7 +708,7 @@ class LilacsCoreSkill(MycroftSkill):
                     if self.debug:
                         self.speak("creating concept: " + cousin)
                     self.connector.create_concept(new_concept_name=cousin.lower(), data={}, child_concepts={},
-                                              parent_concepts={}, synonims=[], antonims=[])
+                                                  parent_concepts={}, synonims=[], antonims=[])
                 if cousin not in self.connector.get_cousins(node):
                     if self.debug:
                         self.speak("adding cousin: " + cousin + " to concept: " + node)
@@ -802,10 +807,10 @@ class LilacsCoreSkill(MycroftSkill):
     # feedback
     def handle_incorrect_answer(self):
         # create nodes / connections for right answer
-        #self.last_question = ""
-        #self.last_question_type = ""
-        #self.last_center = ""
-        #self.last_target = ""
+        # self.last_question = ""
+        # self.last_question_type = ""
+        # self.last_center = ""
+        # self.last_target = ""
         self.speak_dialog("wrong_answer")
 
     def feedback(self, message):
@@ -821,6 +826,6 @@ class LilacsCoreSkill(MycroftSkill):
     def stop(self):
         pass
 
+
 def create_skill():
     return LilacsCoreSkill()
-

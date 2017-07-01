@@ -1,28 +1,26 @@
-from os.path import dirname
+import random
 
 from adapt.intent import IntentBuilder
+
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-
-import random
 
 __author__ = 'paul'
 
 LOGGER = getLogger(__name__)
 
-class FlipCoinSkill(MycroftSkill):
 
+class FlipCoinSkill(MycroftSkill):
     def __init__(self):
         super(FlipCoinSkill, self).__init__(name="FlipCoinSkill")
         self.possibilities = ["heads", "tails"]
 
     def initialize(self):
-
-        flip_a_coin_intent = IntentBuilder("FlipACoinIntent").\
+        flip_a_coin_intent = IntentBuilder("FlipACoinIntent"). \
             require("FlipACoinKeyword").build()
         self.register_intent(flip_a_coin_intent, self.handle_flip_a_coin_intent)
 
-        flip_two_coins_intent = IntentBuilder("FlipTwoCoinsIntent").\
+        flip_two_coins_intent = IntentBuilder("FlipTwoCoinsIntent"). \
             require("FlipTwoCoinsKeyword").build()
         self.register_intent(flip_two_coins_intent, self.handle_flip_two_coins_intent)
 

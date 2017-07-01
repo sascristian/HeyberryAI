@@ -15,9 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from os.path import dirname
-
 from adapt.intent import IntentBuilder
+
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
@@ -27,32 +26,31 @@ logger = getLogger(__name__)
 
 
 class PersonalSkill(MycroftSkill):
-
     def __init__(self):
         super(PersonalSkill, self).__init__(name="PersonalSkill")
 
     def initialize(self):
-        when_were_you_born_intent = IntentBuilder("WhenWereYouBornIntent")\
+        when_were_you_born_intent = IntentBuilder("WhenWereYouBornIntent") \
             .require("WhenWereYouBornKeyword").build()
         self.register_intent(when_were_you_born_intent,
                              self.handle_when_were_you_born_intent)
 
-        where_were_you_born_intent = IntentBuilder("WhereWereYouBornIntent")\
+        where_were_you_born_intent = IntentBuilder("WhereWereYouBornIntent") \
             .require("WhereWereYouBornKeyword").build()
         self.register_intent(where_were_you_born_intent,
                              self.handle_where_were_you_born_intent)
 
-        who_made_you_intent = IntentBuilder("WhoMadeYouIntent")\
+        who_made_you_intent = IntentBuilder("WhoMadeYouIntent") \
             .require("WhoMadeYouKeyWord").build()
         self.register_intent(who_made_you_intent,
                              self.handle_who_made_you_intent)
 
-        who_are_you_intent = IntentBuilder("WhoAreYouIntent")\
+        who_are_you_intent = IntentBuilder("WhoAreYouIntent") \
             .require("WhoAreYouKeyword").build()
         self.register_intent(who_are_you_intent,
                              self.handle_who_are_you_intent)
 
-        what_are_you_intent = IntentBuilder("WhatAreYouIntent")\
+        what_are_you_intent = IntentBuilder("WhatAreYouIntent") \
             .require("WhatAreYouKeyword").build()
         self.register_intent(what_are_you_intent,
                              self.handle_what_are_you_intent)

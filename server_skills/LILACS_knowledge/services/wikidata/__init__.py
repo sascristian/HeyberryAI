@@ -1,10 +1,11 @@
+import sys
 from os.path import abspath
+from os.path import dirname
 
 import wptools
 
 from mycroft.messagebus.message import Message
-import sys
-from os.path import dirname
+
 sys.path.append(dirname(dirname(dirname(dirname(__file__)))))
 from LILACS_knowledge.services import KnowledgeBackend
 from mycroft.util.log import getLogger
@@ -21,7 +22,6 @@ class WikidataService(KnowledgeBackend):
         self.emitter = emitter
         self.name = name
         self.emitter.on('WikidataKnowledgeAdquire', self._adquire)
-
 
     def _adquire(self, message=None):
         logger.info('WikidataKnowledge_Adquire')
@@ -55,7 +55,7 @@ class WikidataService(KnowledgeBackend):
         logger.info('Call WikidataKnowledgeAdquire')
         self.emitter.emit(Message('WikidataKnowledgeAdquire', {"subject": subject}))
 
-    def send_result(self, result = {}):
+    def send_result(self, result={}):
         self.emitter.emit(Message("LILACS_result", {"data": result}))
 
     def stop(self):
@@ -63,7 +63,6 @@ class WikidataService(KnowledgeBackend):
         if self.process:
             self.process.terminate()
             self.process = None
-
 
 
 def load_service(base_config, emitter):

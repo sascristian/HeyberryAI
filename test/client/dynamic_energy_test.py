@@ -1,7 +1,8 @@
-import unittest
 import audioop
-from speech_recognition import AudioSource
+import unittest
+
 from mycroft.client.speech.mic import ResponsiveRecognizer
+from speech_recognition import AudioSource
 
 __author__ = 'seanfitz'
 

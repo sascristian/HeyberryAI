@@ -20,7 +20,6 @@ import xml.etree.ElementTree as ET
 
 import requests
 from adapt.intent import IntentBuilder
-from os.path import dirname
 
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger

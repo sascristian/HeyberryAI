@@ -1,4 +1,3 @@
-
 # -*- coding: iso-8859-15 -*-
 
 # Copyright 2017 Mycroft AI, Inc.
@@ -17,8 +16,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
-
-import math
 
 FRACTION_STRING_EN = {
     2: 'half',

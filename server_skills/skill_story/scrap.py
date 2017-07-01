@@ -1,7 +1,8 @@
+from os.path import dirname
+
+import bs4
 import requests
 from lxml import html
-import bs4
-from os.path import dirname
 
 dialog = []
 names = ["SPOCK", "ONE", "ANDROMEDA", "HUNT", "RHADE", "HARPER", "TYR", "BEM", "COMPUTER", "BEKA",
@@ -28,7 +29,6 @@ for i in range(1, 80):
             if named:
                 dialog.append(line)
 
-
 with open(dirname(__file__) + "/dialog/sci_fi.txt", "wb") as f:
     for line in dialog:
         try:
@@ -40,8 +40,8 @@ with open(dirname(__file__) + "/dialog/sci_fi.txt", "wb") as f:
 print dialog
 
 
-#self.Name = soup.select('h1 a[href^=http://www.metal-archives.com]')[0].get_text()
-#self.link = soup.select('h1 a[href^=http://www.metal-archives.com]')[0].attrs.get('href')
-#self.Style = tree.xpath(".//*[@id='band_stats']/dl[2]/dd[1]/text()")[0]
-#self.Theme = tree.xpath(".//*[@id='band_stats']/dl[2]/dd[2]/text()")[0]
-#self.Label = tree.xpath(".//*[@id='band_stats']/dl[2]/dd[3]/text()")[0]
+# self.Name = soup.select('h1 a[href^=http://www.metal-archives.com]')[0].get_text()
+# self.link = soup.select('h1 a[href^=http://www.metal-archives.com]')[0].attrs.get('href')
+# self.Style = tree.xpath(".//*[@id='band_stats']/dl[2]/dd[1]/text()")[0]
+# self.Theme = tree.xpath(".//*[@id='band_stats']/dl[2]/dd[2]/text()")[0]
+# self.Label = tree.xpath(".//*[@id='band_stats']/dl[2]/dd[3]/text()")[0]
