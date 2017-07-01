@@ -142,7 +142,7 @@ class StyleTransferSkill(MycroftSkill):
 
     def handle_style_transfer_intent(self, message):
         style_img = dirname(__file__) + "/giger.jpg"
-        target_img = dirname(__file__) + "/obama.jpg"
+        target_img = dirname(__file__) + "/deepdraw.png"
         self.speak("testing style transfer")
         self.emitter.emit(
             Message("style_transfer_request", {"style_img": style_img, "target_img": target_img}, message.context))
