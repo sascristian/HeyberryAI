@@ -21,44 +21,28 @@ class DreamSkill(MycroftSkill):
 
     def initialize(self):
 
-        prefixes = [
-            'dream about', 'dream with', 'dream of', 'dream off', 'da']
-        self.__register_prefixed_regex(prefixes, "(?P<DreamSearch>.*)")
-
-        dream_about_intent = IntentBuilder("DreamAboutIntent") \
-            .require("DreamSearch").build()
-        self.register_intent(dream_about_intent,
-                             self.handle_dream_about_intent)
-
         dream_intent = IntentBuilder("DreamIntent")\
-            .require("dream").build()
+            .require("dream").optionally("Subject").build()
         self.register_intent(dream_intent,
                              self.handle_dream_intent)
-
-        # TODO guided dream
-
-    def __register_prefixed_regex(self, prefixes, suffix_regex):
-        for prefix in prefixes:
-            self.register_regex(prefix + ' ' + suffix_regex)
 
     def dream(self, dream_pic, dream_guide=None, dream_name=None):
         self.emitter.emit(Message("deep_dream_request", {"dream_source": dream_pic, "dream_guide": dream_guide, "dream_name": dream_name}, self.context))
 
     def handle_dream_intent(self, message):
-        imagepath = "https://unsplash.it/640/480/?random"
+        search = message.data.get("Subject")
+        if search:
+            # collect dream entropy
+            self.speak("dreaming about " + search)
+            pics = self.search_pic(search)
+            imagepath = random.choice(pics)
+        else:
+            imagepath = "https://unsplash.it/640/480/?random"
         self.dream(imagepath)
 
     def handle_guided_dream_intent(self, message):
         imagepath = "https://unsplash.it/640/480/?random"
         self.dream(imagepath, imagepath)
-
-    def handle_dream_about_intent(self, message):
-        search = message.data.get("DreamSearch")
-        # collect dream entropy
-        self.speak("dreaming about " + search)
-        pics = self.search_pic(search)
-        imagepath = random.choice(pics)
-        self.dream(imagepath)
 
     def stop(self):
         pass
