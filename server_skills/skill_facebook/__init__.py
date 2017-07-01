@@ -1135,8 +1135,8 @@ class FacebookSkill(MycroftSkill):
                     self.fb_settings["timestamps"][id]["timestamps"].append(data["timestamp"])
             except Exception as e:
                 self.log.error(e)
-            self.log.info(
-                data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]["timestamps"]))
+           # self.log.info(
+           #     data["name"] + " online history: " + str(self.fb_settings["timestamps"][id]["timestamps"]))
             self.fb_settings.store()
 
     def handle_friend_request(self, message):
