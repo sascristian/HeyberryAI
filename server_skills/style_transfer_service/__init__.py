@@ -143,31 +143,29 @@ class StyleTransferSkill(MycroftSkill):
 
     def handle_style_transfer_intent(self, message):
         style_img = dirname(__file__)+"/giger.jpg"
-        target_img = dirname(__file__)+"/deepdraw.png"
+        target_img = dirname(__file__)+"/obama.jpg"
         self.speak("testing style transfer")
         self.emitter.emit(Message("style_transfer_request", {"style_img": style_img, "target_img": target_img}, message.context))
 
-    def handle_detailed_style_transfer_intent(self, message):
+    def handle_recursive_style_transfer_intent(self, message):
         style_img = dirname(__file__) + "/starry_night.jpg"
         target_img = dirname(__file__) + "/obama.jpg"
-        user_id = message.context.get("destinatary")
         self.speak("testing recursive style transfer")
         iter = 51
         self.emitter.emit(
             Message("style_transfer_request",
-                    {"source": user_id, "style_img": style_img, "target_img": target_img, "iter_num": 10,
+                    {"style_img": style_img, "target_img": target_img, "iter_num": 10,
                      "name": "test_iter_" + str(10)}, self.context))
         self.wait()
         self.log.info("iter num " + str(10) + " saved")
         for i in range(2, iter):
             self.emitter.emit(
-                Message("style_transfer_request", {"speak":False, "source": user_id, "style_img": style_img, "target_img": self.save_path+"/"+"test_iter_"+str((i-1)*10)+".jpg", "iter_num":10, "name":"test_iter_"+str(i*10)}))
+                Message("style_transfer_request", {"speak": False, "style_img": style_img, "target_img": self.save_path+"/"+"test_iter_"+str((i-1)*10)+".jpg", "iter_num":10, "name":"test_iter_"+str(i*10)}))
             self.wait()
             self.log.info("iter num " + str(i*10) + " saved")
         self.log.info("Recursive Style Transfer Test Finish")
 
     def handle_style_transfer(self, message):
-        user_id = message.context.get("destinatary", "all")
         self.context = message.context
         name = message.data.get("name", time.asctime().replace(" ", "_"))
         style_img = message.data.get("style_img", dirname(__file__)+"/giger.jpg")

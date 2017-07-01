@@ -1,5 +1,4 @@
 import urllib2
-import urllib
 import os
 import random
 import json
@@ -9,7 +8,6 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
-import time
 
 __author__ = 'jarbas'
 
@@ -20,16 +18,6 @@ class DreamSkill(MycroftSkill):
 
     def __init__(self):
         super(DreamSkill, self).__init__(name="DreamSkill")
-        # make working directories, TODO refactor into config file
-        self.outputdir = "../pictures/dreams"
-        # check if folders exist
-        if not os.path.exists(self.outputdir):
-            os.makedirs(self.outputdir)
-        ###imagine dimensions
-        self.w = 640
-        self.h = 480
-
-        self.save = True
 
     def initialize(self):
 
@@ -54,11 +42,15 @@ class DreamSkill(MycroftSkill):
             self.register_regex(prefix + ' ' + suffix_regex)
 
     def dream(self, dream_pic, dream_guide=None, dream_name=None):
-        self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name}, self.context))
+        self.emitter.emit(Message("deep_dream_request", {"dream_source": dream_pic, "dream_guide": dream_guide, "dream_name": dream_name}, self.context))
 
     def handle_dream_intent(self, message):
         imagepath = "https://unsplash.it/640/480/?random"
         self.dream(imagepath)
+
+    def handle_guided_dream_intent(self, message):
+        imagepath = "https://unsplash.it/640/480/?random"
+        self.dream(imagepath, imagepath)
 
     def handle_dream_about_intent(self, message):
         search = message.data.get("DreamSearch")

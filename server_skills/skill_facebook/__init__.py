@@ -610,7 +610,7 @@ class FacebookSkill(MycroftSkill):
         # pre-defined friend list / nicknames
         self.nicknames = self.config.get('friends', {}) #name : id
         # friends to track
-        self.friends_to_track = self.config.get('friends_to_track', ["none"])
+        self.friends_to_track = self.config.get('friends_to_track', ["all"])
         # default reply to wall posts
         self.default_comment = self.config.get('default_comment', [":)"])
         self.logged_in = False
