@@ -27,6 +27,39 @@ from batcountry import BatCountry
 __author__ = 'jarbas'
 
 
+class Dream():
+    def __init__(self, emitter):
+        self.emitter = emitter
+        self.emitter.on("deep_dream_result", self.end_wait)
+        self.waiting = False
+        self.url = None
+        self.file_path = None
+        self.time = None
+
+    def dream(self, dream_source, dream_name=None, iter_num=15, context=None):
+        self.emitter.emit(
+            Message("deep_dream_request", {"dream_source": dream_source, "dream_name": dream_name, "iter_num": iter_num}, context))
+        self.wait()
+        return self.file_path
+
+    def get_url(self):
+        return self.url
+
+    def get_time(self):
+        return self.time
+
+    def wait(self):
+        self.waiting = True
+        while self.waiting:
+            sleep(1)
+
+    def end_wait(self, message):
+        self.waiting = False
+        self.url = message.data.get("dream_url")
+        self.file_path = message.data.get("file")
+        self.time = message.data.get("elapsed_time")
+
+
 class DreamService(MycroftSkill):
     def __init__(self):
         super(DreamService, self).__init__(name="DreamSkill")
@@ -120,36 +153,40 @@ class DreamService(MycroftSkill):
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
+        iter = message.data.get("iter_num", self.iter)
         result = None
         link = None
+        elapsed_time = 0
         if source is None:
             self.log.error("No dream source")
         elif guide is not None:
             result = self.guided_dream(source, guide, name)
         else:
+            start = time.time()
             try:
-                result = self.dream(source, name)
+                result = self.dream(source, name, iter)
             except Exception as e:
                 self.log.error(str(e))
+            elapsed_time = time.time() - start
 
         if result is not None:
             data = self.client.upload_from_path(result)
             link = data["link"]
-            self.speak("Here is what i dreamed", metadata={"url": link, "file": result})
+            self.speak("Here is what i dreamed", metadata={"url": link, "file": result, "elapsed_time": elapsed_time})
         else:
             self.speak("I could not dream this time")
         if ":" in message.context["destinatary"]:  # socket
             self.emitter.emit(Message("message_request",
                                       {"context": message.context,
-                                       "data": {"dream_url": link, "file": result},
+                                       "data": {"dream_url": link, "file": result, "elapsed_time": elapsed_time},
                                        "type": "deep_dream_result"},
                                       message.context))
         self.emitter.emit(Message("deep_dream_result",
-                                  {"dream_url": link, "file": result},
+                                  {"dream_url": link, "file": result, "elapsed_time": elapsed_time},
                                   message.context))
 
     #### dreaming functions
-    def dream(self, imagepah, name):
+    def dream(self, imagepah, name, iter=25):
         self.speak("please wait while the dream is processed")
         layer = random.choice(self.layers)
         # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
@@ -166,7 +203,7 @@ class DreamService(MycroftSkill):
         arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
         img = cv2.imdecode(arr, -1)  # 'load it as it is'
         dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
-        image = bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
+        image = bc.dream(np.float32(dreampic), end=layer, iter_n=iter)
         # write the output image to file
         result = Image.fromarray(np.uint8(image))
         if name is None:
