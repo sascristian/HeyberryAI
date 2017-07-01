@@ -123,7 +123,7 @@ class DreamService(MycroftSkill):
         self.context = message.context
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
-        name = message.data.get("dream_name", time.asctime().replace(" ", "_") + ".jpg")
+        name = message.data.get("dream_name")
         result = None
         link = None
         if source is None:
@@ -173,6 +173,8 @@ class DreamService(MycroftSkill):
         image = bc.dream(np.float32(dreampic), end=layer, iter_n=int(self.iter))
         # write the output image to file
         result = Image.fromarray(np.uint8(image))
+        if name is None:
+            name = time.asctime().replace(" ", "_") + ".jpg"
         outpath = self.outputdir + name
         result.save(outpath)
         bc.cleanup()
