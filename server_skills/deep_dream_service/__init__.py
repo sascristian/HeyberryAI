@@ -53,7 +53,7 @@ class DreamService(MycroftSkill):
         except:
             self.path = "../caffe"
 
-        self.iter = 25#20#self.config["iter"] #dreaming iterations
+        self.iter = 5#20#self.config["iter"] #dreaming iterations
         self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
                         "inception_5b/pool", "inception_5b/5x5",
                         "inception_5b/5x5_reduce", "inception_5b/3x3",
@@ -131,7 +131,10 @@ class DreamService(MycroftSkill):
         elif guide is not None:
             result = self.guided_dream(source, guide, name)
         else:
-            result = self.dream(source, name)
+            try:
+                result = self.dream(source, name)
+            except Exception as e:
+                self.speak(str(e))
 
         if result is not None:
             data = self.client.upload_from_path(result)
