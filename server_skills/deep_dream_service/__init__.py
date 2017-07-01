@@ -111,8 +111,8 @@ class DreamService(MycroftSkill):
 
         dream_status_intent = IntentBuilder("DreamStatusIntent") \
             .require("dream").build()
-        #self.register_intent(dream_status_intent,
-        #                     self.handle_dream_status_intent)
+        self.register_intent(dream_status_intent,
+                             self.handle_dream_status_intent)
 
     def handle_dream_status_intent(self, message):
         self.speak_dialog("dreamstatus")
@@ -120,36 +120,31 @@ class DreamService(MycroftSkill):
     def handle_dream(self, message):
         # TODO dreaming queue
         self.log.info("Dream request received")
+        self.context = message.context
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
-        name = message.data.get("dream_name")
-        user_id = message.context.get("destinatary", "all")
-
-        if user_id == "unknown":
-            user_id = "all"
-        if user_id == "all":
-            self.log.warning("no user/target specified")
-
-        if name is None:
-            name = time.asctime().replace(" ", "_") + ".jpg"
-
-        if guide is not None:
+        name = message.data.get("dream_name", time.asctime().replace(" ", "_") + ".jpg")
+        result = None
+        link = None
+        if source is None:
+            self.log.error("No dream source")
+        elif guide is not None:
             result = self.guided_dream(source, guide, name)
         else:
             result = self.dream(source, name)
 
-        link = None
         if result is not None:
             data = self.client.upload_from_path(result)
             link = data["link"]
-            message.context["destinatary"] = user_id
-            self.speak("Here is what i dreamed", metadata={"url": link})
-            if ":" in user_id: #socket
-                self.emitter.emit(Message("message_request",
-                                          {"context": message.context,
-                                           "data": {"dream_url": link, "file": result},
-                                           "type": "deep_dream_result"},
-                                          message.context))
+            self.speak("Here is what i dreamed", metadata={"url": link, "file": result})
+        else:
+            self.speak("I could not dream this time")
+        if ":" in message.context["destinatary"]: #socket
+            self.emitter.emit(Message("message_request",
+                                      {"context": message.context,
+                                       "data": {"dream_url": link, "file": result},
+                                       "type": "deep_dream_result"},
+                                      message.context))
         self.emitter.emit(Message("deep_dream_result",
                                   {"dream_url": link, "file": result},
                                   message.context))
