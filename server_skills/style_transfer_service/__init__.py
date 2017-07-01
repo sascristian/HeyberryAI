@@ -94,7 +94,7 @@ CAFFENET_WEIGHTS = {"content": {"conv4": 1},
                               "conv5": 0.2}}
 
 
-class StyleTransfer():
+class StyleTransferTool():
     def __init__(self, emitter):
         self.emitter = emitter
         self.emitter.on("style_transfer_result", self.end_wait)
@@ -172,7 +172,7 @@ class StyleTransferSkill(MycroftSkill):
         target_img = dirname(__file__) + "/deepdraw.png"
         iter_num = message.data.get("iter_num", 300)
         self.speak("testing style transfer")
-        transfer = StyleTransfer(self.emitter)
+        transfer = StyleTransferTool(self.emitter)
         file = transfer.style_transfer(style_img, target_img, iter_num, message.context)
         url = transfer.get_url()
         time = transfer.get_time()
