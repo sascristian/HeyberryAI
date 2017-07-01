@@ -143,10 +143,9 @@ class StyleTransferSkill(MycroftSkill):
 
     def handle_style_transfer_intent(self, message):
         style_img = dirname(__file__)+"/giger.jpg"
-        target_img = dirname(__file__)+"/dariusz.jpg"
-        user_id = message.context.get("destinatary")
+        target_img = dirname(__file__)+"/deepdraw.png"
         self.speak("testing style transfer")
-        self.emitter.emit(Message("style_transfer_request", {"source":user_id, "style_img":style_img, "target_img":target_img}, self.context))
+        self.emitter.emit(Message("style_transfer_request", {"style_img": style_img, "target_img": target_img}, message.context))
 
     def handle_detailed_style_transfer_intent(self, message):
         style_img = dirname(__file__) + "/starry_night.jpg"
@@ -168,20 +167,13 @@ class StyleTransferSkill(MycroftSkill):
         self.log.info("Recursive Style Transfer Test Finish")
 
     def handle_style_transfer(self, message):
-        user_id = message.data.get("source")
-        name = message.data.get("name")
-        style_img = message.data.get("style_img")
+        user_id = message.context.get("destinatary", "all")
+        self.context = message.context
+        name = message.data.get("name", time.asctime().replace(" ", "_"))
+        style_img = message.data.get("style_img", dirname(__file__)+"/giger.jpg")
         target_img = message.data.get("target_img")
         iter_num = message.data.get("iter_num", 512)
         speak = message.data.get("speak", True)
-        # set target of result
-        if user_id is not None:
-            if user_id == "unknown":
-                user_id = "all"
-        else:
-            self.log.warning("no user/target specified")
-            user_id = "all"
-
         # load images
         try:
             img_style = self.load_image(style_img)
@@ -189,7 +181,7 @@ class StyleTransferSkill(MycroftSkill):
             self.log.info("images loaded")
         except:
             self.log.error("Could not load images: " + style_img + " | " + target_img)
-            self.send_result("could not save file", user_id)
+            self.send_result()
             return
         # prepare style transfer
         # TODO make model configurable
@@ -206,7 +198,7 @@ class StyleTransferSkill(MycroftSkill):
             st = StyleTransfer(model_name, model_file, pretrained_file, mean_file, weights, logger=self.log)
         except Exception as e:
             self.log.error(e)
-            self.send_result(str(e), user_id)
+            self.send_result()
             return
         # perform style transfer
         self.log.info("starting style transfer")
@@ -219,35 +211,26 @@ class StyleTransferSkill(MycroftSkill):
         img_out = st.get_generated()
 
         # save image
-
-        if name is None:
-            name = time.asctime()
         out_path = self.save_path + "/" + name + '.jpg'
         self.log.info("saving image to " + out_path)
         imsave(out_path, img_as_ubyte(img_out))
-
         self.log.info("Output saved to {0}.".format(out_path))
-        self.send_result(out_path, user_id)
+        self.send_result(out_path)
 
-    def send_result(self, out_path=None, user_id=None):
+    def send_result(self, out_path=None):
         msg_type = "style_transfer_result"
-        msg_data = {}
+        msg_data = {"file": None, "url": None}
         if out_path is not None:
             # upload pic
             data = self.client.upload_from_path(out_path)
             msg_data["url"] = data["link"]
 
-        # send result
         # to source socket
-        if user_id is not None:
-            self.context["destinatary"] = user_id
-            try:
-                if user_id.split(":")[1].isdigit():
+        if ":" in self.context["destinatary"]:
+            if self.context["destinatary"].split(":")[1].isdigit():
                     self.emitter.emit(Message("message_request",
-                                              {"user_id": user_id, "data": msg_data,
+                                              {"context": self.context, "data": msg_data,
                                                "type": msg_type}, self.context))
-            except:
-                pass
         # to bus
         msg_data["file"] = out_path
         self.emitter.emit(Message(msg_type,

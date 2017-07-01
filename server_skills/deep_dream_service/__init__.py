@@ -131,25 +131,32 @@ class DreamService(MycroftSkill):
             self.log.warning("no user/target specified")
 
         if name is None:
-            name = time.asctime().replace(" ","_") + ".jpg"
+            name = time.asctime().replace(" ", "_") + ".jpg"
 
         if guide is not None:
             result = self.guided_dream(source, guide, name)
         else:
             result = self.dream(source, name)
 
-        print result
+        link = None
         if result is not None:
             data = self.client.upload_from_path(result)
             link = data["link"]
-            self.context["destinatary"] = user_id
+            message.context["destinatary"] = user_id
             self.speak("Here is what i dreamed", metadata={"url": link})
-            self.emitter.emit(Message("message_request", {"context":self.context, "data":{"dream_url":link}, "type":"deep_dream_result"}, self.context))
+            if ":" in user_id: #socket
+                self.emitter.emit(Message("message_request",
+                                          {"context": message.context,
+                                           "data": {"dream_url": link, "file": result},
+                                           "type": "deep_dream_result"},
+                                          message.context))
+        self.emitter.emit(Message("deep_dream_result",
+                                  {"dream_url": link, "file": result},
+                                  message.context))
 
     #### dreaming functions
     def dream(self, imagepah, name):
         self.speak("please wait while the dream is processed")
-
         layer = random.choice(self.layers)
         # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
         # TODO any model
@@ -175,12 +182,10 @@ class DreamService(MycroftSkill):
 
     def guided_dream(self, sourcepath, guidepath, name):
         self.log.error("Guided dream not implemented")
+        return None
 
     def stop(self):
-        try:
-            cv2.destroyAllWindows()
-        except:
-            pass
+        pass
 
 
 def create_skill():

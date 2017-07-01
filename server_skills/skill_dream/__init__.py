@@ -53,22 +53,20 @@ class DreamSkill(MycroftSkill):
         for prefix in prefixes:
             self.register_regex(prefix + ' ' + suffix_regex)
 
-    def dream(self, dream_pic, user="unknown", dream_guide=None, dream_name=None):
-        self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name, "source":user}, self.context))
+    def dream(self, dream_pic, dream_guide=None, dream_name=None):
+        self.emitter.emit(Message("deep_dream_request", {"dream_source":dream_pic, "dream_guide":dream_guide, "dream_name":dream_name}, self.context))
 
     def handle_dream_intent(self, message):
-        user_id = message.context.get("destinatary")
         imagepath = "https://unsplash.it/640/480/?random"
-        self.dream(imagepath, user_id)
+        self.dream(imagepath)
 
     def handle_dream_about_intent(self, message):
         search = message.data.get("DreamSearch")
-        user_id = message.context.get("destinatary")
         # collect dream entropy
         self.speak("dreaming about " + search)
         pics = self.search_pic(search)
         imagepath = random.choice(pics)
-        self.dream(imagepath, user_id)
+        self.dream(imagepath)
 
     def stop(self):
         pass
