@@ -111,8 +111,8 @@ class DreamService(MycroftSkill):
 
         dream_status_intent = IntentBuilder("DreamStatusIntent") \
             .require("dream").build()
-        self.register_intent(dream_status_intent,
-                             self.handle_dream_status_intent)
+        #self.register_intent(dream_status_intent,
+        #                     self.handle_dream_status_intent)
 
     def handle_dream_status_intent(self, message):
         self.speak_dialog("dreamstatus")
