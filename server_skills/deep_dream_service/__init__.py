@@ -38,10 +38,10 @@ class DreamService(MycroftSkill):
             client_id = self.config_core.get("APIS")["ImgurKey"]
             client_secret = self.config_core.get("APIS")["ImgurSecret"]
         except:
-            try:
+            if self.config is not None:
                 client_id = self.config.get("ImgurKey")
                 client_secret = self.config.get("ImgurSecret")
-            except:
+            else:
                 # TODO throw error
                 client_id = 'xx'
                 client_secret = 'yyyyyyyyy'
@@ -53,7 +53,7 @@ class DreamService(MycroftSkill):
         except:
             self.path = "../caffe"
 
-        self.iter = 5#20#self.config["iter"] #dreaming iterations
+        self.iter = self.config.get("iter_num", 25) #dreaming iterations
         self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
                         "inception_5b/pool", "inception_5b/5x5",
                         "inception_5b/5x5_reduce", "inception_5b/3x3",
@@ -93,12 +93,9 @@ class DreamService(MycroftSkill):
                         "pool2/3x3_s2","conv2/norm2","conv2/3x3",
                         "conv2/3x3_reduce", "pool1/norm1"] #"pool1/3x3_s2" , "conv17x7_s2"
 
-        ###imagine dimensions
+        # image dimensions
         self.w = 640
         self.h = 480
-
-        ### flag to avoid dreaming multiple times at once
-        self.dreaming = False
 
         self.outputdir = self.config_core["database_path"] + "/dreams/"
 
