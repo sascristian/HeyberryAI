@@ -131,7 +131,7 @@ class DreamService(MycroftSkill):
             try:
                 result = self.dream(source, name)
             except Exception as e:
-                self.speak(str(e))
+                self.log.error(str(e))
 
         if result is not None:
             data = self.client.upload_from_path(result)
