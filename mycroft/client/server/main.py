@@ -59,6 +59,7 @@ def handle_speak(event):
     answer_type = "speak"
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
+    logger.debug("Adding answer to answering queue")
     message_queue[sock_num].append([answer_type, event.data, event.context])
 
 
@@ -154,7 +155,7 @@ def handle_message_request(event):
     type = event.data.get("type")
     data = event.data.get("data")
     context = event.data.get("context", {})
-    context["destinatary"] = "server"
+    context["source"] = "server"
     sock_num = user_id.split(":")[1]
     logger.info("Received message request for sock:" + sock_num + " with type: " + type)
     if sock_num not in message_queue.keys():
@@ -196,9 +197,9 @@ def main():
             if sock_num in message_queue.keys():
                 i = 0
                 for type, data, context in message_queue[sock_num]:
+                    logger.debug("Answering sock " + sock_num)
                     send_message(sock, type, data, context)
                     message_queue[sock_num].pop(i)
-                    # TODO remove empty sock num in queue
                     i += 1
 
         for sock in read_sockets:
@@ -249,7 +250,7 @@ def main():
                                     context["source"] = "unknown"
                                 if "mute" not in context.keys():
                                     context["mute"] = True
-                                context["source"] += ":" + sock_num
+                                context["source"] = context["source"] + ":" + sock_num
                                 # TODO authorize user
                                 if sock_num in users.keys():
                                     user = users[sock_num]
