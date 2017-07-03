@@ -331,6 +331,7 @@ class BrowserService(MycroftSkill):
         self.speak("Here is your Inspirobot picture", metadata={"file":out_path, "url":src})
         # clean the used elements for this session
         browser.reset_elements()
+        self.emitter.emit(Message("inspirobot_result", {"url":src}))
         # optionally close the browser, but dont or other services may crash or take longer
         # browser.close_browser()
 

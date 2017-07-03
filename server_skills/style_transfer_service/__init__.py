@@ -247,10 +247,6 @@ class StyleTransferSkill(MycroftSkill):
         msg_data["file"] = out_path
         self.emitter.emit(Message(msg_type,
                                   msg_data, self.context))
-        if out_path is not None:
-            self.emitter.emit(Message("tweet_request",
-                                  {"tweet_pic": out_path, "tweet_text": "style transfer result #JarbasAI", "tweet_type": "image"},
-                                  self.context))
         self.speak("style transfer result:",
                    metadata=msg_data)
 
