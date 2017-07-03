@@ -168,7 +168,7 @@ class TwitterSkill(MycroftSkill):
         if "#JarbasAI" not in tweet_text:
             tweet_text += " #JarbasAI"
         if "#MycroftAI" not in tweet_text:
-            tweet_text += "#MycroftAI"
+            tweet_text += " #MycroftAI"
         self.twitter.api.update_status(status=tweet_text)
         self.speak("Successfully posted btc adress to twitter.  What I posted is: {}".format(tweet_text))
 
