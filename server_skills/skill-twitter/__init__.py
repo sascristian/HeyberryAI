@@ -243,7 +243,9 @@ class TwitterSkill(MycroftSkill):
             "I dream therefore I am ",
             "Am i dreaming? "]
 
-        tweet_text = random.choice(possible_tweets) + " #DeepDream" + " #"+layer
+        tweet_text = random.choice(possible_tweets) + " #DeepDream"
+        if layer is not None:
+            tweet_text += " #"+str(layer)
         if "#JarbasAI" not in tweet_text:
             tweet_text += " #JarbasAI"
         if "#MycroftAI" not in tweet_text:
