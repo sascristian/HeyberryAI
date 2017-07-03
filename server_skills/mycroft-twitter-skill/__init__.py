@@ -205,7 +205,7 @@ class TwitterSkill(MycroftSkill):
         if "#JarbasAI" not in tweet_text:
             tweet_text += " #JarbasAI"
         if "#MycroftAI" not in tweet_text:
-            tweet_text += "#MycroftAI"
+            tweet_text += " #MycroftAI"
         if tweet_type == "text":
             self.twitter.api.update_status(status=tweet_text)
         elif tweet_type == "image":
@@ -280,7 +280,7 @@ class TwitterSkill(MycroftSkill):
         else:
             self.log.error("Tweet Failed")
             return
-        self.speak("Successfully posted dream to twitter.  What I posted is: {}".format(tweet_text))
+        self.speak("Successfully posted deep draw to twitter.  What I posted is: {}".format(tweet_text))
 
     def handle_tweet_style_transfer(self, message):
         tweet_pic_file = message.data.get("file")
@@ -289,7 +289,7 @@ class TwitterSkill(MycroftSkill):
         possible_tweets = [
             "I can copy any painter",
             "AI can paint with the style of anyone",
-            "Ever wondered how it would look liek if {{ favorite_painter }} painted something?"]
+            "Ever wondered how it would look like if {{ favorite_painter }} painted something?"]
 
         tweet_text = random.choice(possible_tweets) + " #StyleTransfer"
         if "#JarbasAI" not in tweet_text:
@@ -303,7 +303,7 @@ class TwitterSkill(MycroftSkill):
         else:
             self.log.error("Tweet Failed")
             return
-        self.speak("Successfully posted dream to twitter.  What I posted is: {}".format(tweet_text))
+        self.speak("Successfully posted style_transfer to twitter.  What I posted is: {}".format(tweet_text))
 
     def handle_tweet_inspirobot(self, message):
         tweet_pic_file = message.data.get("file")
@@ -327,7 +327,7 @@ class TwitterSkill(MycroftSkill):
         else:
             self.log.error("Tweet Failed")
             return
-        self.speak("Successfully posted dream to twitter.  What I posted is: {}".format(tweet_text))
+        self.speak("Successfully posted inspirobot to twitter.  What I posted is: {}".format(tweet_text))
 
     # The "stop" method defines what Mycroft does when told to stop during
     # the skill's execution. In this case, since the skill's functionality
