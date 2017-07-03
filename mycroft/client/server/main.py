@@ -251,7 +251,10 @@ def main():
                                 if context is None:
                                     context = {}
                                 if "source" not in context.keys():
-                                    context["source"] = "unknown"
+                                    if sock_num in names.keys():
+                                        context["source"] = names[sock_num]
+                                    else:
+                                        context["source"] = "unknown"
                                 if "mute" not in context.keys():
                                     context["mute"] = True
                                 context["source"] = context["source"] + ":" + sock_num
@@ -265,7 +268,9 @@ def main():
                                 if deserialized_message.type == "names_response":
                                     for name in data["names"]:
                                         logger.debug("Setting alias: " + name + " for socket: " + sock_num)
-                                        names[name] = sock_num
+                                        if sock_num not in names.keys():
+                                            names[sock_num] = []
+                                        names[sock_num].append(name)
                                 elif deserialized_message.type == "id_update":
                                     answer_id(sock)
                                 elif deserialized_message.type == "recognizer_loop:utterance":

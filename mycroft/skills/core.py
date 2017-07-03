@@ -283,10 +283,7 @@ class MycroftSkill(object):
             self.events.append((intent_parser.name, receive_handler))
 
     def handle_update_context(self, message):
-        context = {}
-        context["destinatary"] = message.context.get("destinatary", "all")
-        context["mute"] = message.context.get("mute", False)
-        self.context = self.get_context(context)
+        self.context = self.get_context(message.context)
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
@@ -338,21 +335,27 @@ class MycroftSkill(object):
                 context["more_speech"] = self.context.get("more_speech", False)
         return context
 
-    def speak(self, utterance, expect_response=False, metadata={}, context=None):
-        metadata["source_skill"] = self.name
+    def speak(self, utterance, expect_response=False, metadata=None, context=None):
+        if context is None:
+            # use current context
+            context = self.context
+        if metadata is None:
+            metadata = {}
         data = {'utterance': utterance,
                 'expect_response': expect_response,
                 "metadata": metadata}
-        if context is None:
-            context = {}
         self.emitter.emit(Message("speak", data, self.get_context(context)))
 
-    def speak_dialog(self, key, data={}, expect_response=False, metadata={}, context=None):
-        metadata["source_skill"] = self.name
+    def speak_dialog(self, key, data=None, expect_response=False, metadata=None, context=None):
+        if context is None:
+            # use current context
+            context = self.context
+        if metadata is None:
+            metadata = {}
+        if data is None:
+            data = {}
         data['expect_response'] = expect_response
         data["metadata"] = metadata
-        if context is None:
-            context = {}
         self.speak(self.dialog_renderer.render(key, data), context=self.get_context(context))
 
     def init_dialog(self, root_directory):
