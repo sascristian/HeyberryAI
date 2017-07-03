@@ -96,6 +96,10 @@ class TwitterSkill(MycroftSkill):
             require("TweetPatreon").build()
         self.register_intent(post_patreon_tweet_intent, self.handle_tweet_patreon)
 
+        post_btc_tweet_intent = IntentBuilder("PostBTCTweetIntent"). \
+            require("TweetBTC").build()
+        self.register_intent(post_btc_tweet_intent, self.handle_tweet_btc)
+
         self.emitter.on("tweet_request", self.handle_tweet_request)
 
     # The "handle_xxxx_intent" functions define Mycroft's behavior when
@@ -148,8 +152,27 @@ class TwitterSkill(MycroftSkill):
             self.twitter.api.update_status(status=status_post)
             self.speak("Successfully posted status update to twitter.  What I posted is: {}".format(status_post))
 
+    def handle_tweet_btc(self, message):
+        possible_tweets = ["If you love this, can you buy me a {{HUMAN_BEVERAGE}}? I really appreciate it! Send some satoshi's to",
+                           "Send some magic internet money to",
+                           "Do you love bitcoin? I do!",
+                           "Help my maker build me for a living",
+                           "Help me get a body",
+                           "Help my development",
+                           "Support my development",
+                           "Support my maker",
+                           "Help me get more abilities",
+                           "Support my existence"]
+
+        tweet_text = random.choice(possible_tweets) + " 15B4ZQFY5UfopjRtSRQPx7ibRaFukE1Ntq #BTC #SupportMe"
+        if "#JarbasAI" not in tweet_text:
+            tweet_text += " #JarbasAI"
+        if "#MycroftAI" not in tweet_text:
+            tweet_text += "#MycroftAI"
+        self.twitter.api.update_status(status=tweet_text)
+        self.speak("Successfully posted btc adress to twitter.  What I posted is: {}".format(tweet_text))
+
     def handle_tweet_patreon(self, message):
-        # https://www.patreon.com/jarbasAI
         possible_tweets = ["Help me make stuff for mycroft for a living",
                            "Help my maker build me for a living",
                            "Help my maker code me for a living",
