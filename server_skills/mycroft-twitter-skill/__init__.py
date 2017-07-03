@@ -25,7 +25,7 @@
 # skills, whether from other files in mycroft-core or from external libraries
 from os.path import dirname, join
 
-import tweepy, requests, os
+import tweepy, requests, os, random
 from adapt.intent import IntentBuilder
 
 from mycroft.skills.core import MycroftSkill
@@ -92,6 +92,10 @@ class TwitterSkill(MycroftSkill):
             require("PostTweet").optionally("tweet").optionally("status_post").build()
         self.register_intent(post_tweet_intent, self.handle_post_tweet_intent)
 
+        post_patreon_tweet_intent = IntentBuilder("PostPatreonTweetIntent"). \
+            require("TweetPatreon").build()
+        self.register_intent(post_patreon_tweet_intent, self.handle_tweet_patreon)
+
         self.emitter.on("tweet_request", self.handle_tweet_request)
 
     # The "handle_xxxx_intent" functions define Mycroft's behavior when
@@ -144,10 +148,31 @@ class TwitterSkill(MycroftSkill):
             self.twitter.api.update_status(status=status_post)
             self.speak("Successfully posted status update to twitter.  What I posted is: {}".format(status_post))
 
+    def handle_tweet_patreon(self, message):
+        # https://www.patreon.com/jarbasAI
+        possible_tweets = ["Help me make stuff for mycroft for a living",
+                           "Help my maker build me for a living",
+                           "Help my maker code me for a living",
+                           "Support my existence",
+                           "Help me get a body",
+                           "Help my development",
+                           "Support my development",
+                           "Support my maker",
+                           "Help me get more abilities",
+                           "Support my existence"]
+
+        patreon = random.choice(possible_tweets)+" https://www.patreon.com/jarbasAI #Patreon"
+        self.twitter.api.update_status(status=patreon)
+        self.speak("Successfully posted patreon link to twitter.  What I posted is: {}".format(patreon))
+
     def handle_tweet_request(self, message):
         tweet_type = message.data.get("tweet_type", "text")
         tweet_pic = message.data.get("tweet_pic", None)
-        tweet_text = message.data.get("tweet_text", "I Love AI <3 #JarbasAI")
+        tweet_text = message.data.get("tweet_text", "I Love AI <3")
+        if "#JarbasAI" not in tweet_text:
+            tweet_text += " #JarbasAI"
+        if "#MycroftAI" not in tweet_text:
+            tweet_text += "#MycroftAI"
         if tweet_type == "text":
             self.twitter.api.update_status(status=tweet_text)
         elif tweet_type == "image":
@@ -158,6 +183,7 @@ class TwitterSkill(MycroftSkill):
             self.log.error("Unknown tweet type")
 
     def tweet_image_from_url(self, url, text):
+
         filename = 'tweet_pic_temp.jpg'
         request = requests.get(url, stream=True)
         if request.status_code == 200:
