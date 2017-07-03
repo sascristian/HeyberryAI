@@ -125,7 +125,7 @@ class TwitterSkill(MycroftSkill):
         self.register_intent(unfollow_user_intent, self.handle_unfollow_user_intent)
 
         post_tweet_intent = IntentBuilder("PostTweetIntent"). \
-            require("PostTweet").optionally("tweet").optionally("status_post").build()
+            require("status_post").build()
         self.register_intent(post_tweet_intent, self.handle_post_tweet_intent)
 
         post_patreon_tweet_intent = IntentBuilder("PostPatreonTweetIntent"). \
