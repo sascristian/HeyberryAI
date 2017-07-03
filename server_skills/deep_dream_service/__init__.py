@@ -187,7 +187,7 @@ class DreamService(MycroftSkill):
                                   message.context))
         if result is not None:
             self.emitter.emit(Message("tweet_request",
-                                  {"tweet_pic": result, "tweet_text": "deep dreaming #JarbasAI", "tweet_type": "image"},
+                                  {"tweet_pic": result, "tweet_text": "deep dreaming #DeepDream", "tweet_type": "image"},
                                   message.context))
 
     #### dreaming functions
