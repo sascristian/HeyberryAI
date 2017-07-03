@@ -1,0 +1,7 @@
+{
+  "utterance": "how many twitter followers",
+  "intent_type": "GetFollowersIntent",
+  "intent": {
+    "GetFollowersIntent": "You currently have {{followers}} followers."
+  }
+}
