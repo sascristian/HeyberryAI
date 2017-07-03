@@ -198,9 +198,13 @@ def main():
                 i = 0
                 for type, data, context in message_queue[sock_num]:
                     logger.debug("Answering sock " + sock_num)
-                    send_message(sock, type, data, context)
-                    message_queue[sock_num].pop(i)
-                    i += 1
+                    try:
+                        send_message(sock, type, data, context)
+                        message_queue[sock_num].pop(i)
+                        i += 1
+                        logger.debug("Sucesfully sent data: " + str(data))
+                    except Exception as e:
+                        logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
 
         for sock in read_sockets:
             # New connection
