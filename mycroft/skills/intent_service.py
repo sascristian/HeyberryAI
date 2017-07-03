@@ -27,6 +27,8 @@ from mycroft.util.parse import normalize
 
 __author__ = 'seanfitz'
 
+source_name = "server_skills"
+
 logger = getLogger(__name__)
 
 
@@ -117,10 +119,10 @@ class IntentService(object):
             skill_id = int(best_intent['intent_type'].split(":")[0])
             intent_name = best_intent['intent_type'].split(":")[1]
             self.emitter.emit(Message("intent_response", {
-                "skill_id": skill_id, "utterance": utterance, "lang": lang, "intent_name": intent_name}))
+                "skill_id": skill_id, "utterance": utterance, "lang": lang, "intent_name": intent_name}, message.context))
             return True
         self.emitter.emit(Message("intent_response", {
-            "skill_id": 0, "utterance": utterance, "lang": lang, "intent_name": ""}))
+            "skill_id": 0, "utterance": utterance, "lang": lang, "intent_name": ""}, message.context))
         return False
 
     def get_context(self, context=None):
@@ -129,7 +131,7 @@ class IntentService(object):
         # by default set destinatary of reply to source of this message
         context["destinatary"] = context.get("source", "all")
         context["mute"] = context.get("mute", False)
-        context["source"] = "skills"
+        context["source"] = source_name
         return context
 
     def handle_utterance(self, message):
