@@ -366,6 +366,9 @@ class ImageRecognitionSkill(MycroftSkill):
         # to bus
         self.emitter.emit(Message(msg_type,
                                   msg_data, self.context))
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": path, "tweet_text": "deep drawing, label: " + name + " #JarbasAI", "tweet_type": "image"},
+                                  message.context))
 
     def handle_deep_draw_result(self, message):
         link = message.data.get("url")

@@ -185,6 +185,9 @@ class DreamService(MycroftSkill):
         self.emitter.emit(Message("deep_dream_result",
                                   {"dream_url": link, "file": result, "elapsed_time": elapsed_time},
                                   message.context))
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": result, "tweet_text": "deep dreaming #JarbasAI", "tweet_type": "image"},
+                                  message.context))
 
     #### dreaming functions
     def dream(self, imagepah, name=None, iter=25):

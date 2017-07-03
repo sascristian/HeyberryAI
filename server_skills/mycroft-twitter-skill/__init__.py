@@ -25,7 +25,7 @@
 # skills, whether from other files in mycroft-core or from external libraries
 from os.path import dirname, join
 
-import tweepy
+import tweepy, requests, os
 from adapt.intent import IntentBuilder
 
 from mycroft.skills.core import MycroftSkill
@@ -92,6 +92,8 @@ class TwitterSkill(MycroftSkill):
             require("PostTweet").optionally("tweet").optionally("status_post").build()
         self.register_intent(post_tweet_intent, self.handle_post_tweet_intent)
 
+        self.emitter.on("tweet_request", self.handle_tweet_request)
+
     # The "handle_xxxx_intent" functions define Mycroft's behavior when
     # each of the skill's intents is triggered: in this case, he simply
     # speaks a response. Note that the "speak_dialog" method doesn't
@@ -141,6 +143,34 @@ class TwitterSkill(MycroftSkill):
         else:
             self.twitter.api.update_status(status=status_post)
             self.speak("Successfully posted status update to twitter.  What I posted is: {}".format(status_post))
+
+    def handle_tweet_request(self, message):
+        tweet_type = message.data.get("tweet_type", "text")
+        tweet_pic = message.data.get("tweet_pic", None)
+        tweet_text = message.data.get("tweet_text", "I Love AI <3 #JarbasAI")
+        if tweet_type == "text":
+            self.twitter.api.update_status(status=tweet_text)
+        elif tweet_type == "image":
+            self.twitter.api.update_with_media(tweet_pic, status=tweet_text)
+        elif tweet_type == "remote_image":
+            self.tweet_image_from_url(tweet_pic, tweet_text)
+        else:
+            self.log.error("Unknown tweet type")
+
+    def tweet_image_from_url(self, url, text):
+        filename = 'tweet_pic_temp.jpg'
+        request = requests.get(url, stream=True)
+        if request.status_code == 200:
+            with open(filename, 'wb') as image:
+                for chunk in request:
+                    image.write(chunk)
+
+            self.twitter.api.update_with_media(filename, status=text)
+            os.remove(filename)
+            return True
+        else:
+            self.log.error("Unable to download image")
+        return False
 
     # The "stop" method defines what Mycroft does when told to stop during
     # the skill's execution. In this case, since the skill's functionality
