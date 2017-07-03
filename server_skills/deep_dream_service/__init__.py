@@ -158,17 +158,17 @@ class DreamService(MycroftSkill):
         result = None
         link = None
         elapsed_time = 0
+        start = time.time()
         if source is None:
             self.log.error("No dream source")
         elif guide is not None:
             result = self.guided_dream(source, guide, name, iter)
         else:
-            start = time.time()
             try:
                 result = self.dream(source, name, iter)
             except Exception as e:
                 self.log.error(str(e))
-            elapsed_time = time.time() - start
+        elapsed_time = time.time() - start
         layer = random.choice(self.layers)
         if result is not None:
             data = self.client.upload_from_path(result)

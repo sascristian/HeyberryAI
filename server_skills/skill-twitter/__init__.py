@@ -248,10 +248,11 @@ class TwitterSkill(MycroftSkill):
             tweet_text += " #JarbasAI"
         if "#MycroftAI" not in tweet_text:
             tweet_text += " #MycroftAI"
-        if tweet_pic_file:
-            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
-        elif tweet_pic_url:
+
+        if tweet_pic_url:
             self.tweet_image_from_url(tweet_pic_url, tweet_text)
+        elif tweet_pic_file:
+            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
         else:
             self.log.error("Tweet Failed")
             return
@@ -273,10 +274,10 @@ class TwitterSkill(MycroftSkill):
             tweet_text += " #JarbasAI"
         if "#MycroftAI" not in tweet_text:
             tweet_text += " #MycroftAI"
-        if tweet_pic_file:
-            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
-        elif tweet_pic_url:
+        if tweet_pic_url:
             self.tweet_image_from_url(tweet_pic_url, tweet_text)
+        elif tweet_pic_file:
+            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
         else:
             self.log.error("Tweet Failed")
             return
@@ -296,10 +297,10 @@ class TwitterSkill(MycroftSkill):
             tweet_text += " #JarbasAI"
         if "#MycroftAI" not in tweet_text:
             tweet_text += " #MycroftAI"
-        if tweet_pic_file:
-            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
-        elif tweet_pic_url:
+        if tweet_pic_url:
             self.tweet_image_from_url(tweet_pic_url, tweet_text)
+        elif tweet_pic_file:
+            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
         else:
             self.log.error("Tweet Failed")
             return
@@ -320,10 +321,10 @@ class TwitterSkill(MycroftSkill):
             tweet_text += " #JarbasAI"
         if "#MycroftAI" not in tweet_text:
             tweet_text += " #MycroftAI"
-        if tweet_pic_file:
-            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
-        elif tweet_pic_url:
+        if tweet_pic_url:
             self.tweet_image_from_url(tweet_pic_url, tweet_text)
+        elif tweet_pic_file:
+            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
         else:
             self.log.error("Tweet Failed")
             return
