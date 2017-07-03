@@ -149,12 +149,21 @@ def send_message(sock, type="speak", data=None, context=None):
 def handle_message_request(event):
     global message_queue
     type = event.data.get("type")
-    user_id = event.data.get("user_id", "")
+    # merge contexts of message and message_request
+    context = event.context
+    if context is None:
+        context = {}
+    context.update(event.data.get("context", {}))
+    # allow user to be requested explictly
+    user_id = event.data.get("user_id")
+    if user_id is None:
+        # if not, use context
+        user_id = context.get("destinatary", "")
+
     if ":" not in user_id:
-        logger.error("Message_Request: invalid user_id: " + user_id + " in data: " + str(event.data))
+        logger.error("Message_Request: invalid user_id: " + user_id + " in data: " + str(event.data) + " in context: " + context)
         return
-    context = event.data.get("context", {})
-    context["source"] = "server"
+    context["source"] = context.get("source", "skills") + ":server"
     data = event.data.get("data", {})
     sock_num = user_id.split(":")[1]
     logger.info("Message_Request: sock:" + sock_num + " with type: " + type)
