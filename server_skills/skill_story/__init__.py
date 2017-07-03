@@ -22,6 +22,7 @@ import os
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+from mycroft.messagebus.message import Message
 from os.path import dirname
 import time
 __author__ = 'jarbas'
@@ -135,6 +136,9 @@ class StorySkill(MycroftSkill):
         self.save(out)
         # speak
         self.speak(out)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None, "tweet_text": "I am learning to write storys, read this: \n" + out + "#JarbasAI", "tweet_type": "text"},
+                                  message.context))
 
     def save(self, poem):
         # save

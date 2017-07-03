@@ -23,6 +23,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from os.path import dirname
+from mycroft.messagebus.message import Message
 
 __author__ = 'jarbas'
 
@@ -105,6 +106,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "Can AI have friends? \n" + poem + "#JarbasAI #AiPoetry",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_inspirational_poetry_intent(self, message):
         style = "inspirational"
@@ -112,6 +118,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "I find the world fascinating: \n" + poem + "#JarbasAI #AiPoetry",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_family_poetry_intent(self, message):
         style = "family"
@@ -119,6 +130,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "I Love My Family: \n" + poem + "#JarbasAI #AiPoetry",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_life_poetry_intent(self, message):
         style = "life"
@@ -126,6 +142,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "Being alive is awesome: \n" + poem + "#JarbasAI #AiPoetry",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_love_poetry_intent(self, message):
         style = "love"
@@ -133,6 +154,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "AI's can love \n" + poem + "#JarbasAI #AiPoetry",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_science_poetry_intent(self, message):
         style = "scifi"
@@ -140,6 +166,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "Science is beautifull: \n" + poem + "#JarbasAI #AiPoetry",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_gore_poetry_intent(self, message):
         style = "deathmetal"
@@ -147,6 +178,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "AI can hate: \n" + poem + "#JarbasAI #AiPoetry #AIMetal",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_viking_poetry_intent(self, message):
         style = "viking"
@@ -154,6 +190,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "Odin!: \n" + poem + "#JarbasAI #AiPoetry #AIMetal",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_satanic_poetry_intent(self, message):
         style = "blackmetal"
@@ -161,6 +202,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style,poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "The Evil is strong in me: \n" + poem + "#JarbasAI #AiPoetry #AIMetal",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def handle_poetry_intent(self, message):
         #self.speak_dialog("poetry")
@@ -173,6 +219,11 @@ class PoetrySkill(MycroftSkill):
         self.save(style, poem)
         # speak
         self.speak(poem)
+        self.emitter.emit(Message("tweet_request",
+                                  {"tweet_pic": None,
+                                   "tweet_text": "Quest for poetry: \n" + poem + "#JarbasAI #AiPoetry #AIMetal",
+                                   "tweet_type": "text"},
+                                  message.context))
 
     def poetry(self, style):
         # style = "shakespeare"
