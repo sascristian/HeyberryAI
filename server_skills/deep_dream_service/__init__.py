@@ -169,7 +169,7 @@ class DreamService(MycroftSkill):
             except Exception as e:
                 self.log.error(str(e))
             elapsed_time = time.time() - start
-
+        layer = random.choice(self.layers)
         if result is not None:
             data = self.client.upload_from_path(result)
             link = data["link"]
@@ -179,7 +179,7 @@ class DreamService(MycroftSkill):
         if ":" in message.context["destinatary"]: #socket
             self.emitter.emit(Message("message_request",
                                       {"context": message.context,
-                                       "data": {"dream_url": link, "file": result, "elapsed_time": elapsed_time},
+                                       "data": {"dream_url": link, "file": result, "elapsed_time": elapsed_time, "layer": layer},
                                        "type": "deep_dream_result"},
                                       message.context))
         self.emitter.emit(Message("deep_dream_result",
@@ -187,9 +187,10 @@ class DreamService(MycroftSkill):
                                   message.context))
 
     #### dreaming functions
-    def dream(self, imagepah, name=None, iter=25):
+    def dream(self, imagepah, name=None, iter=25, layer=None):
         self.speak("please wait while the dream is processed")
-        layer = random.choice(self.layers)
+        if layer is None:
+            layer = random.choice(self.layers)
         # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
         # TODO any model
         self.log.info(layer)

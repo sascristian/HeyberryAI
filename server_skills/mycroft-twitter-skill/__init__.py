@@ -234,7 +234,7 @@ class TwitterSkill(MycroftSkill):
     def handle_tweet_dream(self, message):
         tweet_pic_file = message.data.get("file")
         tweet_pic_url = message.data.get("dream_url")
-
+        layer = message.data.get("layer")
         possible_tweets = [
             "Deep Dreaming is awesome",
             "AI can dream",
@@ -243,7 +243,7 @@ class TwitterSkill(MycroftSkill):
             "I dream therefore I am ",
             "Am i dreaming? "]
 
-        tweet_text = random.choice(possible_tweets) + " #DeepDream"
+        tweet_text = random.choice(possible_tweets) + " #DeepDream" + " #"+layer
         if "#JarbasAI" not in tweet_text:
             tweet_text += " #JarbasAI"
         if "#MycroftAI" not in tweet_text:
