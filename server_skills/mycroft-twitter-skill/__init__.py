@@ -161,9 +161,13 @@ class TwitterSkill(MycroftSkill):
                            "Help me get more abilities",
                            "Support my existence"]
 
-        patreon = random.choice(possible_tweets)+" https://www.patreon.com/jarbasAI #Patreon"
-        self.twitter.api.update_status(status=patreon)
-        self.speak("Successfully posted patreon link to twitter.  What I posted is: {}".format(patreon))
+        tweet_text = random.choice(possible_tweets)+" https://www.patreon.com/jarbasAI #Patreon"
+        if "#JarbasAI" not in tweet_text:
+            tweet_text += " #JarbasAI"
+        if "#MycroftAI" not in tweet_text:
+            tweet_text += "#MycroftAI"
+        self.twitter.api.update_status(status=tweet_text)
+        self.speak("Successfully posted patreon link to twitter.  What I posted is: {}".format(tweet_text))
 
     def handle_tweet_request(self, message):
         tweet_type = message.data.get("tweet_type", "text")
