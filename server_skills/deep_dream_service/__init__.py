@@ -51,7 +51,7 @@ class Dream():
     def wait(self):
         self.waiting = True
         while self.waiting:
-            sleep(1)
+            time.sleep(1)
 
     def end_wait(self, message):
         self.waiting = False
@@ -185,7 +185,8 @@ class DreamService(MycroftSkill):
         self.emitter.emit(Message("deep_dream_result",
                                   {"dream_url": link, "file": result, "elapsed_time": elapsed_time},
                                   message.context))
-        self.emitter.emit(Message("tweet_request",
+        if result is not None:
+            self.emitter.emit(Message("tweet_request",
                                   {"tweet_pic": result, "tweet_text": "deep dreaming #JarbasAI", "tweet_type": "image"},
                                   message.context))
 
@@ -207,6 +208,10 @@ class DreamService(MycroftSkill):
         arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
         img = cv2.imdecode(arr, -1)  # 'load it as it is'
         dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
+        if dreampic is None:
+            self.log.error("Could not load seed dream pic " + imagepah)
+            self.speak("I can't dream without a seed.. retry later")
+            return
         image = bc.dream(np.float32(dreampic), end=layer, iter_n=iter)
         # write the output image to file
         result = Image.fromarray(np.uint8(image))
