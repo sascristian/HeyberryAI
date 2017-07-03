@@ -124,7 +124,7 @@ def answer_id(sock):
 
 
 def get_answer(utterance, context):
-    logger.debug("emitting utterance to bus: " + utterance)
+    logger.debug("emitting utterance to bus: " + str(utterance))
     ws.emit(
        Message("recognizer_loop:utterance",
                {'utterances': [utterance.strip()]}, context))
