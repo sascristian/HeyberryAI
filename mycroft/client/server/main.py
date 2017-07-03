@@ -252,7 +252,7 @@ def main():
                                     context = {}
                                 if "source" not in context.keys():
                                     if sock_num in names.keys():
-                                        context["source"] = names[sock_num]
+                                        context["source"] = names[sock_num][0]
                                     else:
                                         context["source"] = "unknown"
                                 if "mute" not in context.keys():
