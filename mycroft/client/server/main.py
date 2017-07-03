@@ -253,6 +253,7 @@ def main():
                             logger.debug(
                                 "received: " + str(utterance).strip() + " from socket: " + sock_num + " from ip: " + ip)
                             deserialized_message = Message.deserialize(utterance)
+                            logger.debug("Message type: " + deserialized_message.type )
                             if deserialized_message.type in allowed_bus_messages:
                                 data = deserialized_message.data
                                 # build context
@@ -266,7 +267,7 @@ def main():
                                         context["source"] = "unknown"
                                 if "mute" not in context.keys():
                                     context["mute"] = True
-                                context["source"] = context["source"] + ":" + sock_num
+                                context["source"] = str(context["source"]) + ":" + sock_num
                                 # TODO authorize user
                                 if sock_num in users.keys():
                                     user = users[sock_num]
