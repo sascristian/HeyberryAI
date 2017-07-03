@@ -168,8 +168,8 @@ class StyleTransferSkill(MycroftSkill):
         self.log.info("Style transfer result received " + message.data.get("url"))
 
     def handle_style_transfer_intent(self, message):
-        style_img = dirname(__file__) + "/giger.jpg"
-        target_img = dirname(__file__) + "/deepdraw.png"
+        style_img = dirname(__file__) + "/scream.jpg"
+        target_img = dirname(__file__) + "/obama.jpg"
         iter_num = message.data.get("iter_num", 300)
         self.speak("testing style transfer")
         transfer = StyleTransferTool(self.emitter)
@@ -180,11 +180,13 @@ class StyleTransferSkill(MycroftSkill):
 
     def handle_style_transfer(self, message):
         self.context = message.context
-        name = message.data.get("name", time.asctime().replace(" ", "_"))
+        name = message.data.get("name")
         style_img = message.data.get("style_img", dirname(__file__) + "/giger.jpg")
         target_img = message.data.get("target_img")
         iter_num = message.data.get("iter_num", 512)
         speak = message.data.get("speak", True)
+        if name is None:
+            name = time.asctime().replace(" ", "_")
         # load images
         try:
             img_style = self.load_image(style_img)
@@ -479,7 +481,7 @@ class StyleTransfer(object):
         return x0
 
     def transfer_style(self, img_style, img_content, length=512, ratio=1e5,
-                       n_iter=512, init="-1", verbose=False, callback=None):
+                       n_iter=512, init="-1", verbose=False, callback=None, context=None):
         """
             Transfers the style of the artwork to the input image.
             :param numpy.ndarray img_style:
