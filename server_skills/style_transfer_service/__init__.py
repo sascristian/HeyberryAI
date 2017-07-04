@@ -168,6 +168,8 @@ class StyleTransferSkill(MycroftSkill):
         self.log.info("Style transfer result received " + message.data.get("url"))
 
     def handle_style_transfer_intent(self, message):
+        if message.context is None:
+            message.context = self.context
         style_img = dirname(__file__) + "/scream.jpg"
         target_img = dirname(__file__) + "/obama.jpg"
         iter_num = message.data.get("iter_num", 300)
@@ -179,7 +181,8 @@ class StyleTransferSkill(MycroftSkill):
         self.speak("Style transfer test complete in " + str(time) + " seconds", metadata={"file": file, "url": url, "elapsed_time": time})
 
     def handle_style_transfer(self, message):
-        self.context = message.context
+        if message.context is not None:
+            self.context.update(message.context)
         name = message.data.get("name")
         style_img = message.data.get("style_img", dirname(__file__) + "/giger.jpg")
         target_img = message.data.get("target_img")
@@ -386,10 +389,14 @@ class StyleTransfer(object):
         if self.log is not None:
             self.log.info("Loading model " + model_name)
         self.load_model(model_file, pretrained_file, mean_file)
+        if self.log is not None:
+            self.log.info("Loading weights")
         self.weights = weights.copy()
         self.layers = []
         for layer in self.net.blobs:
             if layer in self.weights["style"] or layer in self.weights["content"]:
+                if self.log is not None:
+                    self.log.info("Loading layer " + layer)
                 self.layers.append(layer)
 
         # set the callback function
