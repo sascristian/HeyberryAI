@@ -47,13 +47,17 @@ class ArtSkill(MycroftSkill):
         self.emitter.emit(Message("art_request", {}, self.context))
 
     def handle_psy_pic(self, message):
-        pic = psy_art(self.psypath, 1, message.data.get("name"))[0]
-        link = None
-        if pic is not None:
-            data = self.client.upload_from_path(pic)
-            link = data["link"]
-            self.speak("Here is what i created", metadata={"url": link, "file": pic})
-        self.emitter.emit(Message("art_result", {"file": pic, "url": link}, self.context))
+        try:
+
+            pic = psy_art(self.psypath, 1, message.data.get("name"))[0]
+            link = None
+            if pic is not None:
+                data = self.client.upload_from_path(pic)
+                link = data["link"]
+                self.speak("Here is what i created", metadata={"url": link, "file": pic})
+            self.emitter.emit(Message("art_result", {"file": pic, "url": link}, self.context))
+        except Exception as e:
+            self.speak(str(e))
 
     def stop(self):
         pass
