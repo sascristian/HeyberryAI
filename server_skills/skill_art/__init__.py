@@ -35,7 +35,7 @@ class ArtSkill(MycroftSkill):
                     client_id = 'xx'
                     client_secret = 'yyyyyyyyy'
 
-            self.client = ImgurClient(client_id, client_secret)
+        self.client = ImgurClient(client_id, client_secret)
 
     def initialize(self):
         psy_intent = IntentBuilder("PsyArtIntent").require("psyart").build()
