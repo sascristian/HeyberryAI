@@ -214,7 +214,7 @@ class StyleTransferSkill(MycroftSkill):
             st = StyleTransfer(model_name, model_file, pretrained_file, mean_file, weights, logger=self.log)
         except Exception as e:
             self.log.error(e)
-            self.send_result()
+            self.send_result(error = e)
             return
         # perform style transfer
         self.log.info("starting style transfer")
@@ -234,7 +234,9 @@ class StyleTransferSkill(MycroftSkill):
         self.log.info("Output saved to {0}.".format(out_path))
         self.send_result(out_path, e_time)
 
-    def send_result(self, out_path=None, e_time=None):
+    def send_result(self, out_path=None, e_time=None, error=None):
+        if error is not None:
+            self.speak(error)
         msg_type = "style_transfer_result"
         msg_data = {"file": None, "url": None, "elapsed_time": e_time}
         if out_path is not None:
@@ -252,7 +254,7 @@ class StyleTransferSkill(MycroftSkill):
         msg_data["file"] = out_path
         self.emitter.emit(Message(msg_type,
                                   msg_data, self.context))
-        self.speak("style transfer result:",
+        self.speak("style transfer result: " + out_path + " " + str(e_time),
                    metadata=msg_data)
 
     def stop(self):
