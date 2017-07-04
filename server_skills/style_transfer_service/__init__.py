@@ -389,8 +389,14 @@ class StyleTransfer(object):
         self.log = logger
         # add model and weights
         if self.log is not None:
-            self.log.info("Loading model " + model_name + " " + model_file + " " + pretrained_file + " " + mean_file)
-        self.load_model(model_file, pretrained_file, mean_file)
+            self.log.info("Loading model " + model_name)
+        if not os.path.isfile(model_file):
+            self.log.error(model_name + " could not be found in path, check requirements.sh for download")
+            self.abort = True
+            return
+        else:
+            self.abort = False
+            self.load_model(model_file, pretrained_file, mean_file)
         if self.log is not None:
             self.log.info("Loading weights")
         self.weights = weights.copy()
@@ -500,7 +506,9 @@ class StyleTransfer(object):
             :param function callback:
                 A callback function, which takes images at iterations.
         """
-
+        if self.abort:
+            self.log.error("no model")
+            return
         # assume that convnet input is square
         orig_dim = min(self.net.blobs["data"].shape[2:])
 
