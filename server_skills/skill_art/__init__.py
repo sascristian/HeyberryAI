@@ -44,7 +44,7 @@ class ArtSkill(MycroftSkill):
         self.emitter.on("art_request", self.handle_psy_pic)
 
     def handle_psy_pic_intent(self, message):
-        self.emitter.emit(Message("art_request", {}))
+        self.emitter.emit(Message("art_request", {}, self.context))
 
     def handle_psy_pic(self, message):
         pic = psy_art(self.psypath, 1, message.data.get("name"))[0]
@@ -53,7 +53,7 @@ class ArtSkill(MycroftSkill):
             data = self.client.upload_from_path(pic)
             link = data["link"]
             self.speak("Here is what i created", metadata={"url": link, "file": pic})
-        self.emitter.emit(Message("art_result", {"file": pic, "url": link}))
+        self.emitter.emit(Message("art_result", {"file": pic, "url": link}, self.context))
 
     def stop(self):
         pass
