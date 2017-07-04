@@ -23,6 +23,7 @@ import requests
 from adapt.intent import IntentBuilder
 
 import random, sys, time
+import os
 from os.path import dirname
 from threading import Thread
 from time import sleep, asctime
@@ -634,7 +635,12 @@ class FacebookSkill(MycroftSkill):
         self.reload_skill = False
         self.mail = self.config['mail']
         self.passwd = self.config['passwd']
-        self.fb_settings = SkillSettings(dirname(__file__) + '/settings.json')
+        try:
+            self.fb_settings = SkillSettings(dirname(__file__) + '/settings.json')
+        except Exception as e:
+            self.log.error("Error with skill settings, attempting reset")
+            os.remove(dirname(__file__) + '/settings.json')
+            self.fb_settings = SkillSettings(dirname(__file__) + '/settings.json')
         self.selenium_cookies = True
         # chat client active
         self.active = self.config.get('chat_client', True)
