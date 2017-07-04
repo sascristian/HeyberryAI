@@ -214,7 +214,7 @@ class StyleTransferSkill(MycroftSkill):
             st = StyleTransfer(model_name, model_file, pretrained_file, mean_file, weights, logger=self.log)
         except Exception as e:
             self.log.error(e)
-            self.send_result(error = e)
+            self.speak(e)
             return
         # perform style transfer
         self.log.info("starting style transfer")
@@ -389,7 +389,7 @@ class StyleTransfer(object):
         self.log = logger
         # add model and weights
         if self.log is not None:
-            self.log.info("Loading model " + model_name)
+            self.log.info("Loading model " + model_name + " " + model_file + " " + pretrained_file + " " + mean_file)
         self.load_model(model_file, pretrained_file, mean_file)
         if self.log is not None:
             self.log.info("Loading weights")
