@@ -143,6 +143,7 @@ class TwitterSkill(MycroftSkill):
         self.emitter.on("deep_dream_result", self.handle_tweet_dream)
         self.emitter.on("style_transfer_result", self.handle_tweet_style_transfer)
         self.emitter.on("inspirobot_result", self.handle_tweet_inspirobot)
+        self.emitter.on("art_result", self.handle_tweet_psyart)
 
     # The "handle_xxxx_intent" functions define Mycroft's behavior when
     # each of the skill's intents is triggered: in this case, he simply
