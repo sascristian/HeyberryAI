@@ -390,6 +390,34 @@ class TwitterSkill(MycroftSkill):
         self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
         self.speak("Successfully posted inspirobot to twitter.  What I posted is: {}".format(tweet_text))
 
+    def handle_tweet_psyart(self, message):
+        tweet_pic_file = message.data.get("file")
+        tweet_pic_url = message.data.get("url")
+
+        possible_tweets = [
+            "Creating psychedelic art with mathematics",
+            "math = art",
+            "math, art, what's the the difference",
+            "math + AI = art"]
+
+        tweet_text = random.choice(possible_tweets) + " #PsyArt"
+        if "#JarbasAI" not in tweet_text:
+            tweet_text += " #JarbasAI"
+        if "#MycroftAI" not in tweet_text:
+            tweet_text += " #MycroftAI"
+        tweet_type = "text"
+        if tweet_pic_url:
+            self.tweet_image_from_url(tweet_pic_url, tweet_text)
+            tweet_type = "remote_image"
+        elif tweet_pic_file:
+            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
+            tweet_type = "image"
+        else:
+            self.log.error("Tweet Failed")
+            return
+        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
+        self.speak("Successfully posted psy art to twitter.  What I posted is: {}".format(tweet_text))
+
     # The "stop" method defines what Mycroft does when told to stop during
     # the skill's execution. In this case, since the skill's functionality
     # is extremely simple, the method just contains the keyword "pass", which
