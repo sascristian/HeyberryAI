@@ -23,17 +23,17 @@ class ArtSkill(MycroftSkill):
         # check if folders exist
         if not os.path.exists(self.psypath):
             os.makedirs(self.psypath)  # TODO get from config
-            try:
-                client_id = self.config_core.get("APIS")["ImgurKey"]
-                client_secret = self.config_core.get("APIS")["ImgurSecret"]
-            except:
-                if self.config is not None:
-                    client_id = self.config.get("ImgurKey")
-                    client_secret = self.config.get("ImgurSecret")
-                else:
-                    # TODO throw error
-                    client_id = 'xx'
-                    client_secret = 'yyyyyyyyy'
+        try:
+            client_id = self.config_core.get("APIS")["ImgurKey"]
+            client_secret = self.config_core.get("APIS")["ImgurSecret"]
+        except:
+            if self.config is not None:
+                client_id = self.config.get("ImgurKey")
+                client_secret = self.config.get("ImgurSecret")
+            else:
+                # TODO throw error
+                client_id = 'xx'
+                client_secret = 'yyyyyyyyy'
 
         self.client = ImgurClient(client_id, client_secret)
 
