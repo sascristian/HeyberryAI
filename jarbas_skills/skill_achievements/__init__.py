@@ -87,7 +87,7 @@ class AchievementsSkill(MycroftSkill):
             self.add_achievement("tts")
         elif "image_classification_result" in type:
             self.add_achievement("googlenet classification")
-        elif "vision_result" in type and len(message.data.get("num_persons", 0)) > 0:
+        elif "vision_result" in type and len(message.get("data", {}).get("num_persons", 0)) > 0:
             self.add_achievement("first face detection")
         elif "class_visualization_result" in type:
             self.add_achievement("deep draw")

@@ -145,23 +145,18 @@ class VisionSkill(MycroftSkill):
         self.filter = "None"
 
     def emit_result(self, path, server=False):
+        requester = "vision_service"
+        message_type = "vision_result"
+        message_data = {"movement": self.movement, "master": self.master, "distance": self.distance,
+                        "num_persons": self.num_persons, "smile_detected": self.smiling}
+        message_data["file"] = path
         if server:
             # send server a message
             stype = "file"
-            requester = "vision_service"
-            message_type = "vision_result"
-            message_data = {"movement": self.movement, "master": self.master, "distance": self.distance,
-                            "num_persons": self.num_persons, "smile_detected": self.smiling}
-            message_data["file"] = path
             self.emitter.emit(Message("server_request",
                                       {"server_msg_type": stype, "requester": requester, "message_type": message_type,
                                        "message_data": message_data}, self.context))
-        else:
-            message_type = "vision_result"
-            message_data = {"movement": self.movement, "master": self.master, "distance": self.distance,
-                            "num_persons": self.num_persons, "smile_detected": self.smiling, "target": source}
-            message_data["file"] = path
-            self.emitter.emit(Message(message_type, message_data, self.context))
+        self.emitter.emit(Message(message_type, message_data, self.context))
 
     def handle_vision_request(self, message):
         self.process_frame()
