@@ -24,8 +24,8 @@
 # skills loaded from Github.  
 
 set -e
-
-mycroft_skill_folder="/opt/mycroft/skills"
+TOP=$(cd $(dirname $0) && pwd -L)
+mycroft_skill_folder=${TOP}/jarbas_skills
 mycroft_virtualenv=~/.virtualenvs/mycroft/bin/activate
 
 echo "#######  Mycroft Skill Manager #######"
@@ -105,7 +105,7 @@ function update() {
 }
 
 function install_defaults() {
-	skills=( "alarm" "audio-record" "configuration" "date-time" "desktop-launcher" "ip" "joke" "hello-world" "media" "npr-news" "naptime" "pairing" "personal" "reminder" "installer" "singing" "speak" "spelling" "stop" "stock" "volume" "weather" "wiki" "wolfram-alpha" "mark1-demo" )
+	skills=( "alarm" "audio-record" "configuration" "date-time" "desktop-launcher" "ip" "joke" "hello-world" "media" "npr-news" "naptime" "pairing" "personal" "reminder" "installer" "singing" "speak" "spelling" "stop" "stock" "volume" "weather" "wiki" "wolfram-alpha" "mark1-demo" "playback-control" )
 	for i in "${skills[@]}"
 	do
 		if [ ! -d "$mycroft_skill_folder/skill-$i" ]; then

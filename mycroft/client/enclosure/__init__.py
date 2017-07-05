@@ -318,16 +318,14 @@ class Enclosure(object):
     def __register_mouth_events(self, event=None):
         self.ws.on('recognizer_loop:record_begin', self.mouth.listen)
         self.ws.on('recognizer_loop:record_end', self.mouth.reset)
-        self.ws.on('recognizer_loop:audio_output_start', self.mouth.talk)
-        self.ws.on('recognizer_loop:audio_output_end', self.mouth.reset)
+        self.ws.on('mycroft.audio.speech.start', self.mouth.talk)
+        self.ws.on('mycroft.audio.speech.end', self.mouth.reset)
 
     def __remove_mouth_events(self, event=None):
         self.ws.remove('recognizer_loop:record_begin', self.mouth.listen)
         self.ws.remove('recognizer_loop:record_end', self.mouth.reset)
-        self.ws.remove('recognizer_loop:audio_output_start',
-                       self.mouth.talk)
-        self.ws.remove('recognizer_loop:audio_output_end',
-                       self.mouth.reset)
+        self.ws.remove('mycroft.audio.speech.start', self.mouth.talk)
+        self.ws.remove('mycroft.audio.speech.end', self.mouth.reset)
 
     def __reset(self, event=None):
         # Reset both the mouth and the eye elements to indicate the unit is

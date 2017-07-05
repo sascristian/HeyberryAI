@@ -1,0 +1,2 @@
+(go to|change to|set) (run level|level) (?P<Level>.*)
+(go to|change to|set) (?P<Level>.*) (run level|level)

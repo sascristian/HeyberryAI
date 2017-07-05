@@ -1,5 +1,12 @@
 # intent parser
 
+
+it is now possible to get intents from utterances, or skills ids from intents, by using intent parser helper class
+
+
+
+# example usage inside converse method
+
         from mycroft.skills.intent_service import IntentParser
 
         def initialize(self):
@@ -12,10 +19,13 @@
             if id == 0:
                 # no intent will be triggered
                 pass
+            elif id == self.skill_id:
+                # a intent inside this skill will trigger
+                pass
             elif id != self.skill_id:
-                # no longer inside this conversation
+                # a intent from skill with id will trigger
+                # we could also get skill_id for intent by doing
                 skill_id = self.intent_parser.get_skill_id(intent)
-                # utterance will trigger skill_id
                 self.intercept_flag = True
 
             if self.intercept_flag:

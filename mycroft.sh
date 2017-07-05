@@ -38,6 +38,8 @@ start options:
       -v, --voice    only voice client
       -c, --cli      only cli
       -d, --debug    only cli, in current terminal
+      -s, --server   server mode
+      -cl, --client  client mode
 
 restart options:
       (same as start)
@@ -126,6 +128,7 @@ case "$1" in
 "start")
   $0 stop
   start-mycroft service
+  start-mycroft audio
   start-mycroft skills
 
   case "$2" in
@@ -142,6 +145,12 @@ case "$1" in
   "-d"|"--debug")
     start-mycroft-debug cli
     ;;
+  "-s"|"--server")
+    start-mycroft server
+    ;;
+  "-cl"|"--client")
+    start-mycroft client
+    ;;
   *)
     echo "Usage"
     usage-exit
@@ -155,8 +164,22 @@ case "$1" in
   stop-mycroft skills
   stop-mycroft voice
   stop-mycroft cli
+  stop-mycroft client
+  stop-mycroft server
+  stop-mycroft audio
   ;;
 
+"restart")
+  case "$2" in
+  ""|"-v"|"--voice"|"-c"|"--cli"|"-d"|"--debug")
+    $0 stop
+    $0 start $2
+    ;;
+  *)
+    usage-exit
+    ;;
+  esac
+  ;;
 *)
   usage-exit
   ;;

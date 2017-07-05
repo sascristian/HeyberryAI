@@ -27,42 +27,52 @@
 # exit on any error
 set -Ee
 
-if [ $(id -u) -eq 0 ]; then
-  echo "This script should not be run as root or with sudo."
-  exit 1
-fi
+#if [ $(id -u) -eq 0 ]; then
+#  echo "This script should not be run as root or with sudo."
+#  exit 1
+#fi
 
 TOP=$(cd $(dirname $0) && pwd -L)
 
-if [ -z "$WORKON_HOME" ]; then
-    VIRTUALENV_ROOT=${VIRTUALENV_ROOT:-"${HOME}/.virtualenvs/mycroft"}
-else
-    VIRTUALENV_ROOT="$WORKON_HOME/mycroft"
-fi
+#if [ -z "$WORKON_HOME" ]; then
+#    VIRTUALENV_ROOT=${VIRTUALENV_ROOT:-"${HOME}/.virtualenvs/mycroft"}
+#else
+#    VIRTUALENV_ROOT="$WORKON_HOME/mycroft"
+#fi
 
 # create virtualenv, consistent with virtualenv-wrapper conventions
-if [ ! -d ${VIRTUALENV_ROOT} ]; then
-   mkdir -p $(dirname ${VIRTUALENV_ROOT})
-  virtualenv -p python2.7 ${VIRTUALENV_ROOT}
-fi
-source ${VIRTUALENV_ROOT}/bin/activate
+#if [ ! -d ${VIRTUALENV_ROOT} ]; then
+#   mkdir -p $(dirname ${VIRTUALENV_ROOT})
+#  virtualenv -p python2.7 ${VIRTUALENV_ROOT}
+#fi
+#source ${VIRTUALENV_ROOT}/bin/activate
 cd ${TOP}
 easy_install pip==7.1.2 # force version of pip
-pip install --upgrade virtualenv
+#pip install --upgrade virtualenv
 
 # install requirements (except pocketsphinx)
 pip2 install -r requirements.txt 
 
-CORES=$(nproc)
-echo Building with $CORES cores.
+if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
+  CORES=1
+else
+  CORES=$(nproc)
+fi
+
+echo "Building with $CORES cores."
 
 #build and install pocketsphinx
 #cd ${TOP}
 #${TOP}/scripts/install-pocketsphinx.sh -q
+
 #build and install mimic
-cd ${TOP}
-${TOP}/scripts/install-mimic.sh
+cd "${TOP}"
+echo "WARNING: The following can take a long time to run!"
+"${TOP}/scripts/install-mimic.sh"
 
 # install pygtk for desktop_launcher skill
 ${TOP}/scripts/install-pygtk.sh
+
+# copy geckodriver to usr/bin for browser service
+cp ${TOP}/geckodriver /usr/bin
 

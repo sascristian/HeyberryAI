@@ -1,0 +1,4 @@
+(reload|load|start|restart) (skill id|skill with id) (?P<Skill_Reload>.*)
+(reload skill|load skill|start skill|restart skill) (?P<Skill_Reload>.*)
+(reload|load|start|restart) (?P<Skill_Reload>.*) (skill)
+(skill) (reload|load|start|restart) (?P<Skill_Reload>.*)

@@ -1,0 +1,5 @@
+(ask cleverbot) (?P<Ask>.*)
+(query cleverbot) (?P<Ask>.*)
+(what does cleverbot say about) (?P<Ask>.*)
+(say) (?P<Ask>.*) (to cleverbot)
+(tell) (?P<Ask>.*) (to cleverbot)

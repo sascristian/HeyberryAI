@@ -42,3 +42,12 @@ pyric==0.1.6
 inflection==0.3.1
 uuid==1.30
 pytz==2017.2
+pychromecast==0.7.7
+python-vlc==1.1.2
+fbchat>=1.0.3
+fuzzywuzzy
+pyvirtualdisplay
+selenium
+mock
+numpy
+imutils

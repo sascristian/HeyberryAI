@@ -24,5 +24,10 @@ sudo apt-get install -y \
     curl \
     libicu-dev \
     pkg-config \
-    automake
+    automake \
+    xvfb \
+    firefox \
+    cvlc \
+    libopencv-dev \
+    python-opencv
 

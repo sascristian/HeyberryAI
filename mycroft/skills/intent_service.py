@@ -18,12 +18,16 @@
 
 from adapt.engine import IntentDeterminationEngine
 import time
+from time import sleep
+from threading import Timer
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import open_intent_envelope
 from mycroft.util.log import getLogger
 from mycroft.util.parse import normalize
 
 __author__ = 'seanfitz'
+
+source_name = "server_skills"
 
 logger = getLogger(__name__)
 
@@ -54,6 +58,7 @@ class IntentService(object):
         t = 0
         while self.waiting and t < 5:
             t = time.time() - start_time
+            sleep(0.1)
         self.waiting = False
         return self.result
 
@@ -114,19 +119,35 @@ class IntentService(object):
             skill_id = int(best_intent['intent_type'].split(":")[0])
             intent_name = best_intent['intent_type'].split(":")[1]
             self.emitter.emit(Message("intent_response", {
-                "skill_id": skill_id, "utterance": utterance, "lang": lang, "intent_name": intent_name}))
+                "skill_id": skill_id, "utterance": utterance, "lang": lang, "intent_name": intent_name}, message.context))
             return True
         self.emitter.emit(Message("intent_response", {
-            "skill_id": 0, "utterance": utterance, "lang": lang, "intent_name": ""}))
+            "skill_id": 0, "utterance": utterance, "lang": lang, "intent_name": ""}, message.context))
         return False
 
+    def get_context(self, context=None):
+        if context is None:
+            context = {}
+        # by default set destinatary of reply to source of this message
+        context["destinatary"] = context.get("source", "all")
+        context["mute"] = context.get("mute", False)
+        context["source"] = source_name
+        return context
+
     def handle_utterance(self, message):
+        # Check if this message is for us
+        if message.context is None:
+            message.context = {}
+        destinatary = message.context.get("destinatary", "skills")
+        if destinatary != "skills" and destinatary != "all":
+            return
         # Get language of the utterance
         lang = message.data.get('lang', None)
         if not lang:
             lang = "en-us"
 
         utterances = message.data.get('utterances', '')
+        context = self.get_context(message.context)
         # check for conversation time-out
         self.active_skills = [skill for skill in self.active_skills
                               if time.time() - skill[1] <= self.converse_timeout * 60]
@@ -140,13 +161,6 @@ class IntentService(object):
                 return
                 # no skill wants to handle utterance, proceed
 
-        source = message.data.get("source")
-        target = message.data.get("target")
-        mute = message.data.get("mute")
-        if target is None:
-            target = source
-        if mute is None:
-            mute = False
         best_intent = None
         for utterance in utterances:
             try:
@@ -161,10 +175,8 @@ class IntentService(object):
                 continue
 
         if best_intent and best_intent.get('confidence', 0.0) > 0.0:
-            best_intent["target"] = target
-            best_intent["mute"] = mute
             reply = message.reply(
-                best_intent.get('intent_type'), best_intent)
+                best_intent.get('intent_type'), best_intent, context)
             self.emitter.emit(reply)
             # update active skills
             skill_id = int(best_intent['intent_type'].split(":")[0])
@@ -174,12 +186,12 @@ class IntentService(object):
             self.emitter.emit(Message("intent_failure", {
                 "utterance": utterances[0],
                 "lang": lang
-            }))
+            }, context))
         else:
             self.emitter.emit(Message("multi_utterance_intent_failure", {
                 "utterances": utterances,
                 "lang": lang
-            }))
+            }, context))
 
     def handle_register_vocab(self, message):
         start_concept = message.data.get('start')
@@ -234,6 +246,7 @@ class IntentParser():
         t = 0
         while self.waiting and t < self.time_out:
             t = time.time() - start_time
+            sleep(0.1)
         return self.intent, self.id
 
     def get_skill_id(self, intent_name):
@@ -244,6 +257,7 @@ class IntentParser():
         t = 0
         while self.waiting and t < self.time_out:
             t = time.time() - start_time
+            sleep(0.1)
         self.waiting = False
         return self.id
 
@@ -255,3 +269,128 @@ class IntentParser():
     def handle_receive_skill_id(self, message):
         self.id = message.data["skill_id"]
         self.waiting = False
+
+
+class IntentLayers():
+    def __init__(self, emitter, layers = [], timer = 500):
+        self.emitter = emitter
+        # make intent tree for N layers
+        self.layers = []
+        self.current_layer = 0
+        self.timer = timer
+        self.timer_thread = None
+        for layer in layers:
+            self.add_layer(layer)
+        self.activate_layer(0)
+        self.emitter.on("intent_layer_timer_end", self.stop_timer)
+
+    def disable_intent(self, intent_name):
+        """Disable a registered intent"""
+        self.emitter.emit(Message("disable_intent", {"intent_name": intent_name}))
+
+    def enable_intent(self, intent_name):
+        """Reenable a registered intent"""
+        self.emitter.emit(Message("enable_intent", {"intent_name": intent_name}))
+
+    def start_timer(self):
+
+        if self.timer_thread is not None:
+            self.stop_timer()
+
+        # set new timer
+        self.timer_thread = Timer(self.timer, self.timer_end)
+        self.timer_thread.start()
+        logger.info("New Timer Started")
+
+    def timer_end(self):
+        # on end of timer reset tree
+        logger.info("Timer Ended - resetting tree")
+        self.emitter.emit(Message("intent_layer_timer_end", {"layer": self.current_layer, "time": self.timer}))
+        self.reset()
+
+    def stop_timer(self):
+        if self.timer_thread is not None:
+            logger.info("Stopping previous timer")
+            self.timer_thread.cancel()
+            self.timer_thread = None
+
+    def reset(self):
+        logger.info("Reseting Tree")
+        self.stop_timer()
+        self.activate_layer(0)
+
+    def next(self):
+        logger.info("Going to next Tree Layer")
+        self.current_layer += 1
+        if self.current_layer > len(self.layers):
+            logger.info("Already in last layer, going to layer 0")
+            self.current_layer = 0
+        if self.current_layer != 0:
+            self.start_timer()
+        self.activate_layer(self.current_layer)
+
+    def previous(self):
+        logger.info("Going to previous Tree Layer")
+        self.current_layer -= 1
+        if self.current_layer < 0:
+            self.current_layer = len(self.layers)
+            logger.info("Already in layer 0, going to last layer")
+        if self.current_layer != 0:
+            self.start_timer()
+        self.activate_layer(self.current_layer)
+
+    def add_layer(self, intent_list=[]):
+        self.layers.append(intent_list)
+        logger.info("Adding layer to tree " + str(intent_list))
+
+    def replace_layer(self, layer_num, intent_list=[]):
+        logger.info("Removing layer number " + str(layer_num) + " from tree ")
+        self.layers.pop(layer_num)
+        self.layers[layer_num] = intent_list
+        logger.info("Adding layer" + str(intent_list) + " to tree in position " + str(layer_num) )
+
+    def remove_layer(self, layer_num):
+        self.layers.pop(layer_num)
+        logger.info("Removing layer number " + str(layer_num) + " from tree ")
+
+    def find_layer(self, intent_list=[]):
+        layer_list = []
+        for i in range(0, len(self.layers)):
+            if self.layers[i] == intent_list:
+                layer_list.append(i)
+        return layer_list
+
+    def disable(self):
+        logger.info("Disabling intent layers")
+        # disable all tree layers
+        for i in range(0, len(self.layers)):
+            self.deactivate_layer(i)
+
+    def activate_layer(self, layer_num):
+        # error check
+        if layer_num < 0 or layer_num > len(self.layers):
+            logger.error("invalid layer number")
+            return
+
+        self.current_layer = layer_num
+
+        # disable other layers
+        self.disable()
+
+        # TODO in here we should wait for all intents to be detached
+        # sometimes detach intent from this step comes after register from next
+        sleep(0.3)
+
+        # enable layer
+        logger.info("Activating Layer " + str(layer_num))
+        for intent_name in self.layers[layer_num]:
+            self.enable_intent(intent_name)
+
+    def deactivate_layer(self, layer_num):
+        # error check
+        if layer_num < 0 or layer_num > len(self.layers):
+            logger.error("invalid layer number")
+            return
+        logger.info("Deactivating Layer " + str(layer_num))
+        for intent_name in self.layers[layer_num]:
+            self.disable_intent(intent_name)
