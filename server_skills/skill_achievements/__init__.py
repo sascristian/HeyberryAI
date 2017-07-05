@@ -62,6 +62,7 @@ class AchievementsSkill(MycroftSkill):
         if name not in self.settings["achievements"].keys():
             self.settings["achievements"][name] = data
             self.settings["achievements"][name]["count"] = 0
+            self.settings["achievements"][name]["tweeted"] = False
         else:
             # update data
             count = self.settings["achievements"][name]["count"]
@@ -80,23 +81,35 @@ class AchievementsSkill(MycroftSkill):
     def handle_new_achievement(self, message):
         _message = json.loads(message)
         type = _message.get("type")
+        data = _message.get("data")
         # TODO all achievements
         if "JokingIntent" in type:
-            self.add_achievement("joke")
+            name = "joke"
         elif "speak" in type:
-            self.add_achievement("tts")
+            name = "tts"
         elif "image_classification_result" in type:
-            self.add_achievement("googlenet classification")
-        elif "vision_result" in type and len(message.data.get("num_persons", 0)) > 0:
-            self.add_achievement("first face detection")
+            name = "googlenet classification"
+        elif "vision_result" in type and data.get("num_persons", 0) > 0:
+            name = "first face detection"
         elif "class_visualization_result" in type:
-            self.add_achievement("deep draw")
+            name = "deep draw"
         elif "deep_dream_result" in type:
-            self.add_achievement("deep dream")
+            name = "deep dream"
         else:
             return
+        self.add_achievement(name)
         self.log.info("Achievement unlocked " + str(self.last_achievement))
         self.emitter.emit(Message("achievement", {"name":self.last_achievement, "achievement":self.settings["achievements"][self.last_achievement]}, self.context))
+        if not self.settings["achievements"][name]["tweeted"]:
+            text = self.settings["achievements"][self.last_achievement]["text"] + " " + self.settings["achievements"][self.last_achievement].get("url")
+            self.tweet_request(text+" #AchievementUnlocked")
+            self.settings["achievements"][name]["tweeted"] = True
+
+    def tweet_request(self, text):
+        tweet_type = "text"
+        tweet_pic = None
+        tweet_text = text
+        self.emitter.emit(Message("tweet_request", {"tweet_type": tweet_type, "tweet_pic": tweet_pic, "tweet_text": tweet_text}, self.context))
 
     def stop(self):
         pass

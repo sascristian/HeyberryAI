@@ -96,8 +96,6 @@ class TwitterSkill(MycroftSkill):
                                   self.config.get('access_token'),
                                   self.config.get('access_secret'),
                                   self.user)
-        if "achievements" not in self.settings.keys():
-            self.settings["achievements"] = {}
 
     def get_followers(self):
         user = self.twitter.api.get_user(self.user)
@@ -140,7 +138,6 @@ class TwitterSkill(MycroftSkill):
         self.emitter.on("style_transfer_result", self.handle_tweet_style_transfer)
         self.emitter.on("inspirobot_result", self.handle_tweet_inspirobot)
         self.emitter.on("art_result", self.handle_tweet_psyart)
-        self.emitter.on("achievement", self.handle_tweet_achievement)
 
     def handle_get_followers_intent(self, message):
         if message.data.get("Person"):
@@ -403,40 +400,6 @@ class TwitterSkill(MycroftSkill):
             return
         self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
         self.speak("Successfully posted psy art to twitter.  What I posted is: {}".format(tweet_text))
-
-    def handle_tweet_achievement(self, message):
-        name = message.data.get("name")
-        achievement = message.data.get("achievement", {})
-        if name not in self.settings["achievements"].keys():
-            self.settings["achievements"][name] = achievement
-            self.settings["achievements"][name]["status"] = "untweeted"
-
-        if self.settings["achievements"][name]["status"] != "untweeted":
-            return
-        tweet_pic_file = achievement.get("file")
-        tweet_pic_url = achievement.get("pic_url")
-        tweet_url = achievement.get("url")
-        tweet_text = achievement.get("text", "Small step for AI a huge step for MachineKind")
-        if tweet_url:
-            tweet_text += " " + tweet_url + " #AchievementUnlocked"
-        if "#JarbasAI" not in tweet_text:
-            tweet_text += " #JarbasAI"
-        if "#MycroftAI" not in tweet_text:
-            tweet_text += " #MycroftAI"
-
-        tweet_type = "text"
-        if tweet_pic_url:
-            self.tweet_image_from_url(tweet_pic_url, tweet_text)
-            tweet_type = "remote_image"
-        elif tweet_pic_file:
-            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
-            tweet_type = "image"
-        else:
-            self.twitter.api.update_status(status=tweet_text)
-        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
-        self.settings["achievements"][name]["status"] = "tweeted"
-        self.speak("Successfully posted achievement to twitter.  What I posted is: {}".format(tweet_text))
-        self.settings.store()
 
     def stop(self):
         pass
