@@ -188,7 +188,7 @@ class DreamService(MycroftSkill):
 
     #### dreaming functions
     def dream(self, imagepah, name=None, iter=25, layer=None):
-        self.speak("please wait while the dream is processed")
+        self.speak("please wait while the dream is processed, this can take up to 15 minutes")
         if layer is None:
             layer = random.choice(self.layers)
         # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
