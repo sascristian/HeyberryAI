@@ -144,39 +144,47 @@ class VisionSkill(MycroftSkill):
             # TODO start vision thread
         self.filter = "None"
 
+    def emit_result(self, path, server=False):
+        if server:
+            # send server a message
+            stype = "file"
+            requester = "vision_service"
+            message_type = "vision_result"
+            message_data = {"movement": self.movement, "master": self.master, "distance": self.distance,
+                            "num_persons": self.num_persons, "smile_detected": self.smiling}
+            message_data["file"] = path
+            self.emitter.emit(Message("server_request",
+                                      {"server_msg_type": stype, "requester": requester, "message_type": message_type,
+                                       "message_data": message_data}, self.context))
+        else:
+            message_type = "vision_result"
+            message_data = {"movement": self.movement, "master": self.master, "distance": self.distance,
+                            "num_persons": self.num_persons, "smile_detected": self.smiling, "target": source}
+            message_data["file"] = path
+            self.emitter.emit(Message(message_type, message_data, self.context))
+
     def handle_vision_request(self, message):
         self.process_frame()
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
         source = message.context.get("source")
         if source is not None and "server" in source:
-            # send server a message
-            stype = "file"
-            requester = "vision_service"
-            message_type = "vision_result"
-            message_data = {"movement":self.movement, "master":self.master, "distance":self.distance, "num_persons":self.num_persons, "smile_detected":self.smiling}
-            message_data["file"] = path
-            self.emitter.emit(Message("server_request", {"server_msg_type":stype, "requester":requester, "message_type": message_type, "message_data": message_data}, self.context))
+            self.emit_result(path, True)
         else:
-            message_type = "vision_result"
-            message_data = {"movement": self.movement, "master": self.master, "distance": self.distance,
-                            "num_persons": self.num_persons, "smile_detected": self.smiling, "target":source}
-            message_data["file"] = path
-            self.emitter.emit(Message(message_type, message_data, self.context))
+            self.emit_result(path, False)
+
 
     # intents
     def handle_webcam_intent(self, message):
         self.process_frame()
         self.speak_dialog("webcam")
         path = self.save_feed(self.webcam_path+"/"+asctime()+".jpg")
+        self.emit_result(path, False)
         #self.display_service.show(path)
 
     def handle_vision_data_intent(self, message):
         self.process_frame()
         self.speak("There are " + str(self.num_persons) + " persons on view")
-        if self.smiling:
-            self.speak("I detect smiling")
-        else:
-            self.speak("Noone is smiling")
+        self.emit_result(path, False)
         # TODO more context, movement, face recog
 
     def handle_reset_vision_intent(self, message):
@@ -186,13 +194,15 @@ class VisionSkill(MycroftSkill):
 
     def handle_what_do_you_see_intent(self, message):
         self.process_frame()
-        feed_path = self.save_feed()
+        path = self.save_feed()
         #self.display_service.show(feed_path)
         self.speak_dialog("vision")
+        self.emit_result(path, False)
 
     def handle_describe_what_do_you_see_intent(self, message):
         self.process_frame()
         feed_path = self.save_feed()
+        self.emit_result(feed_path, False)
         classifier = ImageRecognitionService(self.emitter)
         results = classifier.server_image_classification(feed_path, self.context)
         i = 0
