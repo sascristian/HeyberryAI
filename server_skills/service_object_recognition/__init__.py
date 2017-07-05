@@ -23,16 +23,9 @@ from mycroft.util.log import getLogger
 import os
 import sys
 import cv2
-import time
-import multiprocessing
 import numpy as np
 import tensorflow as tf
-import datetime
-from threading import Thread
-from multiprocessing import Process, Queue, Pool
 from os.path import dirname
-from imutils.video import FPS
-from imutils.video import WebcamVideoStream
 
 sys.path.append('/opt/mycroft/skills/skill-realtime-object-recognition')
 
