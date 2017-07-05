@@ -85,7 +85,7 @@ class AchievementsSkill(MycroftSkill):
         _message = json.loads(message)
         type = _message.get("type")
         data = _message.get("data")
-        # TODO all achievements
+        # TODO all achievements intent/stt/story/poem/bitcoin
         if "JokingIntent" in type:
             name = "joke"
         elif "speak" in type:
@@ -100,6 +100,10 @@ class AchievementsSkill(MycroftSkill):
             name = "deep dream"
         elif "inspirobot" in type:
             name = "inspirobot"
+        elif "tweet_post" in type:
+            name = "tweet"
+        elif "style_transfer_result" in type:
+            name = "style transfer"
         else:
             return
         self.add_achievement(name)
