@@ -34,8 +34,11 @@ class AchievementsSkill(MycroftSkill):
         self.last_achievement = None
 
     def add_standard_achievements(self):
+        self.add_achievement("inspirobot", {"timestamp": None, "text": "Asked Inspirobot for a quote",
+                                                "url": "http://http://inspirobot.me/"})
+
         self.add_achievement("face detection", {"timestamp": None, "text": "Detected faces using haar cascades!", "url":"https://pythonprogramming.net/haar-cascade-object-detection-python-opencv-tutorial/"})
-        self.add_achievement("joke", {"timestamp": None, "text": "Said a joke"})
+        self.add_achievement("joke", {"timestamp": None, "text": "Said a joke", "url": "https://github.com/pyjokes/pyjokes"})
         self.add_achievement("facebook photo like", {"timestamp": None, "text": "Liked a photo on Facebook",
                                                        "url": "https://www.facebook.com/profile.php?id=100017774057242"})
         self.add_achievement("facebook friend", {"timestamp": None, "text": "Added a friend on Facebook",
@@ -44,7 +47,7 @@ class AchievementsSkill(MycroftSkill):
                                              "url": "https://www.facebook.com/profile.php?id=100017774057242"})
         self.add_achievement("tweet", {"timestamp": None, "text": "Twitter bot unlocked",
                                           "url": "https://github.com/btotharye/mycroft-twitter-skill/"})
-        self.add_achievement("tts", {"timestamp": None, "text": "i speak therefore i am", "url": "https://en.wikipedia.org/wiki/Speech_synthesis#Text-to-speech_systems"})
+        self.add_achievement("tts", {"timestamp": None, "text": "i speak therefore i am", "url": "https://mimic.mycroft.ai/"})
         self.add_achievement("deep dream", {"timestamp": None, "text": "deep dreaming performed", "url": "http://www.pyimagesearch.com/2015/07/06/bat-country-an-extendible-lightweight-python-package-for-deep-dreaming-with-caffe-and-convolutional-neural-networks/"})
         self.add_achievement("deep draw", {"timestamp": None, "text": "deep draw performed", "url": "https://www.auduno.com/2015/08/04/drawing-with-googlenet/"})
         self.add_achievement("style transfer", {"timestamp": None, "text": "style transfer performed",
@@ -95,6 +98,8 @@ class AchievementsSkill(MycroftSkill):
             name = "deep draw"
         elif "deep_dream_result" in type:
             name = "deep dream"
+        elif "inspirobot" in type:
+            name = "inspirobot"
         else:
             return
         self.add_achievement(name)
