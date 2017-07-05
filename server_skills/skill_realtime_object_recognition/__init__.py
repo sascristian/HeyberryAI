@@ -92,17 +92,17 @@ def detect_objects(image_np, sess, detection_graph):
     return image_np, boxes, scores, classes, num_detections
 
 
-class RealtimeObjectRecogSkill(MycroftSkill):
+class ObjectRecogSkill(MycroftSkill):
     def __init__(self):
-        super(RealtimeObjectRecogSkill, self).__init__(name="RealtimeObjectRecogSkill")
+        super(ObjectRecogSkill, self).__init__(name="ObjectRecogSkill")
 
     def initialize(self):
-        view_objects_intent = IntentBuilder("ViewOjbectsIntent"). \
+        view_objects_intent = IntentBuilder("TestObjectRecogIntent"). \
             require("ViewObjectsKeyword").build()
         self.register_intent(view_objects_intent, self.handle_view_objects_intent)
 
     def handle_view_objects_intent(self, message):
-        self.speak('Showing you what objects I see now')
+        self.speak('Testing object recognition')
         # Load a (frozen) Tensorflow model into memory.
         self.log.info("Loading tensorflow model into memory")
         detection_graph = tf.Graph()
@@ -128,6 +128,6 @@ class RealtimeObjectRecogSkill(MycroftSkill):
 
 
 def create_skill():
-    return RealtimeObjectRecogSkill()
+    return ObjectRecogSkill()
 
 
