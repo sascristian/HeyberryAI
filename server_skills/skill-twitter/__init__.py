@@ -97,7 +97,7 @@ class TwitterSkill(MycroftSkill):
                                   self.config.get('access_secret'),
                                   self.user)
         if "achievements" not in self.settings.keys():
-            self.settings["achievements"] = []
+            self.settings["achievements"] = {}
 
     def get_followers(self):
         user = self.twitter.api.get_user(self.user)
@@ -406,9 +406,13 @@ class TwitterSkill(MycroftSkill):
 
     def handle_tweet_achievement(self, message):
         name = message.data.get("name")
-        if name in self.settings["achievements"]:
-            return
         achievement = message.data.get("achievement", {})
+        if name not in self.settings["achievements"].keys():
+            self.settings["achievements"][name] = achievement
+            self.settings["achievements"][name]["status"] = "untweeted"
+
+        if self.settings["achievements"][name]["status"] != "untweeted":
+            return
         tweet_pic_file = achievement.get("file")
         tweet_pic_url = achievement.get("pic_url")
         tweet_url = achievement.get("url")
@@ -430,7 +434,9 @@ class TwitterSkill(MycroftSkill):
         else:
             self.twitter.api.update_status(status=tweet_text)
         self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
+        self.settings["achievements"][name]["status"] = "tweeted"
         self.speak("Successfully posted achievement to twitter.  What I posted is: {}".format(tweet_text))
+        self.settings.store()
 
     def stop(self):
         pass
