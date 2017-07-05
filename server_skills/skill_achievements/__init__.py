@@ -100,7 +100,7 @@ class AchievementsSkill(MycroftSkill):
         self.add_achievement(name)
         self.log.info("Achievement unlocked " + str(self.last_achievement))
         self.emitter.emit(Message("achievement", {"name":self.last_achievement, "achievement":self.settings["achievements"][self.last_achievement]}, self.context))
-        if not self.settings["achievements"][name]["tweeted"]:
+        if not self.settings["achievements"][name].get("tweeted", False):
             text = self.settings["achievements"][self.last_achievement]["text"] + " " + self.settings["achievements"][self.last_achievement].get("url")
             self.tweet_request(text+" #AchievementUnlocked")
             self.settings["achievements"][name]["tweeted"] = True
