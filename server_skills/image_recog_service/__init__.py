@@ -212,12 +212,10 @@ class ImageRecognitionSkill(MycroftSkill):
 
     def handle_classify(self, message):
         pic = message.data.get("file")
-        user_id = message.context.get("destinatary", "all")
-
-        if user_id == "unknown":
-            user_id = "all"
-
-        if user_id == "all":
+        user_id = message.context.get("source", "unknown")
+        if ":" not in user_id and ":" in message.context.get("destinatary", "unknown"):
+            user_id =message.context.get("destinatary")
+        elif user_id == "unknown":
             self.log.warning("no user/destinatary specified")
 
         self.log.info("loading image: " + pic)
@@ -254,13 +252,11 @@ class ImageRecognitionSkill(MycroftSkill):
         msg_data = {"classification": result}
         self.context["destinatary"] = user_id
         # to source socket
-        try:
+        if ":" in user_id:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
                                           {"data":msg_data,
                                            "type": msg_type, "context": self.context}, self.context))
-        except:
-            pass
         # to bus
         self.emitter.emit(Message(msg_type,
                                   msg_data, self.context))
