@@ -60,8 +60,9 @@ def handle_speak(event):
     global my_id, source, ws
     utterance = event.data.get('utterance')
     mute = event.data.get('mute')
-    target = str(event.data.get('target'))
-    print my_id, target
+    target = event.context.get('destinatary', "none")
+    if ":" in target:
+        target = target.split(":")[1] #0/1 id or name doesnt matter
     if my_id is None:
         update_id()
     if my_id is None:
