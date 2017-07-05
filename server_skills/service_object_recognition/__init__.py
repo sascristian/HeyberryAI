@@ -74,14 +74,14 @@ def detect_objects(image_np, sess, detection_graph):
         feed_dict={image_tensor: image_np_expanded})
 
     # Visualization of the results of a detection.
-    vis_util.visualize_boxes_and_labels_on_image_array(
-        image_np,
-        np.squeeze(boxes),
-        np.squeeze(classes).astype(np.int32),
-        np.squeeze(scores),
-        category_index,
-        use_normalized_coordinates=True,
-        line_thickness=8)
+    #vis_util.visualize_boxes_and_labels_on_image_array(
+    #    image_np,
+    #    np.squeeze(boxes),
+    #    np.squeeze(classes).astype(np.int32),
+    #    np.squeeze(scores),
+    #    category_index,
+    #    use_normalized_coordinates=True,
+    #    line_thickness=8)
     return image_np, boxes, scores, classes, num_detections
 
 
@@ -116,7 +116,7 @@ class ObjectRecogSkill(MycroftSkill):
         for obj in list(classes):
             o = 0
             for label in obj:
-                label = category_index[label]
+                label = category_index[int(label)]
                 classes[i][o] = label
                 o += 1
             i += 1
