@@ -113,10 +113,10 @@ class ObjectRecogSkill(MycroftSkill):
         image_np, boxes, scores, classes, num_detections = detect_objects(frame, sess, detection_graph)
 
 
-        self.log.info("boxes: " + str(boxes[:5]))
-        self.log.info("scores: " + str(scores[:5]))
+        self.log.info("boxes: " + str(boxes))
+        self.log.info("scores: " + str(scores))
         self.log.info(category_index)
-        self.log.info("classes: " + str(classes[:5]))
+        self.log.info("classes: " + str(classes))
         self.log.info("num: " + str(num_detections))
 
     def stop(self):
