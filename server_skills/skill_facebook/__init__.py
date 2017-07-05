@@ -1179,7 +1179,7 @@ class FacebookSkill(MycroftSkill):
             if id not in self.fb_settings["timestamps"].keys():
                 self.fb_settings["timestamps"][id] = {"last_seen": "never", "timestamps": []}
 
-            self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
+            #self.log.info("Tracking friend: " + data["name"] + " last_seen: " + data["last_seen"])
             self.fb_settings["timestamps"][id]["last_seen"] = data["last_seen"]
 
             try:
