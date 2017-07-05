@@ -68,10 +68,6 @@ def detect_objects(image_np, sess, detection_graph):
     classes = detection_graph.get_tensor_by_name('detection_classes:0')
     num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
-    print scores
-    print classes
-    import time
-    time.sleep(120)
     # Actual detection.
     (boxes, scores, classes, num_detections) = sess.run(
         [boxes, scores, classes, num_detections],
@@ -116,12 +112,17 @@ class ObjectRecogSkill(MycroftSkill):
         self.log.info("Detecting objects")
         image_np, boxes, scores, classes, num_detections = detect_objects(frame, sess, detection_graph)
         classes = classes[0][0].replace(" ","").split(".")
-
-        self.log.info("boxes: " + str(boxes))
-        self.log.info("scores: " + str(scores))
-        self.log.info(category_index)
-        self.log.info("classes: " + str(classes))
-        self.log.info("num: " + str(num_detections))
+        labels = []
+        for i in range(min(5, boxes.shape[0])):
+            if classes[i] in category_index.keys():
+                class_name = category_index[classes[i]]['name']
+            else:
+                class_name = 'N/A'
+            display_str = '{}: {}%'.format(
+                class_name,
+                int(100 * scores[i]))
+            labels.append(display_str)
+        self.log.info("labels: " + str(boxes))
 
     def stop(self):
         pass
