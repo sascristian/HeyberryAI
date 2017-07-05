@@ -116,7 +116,7 @@ class ObjectRecogSkill(MycroftSkill):
         for obj in list(classes):
             o = 0
             for label in obj:
-                label = label_map[label]
+                label = category_index[label]
                 classes[i][o] = label
                 o += 1
             i += 1
