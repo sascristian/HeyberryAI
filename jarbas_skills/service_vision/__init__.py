@@ -194,7 +194,7 @@ class VisionSkill(MycroftSkill):
         self.process_frame()
         feed_path = self.save_feed()
         classifier = ImageRecognitionService(self.emitter)
-        results = classifier.server_image_classification(feed_path, message.data.get("target"))
+        results = classifier.server_image_classification(feed_path, self.context)
         i = 0
         for result in list(results):
             # cleave first word nxxxxx
@@ -525,6 +525,7 @@ class VisionSkill(MycroftSkill):
 def create_skill():
     return VisionSkill()
 
+
 class ImageRecognitionService():
     def __init__(self, emitter, timeout=30, logger=None, server=False):
         self.emitter = emitter
@@ -536,6 +537,7 @@ class ImageRecognitionService():
             self.logger = logger
         else:
             self.logger = getLogger("ImageRecognitionService")
+
         self.emitter.on("image_classification_result", self.end_wait)
 
     def end_wait(self, message):
@@ -552,20 +554,29 @@ class ImageRecognitionService():
             elapsed = time.time() - start
             time.sleep(0.1)
 
-    def local_image_classification(self, picture_path, user_id="unknown"):
-        requester = user_id
+    def local_image_classification(self, picture_path, context=None):
+        if context is None:
+            context = {}
+            requester = "vision_service"
         message_type = "image_classification_request"
-        message_data = {"file": picture_path, "source": requester, "user":"unknown"}
-        self.emitter.emit(Message(message_type, message_data))
+        message_data = {"file": picture_path}
+        self.emitter.emit(Message(message_type, message_data, context))
         self.wait()
         result = self.image_classification_result["classification"]
         return result
 
-    def server_image_classification(self, picture_path, user_id="unknown"):
-        requester = user_id
+    def server_image_classification(self, picture_path, context=None):
+        if context is None:
+            context = {}
+        # send server a message
+        stype = "file"
+        requester = "vision_service"
         message_type = "image_classification_request"
-        message_data = {"file": picture_path, "source": requester, "user":"unknown"}
-        self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data}))
+        message_data = {"file": picture_path}
+        self.emitter.emit(Message("server_request",
+                                  {"server_msg_type": stype, "requester": requester, "message_type": message_type,
+                                   "message_data": message_data}, context))
+
         self.wait()
         result = self.image_classification_result["classification"]
         return result

@@ -94,6 +94,11 @@ def handle_id(event):
     waiting_for_id = False
 
 
+def handle_id_request(event):
+    global my_id, names, ws
+    ws.emit(Message("names_response", {"names": names, "id": my_id}))
+
+
 def connect():
     ws.run_forever()
 
@@ -188,6 +193,7 @@ def handle_server_request(message):
     requester = message.data.get("requester")
     message_type = message.data.get("message_type")
     message_data = message.data.get("message_data")
+    message_context = message.context
     logger.info("Received request to message server from " + requester + " with type: " + str(message_type) + " with data: " + str(message_data))
 
     if stype == "file":
@@ -211,7 +217,7 @@ def handle_server_request(message):
         message_data.pop("file")
     message_data["source"] = requester
     logger.info("sending message with type: " + str(message_type))
-    answer = get_msg(Message(message_type, message_data))
+    answer = get_msg(Message(message_type, message_data, message_context))
     s.send(answer)
 
 
@@ -220,6 +226,7 @@ def main():
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
     ws.on('id', handle_id)
+    ws.on('id_request', handle_id_request)
     ws.on('recognizer_loop:utterance', handle_utterance)
     ws.on('intent_failure', handle_intent_failure)
     ws.on("server_request", handle_server_request)
