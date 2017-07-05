@@ -34,6 +34,8 @@ class AchievementsSkill(MycroftSkill):
         self.last_achievement = None
 
     def add_standard_achievements(self):
+        self.add_achievement("psy art", {"timestamp": None, "text": "Making psychedelic art with math",
+                                            "url": "https://jeremykun.com/2012/01/01/random-psychedelic-art/"})
         self.add_achievement("inspirobot", {"timestamp": None, "text": "Asked Inspirobot for a quote",
                                                 "url": "http://http://inspirobot.me/"})
 
@@ -104,6 +106,8 @@ class AchievementsSkill(MycroftSkill):
             name = "tweet"
         elif "style_transfer_result" in type:
             name = "style transfer"
+        elif "art_result" in type:
+            name = "psy art"
         else:
             return
         self.add_achievement(name)
