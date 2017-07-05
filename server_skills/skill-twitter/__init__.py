@@ -140,6 +140,7 @@ class TwitterSkill(MycroftSkill):
         self.emitter.on("style_transfer_result", self.handle_tweet_style_transfer)
         self.emitter.on("inspirobot_result", self.handle_tweet_inspirobot)
         self.emitter.on("art_result", self.handle_tweet_psyart)
+        self.emitter.on("achievement", self.handle_tweet_achievement)
 
     def handle_get_followers_intent(self, message):
         if message.data.get("Person"):
