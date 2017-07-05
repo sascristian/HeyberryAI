@@ -33,8 +33,11 @@ RECV_BUFFER = 4096  # Advisable to keep it as an exponent of 2
 PORT = 5000
 server_socket = None
 
+# TODO read from config
 blacklisted_ips = []
-# TODO maybe add deep dream request, but i want the utterance handled internally for now /more control
+whitelisted_ips = []
+blacklist = True
+
 allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "vision_result", "image_classification_request", "face_recognition_request"]
 names = {}#name, sock this name refers to
 users = {}#sock, [current user of sock]
@@ -221,6 +224,18 @@ def main():
                 # Handle the case in which there is a new connection received through server_socket
                 try:
                     sockfd, addr = server_socket.accept()
+                    ip, sock_num = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
+                    # see if blacklisted
+                    if ip in blacklisted_ips and blacklist:
+                        logger.warning("Blacklisted ip tried to connect: " + ip)
+                        #  if blacklisted kick
+                        offline_client(sockfd)
+                        continue
+                    elif ip not in whitelisted_ips and not blacklist:
+                        logger.warning("Unknown ip tried to connect: " + ip)
+                        #  if not whitelisted kick
+                        offline_client(sockfd)
+                        continue
                     # wrap in ssl
                     sockfd = ssl.wrap_socket(sockfd,
                                              server_side=True,
@@ -229,16 +244,9 @@ def main():
                                              ssl_version=ssl.PROTOCOL_TLSv1)
                     CONNECTION_LIST.append(sockfd)
                     logger.debug( "Client (%s, %s) connected" % addr )
-                    ip, sock_num = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
-                    # see if blacklisted
-                    if ip not in blacklisted_ips:
-                        # tell other clients this is available
-                        #broadcast_data(sockfd, "[%s:%s] is available\n" % addr, addr)
-                        # tell client it's id
-                        answer_id(sockfd)
-                    else:
-                    #  if blacklisted kick
-                        offline_client(sockfd)
+                    # tell client it's id
+                    answer_id(sockfd)
+
                 except Exception as e:
                     logger.error(e)
             # Some incoming message from a client
