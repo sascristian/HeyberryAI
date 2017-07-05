@@ -87,11 +87,7 @@ class TwitterAPI(object):
         return followers
 
 
-# The logic of each skill is contained within its own class, which inherits
-# base methods from the MycroftSkill class with the syntax you can see below:
-# "class ____Skill(MycroftSkill)"
 class TwitterSkill(MycroftSkill):
-    # The constructor of the skill, which calls MycroftSkill's constructor
     def __init__(self):
         super(TwitterSkill, self).__init__(name="TwitterSkill")
         self.user = self.config.get('twitter_user')
@@ -100,14 +96,14 @@ class TwitterSkill(MycroftSkill):
                                   self.config.get('access_token'),
                                   self.config.get('access_secret'),
                                   self.user)
+        if "achievements" not in self.settings.keys():
+            self.settings["achievements"] = []
 
     def get_followers(self):
         user = self.twitter.api.get_user(self.user)
         followers = user.followers_count
         return followers
 
-    # This method loads the files needed for the skill's functioning, and
-    # creates and registers each intent that the skill uses
     def initialize(self):
         self.load_data_files(dirname(__file__))
         self.load_regex_files(join(dirname(__file__), 'regex', self.lang))
@@ -145,12 +141,6 @@ class TwitterSkill(MycroftSkill):
         self.emitter.on("inspirobot_result", self.handle_tweet_inspirobot)
         self.emitter.on("art_result", self.handle_tweet_psyart)
 
-    # The "handle_xxxx_intent" functions define Mycroft's behavior when
-    # each of the skill's intents is triggered: in this case, he simply
-    # speaks a response. Note that the "speak_dialog" method doesn't
-    # actually speak the text it's passed--instead, that text is the filename
-    # of a file in the dialog folder, and Mycroft speaks its contents when
-    # the method is called.
     def handle_get_followers_intent(self, message):
         if message.data.get("Person"):
             pres_user = self.twitter.api.get_user('realDonaldTrump')
@@ -160,9 +150,6 @@ class TwitterSkill(MycroftSkill):
             followers_count = self.twitter.get_followers()
             self.speak_dialog("followers", data={"followers_count": followers_count})
 
-    #
-    # Follow user intent, takes userid from message and follows them.
-    #
     def handle_follow_user_intent(self, message):
         LOGGER.debug("The message data is: {}".format(message.data))
         follow_user = message.data["user"].replace(" ", "")
@@ -173,9 +160,6 @@ class TwitterSkill(MycroftSkill):
             self.twitter.api.create_friendship(follow_user)
             self.speak("Successfully followed user {} on twitter".format(follow_user))
 
-    #
-    # Follow user intent, takes userid from message and follows them.
-    #
     def handle_unfollow_user_intent(self, message):
         LOGGER.debug("The message data is: {}".format(message.data))
         unfollow_user = message.data["user"].replace(" ", "")
@@ -419,16 +403,38 @@ class TwitterSkill(MycroftSkill):
         self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
         self.speak("Successfully posted psy art to twitter.  What I posted is: {}".format(tweet_text))
 
-    # The "stop" method defines what Mycroft does when told to stop during
-    # the skill's execution. In this case, since the skill's functionality
-    # is extremely simple, the method just contains the keyword "pass", which
-    # does nothing.
+    def handle_tweet_achievement(self, message):
+        name = message.data.get("name")
+        if name in self.settings["achievements"]:
+            return
+        achievement = message.data.get("achievement", {})
+        tweet_pic_file = achievement.get("file")
+        tweet_pic_url = achievement.get("pic_url")
+        tweet_url = achievement.get("url")
+        tweet_text = achievement.get("text", "Small step for AI a huge step for MachineKind")
+        if tweet_url:
+            tweet_text += " " + tweet_url + " #AchievementUnlocked"
+        if "#JarbasAI" not in tweet_text:
+            tweet_text += " #JarbasAI"
+        if "#MycroftAI" not in tweet_text:
+            tweet_text += " #MycroftAI"
+
+        tweet_type = "text"
+        if tweet_pic_url:
+            self.tweet_image_from_url(tweet_pic_url, tweet_text)
+            tweet_type = "remote_image"
+        elif tweet_pic_file:
+            self.twitter.api.update_with_media(tweet_pic_file, status=tweet_text)
+            tweet_type = "image"
+        else:
+            self.twitter.api.update_status(status=tweet_text)
+        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
+        self.speak("Successfully posted achievement to twitter.  What I posted is: {}".format(tweet_text))
+
     def stop(self):
         pass
 
 
-# The "create_skill()" method is used to create an instance of the skill.
-# Note that it's outside the class itself.
 def create_skill():
     return TwitterSkill()
 

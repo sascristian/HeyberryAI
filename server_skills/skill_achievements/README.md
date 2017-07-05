@@ -1,6 +1,8 @@
-# Hello World Skill
+# Personal Skill
 
 ## Usage:
-* `hello world`
-* `how are you`
-* `thank you`
+* `what are you`
+* `when were you born`
+* `where were you born`
+* `who are you`
+* `who made you`
