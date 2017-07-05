@@ -95,7 +95,7 @@ class AchievementsSkill(MycroftSkill):
         elif "image_classification_result" in type:
             name = "googlenet classification"
         elif "vision_result" in type and data.get("num_persons", 0) > 0:
-            name = "first face detection"
+            name = "face detection"
         elif "class_visualization_result" in type:
             name = "deep draw"
         elif "deep_dream_result" in type:
