@@ -18,7 +18,7 @@
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import  Message
-import time
+import time, json
 
 __author__ = 'jarbas'
 
@@ -78,7 +78,8 @@ class AchievementsSkill(MycroftSkill):
         self.emitter.on("message", self.handle_new_achievement)
 
     def handle_new_achievement(self, message):
-        type = message.type
+        _message = json.loads(message)
+        type = _message.get("type")
         # TODO all achievements
         if "JokingIntent" in type:
             self.add_achievement("joke")
@@ -95,7 +96,7 @@ class AchievementsSkill(MycroftSkill):
         else:
             return
         self.log.info("Achievement unlocked " + str(self.last_achievement))
-        self.emitter.emit(Message("achievement", {self.settings["achievements"][self.last_achievement]}, self.context))
+        self.emitter.emit(Message("achievement", self.settings["achievements"][self.last_achievement], self.context))
 
     def stop(self):
         pass

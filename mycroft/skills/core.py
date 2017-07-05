@@ -40,7 +40,7 @@ __author__ = 'seanfitz'
 SKILLS_DIR = join(dirname(dirname(dirname(__file__))) ,"jarbas_skills")
 
 skills_config = ConfigurationManager.instance().get("skills")
-BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
+BLACKLISTED_SKILLS = skills_config.get("blacklisted_skills", {})
 
 
 MainModule = '__init__'
@@ -221,7 +221,10 @@ class MycroftSkill(object):
         try:
             return self._settings
         except:
-            self._settings = SkillSettings(join(self._dir, 'settings.json'))
+            try:
+                self._settings = SkillSettings(join(self._dir, 'settings.json'))
+            except:
+                self._settings = SkillSettings(join(dirname(__file__), 'settings.json'))
             return self._settings
 
     def bind(self, emitter):
@@ -267,8 +270,9 @@ class MycroftSkill(object):
 
         def receive_handler(message):
             try:
+                self.emitter.emit(Message("executing_intent", {"status": "start", "intent": name}))
                 handler(message)
-            except:
+            except Exception as e:
                 # TODO: Localize
                 self.speak(
                     "An error occurred while processing a request in " +
@@ -276,6 +280,9 @@ class MycroftSkill(object):
                 logger.error(
                     "An error occurred while processing a request in " +
                     self.name, exc_info=True)
+                self.emitter.emit(Message("executing_intent", {"status": "failed", "intent": name, "exception": str(e)}))
+                return
+            self.emitter.emit(Message("executing_intent", {"status": "executed", "intent": name}))
 
         if handler:
             self.emitter.on(intent_parser.name, self.handle_update_context)

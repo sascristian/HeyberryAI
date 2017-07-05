@@ -487,7 +487,7 @@ class VisionSkill(MycroftSkill):
             # save actual user face pic
             self.mainface = self.detectedfaces[faceid]
             # save smiling
-            self.smiling = self.detectedsmiles[faceid]
+            #self.smiling = self.detectedsmiles[faceid]
         else:
             self.person_on_screen = False
             self.multiple_persons = False
