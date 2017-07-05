@@ -39,7 +39,7 @@ sys.path.append('/opt/mycroft/skills/skill-realtime-object-recognition')
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
-__author__ = 'eClarity'
+__author__ = 'eClarity' , 'jarbas'
 
 LOGGER = getLogger(__name__)
 
