@@ -111,18 +111,11 @@ class ObjectRecogSkill(MycroftSkill):
         frame = cv2.imread(dirname(__file__) + "/test.jpg")
         self.log.info("Detecting objects")
         image_np, boxes, scores, classes, num_detections = detect_objects(frame, sess, detection_graph)
-        # replace labels
-        i = 0
-        for obj in list(classes):
-            o = 0
-            for label in obj:
-                label = category_index[int(label)]
-                classes[i][o] = label
-                o += 1
-            i += 1
+
 
         self.log.info("boxes: " + str(boxes[:5]))
         self.log.info("scores: " + str(scores[:5]))
+        self.log.info(category_index)
         self.log.info("classes: " + str(classes[:5]))
         self.log.info("num: " + str(num_detections))
 
