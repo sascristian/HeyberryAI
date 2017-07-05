@@ -93,7 +93,7 @@ class AchievementsSkill(MycroftSkill):
         elif "image_classification_result" in type:
             name = "googlenet classification"
         elif "vision_result" in type and data.get("num_persons", 0) > 0:
-            name = "first face detection"
+            name = "face detection"
         elif "class_visualization_result" in type:
             name = "deep draw"
         elif "deep_dream_result" in type:
@@ -113,7 +113,7 @@ class AchievementsSkill(MycroftSkill):
             text = self.settings["achievements"][name]["count"] + " X " + self.settings["achievements"][self.last_achievement]["text"] + " " + self.settings["achievements"][
                 self.last_achievement].get("url", "")
             self.tweet_request(text + " #AchievementUnlocked")
-            self.settings["achievements"][name]["tweeted"] = True
+            
 
     def tweet_request(self, text):
         tweet_type = "text"

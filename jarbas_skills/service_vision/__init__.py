@@ -178,6 +178,7 @@ class VisionSkill(MycroftSkill):
 
     def handle_vision_data_intent(self, message):
         self.process_frame()
+        path = self.save_feed(self.webcam_path + "/" + asctime() + ".jpg")
         self.speak("There are " + str(self.num_persons) + " persons on view")
         self.emit_result(path, False)
         # TODO more context, movement, face recog
