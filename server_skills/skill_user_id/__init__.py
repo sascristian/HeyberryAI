@@ -41,11 +41,11 @@ class UserIdService():
         else:
             self.logger = getLogger("User_ID")
         self.emitter.on("vision_result", self.end_wait)
-        self.emitter.on("face_recognition_result", self.end_wait)
+        self.emitter.on("face.recognition.result", self.end_wait)
 
     def end_wait(self, message):
         # TODO implemnt all wait cases
-        if message.type == "face_recognition_result":
+        if message.type == "face.recognition.result":
             self.logger.info("face recognition result received")
             self.face_recog_result = message.data["result"]
         if message.type == "vision_result":
@@ -63,7 +63,7 @@ class UserIdService():
 
     def local_face_recog(self, picture_path, user_id):
         requester = user_id
-        message_type = "face_recognition_request"
+        message_type = "face.recognition.request"
         context = {"destinatary": user_id}
         message_data = {"file": picture_path, "source": requester, "user":"unknown"}
         self.emitter.emit(Message(message_type, message_data, context))
@@ -73,7 +73,7 @@ class UserIdService():
 
     def server_face_recog(self, picture_path, user_id):
         requester = user_id
-        message_type = "face_recognition_request"
+        message_type = "face.recognition.request"
         message_data = {"file": picture_path, "source": requester}
         context = {"destinatary": user_id}
         self.emitter.emit(Message("server_request", {"server_msg_type":"file", "requester":requester, "message_type": message_type, "message_data": message_data}, context))

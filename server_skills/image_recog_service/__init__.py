@@ -18,7 +18,12 @@ except:
 
 sys.path.insert(0, path + '/python')
 
-import caffe
+try:
+    import caffe
+except:
+    logger = getLogger(__name__)
+    logger.warning("Could not import caffe, this is ok if skill is asking to server")
+
 # caffe.set_mode_gpu() # uncomment this if gpu processing is available
 
 __author__ = 'jarbas'
@@ -33,11 +38,14 @@ class ImageRecogService(ServiceBackend):
             context = {"source": self.name}
 
         if not server:
-            self.emitter.emit(Message("image.classification.request", {"file": file_path}, context))
+            self.send_request(message_type="image.classification.request",
+                              message_data={"file": file_path},
+                              message_context=context)
         else:
-            self.emitter.emit(Message("server_request",
-                                      {"server_msg_type": "file", "requester": self.name, "message_type": "image.classification.request",
-                                       "message_data": {"file": file_path}}, context))
+            self.send_request(message_type="server_request",
+                             message_data={"server_msg_type": "file", "requester": self.name, "message_type": "image.classification.request",
+                                       "message_data": {"file": file_path}},
+                             message_context=context)
 
         self.wait("image.classification.result")
         if self.result is None:
@@ -110,7 +118,7 @@ class ImageRecognitionSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("image.classification.request", self.handle_classify)
         self.emitter.on("class.visualization.request", self.handle_deep_draw)
-        self.emitter.on("class.visualization.result", self.handle_deep_draw_result)
+        #self.emitter.on("class.visualization.result", self.handle_deep_draw_result)
 
         image_recog_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
             .require("imgstatus").build()
@@ -148,14 +156,6 @@ class ImageRecognitionSkill(MycroftSkill):
         self.context["destinatary"] = dest
         self.speak("in test image i see " + results[0] + ", or maybe it is " + results[1])
 
-    def handle_deep_draw_intent(self, message):
-        imagenet_class = random.randint(0, len(self.label_mapping))
-        self.speak_dialog("imgrecogstatus")
-        dest = message.context.get("destinatary", "all")
-        imgrecog = ImageRecogService(self.emitter, timeout=130)
-        file = imgrecog.get_deep_draw(class_num = imagenet_class, server=False)
-        #url = imgrecog.get_result().get("url", "")
-
     def handle_deep_draw_about_intent(self, message):
         about = message.data.get("NetClass")
         imagenet_class = -1
@@ -181,8 +181,14 @@ class ImageRecognitionSkill(MycroftSkill):
                 i += 1
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
-        file = imgrecog.get_deep_draw(class_num=imagenet_class, server=False)
-        url = imgrecog.get_result().get("url", "")
+        file = imgrecog.get_deep_draw(class_num=imagenet_class, server=False, context=self.context)
+        result = imgrecog.result
+        if result is None:
+            result = {}
+        url = result.get("url")
+        class_name = result.get("class_name", "")
+        self.speak("Here is how i visualize " + class_name,
+                   metadata=result)
 
     def handle_classify(self, message):
         pic = message.data.get("file", None)
@@ -207,13 +213,17 @@ class ImageRecognitionSkill(MycroftSkill):
         self.log.info("predicting")
         result = []
         # make net
-        path = self.path + '/models/' + self.model
-        net = caffe.Classifier(path + '/deploy.prototxt', path + '/' + self.model + '.caffemodel',
+        try:
+            path = self.path + '/models/' + self.model
+            net = caffe.Classifier(path + '/deploy.prototxt', path + '/' + self.model + '.caffemodel',
                                     mean=np.load(self.path + '/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(
                                         1).mean(1),
                                     channel_swap=(2, 1, 0),
                                     raw_scale=255,
                                     image_dims=(224, 224))
+        except:
+            self.log.error("Could not start caffe classifier")
+
 
         try:
             prediction = net.predict([input_image])
@@ -340,14 +350,6 @@ class ImageRecognitionSkill(MycroftSkill):
         # to bus
         self.emitter.emit(Message(msg_type,
                                   msg_data, self.context))
-
-    def handle_deep_draw_result(self, message):
-        link = message.data.get("url")
-        class_label = message.data.get("class_label")
-        class_name = message.data.get("class_name")
-        self.speak("Here is how i visualize " + class_name,
-                          metadata={"url": link, "class_label": class_label,
-                                    "class_name": class_name}, context=message.context)
 
     def stop(self):
         pass

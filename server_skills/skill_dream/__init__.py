@@ -1,5 +1,4 @@
 import urllib2
-import os
 import random
 import json
 from bs4 import BeautifulSoup
@@ -27,7 +26,7 @@ class DreamSkill(MycroftSkill):
                              self.handle_dream_intent)
 
     def dream(self, dream_pic, dream_guide=None, dream_name=None):
-        self.emitter.emit(Message("deep_dream_request", {"dream_source": dream_pic, "dream_guide": dream_guide, "dream_name": dream_name}, self.context))
+        self.emitter.emit(Message("deep.dream.request", {"dream_source": dream_pic, "dream_guide": dream_guide, "dream_name": dream_name}, self.context))
 
     def handle_dream_intent(self, message):
         search = message.data.get("Subject")

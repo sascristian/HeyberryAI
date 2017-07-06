@@ -131,13 +131,13 @@ class TwitterSkill(MycroftSkill):
         self.register_intent(post_btc_tweet_intent, self.handle_tweet_btc)
 
         # external tweet requests"
-        self.emitter.on("tweet_request", self.handle_tweet_request)
+        self.emitter.on("tweet.request", self.handle_tweet_request)
         # automatic tweets
-        self.emitter.on("class_visualization_result", self.handle_tweet_deepdraw)
-        self.emitter.on("deep_dream_result", self.handle_tweet_dream)
-        self.emitter.on("style_transfer_result", self.handle_tweet_style_transfer)
-        self.emitter.on("inspirobot_result", self.handle_tweet_inspirobot)
-        self.emitter.on("art_result", self.handle_tweet_psyart)
+        self.emitter.on("class.visualization.result", self.handle_tweet_deepdraw)
+        self.emitter.on("deep.dream.result", self.handle_tweet_dream)
+        self.emitter.on("style.transfer.result", self.handle_tweet_style_transfer)
+        self.emitter.on("inspirobot.result", self.handle_tweet_inspirobot)
+        self.emitter.on("art.result", self.handle_tweet_psyart)
 
     def handle_get_followers_intent(self, message):
         if message.data.get("Person"):
@@ -177,7 +177,7 @@ class TwitterSkill(MycroftSkill):
         else:
             self.twitter.api.update_status(status=status_post)
             self.speak("Successfully posted status update to twitter.  What I posted is: {}".format(status_post))
-        self.emitter.emit(Message("twitter_post", {"post": status_post, "post_type": "text"}))
+        self.emitter.emit(Message("twitter.post", {"post": status_post, "post_type": "text"}))
 
     def handle_tweet_btc(self, message):
         possible_tweets = ["If you love this, can you buy me a {{HUMAN_BEVERAGE}}? I really appreciate it! Send some satoshi's to",
@@ -198,7 +198,7 @@ class TwitterSkill(MycroftSkill):
             tweet_text += " #MycroftAI"
         self.twitter.api.update_status(status=tweet_text)
         self.speak("Successfully posted btc adress to twitter.  What I posted is: {}".format(tweet_text))
-        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": "text"}))
+        self.emitter.emit(Message("twitter.post", {"post": tweet_text, "post_type": "text"}))
 
     def handle_tweet_patreon(self, message):
         possible_tweets = ["Help me make stuff for mycroft for a living",
@@ -219,7 +219,7 @@ class TwitterSkill(MycroftSkill):
             tweet_text += " #MycroftAI"
         self.twitter.api.update_status(status=tweet_text)
         self.speak("Successfully posted patreon link to twitter.  What I posted is: {}".format(tweet_text))
-        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": "text"}))
+        self.emitter.emit(Message("twitter.post", {"post": tweet_text, "post_type": "text"}))
 
     def handle_tweet_request(self, message):
         tweet_type = message.data.get("tweet_type", "text")
@@ -238,7 +238,7 @@ class TwitterSkill(MycroftSkill):
         else:
             self.log.error("Unknown tweet type")
             return
-        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
+        self.emitter.emit(Message("twitter.post", {"post": tweet_text, "post_type": tweet_type}))
 
     def tweet_image_from_url(self, url, text):
 
@@ -287,7 +287,7 @@ class TwitterSkill(MycroftSkill):
             self.log.error("Tweet Failed")
             return
         self.speak("Successfully posted dream to twitter.  What I posted is: {}".format(tweet_text))
-        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
+        self.emitter.emit(Message("twitter.post", {"post": tweet_text, "post_type": tweet_type}))
 
     def handle_tweet_deepdraw(self, message):
         tweet_pic_file = message.data.get("file")
@@ -316,7 +316,7 @@ class TwitterSkill(MycroftSkill):
             self.log.error("Tweet Failed")
             return
         self.speak("Successfully posted deep draw to twitter.  What I posted is: {}".format(tweet_text))
-        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
+        self.emitter.emit(Message("twitter.post", {"post": tweet_text, "post_type": tweet_type}))
 
     def handle_tweet_style_transfer(self, message):
         tweet_pic_file = message.data.get("file")
@@ -370,7 +370,7 @@ class TwitterSkill(MycroftSkill):
         else:
             self.log.error("Tweet Failed")
             return
-        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
+        self.emitter.emit(Message("twitter.post", {"post": tweet_text, "post_type": tweet_type}))
         self.speak("Successfully posted inspirobot to twitter.  What I posted is: {}".format(tweet_text))
 
     def handle_tweet_psyart(self, message):
@@ -398,7 +398,7 @@ class TwitterSkill(MycroftSkill):
         else:
             self.log.error("Tweet Failed")
             return
-        self.emitter.emit(Message("twitter_post", {"post": tweet_text, "post_type": tweet_type}))
+        self.emitter.emit(Message("twitter.post", {"post": tweet_text, "post_type": tweet_type}))
         self.speak("Successfully posted psy art to twitter.  What I posted is: {}".format(tweet_text))
 
     def stop(self):

@@ -97,7 +97,7 @@ CAFFENET_WEIGHTS = {"content": {"conv4": 1},
 class StyleTransferTool():
     def __init__(self, emitter):
         self.emitter = emitter
-        self.emitter.on("style_transfer_result", self.end_wait)
+        self.emitter.on("style.transfer.result", self.end_wait)
         self.waiting = False
         self.url = None
         self.file_path = None
@@ -105,7 +105,7 @@ class StyleTransferTool():
 
     def style_transfer(self, style_path, target_path, iter_num=300, context=None):
         self.emitter.emit(
-            Message("style_transfer_request", {"style_img": style_path, "target_img": target_path, "iter_num": iter_num}, context))
+            Message("style.transfer.request", {"style_img": style_path, "target_img": target_path, "iter_num": iter_num}, context))
         self.wait()
         return self.file_path
 
@@ -156,8 +156,8 @@ class StyleTransferSkill(MycroftSkill):
             os.makedirs(self.save_path)
 
     def initialize(self):
-        self.emitter.on("style_transfer_request", self.handle_style_transfer)
-        self.emitter.on("style_transfer_result", self.handle_receive_transfer_result)
+        self.emitter.on("style.transfer.request", self.handle_style_transfer)
+        self.emitter.on("style.transfer.result", self.handle_receive_transfer_result)
 
         style_transfer_intent = IntentBuilder("StyleTransferIntent") \
             .require("styletransfer").build()
@@ -237,7 +237,7 @@ class StyleTransferSkill(MycroftSkill):
     def send_result(self, out_path=None, e_time=None, error=None):
         if error is not None:
             self.speak(error)
-        msg_type = "style_transfer_result"
+        msg_type = "style.transfer.result"
         msg_data = {"file": None, "url": None, "elapsed_time": e_time}
         if out_path is not None:
             # upload pic

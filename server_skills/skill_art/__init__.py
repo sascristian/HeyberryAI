@@ -41,10 +41,10 @@ class ArtSkill(MycroftSkill):
         psy_intent = IntentBuilder("PsyArtIntent").require("psyart").build()
         self.register_intent(psy_intent, self.handle_psy_pic_intent)
 
-        self.emitter.on("art_request", self.handle_psy_pic)
+        self.emitter.on("art.request", self.handle_psy_pic)
 
     def handle_psy_pic_intent(self, message):
-        self.emitter.emit(Message("art_request", {}, self.context))
+        self.emitter.emit(Message("art.request", {}, self.context))
 
     def handle_psy_pic(self, message):
         try:
@@ -55,7 +55,7 @@ class ArtSkill(MycroftSkill):
                 data = self.client.upload_from_path(pic)
                 link = data["link"]
                 self.speak("Here is what i created", metadata={"url": link, "file": pic})
-            self.emitter.emit(Message("art_result", {"file": pic, "url": link}, self.context))
+            self.emitter.emit(Message("art.result", {"file": pic, "url": link}, self.context))
         except Exception as e:
             self.speak(str(e))
 

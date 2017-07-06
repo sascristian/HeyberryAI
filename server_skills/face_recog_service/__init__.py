@@ -25,7 +25,7 @@ class FaceRecService(MycroftSkill):
             self.known_faces[face] = face_recognition.face_encodings(face_recognition.load_image_file(os.path.dirname(__file__) + "/known faces/" + face))[0]
 
     def initialize(self):
-        self.emitter.on("face_recognition_request", self.handle_recog)
+        self.emitter.on("face.recognition.request", self.handle_recog)
 
     def handle_recog(self, message):
         face = message.data.get("file")
@@ -59,12 +59,12 @@ class FaceRecService(MycroftSkill):
             self.log.error("no face detected in provided image")
 
         self.context["destinatary"] = user_id
-        self.emitter.emit(Message("face_recognition_result",
+        self.emitter.emit(Message("face.recognition.result",
                                   {"result": result}, self.context))
         try:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"context": self.context, "data": {"result": result}, "type": "face_recognition_result"}, self.context))
+                                          {"context": self.context, "data": {"result": result}, "type": "face.recognition.result"}, self.context))
         except:
             # .split failed
             pass

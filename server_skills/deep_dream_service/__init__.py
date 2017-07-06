@@ -30,7 +30,7 @@ __author__ = 'jarbas'
 class Dream():
     def __init__(self, emitter):
         self.emitter = emitter
-        self.emitter.on("deep_dream_result", self.end_wait)
+        self.emitter.on("deep.dream.result", self.end_wait)
         self.waiting = False
         self.url = None
         self.file_path = None
@@ -38,7 +38,7 @@ class Dream():
 
     def dream(self, dream_source, dream_name=None, iter_num=15, context=None):
         self.emitter.emit(
-            Message("deep_dream_request", {"dream_source": dream_source, "dream_name": dream_name, "iter_num": iter_num}, context))
+            Message("deep.dream.request", {"dream_source": dream_source, "dream_name": dream_name, "iter_num": iter_num}, context))
         self.wait()
         return self.file_path
 
@@ -137,7 +137,7 @@ class DreamService(MycroftSkill):
             os.makedirs(self.outputdir)
 
     def initialize(self):
-        self.emitter.on("deep_dream_request", self.handle_dream)
+        self.emitter.on("deep.dream.request", self.handle_dream)
 
         dream_status_intent = IntentBuilder("DreamStatusIntent") \
             .require("dream").build()
@@ -180,9 +180,9 @@ class DreamService(MycroftSkill):
             self.emitter.emit(Message("message_request",
                                       {"context": message.context,
                                        "data": {"dream_url": link, "file": result, "elapsed_time": elapsed_time, "layer": layer},
-                                       "type": "deep_dream_result"},
+                                       "type": "deep.dream.result"},
                                       message.context))
-        self.emitter.emit(Message("deep_dream_result",
+        self.emitter.emit(Message("deep.dream.result",
                                   {"dream_url": link, "file": result, "elapsed_time": elapsed_time},
                                   message.context))
 
