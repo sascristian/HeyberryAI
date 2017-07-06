@@ -1,8 +1,41 @@
 Some steps were done to connect mycroft instances together, every instance can receive connections and send answers, or connect and ask answers
 
-A chat room could be made this way, or we can imagine something wilder
+![ssl](https://raw.githubusercontent.com/JarbasAI/client_server_idea/master/ssl.jpeg)
 
-Imagine many mycrofts all running both as server and client, each "asking their parent" the answers for the questions they do not know, then someone makes a protocol to transfer and validate skills between mycrofts, then it evolves by itself
+# usage cases
+
+computational server:
+    - host deep dream, facebook, everything
+    - clients connect for heavy processing/private skills
+
+house server:
+    - connect all your mycrofts, "kitchen", "living room", "magic mirror", use them as a single one or to relay orders
+
+![house](https://raw.githubusercontent.com/JarbasAI/client_server_idea/master/Untitled%20Diagram.jpg)
+
+chat room server:
+    - jarbas: "tell mycroft hello"
+    - server -> mycroft_to_socket_num
+             -> ask_mycroft_if_jarbas_ok
+    - mycroft -> is_friend(jarbas, secret_hashed)
+              -> yes
+    - server -> save_yes
+            -> send_message (mycroft, speak: jarbas says hello)
+
+    - mycroft -> is_friend(jarbas, secret_hashed)
+            -> no
+    - server -> save_no
+            -> send_message (mycroft, connection.attempt.warning )
+            -> send_message (jarbas, connection.refused.warning )
+
+
+
+Or you can go wild, create the mycroft mesh collective:
+
+ - many mycrofts all running both as server and client,
+ - each "asking their parent" the answers for the questions they do not know,
+ - make a protocol to transfer and validate skills between mycrofts,
+ - watch it evolve by itself as masters update code
 
 
 # jarbas client
@@ -17,6 +50,7 @@ Imagine many mycrofts all running both as server and client, each "asking their 
 - if 20 seconds and no intent nor failure trigger -> ask server
 - listen for requests to message server, including files
 - trust all messages from server and broadcast them to client messagebus
+
 
 # jarbas server
 
