@@ -133,7 +133,7 @@ class ImageRecognitionSkill(MycroftSkill):
         self.speak_dialog("imgrecogstatus")
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
-        results = imgrecog.get_classification(dirname(__file__)+"/obama.jpg", server=True)
+        results = imgrecog.get_classification(dirname(__file__)+"/obama.jpg", server=False)
         i = 0
         for result in list(results):
             # cleave first word nxxxxx
@@ -153,7 +153,7 @@ class ImageRecognitionSkill(MycroftSkill):
         self.speak_dialog("imgrecogstatus")
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
-        file = imgrecog.get_deep_draw(class_num = imagenet_class, server=True)
+        file = imgrecog.get_deep_draw(class_num = imagenet_class, server=False)
         #url = imgrecog.get_result().get("url", "")
 
     def handle_deep_draw_about_intent(self, message):
@@ -181,7 +181,7 @@ class ImageRecognitionSkill(MycroftSkill):
                 i += 1
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
-        file = imgrecog.get_deep_draw(class_num=imagenet_class, server=True)
+        file = imgrecog.get_deep_draw(class_num=imagenet_class, server=False)
         url = imgrecog.get_result().get("url", "")
 
     def handle_classify(self, message):
