@@ -38,11 +38,14 @@ class ImageRecogService(ServiceBackend):
             context = {"source": self.name}
 
         if not server:
-            self.emitter.emit(Message("image.classification.request", {"file": file_path}, context))
+            self.send_request(message_type="image.classification.request",
+                              message_data={"file": file_path},
+                              message_context=context)
         else:
-            self.emitter.emit(Message("server_request",
-                                      {"server_msg_type": "file", "requester": self.name, "message_type": "image.classification.request",
-                                       "message_data": {"file": file_path}}, context))
+            self.send_request(message_type="server_request",
+                             message_data={"server_msg_type": "file", "requester": self.name, "message_type": "image.classification.request",
+                                       "message_data": {"file": file_path}},
+                             message_context=context)
 
         self.wait("image.classification.result")
         if self.result is None:

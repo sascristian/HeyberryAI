@@ -82,7 +82,7 @@ def handle_speak(event):
         #if source is not None and source != "unknown":
         #    data["target"] = source
         #    source = None
-        ws.emit(Message("speak", data))
+        #ws.emit(Message("speak", data))
 
 
 def handle_id(event):

@@ -36,6 +36,13 @@ class ServiceBackend(object):
         for msg in waiting_messages:
             self.emitter.on(msg, self.end_wait)
 
+    def send_request(self, message_type, message_data=None, message_context=None):
+        if message_data is None:
+            message_data = {}
+        if message_context is None:
+            message_context = {}
+        self.emitter.emit(Message(message_type, message_data, message_context))
+
     def wait(self, waiting_for="any"):
         """
             wait until result response or time_out

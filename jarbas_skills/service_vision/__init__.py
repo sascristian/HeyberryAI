@@ -27,6 +27,7 @@ sys.path.append(dirname(dirname(__file__)))
 from service_object_recognition import ObjectRecogService
 from service_image_recognition import ImageRecogService
 
+
 class VisionService(ServiceBackend):
     def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
         super(VisionService, self).__init__(name="VisionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
@@ -34,7 +35,7 @@ class VisionService(ServiceBackend):
     def get_feed(self, context=None):
         if context is None:
             context = {"source": "vision_service"}
-        self.emitter.emit(Message("vision.feed.request", {}, context))
+        self.send_request("vision.feed.request", {}, context)
         self.wait("vision.feed.result")
         if self.result is None:
             self.result = {}
@@ -43,14 +44,14 @@ class VisionService(ServiceBackend):
     def get_data(self, context=None):
         if context is None:
             context = {"source": "vision_service"}
-        self.emitter.emit(Message("vision_request", {}, context))
+        self.send_request("vision_request", {}, context)
         self.wait("vision_result")
         return self.result
 
     def get_faces(self, file=None, context=None):
         if context is None:
             context = {"source": "vision_service"}
-        self.emitter.emit(Message("vision.faces.request", {"file":file}, context))
+        self.send_request("vision.faces.request", {"file": file}, context)
         self.wait("vision.faces.result")
         if self.result is None:
             self.result = {}
@@ -250,22 +251,27 @@ class VisionSkill(MycroftSkill):
         self.emit_result(path, False)
 
     def handle_describe_what_do_you_see_intent(self, message):
-        #self.speak("Testing open cv vision")
+        # get vision feed and haar-cascade processing
+        self.speak("Testing open cv vision")
         vision = VisionService(self.emitter)
-        #data = vision.get_data()
+        data = vision.get_data()
         feed = vision.get_feed()
-        #faces = vision.get_faces()
-        #self.speak("feed_path: " + feed)
-        #self.speak("feed_data: " + str(data))
-        #self.speak("face_boxes: " + str(faces))
-        #self.speak('Testing tensorflow object recognition')
-        #objrecog = ObjectRecogService(self.emitter, timeout=30)
-        #result = objrecog.recognize_objects(feed)
-        #objects = result.get("objects", [])
-        #self.speak("object_recog: " + str(objects))
-        self.speak('Testing bvlc google image recognition')
+        faces = vision.get_faces()
+        self.speak("feed_data: " + str(data))
+
+        # get tensor flow object recog api objects
+        self.speak('Testing tensorflow object recognition')
+        objrecog = ObjectRecogService(self.emitter, timeout=30)
+        result = objrecog.recognize_objects(feed)
+        objects = result.get("objects", []) # list of all detected objects
+        labels = result.get("labels", {}) # label and ocurrences of each object with score > 30%
+        self.speak("object_recog: " + str(labels))
+
+        # get bvlc googlenet top 5 classification labels
+        self.speak('Testing bvlc googlenet image recognition')
         imgrecog = ImageRecogService(self.emitter, timeout=130)
         results = imgrecog.get_classification(feed, server=True)
+        # quick cleanup of ugly label names
         i = 0
         for result in list(results):
             # cleave first word nxxxxx
@@ -276,6 +282,7 @@ class VisionSkill(MycroftSkill):
             result = r[:-1].split(",")[0]
             results[i] = result
             i += 1
+
         classifications = results
         self.speak("classifications: " + str(classifications))
 
