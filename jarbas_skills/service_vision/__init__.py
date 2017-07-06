@@ -17,7 +17,44 @@ from imutils.video import FPS
 from imutils.video import WebcamVideoStream as eye
 import imutils
 from time import asctime
+from mycroft.skills.jarbas_service import ServiceBackend
+
 __author__ = "jarbas"
+
+from os.path import dirname
+sys.path.append(dirname(dirname(__file__)))
+
+from service_object_recognition import ObjectRecogService
+from service_image_recognition import ImageRecogService
+
+class VisionService(ServiceBackend):
+    def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
+        super(VisionService, self).__init__(name="VisionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
+
+    def get_feed(self, context=None):
+        if context is None:
+            context = {"source": "vision_service"}
+        self.emitter.emit(Message("vision.feed.request", {}, context))
+        self.wait("vision.feed.result")
+        if self.result is None:
+            self.result = {}
+        return self.result.get("file")
+
+    def get_data(self, context=None):
+        if context is None:
+            context = {"source": "vision_service"}
+        self.emitter.emit(Message("vision_request", {}, context))
+        self.wait("vision_result")
+        return self.result
+
+    def get_faces(self, file=None, context=None):
+        if context is None:
+            context = {"source": "vision_service"}
+        self.emitter.emit(Message("vision.faces.request", {"file":file}, context))
+        self.wait("vision.faces.result")
+        if self.result is None:
+            self.result = {}
+        return self.result.get("faces", [])
 
 
 class VisionSkill(MycroftSkill):
@@ -28,6 +65,10 @@ class VisionSkill(MycroftSkill):
         self.external_shutdown = False
         self.external_reload = False
         self.filter = "None"
+        # bools
+        self.showfeed = True
+        self.showboundingboxes = True
+        self.showdetected = True
         # TODO read from config
         self.webcam_path = dirname(__file__) + "/webcam"
         if not exists(self.webcam_path):
@@ -37,6 +78,8 @@ class VisionSkill(MycroftSkill):
        # self.display_service = DisplayService(self.emitter)
         self.init_vision()
         self.emitter.on("vision_request", self.handle_vision_request)
+        self.emitter.on("vision.feed.request", self.handle_feed_request)
+        self.emitter.on("vision.faces.request", self.handle_face_request)
         self.build_intents()
 
     def build_intents(self):
@@ -126,11 +169,6 @@ class VisionSkill(MycroftSkill):
         self.focalLength = (marker * self.KNOWN_DISTANCE) / self.KNOWN_WIDTH
 
         # TODO read from config file
-        # bools
-        self.showfeed = True
-        self.showboundingboxes = True
-        self.showdetected = True
-
         ######## detected objects ######
         self.detectedfaces = []
         self.detectedmoods = []
@@ -143,12 +181,13 @@ class VisionSkill(MycroftSkill):
             pass
             # TODO start vision thread
         self.filter = "None"
+        self.faces = []
 
     def emit_result(self, path, server=False):
         requester = "vision_service"
         message_type = "vision_result"
-        message_data = {"movement": self.movement, "master": self.master, "distance": self.distance,
-                        "num_persons": self.num_persons, "smile_detected": self.smiling}
+        message_data = {"movement": self.movement,
+                        "num_persons": len(self.faces), "smile_detected": self.smiling, "faces": self.faces}
         message_data["file"] = path
         if server:
             # send server a message
@@ -159,7 +198,7 @@ class VisionSkill(MycroftSkill):
         self.emitter.emit(Message(message_type, message_data, self.context))
 
     def handle_vision_request(self, message):
-        self.process_frame()
+        feed = self.process_frame()
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
         source = message.context.get("source")
         if source is not None and "server" in source:
@@ -167,6 +206,21 @@ class VisionSkill(MycroftSkill):
         else:
             self.emit_result(path, False)
 
+    def handle_feed_request(self, message):
+        path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
+        self.emitter.emit(Message("vision.feed.result", {"file": path}, self.context))
+
+    def handle_face_request(self, message):
+        path = message.data.get("file")
+        if not path:
+            path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
+
+        img = cv2.imread(path)
+        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+
+        # detect faces
+        faces = self.find_faces(gray)
+        self.emitter.emit(Message("vision.faces.result", {"file": path, "faces": faces}, self.context))
 
     # intents
     def handle_webcam_intent(self, message):
@@ -196,11 +250,22 @@ class VisionSkill(MycroftSkill):
         self.emit_result(path, False)
 
     def handle_describe_what_do_you_see_intent(self, message):
-        self.process_frame()
-        feed_path = self.save_feed()
-        self.emit_result(feed_path, False)
-        classifier = ImageRecognitionService(self.emitter)
-        results = classifier.server_image_classification(feed_path, self.context)
+        #self.speak("Testing open cv vision")
+        vision = VisionService(self.emitter)
+        #data = vision.get_data()
+        feed = vision.get_feed()
+        #faces = vision.get_faces()
+        #self.speak("feed_path: " + feed)
+        #self.speak("feed_data: " + str(data))
+        #self.speak("face_boxes: " + str(faces))
+        #self.speak('Testing tensorflow object recognition')
+        #objrecog = ObjectRecogService(self.emitter, timeout=30)
+        #result = objrecog.recognize_objects(feed)
+        #objects = result.get("objects", [])
+        #self.speak("object_recog: " + str(objects))
+        self.speak('Testing bvlc google image recognition')
+        imgrecog = ImageRecogService(self.emitter, timeout=130)
+        results = imgrecog.get_classification(feed, server=True)
         i = 0
         for result in list(results):
             # cleave first word nxxxxx
@@ -211,8 +276,8 @@ class VisionSkill(MycroftSkill):
             result = r[:-1].split(",")[0]
             results[i] = result
             i += 1
-
-        self.speak("i see " + results[0] + ", or maybe it is " + results[1])
+        classifications = results
+        self.speak("classifications: " + str(classifications))
 
     def handle_skeleton_filter_intent(self, message):
         self.speak_dialog("skeleton")
@@ -297,9 +362,8 @@ class VisionSkill(MycroftSkill):
 
         # detect faces
         faces = self.find_faces(gray)
-        sidefaces = self.find_side_faces(gray)
+        self.faces = faces
         biggest = 0
-
         self.log.debug(' searching for faces ')
         for (x, y, w, h) in faces:
             self.log.debug(' detected face id: ' + str(face_counter))
@@ -350,23 +414,6 @@ class VisionSkill(MycroftSkill):
                 self.rect = (x, y, w, h)
                 # update context
                 self.update_context(face_counter)
-
-        self.log.debug(' searching for profile faces ')
-        for (x, y, w, h) in sidefaces:
-            roi_gray = gray[y:y + h, x:x + w]
-            roi_color = img[y:y + h, x:x + w]
-
-            # resize all faces to standard size and append to detected users
-            resized_roi_color = cv2.resize(roi_color, (50, 50))
-            self.detectedfaces.append(resized_roi_color)
-
-            if w * h >= biggest:  # user detected
-                biggest = w * h
-                # foreground/focus rect = user face
-                self.rect = (x, y, w, h)
-                # update context
-                self.update_context(face_counter)
-
         self.log.info(' vision processing complete ')
         return img
 
@@ -531,58 +578,3 @@ class VisionSkill(MycroftSkill):
 def create_skill():
     return VisionSkill()
 
-
-class ImageRecognitionService():
-    def __init__(self, emitter, timeout=30, logger=None, server=False):
-        self.emitter = emitter
-        self.waiting = False
-        self.server = server
-        self.image_classification_result = {"classification":"unknown"}
-        self.timeout = timeout
-        if logger is not None:
-            self.logger = logger
-        else:
-            self.logger = getLogger("ImageRecognitionService")
-
-        self.emitter.on("image_classification_result", self.end_wait)
-
-    def end_wait(self, message):
-        if message.type == "image_classification_result":
-            self.logger.info("image classification result received")
-            self.image_classification_result = message.data
-        self.waiting = False
-
-    def wait(self):
-        start = time.time()
-        elapsed = 0
-        self.waiting = True
-        while self.waiting and elapsed < self.timeout:
-            elapsed = time.time() - start
-            time.sleep(0.1)
-
-    def local_image_classification(self, picture_path, context=None):
-        if context is None:
-            context = {}
-            requester = "vision_service"
-        message_type = "image_classification_request"
-        message_data = {"file": picture_path}
-        self.emitter.emit(Message(message_type, message_data, context))
-        self.wait()
-        result = self.image_classification_result["classification"]
-        return result
-
-    def server_image_classification(self, picture_path, context=None):
-        if context is None:
-            context = {}
-        # send server a message
-        stype = "file"
-        requester = "vision_service"
-        message_type = "image_classification_request"
-        message_data = {"file": picture_path}
-        self.emitter.emit(Message("server_request",
-                                  {"server_msg_type": stype, "requester": requester, "message_type": message_type,
-                                   "message_data": message_data}, context))
-
-        self.wait()
-        result = self.image_classification_result["classification"]
-        return result

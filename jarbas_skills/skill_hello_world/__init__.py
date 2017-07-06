@@ -23,6 +23,13 @@ from mycroft.util.log import getLogger
 __author__ = 'eward'
 
 LOGGER = getLogger(__name__)
+import sys
+from os.path import dirname
+sys.path.append(dirname(dirname(__file__)))
+
+from service_vision import VisionService
+from service_object_recognition import ObjectRecogService
+from service_image_recognition import ImageRecogService
 
 
 class HelloWorldSkill(MycroftSkill):
