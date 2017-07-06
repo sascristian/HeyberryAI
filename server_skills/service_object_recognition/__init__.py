@@ -111,17 +111,51 @@ class ObjectRecogSkill(MycroftSkill):
         frame = cv2.imread(dirname(__file__) + "/test.jpg")
         self.log.info("Detecting objects")
         image_np, boxes, scores, classes, num_detections = detect_objects(frame, sess, detection_graph)
-        labels = []
-        for i in range(min(5, boxes.shape[0])):
-            if classes[i] in category_index.keys():
-                class_name = category_index[classes[i]]['name']
+        objects = []
+        self.log.info("Processing labels")
+        for i in classes:
+            for c in i:
+                obj = {}
+                c = int(c)
+                if c in category_index.keys():
+                    class_name = category_index[c]['name']
+                else:
+                    class_name = 'N/A'
+                obj["label"] = class_name
+                objects.append(obj)
+
+        self.log.info("Processing scores")
+        for i in scores:
+            o = 0
+            for c in i:
+                c = int(c * 100)
+                objects[o]["score"] = c
+                o += 1
+
+        self.log.info("Processing bounding boxes")
+        for i in boxes:
+            o = 0
+            for c in i:
+                # TODO process into x,y coords rects
+                objects[o]["box"] = c
+                o += 1
+
+        self.log.info("Counting objects and removing low scores")
+        labels = {}
+        for obj in objects:
+            # bypass low scores
+            if obj["score"] < 30:
+                continue
+            if obj["label"] not in labels.keys():
+                labels[obj["label"]] = 1
             else:
-                class_name = 'N/A'
-            display_str = '{}: {}%'.format(
-                class_name,
-                int(100 * scores[i]))
-            labels.append(display_str)
-        self.log.info("labels: " + str(boxes))
+                labels[obj["label"]] += 1
+
+        self.log.info("detected : " + str(labels))
+        ut = ""
+        for object in labels:
+            ut += str(labels[object]) + " " + object + " \n"
+        self.speak(ut)
 
     def stop(self):
         pass
