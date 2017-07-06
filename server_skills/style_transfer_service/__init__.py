@@ -170,9 +170,9 @@ class StyleTransferSkill(MycroftSkill):
     def handle_style_transfer_intent(self, message):
         if message.context is None:
             message.context = self.context
-        style_img = dirname(__file__) + "/scream.jpg"
-        target_img = dirname(__file__) + "/obama.jpg"
-        iter_num = message.data.get("iter_num", 300)
+        style_img = dirname(__file__) + "/giger.jpg"
+        target_img = dirname(__file__) + "/starry_night.jpg"
+        iter_num = message.data.get("iter_num", 400)
         self.speak("testing style transfer")
         transfer = StyleTransferTool(self.emitter)
         file = transfer.style_transfer(style_img, target_img, iter_num, message.context)
