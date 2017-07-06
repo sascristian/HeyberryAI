@@ -113,7 +113,7 @@ class ObjectRecogSkill(MycroftSkill):
         image_np, boxes, scores, classes, num_detections = detect_objects(frame, sess, detection_graph)
         labels = []
         for i in range(min(5, boxes.shape[0])):
-            if classes[i] in category_index:
+            if classes[i] in category_index.keys():
                 class_name = category_index[classes[i]]['name']
             else:
                 class_name = 'N/A'
