@@ -146,9 +146,9 @@ class ImageRecognitionSkill(MycroftSkill):
             os.makedirs(self.save_path)
 
     def initialize(self):
-        self.emitter.on("image_classification_request", self.handle_classify)
-        self.emitter.on("class_visualization_request", self.handle_deep_draw)
-        self.emitter.on("class_visualization_result", self.handle_deep_draw_result)
+        self.emitter.on("image.classification.request", self.handle_classify)
+        self.emitter.on("class.visualization.request", self.handle_deep_draw)
+        self.emitter.on("class.visualization.result", self.handle_deep_draw_result)
 
         image_recog_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
             .require("imgstatus").build()
@@ -248,7 +248,7 @@ class ImageRecognitionSkill(MycroftSkill):
         self.log.info(result)
 
         # send result
-        msg_type = "image_classification_result"
+        msg_type = "image.classification.result"
         msg_data = {"classification": result}
         self.context["destinatary"] = user_id
         # to source socket
@@ -347,7 +347,7 @@ class ImageRecognitionSkill(MycroftSkill):
         data = self.client.upload_from_path(path)
         link = data["link"]
         # send result
-        msg_type = "class_visualization_result"
+        msg_type = "class.visualization.result"
         msg_data = {"url": link, "class_label": imagenet_class, "class_name": name}
         # to source socket
         self.context["destinatary"] = user_id
