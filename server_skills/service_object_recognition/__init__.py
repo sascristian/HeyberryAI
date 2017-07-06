@@ -151,7 +151,7 @@ class ObjectRecogSkill(MycroftSkill):
             else:
                 labels[obj["label"]] += 1
 
-        self.log.info("detected : " + str(labels))
+        self.log.info("detected : " + str(objects))
         ut = ""
         for object in labels:
             ut += str(labels[object]) + " " + object + " \n"
