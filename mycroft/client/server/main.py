@@ -304,7 +304,7 @@ def main():
                                 elif deserialized_message.type == "vision_result":
                                     deserialized_message.data["feed_path"] = "../tmp_file.jpg"
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
-                                elif deserialized_message.type == "image_classification_request":
+                                elif deserialized_message.type == "image.classification.request":
                                     deserialized_message.data["file"] = "../tmp_file.jpg"
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
                                 else:
