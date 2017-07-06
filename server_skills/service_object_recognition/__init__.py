@@ -18,7 +18,9 @@
 from adapt.intent import IntentBuilder
 
 from mycroft.skills.core import MycroftSkill
+from mycroft.skills.jarbas_service import ServiceBackend
 from mycroft.util.log import getLogger
+from mycroft.messagebus.message import Message
 
 import os
 import sys
@@ -159,6 +161,23 @@ class ObjectRecogSkill(MycroftSkill):
 
     def stop(self):
         pass
+
+
+class ObjectRecogService(ServiceBackend):
+    def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
+        super(ObjectRecogService, self).__init__(name="ObjectRecogService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
+
+    def recognize_objects(self, picture_path):
+        self.emitter.emit(Message("object.recognition.request", {"file": picture_path}))
+        self.wait("object.recognition.result")
+
+    def recognize_objects_from_url(self, picture_url):
+        self.emitter.emit(Message("object.recognition.request", {"url": picture_url}))
+        self.wait("object.recognition.result")
+
+    def process_result(self):
+        # message.data is already formatted result
+        return self.result
 
 
 def create_skill():
