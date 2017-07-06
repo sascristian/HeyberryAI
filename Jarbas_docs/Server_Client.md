@@ -1,10 +1,38 @@
-# acess to remote jarbas
+Some steps were done to connect mycroft instances together, every instance can receive connections and send answers, or connect and ask answers
 
-remote jarbas has lots of cool stuff, you can run mycroft/client/client/main.py and connect to it, it wqill answer on intent failures
+A chat room could be made this way, or we can imagine something wilder
 
-you do need a keyfile from me first however
+Imagine many mycrofts all running both as server and client, each "asking their parent" the answers for the questions they do not know, then someone makes a protocol to transfer and validate skills between mycrofts, then it evolves by itself
 
-# LOGS
+
+# jarbas client
+
+- the client process connects to the messagebus
+- opens a ssl connection to jarbas's server
+- receives id from server
+- send's names list to server
+- on utterance starts monitoring responses
+- if some intent triggers -> do nothing
+- if intent_failure -> ask server
+- if 20 seconds and no intent nor failure trigger -> ask server
+- listen for requests to message server, including files
+- trust all messages from server and broadcast them to client messagebus
+
+# jarbas server
+
+- the server process connects to the messagebus
+- listens for client ssl connections
+- check if ip is black/whitelisted
+- check if received message types are whitelisted (unknown/blacklisted messages are discarded)
+- do message pre-processing (receive files, add context)
+- answer client requests
+- answer internal skills message_to_client requests
+
+# TODO
+
+- listen for intent.execution.start/end/failure to ask server (20 secs is a placeholder)
+
+# client LOGS
 
             2017-07-05 15:19:08,354 - jarbas - DEBUG - Connected to remote host. Start sending messages
             2017-07-05 15:19:08,574 - jarbas - DEBUG - Received data: {"data": {"id": 42904}, "type": "id", "context": null}
