@@ -39,6 +39,7 @@ class ServiceBackend(object):
         self.waiting_messages = waiting_messages
         for msg in waiting_messages:
             self.emitter.on(msg, self.end_wait)
+        self.context = {"source": self.name, "waiting_for": self.waiting_messages}
 
     def send_request(self, message_type, message_data=None, message_context=None, server=False):
         """
@@ -58,7 +59,6 @@ class ServiceBackend(object):
                                       {"server_msg_type": type, "requester": self.name,
                                        "message_type": message_type,
                                        "message_data": message_data}, message_context))
-
 
     def wait(self, waiting_for="any"):
         """
@@ -85,6 +85,9 @@ class ServiceBackend(object):
         """
         if self.waiting_for == "any" or message.type == self.waiting_for:
             self.result = message.data
+            if message.context is None:
+                message.context = {}
+            self.context.update(message.context)
             self.waiting = False
 
     def get_result(self):

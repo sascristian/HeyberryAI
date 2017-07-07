@@ -70,7 +70,7 @@ class YoutubeSkill(MycroftSkill):
     def handle_play_song_intent(self, message):
         # Play the song requested
         title = message.data.get("Title")
-        target = message.data.get("target", "all")
+        target = message.context.get("destinatary", "all")
         utterance = message.data.get("utterance", "")
         self.speak("searching youtube for " + title)
         # TODO seperate artist and song
@@ -82,7 +82,7 @@ class YoutubeSkill(MycroftSkill):
                 videos.append(url + v)
         self.log.info("Youtube Links:" + str(videos))
         if "fbchat_" in target:
-            self.speak("Here is youtube link", metadata={"url":videos[0]})
+            self.speak("Here is youtube link", metadata={"url": videos[0]})
         else:
             #self.audio_service.play(videos, utterance + " in vlc")
             command = ['cvlc']

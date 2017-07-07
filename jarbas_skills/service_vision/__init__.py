@@ -1,51 +1,21 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
-from mycroft.util.log import getLogger
 
 # try to load display service
 import sys
 from os.path import dirname, exists
 from os import makedirs
-sys.path.append(dirname(dirname(__file__)))
 
-#from service_display.displayservice import DisplayService
-import time
 import numpy as np
 import cv2
 from imutils.video import FPS
 from imutils.video import WebcamVideoStream as eye
 import imutils
 from time import asctime
-from mycroft.skills.jarbas_service import ServiceBackend
+from mycroft.util.services import VisionService, ObjectRecogService, ImageRecogService
 
 __author__ = "jarbas"
-
-from os.path import dirname
-sys.path.append(dirname(dirname(__file__)))
-
-from service_object_recognition import ObjectRecogService
-from service_image_recognition import ImageRecogService
-
-
-class VisionService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
-        super(VisionService, self).__init__(name="VisionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
-
-    def get_feed(self, context=None):
-        self.send_request("vision.feed.request", {}, context)
-        self.wait("vision.feed.result")
-        return self.result.get("file")
-
-    def get_data(self, context=None):
-        self.send_request("vision_request", {}, context)
-        self.wait("vision_result")
-        return self.result
-
-    def get_faces(self, file=None, context=None):
-        self.send_request("vision.faces.request", {"file": file}, context)
-        self.wait("vision.faces.result")
-        return self.result.get("faces", [])
 
 
 class VisionSkill(MycroftSkill):
@@ -189,6 +159,8 @@ class VisionSkill(MycroftSkill):
         self.emitter.emit(Message(message_type, message_data, self.context))
 
     def handle_vision_request(self, message):
+        if message.context is not None:
+            self.context.update(message.context)
         feed = self.process_frame()
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
         source = message.context.get("source")
@@ -198,10 +170,14 @@ class VisionSkill(MycroftSkill):
             self.emit_result(path, False)
 
     def handle_feed_request(self, message):
+        if message.context is not None:
+            self.context.update(message.context)
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
         self.emitter.emit(Message("vision.feed.result", {"file": path}, self.context))
 
     def handle_face_request(self, message):
+        if message.context is not None:
+            self.context.update(message.context)
         path = message.data.get("file")
         if not path:
             path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
@@ -246,20 +222,20 @@ class VisionSkill(MycroftSkill):
         vision = VisionService(self.emitter)
         data = vision.get_data()
         feed = vision.get_feed()
-        faces = vision.get_faces()
+        #faces = vision.get_faces()
         self.speak("feed_data: " + str(data))
 
         # get tensor flow object recog api objects
         self.speak('Testing tensorflow object recognition')
-        objrecog = ObjectRecogService(self.emitter, timeout=30)
-        result = objrecog.recognize_objects(feed)
+        objrecog = ObjectRecogService(self.emitter)
+        result = objrecog.recognize_objects(feed, server=True)
         objects = result.get("objects", []) # list of all detected objects
         labels = result.get("labels", {}) # label and ocurrences of each object with score > 30%
         self.speak("object_recog: " + str(labels))
 
         # get bvlc googlenet top 5 classification labels
         self.speak('Testing bvlc googlenet image recognition')
-        imgrecog = ImageRecogService(self.emitter, timeout=130)
+        imgrecog = ImageRecogService(self.emitter)
         results = imgrecog.get_classification(feed, server=True)
         # quick cleanup of ugly label names
         i = 0
