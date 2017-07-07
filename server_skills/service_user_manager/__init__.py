@@ -51,7 +51,7 @@ class User():
         self.settings = SkillSettings(path)
         if self.user_id not in self.settings.keys():
             self.settings[self.user_id] = {}
-        self.name = self.settings[self.user_id].get("name")
+        self.name = self.settings[self.user_id].get("name", "user")
         self.nicknames = self.settings[self.user_id].get("nicknames", [])
         self.public_key = self.settings[self.user_id].get("public_key")
         self.security_level = self.settings[self.user_id].get("security_level", 0)
@@ -195,12 +195,11 @@ class UserSkill(MycroftSkill):
     def handle_user_from_sock_request(self, message):
         sock = message.data.get("sock", "")
         user_id = "0"
-        self.log.info("user id list: " + str(self.user_list.keys()))
-        self.log.info(sock)
+        self.log.info("user id list: " + str(self.user_list))
         for id in self.user_list.keys():
             if self.user_list[id] == sock:
-                user_id = id
-                self.log.info(id)
+                user_id = str(id)
+                self.log.info(user_id)
                 break
         if user_id not in self.users.keys():
             self.log.error("Something went wrong")
@@ -260,25 +259,16 @@ class UserSkill(MycroftSkill):
         # update user info
         self.log.info("Updating user info")
         current_user = self.users[current_user]
-        self.log.info(0)
         current_user.current_sock = sock
-        self.log.info(1)
         current_user.current_ip = ip
-        self.log.info(2)
         current_user.add_new_ip(ip)
-        self.log.info(3)
         current_user.last_timestamp = time.time()
-        self.log.info(4)
         current_user.last_seen = "0 seconds ago"
-        self.log.info(5)
         current_user.timestamp_history.append(time.time())
-        self.log.info(6)
         current_user.user_type = type
-        self.log.info(7)
         current_user.status = "online"
-        self.log.info(8)
         current_user.save_user()
-        self.log.info("User updated: " + user + " " + ip + " " + str(current_user.last_timestamp))
+        self.log.info("User updated: " + current_user.name + " " + current_user.current_ip + " " + str(current_user.last_timestamp))
         self.emitter.emit(Message("user.connected"))
 
     def handle_user_names(self, message):
