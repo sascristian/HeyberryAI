@@ -4,39 +4,9 @@ import urllib
 from os.path import dirname
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
-from mycroft.skills.jarbas_service import ServiceBackend
+from mycroft.util.services import FaceRecognitionService
 
 __author__ = 'jarbas'
-
-
-def url_to_pic(url):
-    saved_url = dirname(__file__) + "/temp.jpg"
-    f = open(saved_url, 'wb')
-    f.write(urllib.urlopen(url).read())
-    f.close()
-    return saved_url
-
-
-class FaceRecognitionService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
-        super(FaceRecognitionService, self).__init__(name="FaceRecognitionService", emitter=emitter, timeout=timeout,
-                                                     waiting_messages=waiting_messages, logger=logger)
-
-    def face_recognition_from_file(self, picture_path, context=None, server=False):
-        self.send_request(message_type="face.recognition.request",
-                          message_data={"file": picture_path},
-                          message_context=context,
-                          server=server)
-        self.wait("face.recognition.result")
-        return self.result.get("result", "unknown person")
-
-    def face_recognition_from_url(self, url, context=None, server=False):
-        self.send_request(message_type="face.recognition.request",
-                          message_data={"file": url_to_pic(url)},
-                          message_context=context,
-                          server=server)
-        self.wait("face.recognition.result")
-        return self.result.get("result", "unknown person")
 
 
 class FaceRecService(MycroftSkill):

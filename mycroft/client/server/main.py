@@ -38,7 +38,7 @@ blacklisted_ips = []
 whitelisted_ips = []
 blacklist = True
 
-allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "vision_result", "vision.faces.result", "vision.feed.result", "image.classification.request", "class.visualization.request", "face.recognition.request"]
+allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "vision_result", "vision.faces.result", "vision.feed.result", "image.classification.request", "style.transfer.request", "class.visualization.request", "face.recognition.request", "object.recognition.request"]
 names = {}#name, sock this name refers to
 users = {}#sock, [current user of sock]
 
