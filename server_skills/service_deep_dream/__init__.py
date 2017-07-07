@@ -193,14 +193,18 @@ class DreamService(MycroftSkill):
             self.speak("I can't dream without a seed.. retry later")
             return
         image = bc.dream(np.float32(dreampic), end=layer, iter_n=iter)
+        bc.cleanup()
         # write the output image to file
         self.log.info("Saving dream")
-        result = Image.fromarray(np.uint8(image))
         if name is None:
             name = time.asctime().replace(" ", "_") + ".jpg"
         outpath = self.outputdir + name
-        result.save(outpath)
-        bc.cleanup()
+        try:
+            cv2.imwrite(outpath, image)
+        except:
+            result = Image.fromarray(np.uint8(image))
+            result.save(outpath)
+
         return outpath
 
     def guided_dream(self, sourcepath, guidepath, name=None, iter=25):
