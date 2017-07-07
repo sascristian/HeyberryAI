@@ -125,10 +125,6 @@ def offline_client(sock):
         pass
 
 
-def get_user_from_sock(sock_num):
-    pass
-
-
 # answer id
 def answer_id(sock):
     # send the message to the client who has send us the message

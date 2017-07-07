@@ -126,6 +126,12 @@ class UserManagerService(ServiceBackend):
         self.wait("user.from_sock.result")
         return self.result
 
+    def user_from_facebook_id(self, id):
+        self.send_request(message_type="user.from_facebook.request",
+                          message_data={"id": id})
+        self.wait("user.from_facebook.result")
+        return self.result
+
 
 class FaceRecognitionService(ServiceBackend):
     def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):

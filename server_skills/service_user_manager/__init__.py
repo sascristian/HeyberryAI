@@ -125,6 +125,18 @@ class UserSkill(MycroftSkill):
         self.emitter.on("user.disconnect", self.handle_user_disconnect)
         self.emitter.on("user.facebook", self.handle_facebook_user)
         self.emitter.on("user.from_sock.request", self.handle_user_from_sock_request)
+        self.emitter.on("user.from_facebook.request", self.handle_user_from_facebook_request)
+
+    def handle_user_from_facebook_request(self, message):
+        user_id = message.data.get("id")
+        data = {"id": user_id,
+                "fordbidden_skills": self.facebook_users[user_id].forbidden_skills,
+                "fordbidden_messages": self.facebook_users[user_id].forbidden_messages,
+                "fordbidden_intents": self.facebook_users[user_id].forbidden_intents,
+                "security_level": self.facebook_users[user_id].security_level,
+                "pub_key": self.facebook_users[user_id].public_key,
+                "nicknames": self.facebook_users[user_id].nicknames}
+        self.emitter.emit("user.from_facebook.result", data)
 
     def handle_user_from_sock_request(self, message):
         sock = message.data.get("sock")

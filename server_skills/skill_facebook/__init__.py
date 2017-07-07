@@ -34,10 +34,15 @@ from mycroft.skills.core import MycroftSkill
 sys.path.append(dirname(dirname(__file__)))
 from service_browser import BrowserControl
 from mycroft.skills.settings import SkillSettings
+from mycroft.util.services import UserManagerService
+from mycroft.skills.intent_service import IntentParser
 from fuzzywuzzy import fuzz
+
 __author__ = 'jarbas'
 
-# TODO logs in bots
+user_manager = None
+parser = None
+
 
 import logging
 # disable logs from requests and urllib 3, or there is too much spam from facebook
@@ -131,7 +136,9 @@ class FaceChat(fbchat.Client):
         self.queue_thread = None
         self.privacy = False
         self.active = active
-
+        global user_manager, parser
+        parser = IntentParser(self.emitter)
+        user_manager = UserManagerService(self.emitter)
         self.start_threads()
 
     def activate_client(self):
@@ -151,6 +158,24 @@ class FaceChat(fbchat.Client):
                 chatmsg = chat[1]
                 # NOTE user id skill checks for photo param
                 context = {'source': 'fbchat_' + chat[0], "mute": True, "user": chat[2], "photo": chat[3]}
+                # check if skill/intent that will trigger is authorized for this user
+                intent = parser.determine_intent(chatmsg)
+                user_data = user_manager.user_from_facebook(chat[0])
+                if intent in user_data["forbidden_intents"]:
+                    self.log.warning("Intent " + intent + " is not allowed for " + user_data["nicknames"][0])
+                    # remove from queue
+                    self.log.debug("Removing item from queue")
+                    self.queue.pop(0)
+                    continue
+
+                skill = parser.get_skill_id(intent)
+                if skill in user_data["forbidden_skills"]:
+                    self.log.warning("Skill " + skill + " is not allowed for " + user_data["nicknames"][0])
+                    # remove from queue
+                    self.log.debug("Removing item from queue")
+                    self.queue.pop(0)
+                    continue
+
                 self.ws.emit(
                     Message("recognizer_loop:utterance",
                             {'utterances': [chatmsg]}, context))
