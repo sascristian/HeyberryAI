@@ -217,15 +217,13 @@ class UserSkill(MycroftSkill):
         ip = message.data.get("ip")
         sock = message.data.get("sock")
         pub_key = message.data.get("pub_key")
-        type = message.context.get("source", "unknown")
         user = message.context.get("user", "user")
 
-        if ":" in type:
-            type = type.split(":")[0] + "_client"
-
+        type = "sock_client"
         current_user = None
         if pub_key is None:
             pub_key = "yy"
+
         self.log.info("Comparing user key to default key")
         if pub_key == self.default_key:
             # default shared user
