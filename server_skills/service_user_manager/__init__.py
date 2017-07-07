@@ -109,7 +109,7 @@ class User():
 class UserSkill(MycroftSkill):
     def __init__(self):
         super(UserSkill, self).__init__(name="UserSkill")
-        self.default_key = ""
+        self.default_key = "xxxxxxxx"
         self.reload_skill = False
         self.user_list = self.settings.get("users", {}) # id, sock
         self.users = {"0": User("0")}    # id, user object
@@ -216,7 +216,7 @@ class UserSkill(MycroftSkill):
     def handle_user_connect(self, message):
         ip = message.data.get("ip")
         sock = message.data.get("sock")
-        pub_key = message.data.get("pub_key")
+        pub_key = message.data.get("pub_key", "")
         type = message.context.get("source", "unknown")
         user = message.context.get("user", "user")
 
@@ -238,17 +238,19 @@ class UserSkill(MycroftSkill):
         if current_user is None:
             # new user
             # get new_id
-            new_id = len(self.users.keys())+1
+            new_id = len(self.user_list.keys())+1
             while new_id in self.users.keys():
                 new_id += 1
             # save new user
-            new_user = User(id=str(new_id), emitter=self.emitter, name=user)
-            self.users[str(new_id)] = new_user
-            current_user = str(new_id)
+            new_id = str(new_id)
+            new_user = User(id=new_id, emitter=self.emitter, name=user)
+            new_user.public_key = pub_key
+            self.users[new_id] = new_user
+            current_user = new_id
 
         self.user_list[current_user] = sock # set active sock
         # update user info
-        current_user = self.user_list[current_user]
+        current_user = self.users[current_user]
         current_user.current_sock = sock
         current_user.current_ip = ip
         current_user.add_new_ip(ip)
