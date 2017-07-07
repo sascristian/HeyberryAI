@@ -247,7 +247,7 @@ class FaceChat(fbchat.Client):
                 self.log.info("Message from " + author_id + ": " + message)
             author_name = self.get_user_name(author_id)
             author_photo = self.get_user_photo(author_id)
-            self.ws.emit(Message("fb_chat_message",
+            self.ws.emit(Message("fb.chat.message",
                                  {"author_id": author_id, "author_name": author_name, "message": message,
                                       "photo": author_photo}))
             #self.ws.emit(Message("user.facebook", {"name": author_name, "id": author_id, "photo": author_photo, "ts": time.time()}))
