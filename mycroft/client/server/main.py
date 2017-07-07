@@ -106,6 +106,7 @@ def offline_client(sock):
         ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
         logger.debug("Client is offline: " + str(sock.getpeername()))
         names.pop(sock_num, None)
+        ws.emit(Message("user.disconnect", {"ip": ip, "sock": sock_num}))
     except:
         # already removed
         pass
@@ -244,9 +245,12 @@ def main():
                                              ssl_version=ssl.PROTOCOL_TLSv1)
                     CONNECTION_LIST.append(sockfd)
                     logger.debug( "Client (%s, %s) connected" % addr )
+                    # TODO pubkey
+                    context = {"user": "user", "source": addr}
+                    ws.emit(Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": None}, context))
+
                     # tell client it's id
                     answer_id(sockfd)
-
                 except Exception as e:
                     logger.error(e)
             # Some incoming message from a client
@@ -289,6 +293,8 @@ def main():
                                         if sock_num not in names.keys():
                                             names[sock_num] = []
                                         names[sock_num].append(name)
+                                    ws.emit(
+                                        Message("user.names", {"names": data["names"], "sock": sock_num}, context))
                                 elif deserialized_message.type == "id_update":
                                     answer_id(sock)
                                 elif deserialized_message.type == "recognizer_loop:utterance":
@@ -323,6 +329,8 @@ def main():
                             else:
                                 logger.info("file chunk received for " + str(sock_num))
                                 file_socks[sock_num].write(utterance)
+
+                        ws.emit(Message("user.request", {"ip": ip, "sock": sock_num}))
 
                 except Exception as e:
                     logger.error(e)
