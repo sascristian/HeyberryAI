@@ -15,6 +15,8 @@ import urllib2
 import random
 import json
 from bs4 import BeautifulSoup
+from os.path import dirname
+import urllib
 
 try:
     path = ConfigurationManager.get("caffe_path")
@@ -123,8 +125,12 @@ class DreamService(MycroftSkill):
             url = random.choice(pics)
         else:
             url = "https://unsplash.it/640/480/?random"
+        req = urllib.urlopen(url)
+        arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+        img = cv2.imdecode(arr, -1)  # 'load it as it is'
+        cv2.imwrite(dirname(__file__)+"/dream_seed.jpg", img)
         dreamer = DD(self.emitter)
-        dreamer.dream_from_url(url, context=message.context, server=False)
+        dreamer.dream_from_file(dirname(__file__)+"/dream_seed.jpg", context=message.context, server=False)
 
     def handle_dream(self, message):
         # TODO dreaming queue
