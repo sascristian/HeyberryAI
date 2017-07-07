@@ -195,10 +195,10 @@ class DreamService(MycroftSkill):
         image = bc.dream(np.float32(dreampic), end=layer, iter_n=iter)
         bc.cleanup()
         # write the output image to file
-        self.log.info("Saving dream")
         if name is None:
             name = time.asctime().replace(" ", "_") + ".jpg"
         outpath = self.outputdir + name
+        self.log.info("Saving dream: " + outpath)
         try:
             cv2.imwrite(outpath, image)
         except:
