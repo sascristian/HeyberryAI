@@ -171,7 +171,7 @@ class ObjectRecogSkill(MycroftSkill):
         self.emitter.emit(Message("object.recognition.result", {"labels": labels, "objects": objects}, self.context))
         # to source socket
         if ":" in self.context.get("source", ""):
-            if self.context["destinatary"].split(":")[1].isdigit():
+            if self.context["source"].split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
                                           {"context": self.context, "data": {"labels": labels, "objects": objects},
                                            "type": "object.recognition.result"}, self.context))

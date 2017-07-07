@@ -36,7 +36,7 @@ class FaceRecService(MycroftSkill):
         if face is None:
             self.log.error("no file!")
             face = "missing file"
-        user_id = message.context.get("destinatary", "all")
+        user_id = message.context.get("source", "all")
         self.log.info(user_id + " request facerecog for " + face)
 
         if user_id == "unknown":
@@ -70,13 +70,11 @@ class FaceRecService(MycroftSkill):
         self.context["destinatary"] = user_id
         self.emitter.emit(Message("face.recognition.result",
                                   {"result": result}, self.context))
-        try:
+        if ":" in user_id:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
                                           {"context": self.context, "data": {"result": result}, "type": "face.recognition.result"}, self.context))
-        except:
-            # .split failed
-            pass
+
 
     def stop(self):
         pass
