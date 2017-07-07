@@ -216,7 +216,7 @@ class UserSkill(MycroftSkill):
     def handle_user_connect(self, message):
         ip = message.data.get("ip")
         sock = message.data.get("sock")
-        pub_key = message.data.get("pub_key", "")
+        pub_key = message.data.get("pub_key")
         type = message.context.get("source", "unknown")
         user = message.context.get("user", "user")
 
@@ -226,6 +226,9 @@ class UserSkill(MycroftSkill):
             type = "facebook chat"
 
         current_user = None
+        if pub_key is None:
+            pub_key = "yy"
+
         if pub_key == self.default_key:
             # default shared user
             current_user = self.users["0"]
@@ -235,11 +238,12 @@ class UserSkill(MycroftSkill):
                 user = self.users[user]
                 if user.public_key == pub_key:
                     current_user = user.user_id
+
         if current_user is None:
             # new user
             # get new_id
             new_id = len(self.user_list.keys())+1
-            while new_id in self.users.keys():
+            while str(new_id) in self.user_list.keys():
                 new_id += 1
             # save new user
             new_id = str(new_id)
