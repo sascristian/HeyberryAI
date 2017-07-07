@@ -163,8 +163,7 @@ asking server service
                 while self.waiting and elapsed < self.timeout:
                     elapsed = time() - start
                     sleep(0.3)
-                if self.result is None:
-                    self.result = {}
+                self.process_result()
                 return not self.waiting
 
             def end_wait(self, message):
