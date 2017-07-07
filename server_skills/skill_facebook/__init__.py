@@ -32,7 +32,7 @@ from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 
 sys.path.append(dirname(dirname(__file__)))
-from browser_service import BrowserControl
+from service_browser import BrowserControl
 from mycroft.skills.settings import SkillSettings
 from fuzzywuzzy import fuzz
 __author__ = 'jarbas'
