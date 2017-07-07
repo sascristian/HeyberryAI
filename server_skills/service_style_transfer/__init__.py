@@ -45,7 +45,7 @@ from scipy.misc import imsave
 from scipy.optimize import minimize
 from skimage import img_as_ubyte
 from skimage.transform import rescale
-
+from mycroft.util.services import StyleTransferService
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 
@@ -174,10 +174,10 @@ class StyleTransferSkill(MycroftSkill):
         target_img = dirname(__file__) + "/starry_night.jpg"
         iter_num = message.data.get("iter_num", 400)
         self.speak("testing style transfer")
-        transfer = StyleTransferTool(self.emitter)
-        file = transfer.style_transfer(style_img, target_img, iter_num, message.context)
-        url = transfer.get_url()
-        time = transfer.get_time()
+        transfer = StyleTransferService(self.emitter)
+        file = transfer.transfer_from_file(target_img, style_img, iter=iter_num, context=self.context, server=False)
+        url = transfer.get_result().get("url")
+        time = transfer.get_result().get("elapsed_time")
         self.speak("Style transfer test complete in " + str(time) + " seconds", metadata={"file": file, "url": url, "elapsed_time": time})
 
     def handle_style_transfer(self, message):

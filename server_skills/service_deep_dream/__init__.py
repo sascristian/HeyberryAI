@@ -5,14 +5,16 @@ import random
 from PIL import Image
 import imutils
 import sys
-import urllib
 import os
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 from mycroft.configuration import ConfigurationManager
 from imgurpython import ImgurClient
-
+import urllib2
+import random
+import json
+from bs4 import BeautifulSoup
 
 try:
     path = ConfigurationManager.get("caffe_path")
@@ -23,41 +25,9 @@ sys.path.insert(0, path + '/python')
 
 from batcountry import BatCountry
 
+from mycroft.util.services import DreamService as DD
 
 __author__ = 'jarbas'
-
-
-class Dream():
-    def __init__(self, emitter):
-        self.emitter = emitter
-        self.emitter.on("deep.dream.result", self.end_wait)
-        self.waiting = False
-        self.url = None
-        self.file_path = None
-        self.time = None
-
-    def dream(self, dream_source, dream_name=None, iter_num=15, context=None):
-        self.emitter.emit(
-            Message("deep.dream.request", {"dream_source": dream_source, "dream_name": dream_name, "iter_num": iter_num}, context))
-        self.wait()
-        return self.file_path
-
-    def get_url(self):
-        return self.url
-
-    def get_time(self):
-        return self.time
-
-    def wait(self):
-        self.waiting = True
-        while self.waiting:
-            time.sleep(1)
-
-    def end_wait(self, message):
-        self.waiting = False
-        self.url = message.data.get("dream_url")
-        self.file_path = message.data.get("file")
-        self.time = message.data.get("elapsed_time")
 
 
 class DreamService(MycroftSkill):
@@ -139,13 +109,22 @@ class DreamService(MycroftSkill):
     def initialize(self):
         self.emitter.on("deep.dream.request", self.handle_dream)
 
-        dream_status_intent = IntentBuilder("DreamStatusIntent") \
-            .require("dream").build()
-        #self.register_intent(dream_status_intent,
-        #                     self.handle_dream_status_intent)
+        dream_intent = IntentBuilder("DreamIntent") \
+            .require("dream").optionally("Subject").build()
+        self.register_intent(dream_intent,
+                             self.handle_dream_intent)
 
-    def handle_dream_status_intent(self, message):
-        self.speak_dialog("dreamstatus")
+    def handle_dream_intent(self, message):
+        search = message.data.get("Subject")
+        if search:
+            # collect dream entropy
+            self.speak("dreaming about " + search)
+            pics = self.search_pic(search)
+            url = random.choice(pics)
+        else:
+            url = "https://unsplash.it/640/480/?random"
+        dreamer = DD(self.emitter)
+        dreamer.dream_from_url(url, context=message.context, server=False)
 
     def handle_dream(self, message):
         # TODO dreaming queue
@@ -155,6 +134,7 @@ class DreamService(MycroftSkill):
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
         iter = message.data.get("iter_num", self.iter)
+
         result = None
         link = None
         start = time.time()
@@ -200,9 +180,7 @@ class DreamService(MycroftSkill):
             bc = BatCountry(self.path)  # path,model_path=path)
         except Exception as e:
             self.log.error(e)
-        req = urllib.urlopen(imagepah)
-        arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
-        img = cv2.imdecode(arr, -1)  # 'load it as it is'
+        img = cv2.imread(imagepah)
         dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
         if dreampic is None:
             self.log.error("Could not load seed dream pic " + imagepah)
@@ -221,6 +199,29 @@ class DreamService(MycroftSkill):
     def guided_dream(self, sourcepath, guidepath, name=None, iter=25):
         self.log.error("Guided dream not implemented")
         return None
+
+    ## pic search
+    def get_soup(self, url, header):
+        return BeautifulSoup(urllib2.urlopen(urllib2.Request(url, headers=header)), 'html.parser')
+
+    def search_pic(self, searchkey, dlnum=5):
+        query = searchkey  # raw_input("query image")# you can change the query for the image  here
+        query = query.split()
+        query = '+'.join(query)
+        url = "https://www.google.co.in/search?q=" + query + "&source=lnms&tbm=isch"
+        header = {
+            'User-Agent': "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
+        }
+        soup = self.get_soup(url, header)
+        i = 0
+        ActualImages = []  # contains the link for Large original images, type of  image
+        for a in soup.find_all("div", {"class": "rg_meta"}):
+            link = json.loads(a.text)["ou"]
+            ActualImages.append(link)
+            i += 1
+            if i >= dlnum:
+                break
+        return ActualImages
 
     def stop(self):
         pass
