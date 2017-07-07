@@ -22,9 +22,12 @@ from threading import Thread
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-
+from mycroft.util.services import UserManagerService
+from mycroft.skills.intent_service import IntentParser
 
 ws = None
+parser = None
+user_manager = None
 logger = getLogger("Mycroft_Server")
 
 # List to keep track of socket descriptors
@@ -122,6 +125,10 @@ def offline_client(sock):
         pass
 
 
+def get_user_from_sock(sock_num):
+    pass
+
+
 # answer id
 def answer_id(sock):
     # send the message to the client who has send us the message
@@ -137,9 +144,17 @@ def answer_id(sock):
                 offline_client(sock)
 
 
-def get_answer(utterance, context):
-    user = context["user"]
-    # TODO check if skill/intent that will trigger is authorized for this user
+def get_answer(utterance, user_data, context):
+    global parser
+    # check if skill/intent that will trigger is authorized for this user
+    intent = parser.determine_intent(utterance)
+    if intent in user_data["forbidden_intents"]:
+        logger.warning("Intent " + intent + " is not allowed for " + user_data["nicknames"][0])
+        return
+    skill = parser.get_skill_id(intent)
+    if skill in user_data["forbidden_skills"]:
+        logger.warning("Skill " + skill + " is not allowed for " + user_data["nicknames"][0])
+        return
     logger.debug("emitting utterance to bus: " + str(utterance))
     ws.emit(
        Message("recognizer_loop:utterance",
@@ -189,7 +204,7 @@ def handle_message_request(event):
 
 
 def main():
-    global ws
+    global ws, parser, user_manager
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
     ws.on('intent_failure', handle_failure)
@@ -197,6 +212,8 @@ def main():
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
+    parser = IntentParser(ws)
+    user_manager = UserManagerService(ws)
 
     global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue, file_socks
     # start server socket
@@ -213,6 +230,8 @@ def main():
     # read cert and key
     cert = dirname(__file__) + "/certs/myapp.crt"
     key = dirname(__file__) + "/certs/myapp.key"
+
+
     while True:
         # Get the list sockets which are ready to be read through select
         read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
@@ -293,11 +312,14 @@ def main():
                                     context["mute"] = True
                                 context["source"] = str(context["source"]) + ":" + sock_num
 
-                                # TODO authorize user message_type
+                                # authorize user message_type
                                 # get user from sock
+                                user_data = user_manager.user_from_sock(sock_num)
                                 # see if this user can perform this action
-
-                                user = sock_num
+                                if deserialized_message.type in user_data["forbidden_messages"]:
+                                    logger.warning("This user is not allowed to perform this action " + str(sock_num))
+                                    continue
+                                user = user_data["id"]
 
                                 context["user"] = user
                                 # handle message
@@ -324,7 +346,7 @@ def main():
                                 elif deserialized_message.type == "recognizer_loop:utterance":
                                     utterance = data["utterances"][0]
                                     # get answer
-                                    get_answer(utterance, context)
+                                    get_answer(utterance, user_data, context)
                                 elif deserialized_message.type == "incoming_file":
                                     logger.info("started receiving file for " + str(sock_num))
                                     file_socks[sock_num] = open("../tmp_file.jpg", 'wb')

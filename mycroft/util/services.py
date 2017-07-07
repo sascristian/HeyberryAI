@@ -115,6 +115,18 @@ class ServiceBackend(object):
         return self.result
 
 
+class UserManagerService(ServiceBackend):
+    def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
+        super(UserManagerService, self).__init__(name="UserManagerService", emitter=emitter, timeout=timeout,
+                                                   waiting_messages=waiting_messages, logger=logger)
+
+    def user_from_sock(self, sock_num):
+        self.send_request(message_type="user.from_sock.request",
+                          message_data={"sock": sock_num})
+        self.wait("user.from_sock.result")
+        return self.result
+
+
 class FaceRecognitionService(ServiceBackend):
     def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
         super(FaceRecognitionService, self).__init__(name="FaceRecognitionService", emitter=emitter, timeout=timeout,

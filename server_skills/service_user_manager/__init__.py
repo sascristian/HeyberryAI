@@ -26,6 +26,7 @@ LOGGER = getLogger(__name__)
 
 from mycroft.messagebus.message import Message
 from mycroft.skills.settings import SkillSettings
+
 from os.path import dirname
 import time
 
@@ -54,7 +55,9 @@ class User():
         self.nicknames = self.settings[self.user_id].get("nicknames", [])
         self.public_key = self.settings[self.user_id].get("public_key")
         self.security_level = self.settings[self.user_id].get("security_level", 0)
-        self.authorized_skills = self.settings[self.user_id].get("authorized_skills", [])
+        self.forbidden_skills = self.settings[self.user_id].get("forbidden_skills", [])
+        self.forbidden_messages = self.settings[self.user_id].get("forbidden_messages", [])
+        self.forbidden_intents = self.settings[self.user_id].get("forbidden_intents", [])
         self.last_seen = self.settings[self.user_id].get("last_seen", "never")
         self.last_timestamp = self.settings[self.user_id].get("last_ts", 0)
         self.known_ips = self.settings[self.user_id].get("known_ips", [])
@@ -67,13 +70,15 @@ class User():
         self.settings[self.user_id]["nicknames"] = self.nicknames
         self.settings[self.user_id]["public_key"] = self.public_key
         self.settings[self.user_id]["security_level"] = self.security_level
-        self.settings[self.user_id]["authorized_skills"] = self.authorized_skills
+        self.settings[self.user_id]["forbidden_skills"] = self.forbidden_skills
+        self.settings[self.user_id]["forbidden_intents"] = self.forbidden_intents
         self.settings[self.user_id]["last_seen"] = self.last_seen
         self.settings[self.user_id]["last_ts"] = self.last_timestamp
         self.settings[self.user_id]["known_ips"] = self.known_ips
         self.settings[self.user_id]["timestamp_history"] = self.timestamp_history
         self.settings[self.user_id]["photo"] = self.photo
         self.settings[self.user_id]["user_type"] = self.user_type
+        self.settings[self.user_id]["forbidden_messages"] = self.forbidden_messages
         self.settings.store()
 
     def add_new_ip(self, ip, emit=True):
@@ -129,7 +134,9 @@ class UserSkill(MycroftSkill):
                 user_id = id
                 break
         data = {"id": user_id,
-                "authorized_skills": self.users[user_id].authorized_skills,
+                "fordbidden_skills": self.users[user_id].forbidden_skills,
+                "fordbidden_messages": self.users[user_id].forbidden_messages,
+                "fordbidden_intents": self.users[user_id].forbidden_intents,
                 "security_level": self.users[user_id].security_level,
                 "pub_key": self.users[user_id].public_key,
                 "nicknames": self.users[user_id].nicknames}
