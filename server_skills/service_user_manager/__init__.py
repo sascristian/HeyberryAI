@@ -123,9 +123,63 @@ class UserSkill(MycroftSkill):
         self.emitter.on("user.names", self.handle_user_names)
         self.emitter.on("user.request", self.handle_user_request)
         self.emitter.on("user.disconnect", self.handle_user_disconnect)
-        self.emitter.on("user.facebook", self.handle_facebook_user)
+        self.emitter.on("fb.chat.message", self.handle_fb_message_received)
+        self.emitter.on("fb.chat.message.seen", self.handle_fb_message_seen)
+        self.emitter.on("fb.last.seen.timestamps", self.handle_fb_timestamp)
         self.emitter.on("user.from_sock.request", self.handle_user_from_sock_request)
         self.emitter.on("user.from_facebook.request", self.handle_user_from_facebook_request)
+
+    def handle_fb_timestamp(self, message):
+        timestamps = message.data.get("timestamps", {})
+        for id in timestamps:
+            name = timestamps[id]["name"]
+            ts = timestamps[id]["timestamp"]
+            if id in self.facebook_users.keys():
+                current_user = self.facebook_users[id]
+            else:
+                current_user = User(id=id, name=name, emitter=self.emitter)
+                self.facebook_users[id] = current_user
+            current_user.name = name
+            current_user.add_nicknames([name])
+            current_user.user_type = "facebook chat"
+            current_user.status = "online"
+            current_user.last_timestamp = ts
+            current_user.timestamp_history.append(ts)
+            current_user.save_user()
+
+    def handle_fb_message_seen(self, message):
+        name = message.data.get("friend_name")
+        id = message.data.get("friend_id")
+        ts = message.data.get("timestamp")
+        if id in self.facebook_users.keys():
+            current_user = self.facebook_users[id]
+        else:
+            current_user = User(id=id, name=name, emitter=self.emitter)
+            self.facebook_users[id] = current_user
+
+        current_user.name = name
+        current_user.add_nicknames([name])
+        current_user.user_type = "facebook chat"
+        current_user.status = "online"
+        current_user.last_timestamp = ts
+        current_user.timestamp_history.append(ts)
+        current_user.save_user()
+
+    def handle_fb_message_received(self, message):
+        name = message.data.get("author_name")
+        id = message.data.get("author_id")
+        photo = message.data.get("photo")
+        if id in self.facebook_users.keys():
+            current_user = self.facebook_users[id]
+        else:
+            current_user = User(id=id, name=name, emitter=self.emitter)
+            self.facebook_users[id] = current_user
+        current_user.name = name
+        current_user.add_nicknames([name])
+        current_user.user_type = "facebook chat"
+        current_user.status = "online"
+        current_user.photo = photo
+        current_user.save_user()
 
     def handle_user_from_facebook_request(self, message):
         user_id = message.data.get("id")
@@ -153,31 +207,6 @@ class UserSkill(MycroftSkill):
                 "pub_key": self.users[user_id].public_key,
                 "nicknames": self.users[user_id].nicknames}
         self.emitter.emit("user.from_sock.result", data)
-
-    def handle_facebook_user(self, message):
-        name = message.data.get("name")
-        id = message.data.get("id")
-        photo = message.data.get("photo")
-        ts = message.data.get("ts")
-        last_seen = message.data.get("last_seen")
-        if id in self.facebook_users.keys():
-            current_user = self.facebook_users[id]
-        else:
-            current_user = User(id=id, name=name, emitter=self.emitter)
-            self.facebook_users[id] = current_user
-
-        current_user.name = name
-        current_user.add_nicknames([name])
-        current_user.user_type = "facebook chat"
-        current_user.status = "online"
-        if last_seen is not None:
-            current_user.last_seen = last_seen
-        if photo is not None:
-            current_user.photo = photo
-        if ts is not None:
-            current_user.last_timestamp = ts
-            current_user.timestamp_history.append(ts)
-        current_user.save_user()
 
     def handle_user_connect(self, message):
         ip = message.data.get("ip")

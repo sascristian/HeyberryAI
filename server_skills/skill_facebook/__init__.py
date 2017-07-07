@@ -127,7 +127,7 @@ class FaceChat(fbchat.Client):
 
         self.ws = emitter
         if self.ws is not None:
-            self.ws.on("fb_chat_message", self.handle_chat_request)
+            self.ws.on("fb.chat.message", self.handle_chat_request)
             self.ws.on("speak", self.handle_speak)
         else:
             self.log.error("No emitter was provided to facebook chat")
@@ -250,7 +250,7 @@ class FaceChat(fbchat.Client):
             self.ws.emit(Message("fb_chat_message",
                                  {"author_id": author_id, "author_name": author_name, "message": message,
                                       "photo": author_photo}))
-            self.ws.emit(Message("user.facebook", {"name": author_name, "id": author_id, "photo": author_photo, "ts": time.time()}))
+            #self.ws.emit(Message("user.facebook", {"name": author_name, "id": author_id, "photo": author_photo, "ts": time.time()}))
 
     def onChatTimestamp(self, buddylist={}, msg={}):
         """
@@ -281,10 +281,10 @@ class FaceChat(fbchat.Client):
             else:
                 last_seen = str(last_seen) + " seconds ago"
             data[id] = {"name": name, "timestamp": timestamp, "last_seen": last_seen}
-            self.ws.emit(Message("user.facebook",
-                                 {"name": name, "id": id, "last_seen": last_seen, "ts": timestamp}))
+            #self.ws.emit(Message("user.facebook",
+            #                    {"name": name, "id": id, "last_seen": last_seen, "ts": timestamp}))
 
-        self.ws.emit(Message("fb_last_seen_timestamps", {"timestamps": data}))
+        self.ws.emit(Message("fb.last.seen.timestamps", {"timestamps": data}))
 
     def onUnknownMesssageType(self, msg={}):
         """
@@ -337,8 +337,8 @@ class FaceChat(fbchat.Client):
             # seen
             self.ws.emit(
                 Message("fb.chat.message.seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
-            self.ws.emit(Message("user.facebook",
-                                 {"name": name, "id": seen_by, "ts": seen_ts}))
+            #self.ws.emit(Message("user.facebook",
+            #                     {"name": name, "id": seen_by, "ts": seen_ts}))
 
     def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
                            metadata=None, msg={}):
@@ -730,13 +730,13 @@ class FacebookSkill(MycroftSkill):
         # populate friend ids
         self.get_ids_from_chat()  # TODO make an intent for this?
         # listen for chat messages
-        self.emitter.on("fb_chat_message", self.handle_chat_message)
-        self.emitter.on("fb_post_request", self.handle_post_request)
-        self.emitter.on("fb_friend_request", self.handle_friend_request)
-        self.emitter.on("fb_last_seen_timestamps", self.handle_track_friends)
-        self.emitter.on("fb_chat_message_delivered", self.handle_message_delivered)
-        self.emitter.on("fb_chat_message_seen", self.handle_message_seen)
-        self.emitter.on("fb_chat_message_sent", self.handle_message_sent)
+        self.emitter.on("fb.chat.message", self.handle_chat_message)
+        self.emitter.on("fb.post.request", self.handle_post_request)
+        self.emitter.on("fb.friend.request", self.handle_friend_request)
+        self.emitter.on("fb.last.seen.timestamps", self.handle_track_friends)
+        self.emitter.on("fb.chat.message.delivered", self.handle_message_delivered)
+        self.emitter.on("fb.chat.message.seen", self.handle_message_seen)
+        self.emitter.on("fb.chat.message.sent", self.handle_message_sent)
         self.build_intents()
         self.login()
 
