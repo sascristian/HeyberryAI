@@ -260,14 +260,23 @@ class UserSkill(MycroftSkill):
         # update user info
         self.log.info("Updating user info")
         current_user = self.users[current_user]
+        self.log.info(0)
         current_user.current_sock = sock
+        self.log.info(1)
         current_user.current_ip = ip
+        self.log.info(2)
         current_user.add_new_ip(ip)
+        self.log.info(3)
         current_user.last_timestamp = time.time()
+        self.log.info(4)
         current_user.last_seen = "0 seconds ago"
+        self.log.info(5)
         current_user.timestamp_history.append(time.time())
+        self.log.info(6)
         current_user.user_type = type
+        self.log.info(7)
         current_user.status = "online"
+        self.log.info(8)
         current_user.save_user()
         self.log.info("User updated: " + user + " " + ip + " " + str(current_user.last_timestamp))
         self.emitter.emit(Message("user.connected"))
