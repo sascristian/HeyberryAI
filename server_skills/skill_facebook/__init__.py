@@ -137,8 +137,8 @@ class FaceChat(fbchat.Client):
         self.privacy = False
         self.active = active
         global user_manager, parser
-        parser = IntentParser(self.emitter)
-        user_manager = UserManagerService(self.emitter)
+        parser = IntentParser(self.ws)
+        user_manager = UserManagerService(self.ws)
         self.start_threads()
 
     def activate_client(self):
