@@ -160,7 +160,7 @@ class FaceChat(fbchat.Client):
                 context = {'source': 'fbchat_' + chat[0], "mute": True, "user": chat[2], "photo": chat[3]}
                 # check if skill/intent that will trigger is authorized for this user
                 intent = parser.determine_intent(chatmsg)
-                user_data = user_manager.user_from_facebook(chat[0])
+                user_data = user_manager.user_from_facebook_id(chat[0])
                 if intent in user_data["forbidden_intents"]:
                     self.log.warning("Intent " + intent + " is not allowed for " + user_data["nicknames"][0])
                     # remove from queue
