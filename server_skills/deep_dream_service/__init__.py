@@ -157,7 +157,6 @@ class DreamService(MycroftSkill):
         iter = message.data.get("iter_num", self.iter)
         result = None
         link = None
-        elapsed_time = 0
         start = time.time()
         if source is None:
             self.log.error("No dream source")

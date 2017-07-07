@@ -18,7 +18,7 @@
 from adapt.intent import IntentBuilder
 
 from mycroft.skills.core import MycroftSkill
-from mycroft.skills.jarbas_service import ServiceBackend
+from mycroft.util.services import ObjectRecogService
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 
@@ -96,9 +96,21 @@ class ObjectRecogSkill(MycroftSkill):
             require("ViewObjectsKeyword").build()
         self.register_intent(view_objects_intent, self.handle_view_objects_intent)
 
+        self.emitter.on("object.recognition.request", self.handle_recognition_request)
+
     def handle_view_objects_intent(self, message):
         self.speak('Testing object recognition')
-        # Load a (frozen) Tensorflow model into memory.
+        objrecog = ObjectRecogService(self.emitter, timeout=30)
+        result = objrecog.recognize_objects(dirname(__file__) + "/test.jpg", server=False)
+        labels = result.get("labels", {})
+        ut = ""
+        for object in labels:
+            count = labels[object]
+            ut += str(count) + " " + object + " \n"
+        self.speak(ut)
+
+    def handle_recognition_request(self, message):
+        file = message.data.get("file", dirname(__file__) + "/test.jpg")
         self.log.info("Loading tensorflow model into memory")
         detection_graph = tf.Graph()
         with detection_graph.as_default():
@@ -109,8 +121,8 @@ class ObjectRecogSkill(MycroftSkill):
                 tf.import_graph_def(od_graph_def, name='')
 
         sess = tf.Session(graph=detection_graph)
-        self.log.info("Loading test image")
-        frame = cv2.imread(dirname(__file__) + "/test.jpg")
+        self.log.info("Loading image")
+        frame = cv2.imread(file)
         self.log.info("Detecting objects")
         image_np, boxes, scores, classes, num_detections = detect_objects(frame, sess, detection_graph)
         objects = []
@@ -139,7 +151,7 @@ class ObjectRecogSkill(MycroftSkill):
             o = 0
             for c in i:
                 # TODO process into x,y coords rects
-                objects[o]["box"] = c
+                #objects[o]["box"] = c
                 o += 1
 
         self.log.info("Counting objects and removing low scores")
@@ -154,30 +166,16 @@ class ObjectRecogSkill(MycroftSkill):
                 labels[obj["label"]] += 1
 
         self.log.info("detected : " + str(objects))
-        ut = ""
-        for object in labels:
-            ut += str(labels[object]) + " " + object + " \n"
-        self.speak(ut)
+        self.emitter.emit(Message("object.recognition.result", {"labels": labels, "objects": objects}, self.context))
+        # to source socket
+        if ":" in self.context.get("destinatary", ""):
+            if self.context["destinatary"].split(":")[1].isdigit():
+                self.emitter.emit(Message("message_request",
+                                          {"context": self.context, "data": {"labels": labels, "objects": objects},
+                                           "type": "object.recognition.result"}, self.context))
 
     def stop(self):
         pass
-
-
-class ObjectRecogService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
-        super(ObjectRecogService, self).__init__(name="ObjectRecogService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
-
-    def recognize_objects(self, picture_path):
-        self.emitter.emit(Message("object.recognition.request", {"file": picture_path}))
-        self.wait("object.recognition.result")
-
-    def recognize_objects_from_url(self, picture_url):
-        self.emitter.emit(Message("object.recognition.request", {"url": picture_url}))
-        self.wait("object.recognition.result")
-
-    def process_result(self):
-        # message.data is already formatted result
-        return self.result
 
 
 def create_skill():
