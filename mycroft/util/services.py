@@ -1,7 +1,7 @@
 from time import sleep, time, asctime
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
-import urllib
+import urllib, random
 from os.path import dirname
 
 __author__ = 'jarbas'
