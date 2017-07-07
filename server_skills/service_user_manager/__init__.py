@@ -193,9 +193,9 @@ class UserSkill(MycroftSkill):
         self.emitter.emit("user.from_facebook.result", data)
 
     def handle_user_from_sock_request(self, message):
-        sock = message.data.get("sock")
+        sock = message.data.get("sock", "")
         user_id = "0"
-        for id in self.user_list:
+        for id in self.user_list.keys():
             if self.user_list[id] == sock:
                 user_id = id
                 break
