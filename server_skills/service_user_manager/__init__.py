@@ -261,6 +261,7 @@ class UserSkill(MycroftSkill):
         current_user.status = "online"
         current_user.save_user()
         self.log.info("User updated: " + user + " " + ip + " " + str(current_user.last_timestamp))
+        self.emitter.emit(Message("user.connected"))
 
     def handle_user_names(self, message):
         names = message.data.get("names")
@@ -315,6 +316,7 @@ class UserSkill(MycroftSkill):
         current_user.timestamp_history.append(time.time())
         current_user.status = "offline"
         current_user.save_user()
+        self.emitter.emit(Message("user.disconnected"))
 
     def stop(self):
         # save all users
