@@ -105,6 +105,7 @@ class UserSkill(MycroftSkill):
     def __init__(self):
         super(UserSkill, self).__init__(name="UserSkill")
         self.default_key = ""
+        self.reload_skill = False
         self.user_list = self.settings.get("users", {}) # id, sock
         self.users = {"0": User("0")}    # id, user object
         for user_id in self.user_list.keys():
@@ -131,6 +132,7 @@ class UserSkill(MycroftSkill):
             current_user = User(id=id, name=name, emitter=self.emitter)
             self.facebook_users[id] = current_user
 
+        current_user.name = name
         current_user.add_nicknames([name])
         current_user.user_type = "facebook chat"
         current_user.status = "online"
@@ -141,7 +143,7 @@ class UserSkill(MycroftSkill):
         if ts is not None:
             current_user.last_timestamp = ts
             current_user.timestamp_history.append(ts)
-        current_user.save()
+        current_user.save_user()
 
     def handle_user_connect(self, message):
         ip = message.data.get("ip")
@@ -245,7 +247,11 @@ class UserSkill(MycroftSkill):
         current_user.save_user()
 
     def stop(self):
-        pass
+        # save all users
+        for user in self.facebook_users:
+            self.facebook_users[user].save_user()
+        for user in self.users:
+            self.users[user].save_user()
 
 
 def create_skill():
