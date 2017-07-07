@@ -257,7 +257,7 @@ class FaceChat(fbchat.Client):
                 last_seen = str(last_seen) + " seconds ago"
             data[id] = {"name": name, "timestamp": timestamp, "last_seen": last_seen}
             self.ws.emit(Message("user.facebook",
-                                 {"name": name, "id": id, "last_seen": last_seem, "ts": timestamp}))
+                                 {"name": name, "id": id, "last_seen": last_seen, "ts": timestamp}))
 
         self.ws.emit(Message("fb_last_seen_timestamps", {"timestamps": data}))
 
