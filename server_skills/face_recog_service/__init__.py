@@ -33,6 +33,9 @@ class FaceRecService(MycroftSkill):
         if message.context is not None:
             self.context.update(message.context)
         face = message.data.get("file")
+        if face is None:
+            self.log.error("no file!")
+            face = "missing file"
         user_id = message.context.get("destinatary", "all")
         self.log.info(user_id + " request facerecog for " + face)
 
@@ -45,7 +48,10 @@ class FaceRecService(MycroftSkill):
         result = "unknown person"
         # read unknown image
         self.log.info("loading unknown image")
-        unknown_image = face_recognition.load_image_file(face)
+        try:
+            unknown_image = face_recognition.load_image_file(face)
+        except:
+            self.log.error("loading file failed")
         self.log.info("getting face encodings of unknown image")
         try:
             encoding = face_recognition.face_encodings(unknown_image)[0]
