@@ -91,7 +91,7 @@ class ServiceBackend(object):
         """
             return last processed result
         """
-        return self.process_result()
+        return self.result
 
     def process_result(self):
         """

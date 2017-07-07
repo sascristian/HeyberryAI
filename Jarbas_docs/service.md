@@ -1,6 +1,6 @@
 # service backend
 
-a helper abstract class was implemented, this handles waits, timeouts, receiving data from other skill, asking server or locally flag, context manipulation
+a helper abstract class was implemented, this handles waits, timeouts, receiving data from other skill, asking server or locally flag, context manipulation, result processing
 
 # example implemented services usage
 
