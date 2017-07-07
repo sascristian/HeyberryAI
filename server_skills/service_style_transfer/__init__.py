@@ -391,7 +391,7 @@ class StyleTransfer(object):
         if self.log is not None:
             self.log.info("Loading model " + model_name)
         if not os.path.isfile(model_file):
-            self.log.error(model_name + " could not be found in path, check requirements.sh for download")
+            self.log.error(str(model_name) + " could not be found in path, check requirements.sh for download")
             self.abort = True
             return
         else:

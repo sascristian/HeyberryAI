@@ -194,6 +194,7 @@ class DreamService(MycroftSkill):
             return
         image = bc.dream(np.float32(dreampic), end=layer, iter_n=iter)
         # write the output image to file
+        self.log.info("Saving dream")
         result = Image.fromarray(np.uint8(image))
         if name is None:
             name = time.asctime().replace(" ", "_") + ".jpg"
