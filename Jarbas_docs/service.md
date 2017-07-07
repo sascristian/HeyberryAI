@@ -48,17 +48,17 @@ vision service
                 super(VisionService, self).__init__(name="VisionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
             def get_feed(self, context=None):
-                self.send_request("vision.feed.request", {}, context)
+                self.send_request("vision.feed.request")
                 self.wait("vision.feed.result")
                 return self.result.get("file")
 
             def get_data(self, context=None):
-                self.send_request("vision_request", {}, context)
+                self.send_request("vision_request")
                 self.wait("vision_result")
                 return self.result
 
             def get_faces(self, file=None, context=None):
-                self.send_request("vision.faces.request", {"file": file}, context)
+                self.send_request("vision.faces.request", {"file": file})
                 self.wait("vision.faces.result")
                 return self.result.get("faces", [])
 
@@ -187,3 +187,7 @@ asking server service
                 if self.result is None:
                     self.result = {}
                 return self.result
+                
+ # TODO
+ 
+ option to send message to connected client, example, server requesting vision feed for face recog
