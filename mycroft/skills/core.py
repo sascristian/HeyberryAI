@@ -270,7 +270,7 @@ class MycroftSkill(object):
 
         def receive_handler(message):
             try:
-                self.emitter.emit(Message("executing_intent", {"status": "start", "intent": name}))
+                self.emitter.emit(Message("executing.intent.start", {"status": "start", "intent": name}))
                 handler(message)
             except Exception as e:
                 # TODO: Localize
@@ -280,9 +280,9 @@ class MycroftSkill(object):
                 logger.error(
                     "An error occurred while processing a request in " +
                     self.name, exc_info=True)
-                self.emitter.emit(Message("executing_intent", {"status": "failed", "intent": name, "exception": str(e)}))
+                self.emitter.emit(Message("executing.intent.error", {"status": "failed", "intent": name, "exception": str(e)}))
                 return
-            self.emitter.emit(Message("executing_intent", {"status": "executed", "intent": name}))
+            self.emitter.emit(Message("executing.intent.end", {"status": "executed", "intent": name}))
 
         if handler:
             self.emitter.on(intent_parser.name, self.handle_update_context)

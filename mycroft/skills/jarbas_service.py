@@ -40,7 +40,7 @@ class ServiceBackend(object):
         for msg in waiting_messages:
             self.emitter.on(msg, self.end_wait)
 
-    def send_request(self, message_type, message_data=None, message_context=None):
+    def send_request(self, message_type, message_data=None, message_context=None, server=False):
         """
           send message
         """
@@ -48,7 +48,17 @@ class ServiceBackend(object):
             message_data = {}
         if message_context is None:
             message_context = {"source": self.name, "waiting_for": self.waiting_messages}
-        self.emitter.emit(Message(message_type, message_data, message_context))
+        if not server:
+            self.emitter.emit(Message(message_type, message_data, message_context))
+        else:
+            type = "bus"
+            if "file" in message_data.keys():
+                type = "file"
+            self.emitter.emit(Message("server_request",
+                                      {"server_msg_type": type, "requester": self.name,
+                                       "message_type": message_type,
+                                       "message_data": message_data}, message_context))
+
 
     def wait(self, waiting_for="any"):
         """
@@ -66,7 +76,8 @@ class ServiceBackend(object):
         while self.waiting and elapsed < self.timeout:
             elapsed = time() - start
             sleep(0.3)
-
+        if self.result is None:
+            self.result = {}
         return not self.waiting
 
     def end_wait(self, message):

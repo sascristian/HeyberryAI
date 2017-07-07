@@ -65,24 +65,10 @@ def handle_speak(event):
         target = target.split(":")[1] #0/1 id or name doesnt matter
     if my_id is None:
         update_id()
-    if my_id is None:
-        logger.warning("Id is None, is messagebus bus service active?")
 
     # if the target was aimed at client itself, broadcast
     if (str(target) == my_id or str(target) in names) and not mute:
         logger.info("Speak: " + utterance)
-        # redirect to all
-        data = {'utterance': utterance,
-                'expect_response': event.data.get('expect_response'),
-                'mute': mute,
-                'more': event.data.get('more'),
-                'target': "all",
-                "metadata": event.data.get('metadata')}
-        # use source of last utterance as target? no guarantee its correct destiny, but all is not necessarily desirable
-        #if source is not None and source != "unknown":
-        #    data["target"] = source
-        #    source = None
-        #ws.emit(Message("speak", data))
 
 
 def handle_id(event):

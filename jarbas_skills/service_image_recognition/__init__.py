@@ -34,42 +34,21 @@ class ImageRecogService(ServiceBackend):
         super(ImageRecogService, self).__init__(name="ImageRecognitionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
     def get_classification(self, file_path, server=True, context=None):
-        if context is None:
-            context = {"source": self.name}
-
-        if not server:
-            self.send_request(message_type="image.classification.request",
-                              message_data={"file": file_path},
-                              message_context=context)
-        else:
-            self.send_request(message_type="server_request",
-                             message_data={"server_msg_type": "file", "requester": self.name, "message_type": "image.classification.request",
-                                       "message_data": {"file": file_path}},
-                             message_context=context)
-
+        self.send_request(message_type="image.classification.request",
+                          message_data={"file": file_path},
+                          message_context=context,
+                          server=server)
         self.wait("image.classification.result")
-        if self.result is None:
-            self.result = {}
         return self.result.get("classification", [])
 
     def get_deep_draw(self, class_num=None, server=True, context=None):
-        if context is None:
-            context = {"source": self.name}
-        msg_type = "class.visualization.request"
         if class_num is None:
             class_num = random.randint(0, 1000)
-        msg_data = {"class": class_num}
-        if not server:
-            self.emitter.emit(Message(msg_type, msg_data, context))
-        else:
-            self.emitter.emit(Message("server_request",
-                                      {"server_msg_type": "file", "requester": self.name,
-                                       "message_type": msg_type,
-                                       "message_data": msg_data}, context))
-
+        self.send_request(message_type="class.visualization.request",
+                          message_data={"class": class_num},
+                          message_context=context,
+                          server=server)
         self.wait("class.visualization.result")
-        if self.result is None:
-            self.result = {"file": None, "url": None, "class_label": class_num, "class_name": None}
         return self.result.get("file", [])
 
 
@@ -181,8 +160,14 @@ class ImageRecognitionSkill(MycroftSkill):
                 i += 1
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
-        file = imgrecog.get_deep_draw(class_num=imagenet_class, server=True)
-        url = imgrecog.get_result().get("url", "")
+        file = imgrecog.get_deep_draw(class_num=imagenet_class, server=True, context=self.context)
+        result = imgrecog.result
+        if result is None:
+            result = {}
+        url = result.get("url")
+        class_name = result.get("class_name", "")
+        self.speak("Here is how i visualize " + class_name,
+                   metadata=result)
 
     def handle_classify(self, message):
         pic = message.data.get("file", None)
@@ -344,14 +329,6 @@ class ImageRecognitionSkill(MycroftSkill):
         # to bus
         self.emitter.emit(Message(msg_type,
                                   msg_data, self.context))
-
-    def handle_deep_draw_result(self, message):
-        link = message.data.get("url")
-        class_label = message.data.get("class_label")
-        class_name = message.data.get("class_name")
-        self.speak("Here is how i visualize " + class_name,
-                          metadata={"url": link, "class_label": class_label,
-                                    "class_name": class_name}, context=message.context)
 
     def stop(self):
         pass

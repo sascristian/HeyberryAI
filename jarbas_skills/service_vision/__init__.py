@@ -33,28 +33,18 @@ class VisionService(ServiceBackend):
         super(VisionService, self).__init__(name="VisionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
     def get_feed(self, context=None):
-        if context is None:
-            context = {"source": "vision_service"}
         self.send_request("vision.feed.request", {}, context)
         self.wait("vision.feed.result")
-        if self.result is None:
-            self.result = {}
         return self.result.get("file")
 
     def get_data(self, context=None):
-        if context is None:
-            context = {"source": "vision_service"}
         self.send_request("vision_request", {}, context)
         self.wait("vision_result")
         return self.result
 
     def get_faces(self, file=None, context=None):
-        if context is None:
-            context = {"source": "vision_service"}
         self.send_request("vision.faces.request", {"file": file}, context)
         self.wait("vision.faces.result")
-        if self.result is None:
-            self.result = {}
         return self.result.get("faces", [])
 
 

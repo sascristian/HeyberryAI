@@ -90,16 +90,18 @@ class AchievementsSkill(MycroftSkill):
             name = "joke"
         elif "speak" in type:
             name = "tts"
-        elif "image_classification_result" in type:
+        elif "image.classification.result" in type:
             name = "googlenet classification"
         elif "vision_result" in type and data.get("num_persons", 0) > 0:
             name = "face detection"
-        elif "class_visualization_result" in type:
+        elif "class.visualization.result" in type:
             name = "deep draw"
-        elif "deep_dream_result" in type:
+        elif "deep.dream.result" in type:
             name = "deep dream"
         elif "inspirobot" in type:
             name = "inspirobot"
+        elif "object.recognition.result" in type:
+            name = "tensor flow object recognition"
         else:
             return
         self.add_achievement(name)

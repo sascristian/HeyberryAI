@@ -176,22 +176,14 @@ class ObjectRecogService(ServiceBackend):
     def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
         super(ObjectRecogService, self).__init__(name="ObjectRecogService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
-    def recognize_objects(self, picture_path, context=None):
-        if context is None:
-            context = {"source": "Object Recognition"}
-        self.send_request("object.recognition.request", {"file": picture_path}, context)
+    def recognize_objects(self, picture_path, context=None, server=False):
+        self.send_request("object.recognition.request", {"file": picture_path}, context, server=server)
         self.wait("object.recognition.result")
-        if self.result is None:
-            self.result = {"labels": {}, "objects": []}
         return self.result
 
-    def recognize_objects_from_url(self, picture_url, context=None):
-        if context is None:
-            context = {"source": "Object Recognition"}
-        self.send_request("object.recognition.request", {"url": picture_url}, context)
+    def recognize_objects_from_url(self, picture_url, context=None, server=False):
+        self.send_request("object.recognition.request", {"url": picture_url}, context, server=server)
         self.wait("object.recognition.result")
-        if self.result is None:
-            self.result = {"labels": {}, "objects": []}
         return self.result
 
 

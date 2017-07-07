@@ -1,6 +1,6 @@
 # service backend
 
-a helper abstract class was implemented, this handles timeouts and receiving data from other skill
+a helper abstract class was implemented, this handles waits, timeouts, receiving data from other skill, asking server or locally flag, context manipulation
 
 # example implemented services usage
 
@@ -35,7 +35,11 @@ a helper abstract class was implemented, this handles timeouts and receiving dat
             classifications = imgrecog.get_classification(feed, server=True)
             self.speak("classifications: " + str(classifications))
 
-# implementating a service
+# implementing a service
+
+
+vision service
+
 
         from mycroft.skills.jarbas_service import BackendService
 
@@ -43,26 +47,50 @@ a helper abstract class was implemented, this handles timeouts and receiving dat
             def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
                 super(VisionService, self).__init__(name="VisionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
-            def get_feed(self):
-                self.send_request("vision.feed.request")
+            def get_feed(self, context=None):
+                self.send_request("vision.feed.request", {}, context)
                 self.wait("vision.feed.result")
-                if self.result is None:
-                    self.result = {}
                 return self.result.get("file")
 
-            def get_data(self):
-                self.send_request("vision_request")
+            def get_data(self, context=None):
+                self.send_request("vision_request", {}, context)
                 self.wait("vision_result")
                 return self.result
 
-            def get_faces(self, file=None):
-                self.send_request("vision.faces.request", {"file": file})
+            def get_faces(self, file=None, context=None):
+                self.send_request("vision.faces.request", {"file": file}, context)
                 self.wait("vision.faces.result")
-                if self.result is None:
-                    self.result = {}
                 return self.result.get("faces", [])
 
+asking server service
+
+        class ImageRecogService(ServiceBackend):
+            def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
+                super(ImageRecogService, self).__init__(name="ImageRecognitionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
+
+            def get_classification(self, file_path, server=True, context=None):
+                self.send_request(message_type="image.classification.request",
+                                  message_data={"file": file_path},
+                                  message_context=context,
+                                  server=server)
+                self.wait("image.classification.result")
+                return self.result.get("classification", [])
+
+            def get_deep_draw(self, class_num=None, server=True, context=None):
+                if class_num is None:
+                    class_num = random.randint(0, 1000)
+                self.send_request(message_type="class.visualization.request",
+                                  message_data={"class": class_num},
+                                  message_context=context,
+                                  server=server)
+                self.wait("class.visualization.result")
+                return self.result.get("file", [])
+
+
+
+
 # full class
+
 
         class ServiceBackend(object):
             """
@@ -99,7 +127,7 @@ a helper abstract class was implemented, this handles timeouts and receiving dat
                 for msg in waiting_messages:
                     self.emitter.on(msg, self.end_wait)
 
-            def send_request(self, message_type, message_data=None, message_context=None):
+            def send_request(self, message_type, message_data=None, message_context=None, server=False):
                 """
                   send message
                 """
@@ -107,7 +135,17 @@ a helper abstract class was implemented, this handles timeouts and receiving dat
                     message_data = {}
                 if message_context is None:
                     message_context = {"source": self.name, "waiting_for": self.waiting_messages}
-                self.emitter.emit(Message(message_type, message_data, message_context))
+                if not server:
+                    self.emitter.emit(Message(message_type, message_data, message_context))
+                else:
+                    type = "bus"
+                    if "file" in message_data.keys():
+                        type = "file"
+                    self.emitter.emit(Message("server_request",
+                                              {"server_msg_type": type, "requester": self.name,
+                                               "message_type": message_type,
+                                               "message_data": message_data}, message_context))
+
 
             def wait(self, waiting_for="any"):
                 """
@@ -125,7 +163,8 @@ a helper abstract class was implemented, this handles timeouts and receiving dat
                 while self.waiting and elapsed < self.timeout:
                     elapsed = time() - start
                     sleep(0.3)
-
+                if self.result is None:
+                    self.result = {}
                 return not self.waiting
 
             def end_wait(self, message):
@@ -146,4 +185,6 @@ a helper abstract class was implemented, this handles timeouts and receiving dat
                 """
                  process and return only desired data
                  """
+                if self.result is None:
+                    self.result = {}
                 return self.result
