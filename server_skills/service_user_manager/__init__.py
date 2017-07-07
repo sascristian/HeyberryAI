@@ -119,6 +119,21 @@ class UserSkill(MycroftSkill):
         self.emitter.on("user.request", self.handle_user_request)
         self.emitter.on("user.disconnect", self.handle_user_disconnect)
         self.emitter.on("user.facebook", self.handle_facebook_user)
+        self.emitter.on("user.from_sock.request", self.handle_user_from_sock_request)
+
+    def handle_user_from_sock_request(self, message):
+        sock = message.data.get("sock")
+        user_id = "0"
+        for id in self.user_list:
+            if self.user_list[id] == sock:
+                user_id = id
+                break
+        data = {"id": user_id,
+                "authorized_skills": self.users[user_id].authorized_skills,
+                "security_level": self.users[user_id].security_level,
+                "pub_key": self.users[user_id].public_key,
+                "nicknames": self.users[user_id].nicknames}
+        self.emitter.emit("user.from_sock.result", data)
 
     def handle_facebook_user(self, message):
         name = message.data.get("name")

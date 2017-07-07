@@ -38,9 +38,20 @@ blacklisted_ips = []
 whitelisted_ips = []
 blacklist = True
 
-allowed_bus_messages = ["recognizer_loop:utterance", "names_response", "id_update", "incoming_file", "vision_result", "vision.faces.result", "vision.feed.result", "image.classification.request", "style.transfer.request", "class.visualization.request", "face.recognition.request", "object.recognition.request"]
-names = {}#name, sock this name refers to
-users = {}#sock, [current user of sock]
+allowed_bus_messages = ["recognizer_loop:utterance",
+                        "names_response",
+                        "id_update",
+                        "incoming_file",
+                        "vision_result",
+                        "vision.faces.result",
+                        "vision.feed.result",
+                        "image.classification.request",
+                        "style.transfer.request",
+                        "class.visualization.request",
+                        "face.recognition.request",
+                        "object.recognition.request"]
+
+names = {} #name, sock this name refers to
 
 message_queue = {}
 file_socks = {} #sock num: file object
@@ -64,7 +75,6 @@ def handle_speak(event):
         message_queue[sock_num] = []
     logger.debug("Adding answer to answering queue")
     message_queue[sock_num].append([answer_type, event.data, event.context])
-
 
 
 def connect():
@@ -128,6 +138,8 @@ def answer_id(sock):
 
 
 def get_answer(utterance, context):
+    user = context["user"]
+    # TODO check if skill/intent that will trigger is authorized for this user
     logger.debug("emitting utterance to bus: " + str(utterance))
     ws.emit(
        Message("recognizer_loop:utterance",
@@ -186,7 +198,7 @@ def main():
     event_thread.setDaemon(True)
     event_thread.start()
 
-    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue, users, file_socks
+    global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue, file_socks
     # start server socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -280,13 +292,25 @@ def main():
                                 if "mute" not in context.keys():
                                     context["mute"] = True
                                 context["source"] = str(context["source"]) + ":" + sock_num
-                                # TODO authorize user
-                                if sock_num in users.keys():
-                                    user = users[sock_num]
-                                else:
-                                    user = sock_num
+
+                                # TODO authorize user message_type
+                                # get user from sock
+                                # see if this user can perform this action
+
+                                user = sock_num
+
                                 context["user"] = user
                                 # handle message
+
+                                # check if message also sent files
+                                if "file" in deserialized_message.data.keys():
+                                    deserialized_message.data["file"] = "../tmp_file.jpg"
+                                elif "feed_path" in deserialized_message.data.keys():
+                                    deserialized_message.data["feed_path"] = "../tmp_file.jpg"
+                                elif "path" in deserialized_message.data.keys():
+                                    deserialized_message.data["path"] = "../tmp_file.jpg"
+
+                                # pre-process message type
                                 if deserialized_message.type == "names_response":
                                     for name in data["names"]:
                                         logger.debug("Setting alias: " + name + " for socket: " + sock_num)
@@ -304,22 +328,10 @@ def main():
                                 elif deserialized_message.type == "incoming_file":
                                     logger.info("started receiving file for " + str(sock_num))
                                     file_socks[sock_num] = open("../tmp_file.jpg", 'wb')
-
-                                # set temp file path
-                                if "file" in deserialized_message.data.keys():
-                                    deserialized_message.data["file"] = "../tmp_file.jpg"
-                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
-                                elif "feed_path" in deserialized_message.data.keys():
-                                    deserialized_message.data["feed_path"] = "../tmp_file.jpg"
-                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
-                                elif "path" in deserialized_message.data.keys():
-                                    deserialized_message.data["path"] = "../tmp_file.jpg"
-                                    ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
                                 else:
                                     logger.info("no special handling provided for " + deserialized_message.type)
                                     # message is whitelisted and no special handling was provided
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
-
 
                         else:
                             if utterance == "end_of_file":
