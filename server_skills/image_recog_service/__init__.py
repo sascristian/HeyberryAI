@@ -9,7 +9,7 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 from fuzzywuzzy import fuzz
-from mycroft.skills.jarbas_service import ServiceBackend
+from mycroft.util.services import ImageRecogService
 
 try:
     path = ConfigurationManager.get("caffe_path")
@@ -27,50 +27,6 @@ except:
 # caffe.set_mode_gpu() # uncomment this if gpu processing is available
 
 __author__ = 'jarbas'
-
-
-class ImageRecogService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
-        super(ImageRecogService, self).__init__(name="ImageRecognitionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
-
-    def get_classification(self, file_path, server=True, context=None):
-        if context is None:
-            context = {"source": self.name}
-
-        if not server:
-            self.send_request(message_type="image.classification.request",
-                              message_data={"file": file_path},
-                              message_context=context)
-        else:
-            self.send_request(message_type="server_request",
-                             message_data={"server_msg_type": "file", "requester": self.name, "message_type": "image.classification.request",
-                                       "message_data": {"file": file_path}},
-                             message_context=context)
-
-        self.wait("image.classification.result")
-        if self.result is None:
-            self.result = {}
-        return self.result.get("classification", [])
-
-    def get_deep_draw(self, class_num=None, server=True, context=None):
-        if context is None:
-            context = {"source": self.name}
-        msg_type = "class.visualization.request"
-        if class_num is None:
-            class_num = random.randint(0, 1000)
-        msg_data = {"class": class_num}
-        if not server:
-            self.emitter.emit(Message(msg_type, msg_data, context))
-        else:
-            self.emitter.emit(Message("server_request",
-                                      {"server_msg_type": "file", "requester": self.name,
-                                       "message_type": msg_type,
-                                       "message_data": msg_data}, context))
-
-        self.wait("class.visualization.result")
-        if self.result is None:
-            self.result = {"file": None, "url": None, "class_label": class_num, "class_name": None}
-        return self.result.get("file", [])
 
 
 class ImageRecognitionSkill(MycroftSkill):
@@ -191,6 +147,8 @@ class ImageRecognitionSkill(MycroftSkill):
                    metadata=result)
 
     def handle_classify(self, message):
+        if message.context is not None:
+            self.context.update(message.context)
         pic = message.data.get("file", None)
         if pic is None:
             self.log.error("Could not read file to classify")
@@ -250,6 +208,8 @@ class ImageRecognitionSkill(MycroftSkill):
                                   msg_data, self.context))
 
     def handle_deep_draw(self, message):
+        if message.context is not None:
+            self.context.update(message.context)
         # deep draw, these octaves determine gradient ascent steps
         octaves = [
             {

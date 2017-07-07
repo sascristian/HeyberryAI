@@ -30,6 +30,8 @@ class FaceRecService(MycroftSkill):
         # TODO test face recog intent
 
     def handle_recog(self, message):
+        if message.context is not None:
+            self.context.update(message.context)
         face = message.data.get("file")
         user_id = message.context.get("destinatary", "all")
         self.log.info(user_id + " request facerecog for " + face)

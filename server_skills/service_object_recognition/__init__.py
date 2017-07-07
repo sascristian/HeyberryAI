@@ -110,6 +110,8 @@ class ObjectRecogSkill(MycroftSkill):
         self.speak(ut)
 
     def handle_recognition_request(self, message):
+        if message.context is not None:
+            self.context.update(message.context)
         file = message.data.get("file", dirname(__file__) + "/test.jpg")
         self.log.info("Loading tensorflow model into memory")
         detection_graph = tf.Graph()
