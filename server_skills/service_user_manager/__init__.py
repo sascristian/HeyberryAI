@@ -221,39 +221,46 @@ class UserSkill(MycroftSkill):
         user = message.context.get("user", "user")
 
         if ":" in type:
-            type = type.split(":")[0] + "client"
-        elif "fbchat" in type:
-            type = "facebook chat"
+            type = type.split(":")[0] + "_client"
 
         current_user = None
         if pub_key is None:
             pub_key = "yy"
-
+        self.log.info("Comparing user key to default key")
         if pub_key == self.default_key:
             # default shared user
             current_user = self.users["0"]
         else:
+            self.log.info("Comparing user key to keys in db")
             # id user by pub_key
             for user in self.users:
                 user = self.users[user]
                 if user.public_key == pub_key:
+                    self.log.info("User found")
                     current_user = user.user_id
 
         if current_user is None:
+            self.log.info("Registering new user")
             # new user
             # get new_id
+            self.log.info("new_id")
             new_id = len(self.user_list.keys())+1
+            self.log.info(new_id)
             while str(new_id) in self.user_list.keys():
+                self.log.info("id exists, increasing")
                 new_id += 1
             # save new user
             new_id = str(new_id)
             new_user = User(id=new_id, emitter=self.emitter, name=user)
+            self.log.info("Creating user")
             new_user.public_key = pub_key
             self.users[new_id] = new_user
             current_user = new_id
 
+        self.log.info("Setting user sock")
         self.user_list[current_user] = sock # set active sock
         # update user info
+        self.log.info("Updating user info")
         current_user = self.users[current_user]
         current_user.current_sock = sock
         current_user.current_ip = ip
