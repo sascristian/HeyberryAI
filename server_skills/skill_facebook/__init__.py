@@ -225,7 +225,7 @@ class FaceChat(fbchat.Client):
             self.ws.emit(Message("fb_chat_message",
                                  {"author_id": author_id, "author_name": author_name, "message": message,
                                       "photo": author_photo}))
-
+            self.ws.emit(Message("user.facebook", {"name": author_name, "id": author_id, "photo": author_photo, "ts": time.time()}))
 
     def onChatTimestamp(self, buddylist={}, msg={}):
         """
@@ -256,6 +256,9 @@ class FaceChat(fbchat.Client):
             else:
                 last_seen = str(last_seen) + " seconds ago"
             data[id] = {"name": name, "timestamp": timestamp, "last_seen": last_seen}
+            self.ws.emit(Message("user.facebook",
+                                 {"name": name, "id": id, "last_seen": last_seem, "ts": timestamp}))
+
         self.ws.emit(Message("fb_last_seen_timestamps", {"timestamps": data}))
 
     def onUnknownMesssageType(self, msg={}):

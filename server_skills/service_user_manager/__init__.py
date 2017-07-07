@@ -110,15 +110,38 @@ class UserSkill(MycroftSkill):
         for user_id in self.user_list.keys():
             user = User(id=user_id, emitter=self.emitter)
             self.users[user_id] = user
+        self.facebook_users = {} #fb_id, user object
 
     def initialize(self):
         self.emitter.on("user.connect", self.handle_user_connect)
         self.emitter.on("user.names", self.handle_user_names)
         self.emitter.on("user.request", self.handle_user_request)
         self.emitter.on("user.disconnect", self.handle_user_disconnect)
+        self.emitter.on("user.facebook", self.handle_facebook_user)
 
     def handle_facebook_user(self, message):
-        pass
+        name = message.data.get("name")
+        id = message.data.get("id")
+        photo = message.data.get("photo")
+        ts = message.data.get("ts")
+        last_seen = message.data.get("last_seen")
+        if id in self.facebook_users.keys():
+            current_user = self.facebook_users[id]
+        else:
+            current_user = User(id=id, name=name, emitter=self.emitter)
+            self.facebook_users[id] = current_user
+
+        current_user.add_nicknames([name])
+        current_user.user_type = "facebook chat"
+        current_user.status = "online"
+        if last_seen is not None:
+            current_user.last_seen = last_seen
+        if photo is not None:
+            current_user.photo = photo
+        if ts is not None:
+            current_user.last_timestamp = ts
+            current_user.timestamp_history.append(ts)
+        current_user.save()
 
     def handle_user_connect(self, message):
         ip = message.data.get("ip")
