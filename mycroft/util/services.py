@@ -117,7 +117,7 @@ class ServiceBackend(object):
 
 class FaceRecognitionService(ServiceBackend):
     def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
-        super(StyleTransferService, self).__init__(name="FaceRecognitionService", emitter=emitter, timeout=timeout,
+        super(FaceRecognitionService, self).__init__(name="FaceRecognitionService", emitter=emitter, timeout=timeout,
                                                    waiting_messages=waiting_messages, logger=logger)
 
     def face_recognition_from_file(self, picture_path, context=None, server=False):
