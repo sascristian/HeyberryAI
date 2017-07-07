@@ -195,10 +195,15 @@ class UserSkill(MycroftSkill):
     def handle_user_from_sock_request(self, message):
         sock = message.data.get("sock", "")
         user_id = "0"
+        self.log.info("user id list: " + str(self.user_list.keys()))
+        self.log.info(sock)
         for id in self.user_list.keys():
             if self.user_list[id] == sock:
                 user_id = id
+                self.log.info(id)
                 break
+        if user_id not in self.users.keys():
+            self.log.error("Something went wrong")
         data = {"id": user_id,
                 "fordbidden_skills": self.users[user_id].forbidden_skills,
                 "fordbidden_messages": self.users[user_id].forbidden_messages,
