@@ -13,7 +13,7 @@ from imutils.video import FPS
 from imutils.video import WebcamVideoStream as eye
 import imutils
 from time import asctime
-from mycroft.util.services import VisionService, ObjectRecogService, ImageRecogService
+from mycroft.util.jarbas_services import VisionService, ObjectRecogService, ImageRecogService
 
 __author__ = "jarbas"
 

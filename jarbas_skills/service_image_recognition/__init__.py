@@ -10,7 +10,7 @@ from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 from mycroft.configuration import ConfigurationManager
 from fuzzywuzzy import fuzz
-from mycroft.util.services import ImageRecogService
+from mycroft.util.jarbas_services import ImageRecogService
 
 try:
     path = ConfigurationManager().get("caffe_path")
