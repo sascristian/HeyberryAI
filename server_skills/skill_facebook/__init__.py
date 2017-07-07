@@ -278,7 +278,7 @@ class FaceChat(fbchat.Client):
         if self.verbose:
             self.log.info("Friend request from {}".format(from_id))
         if from_id is not None:
-            self.ws.emit(Message("fb_friend_request", {"friend_id": from_id}))
+            self.ws.emit(Message("fb.friend.request", {"friend_id": from_id}))
 
     def onMessageSeen(self, seen_by=None, thread_id=None, thread_type=ThreadType.USER, seen_ts=None, ts=None,
                       metadata=None, msg={}):
@@ -305,13 +305,15 @@ class FaceChat(fbchat.Client):
             # (automatic fb message sent to friend "  you and blabla are now friends, start chatting with blabla")
             self.log.info("friend request accepted by " + name)
             self.ws.emit(
-                Message("fb_possible_new_friend",
+                Message("fb.possible.new.friend",
                         {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
             self.pending_requests.pop(seen_by)
         else:
             # seen
             self.ws.emit(
-                Message("fb_chat_message_seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+                Message("fb.chat.message.seen", {"friend_id": seen_by, "friend_name": name, "timestamp": seen_ts}))
+            self.ws.emit(Message("user.facebook",
+                                 {"name": name, "id": seen_by, "ts": seen_ts}))
 
     def onMessageDelivered(self, msg_ids=None, delivered_for=None, thread_id=None, thread_type=ThreadType.USER, ts=None,
                            metadata=None, msg={}):
@@ -333,7 +335,7 @@ class FaceChat(fbchat.Client):
                                                                        ts / 1000))
         name = self.get_user_name(delivered_for)
         self.ws.emit(
-            Message("fb_chat_message_delivered", {"friend_id": delivered_for, "friend_name": name, "timestamp": ts}))
+            Message("fb.chat.message.delivered", {"friend_id": delivered_for, "friend_name": name, "timestamp": ts}))
 
     def sendMessage(self, message, thread_id=None, thread_type=ThreadType.USER):
         """
@@ -359,7 +361,7 @@ class FaceChat(fbchat.Client):
             self.log.info("Sending message {} to {}".format(message, thread_id))
 
         self.ws.emit(
-            Message("fb_chat_message_sent", {"friend_id": thread_id, "message": message, "message_id": message_id}))
+            Message("fb.chat.message.sent", {"friend_id": thread_id, "message": message, "message_id": message_id}))
         return message_id
 
     # re-log in
