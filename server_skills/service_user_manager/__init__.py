@@ -28,7 +28,7 @@ from mycroft.messagebus.message import Message
 from mycroft.skills.settings import SkillSettings
 
 from os.path import dirname
-import time
+import time, os
 
 
 class User():
@@ -47,7 +47,11 @@ class User():
 
     def load_user(self, path=None):
         if path is None:
-            path = dirname(__file__) + "/users/"+str(self.user_id)+".json"
+            path = dirname(__file__) + "/users"
+        # check if folders exist
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path += "/"+str(self.user_id)+".json"
         self.settings = SkillSettings(path)
         if self.user_id not in self.settings.keys():
             self.settings[self.user_id] = {}
