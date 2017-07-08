@@ -188,6 +188,11 @@ class UserSkill(MycroftSkill):
 
     def handle_user_from_facebook_request(self, message):
         user_id = message.data.get("id")
+        if user_id not in self.facebook_users.keys():
+            # new user
+            new_user = User(id=user_id, emitter=self.emitter)
+            self.facebook_users[user_id] = new_user
+
         data = {"id": user_id,
                 "fordbidden_skills": self.facebook_users[user_id].forbidden_skills,
                 "fordbidden_messages": self.facebook_users[user_id].forbidden_messages,
