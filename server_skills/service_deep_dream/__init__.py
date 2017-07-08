@@ -197,6 +197,8 @@ class DreamService(MycroftSkill):
         # write the output image to file
         if name is None:
             name = time.asctime().replace(" ", "_") + ".jpg"
+        if ".jpg" not in name:
+            name += ".jpg"
         outpath = self.outputdir + name
         self.log.info("Saving dream: " + outpath)
         try:
