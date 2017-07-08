@@ -273,7 +273,7 @@ def main():
                     CONNECTION_LIST.append(sockfd)
                     logger.debug( "Client (%s, %s) connected" % addr )
                     # TODO pubkey
-                    context = {"user": "user", "source": ip+":"+str(sock_num)}
+                    context = {"user": "user", "source": ip + ":" + str(sock_num)}
                     ws.emit(Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": None}, context))
 
                     # tell client it's id

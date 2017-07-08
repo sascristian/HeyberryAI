@@ -135,7 +135,7 @@ class UserSkill(MycroftSkill):
         self.users = {}    # id, user object
         for user_id in self.user_list.keys():
             user = User(id=user_id, emitter=self.emitter)
-            user.reset()
+            #user.reset()
             self.users[user_id] = user
         self.facebook_users = {} #fb_id, user object
 
@@ -215,9 +215,10 @@ class UserSkill(MycroftSkill):
             self.facebook_users[user_id] = new_user
 
         data = {"id": user_id,
-            "fordbidden_skills": self.facebook_users[user_id].forbidden_skills,
-            "fordbidden_messages": self.facebook_users[user_id].forbidden_messages,
-            "fordbidden_intents": self.facebook_users[user_id].forbidden_intents,
+            "forbidden_skills": self.facebook_users[user_id].forbidden_skills,
+            "forbidden_skills": self.facebook_users[user_id].forbidden_skills,
+            "forbidden_messages": self.facebook_users[user_id].forbidden_messages,
+            "forbidden_intents": self.facebook_users[user_id].forbidden_intents,
             "security_level": self.facebook_users[user_id].security_level,
             "pub_key": self.facebook_users[user_id].public_key,
             "nicknames": self.facebook_users[user_id].nicknames}
@@ -240,9 +241,9 @@ class UserSkill(MycroftSkill):
             return
 
         data = {"id": user_id,
-                "fordbidden_skills": self.users[user_id].forbidden_skills,
-                "fordbidden_messages": self.users[user_id].forbidden_messages,
-                "fordbidden_intents": self.users[user_id].forbidden_intents,
+                "forbidden_skills": self.users[user_id].forbidden_skills,
+                "forbidden_messages": self.users[user_id].forbidden_messages,
+                "forbidden_intents": self.users[user_id].forbidden_intents,
                 "security_level": self.users[user_id].security_level,
                 "pub_key": self.users[user_id].public_key,
                 "nicknames": self.users[user_id].nicknames}
@@ -305,7 +306,7 @@ class UserSkill(MycroftSkill):
         current_user.status = "online"
         current_user.save_user()
         self.log.info("User updated: " + current_user.name + " " + current_user.current_ip + " " + str(current_user.last_timestamp))
-        self.emitter.emit(Message("user.connected",{},message.context))
+        self.emitter.emit(Message("user.connected", {} ,message.context))
 
     def handle_user_names(self, message):
         names = message.data.get("names")
