@@ -148,8 +148,95 @@ class UserSkill(MycroftSkill):
         self.emitter.on("fb.chat.message.seen", self.handle_fb_message_seen)
         self.emitter.on("fb.last.seen.timestamps", self.handle_fb_timestamp)
         self.emitter.on("user.from_sock.request", self.handle_user_from_sock_request)
+        self.emitter.on("user.from_id.request", self.handle_user_from_id_request)
         self.emitter.on("user.from_facebook.request", self.handle_user_from_facebook_request)
 
+    # internal messages
+    def handle_user_from_id_request(self, message):
+        user_id = message.data.get("id")
+        found = False
+        for id in self.user_list.keys():
+            # search socks
+            if id == user_id:
+                user_id = str(id)
+                self.log.info("sock user found: " + user_id)
+                found = True
+
+        if not found:
+            # search fb
+            for id in self.facebook_users.keys():
+                # search socks
+                if id == user_id:
+                    user_id = str(id)
+                    self.log.info("facebook user found: " + user_id)
+                    found = True
+        else:
+            data = {"id": user_id,
+                    "forbidden_skills": self.users[user_id].forbidden_skills,
+                    "forbidden_messages": self.users[user_id].forbidden_messages,
+                    "forbidden_intents": self.users[user_id].forbidden_intents,
+                    "security_level": self.users[user_id].security_level,
+                    "pub_key": self.users[user_id].public_key,
+                    "nicknames": self.users[user_id].nicknames}
+            self.emitter.emit(Message("user.from_id.result", data, message.context))
+            return
+
+        if found:
+            data = {"id": user_id,
+                    "forbidden_skills": self.facebook_users[user_id].forbidden_skills,
+                    "forbidden_messages": self.facebook_users[user_id].forbidden_messages,
+                    "forbidden_intents": self.facebook_users[user_id].forbidden_intents,
+                    "security_level": self.facebook_users[user_id].security_level,
+                    "pub_key": self.facebook_users[user_id].public_key,
+                    "nicknames": self.facebook_users[user_id].nicknames}
+            self.emitter.emit(Message("user.from_id.result", data, message.context))
+        else:
+            data = {"id": user_id, "error": "no such user"}
+            self.emitter.emit(Message("user.from_id.result", data, message.context))
+
+    def handle_user_from_facebook_request(self, message):
+        user_id = message.data.get("id")
+        if user_id not in self.facebook_users.keys():
+            self.log.warning("Unknown facebook id provided, creating new user profile")
+            # new user
+            new_user = User(id=user_id, emitter=self.emitter)
+            self.facebook_users[user_id] = new_user
+
+        data = {"id": user_id,
+            "forbidden_skills": self.facebook_users[user_id].forbidden_skills,
+            "forbidden_messages": self.facebook_users[user_id].forbidden_messages,
+            "forbidden_intents": self.facebook_users[user_id].forbidden_intents,
+            "security_level": self.facebook_users[user_id].security_level,
+            "pub_key": self.facebook_users[user_id].public_key,
+            "nicknames": self.facebook_users[user_id].nicknames}
+        self.emitter.emit(Message("user.from_facebook.result", data, message.context))
+
+    def handle_user_from_sock_request(self, message):
+        sock = message.data.get("sock", "")
+        user_id = None
+        self.log.info("user id_to_sock: " + str(self.user_list))
+        for id in self.user_list.keys():
+            if self.user_list[id] == sock:
+                user_id = str(id)
+                self.log.info("user found: " + user_id)
+                break
+
+        if user_id is None or user_id not in self.user_list.keys():
+            self.log.error("Something went wrong, that sock is not supposed to be open")
+            # TODO send close request?
+            self.emitter.emit("user.from_sock.result", {"id": None, "error": "that sock is not supposed to be open"})
+            return
+
+        data = {"id": user_id,
+                "forbidden_skills": self.users[user_id].forbidden_skills,
+                "forbidden_messages": self.users[user_id].forbidden_messages,
+                "forbidden_intents": self.users[user_id].forbidden_intents,
+                "security_level": self.users[user_id].security_level,
+                "pub_key": self.users[user_id].public_key,
+                "nicknames": self.users[user_id].nicknames}
+        self.emitter.emit(Message("user.from_sock.result", data, message.context))
+
+    # facebook messages
     def handle_fb_timestamp(self, message):
         timestamps = message.data.get("timestamps", {})
         for id in timestamps:
@@ -207,48 +294,8 @@ class UserSkill(MycroftSkill):
         current_user.photo = photo
         current_user.save_user()
 
-    def handle_user_from_facebook_request(self, message):
-        user_id = message.data.get("id")
-        if user_id not in self.facebook_users.keys():
-            # new user
-            new_user = User(id=user_id, emitter=self.emitter)
-            self.facebook_users[user_id] = new_user
 
-        data = {"id": user_id,
-            "forbidden_skills": self.facebook_users[user_id].forbidden_skills,
-            "forbidden_skills": self.facebook_users[user_id].forbidden_skills,
-            "forbidden_messages": self.facebook_users[user_id].forbidden_messages,
-            "forbidden_intents": self.facebook_users[user_id].forbidden_intents,
-            "security_level": self.facebook_users[user_id].security_level,
-            "pub_key": self.facebook_users[user_id].public_key,
-            "nicknames": self.facebook_users[user_id].nicknames}
-        self.emitter.emit(Message("user.from_facebook.result", data, message.context))
-
-    def handle_user_from_sock_request(self, message):
-        sock = message.data.get("sock", "")
-        user_id = None
-        self.log.info("user id_to_sock: " + str(self.user_list))
-        for id in self.user_list.keys():
-            if self.user_list[id] == sock:
-                user_id = str(id)
-                self.log.info("user found: " + user_id)
-                break
-
-        if user_id is None or user_id not in self.user_list.keys():
-            self.log.error("Something went wrong, that sock is not supposed to be open")
-            # TODO send close request?
-            self.emitter.emit("user.from_sock.result", {"id": None})
-            return
-
-        data = {"id": user_id,
-                "forbidden_skills": self.users[user_id].forbidden_skills,
-                "forbidden_messages": self.users[user_id].forbidden_messages,
-                "forbidden_intents": self.users[user_id].forbidden_intents,
-                "security_level": self.users[user_id].security_level,
-                "pub_key": self.users[user_id].public_key,
-                "nicknames": self.users[user_id].nicknames}
-        self.emitter.emit(Message("user.from_sock.result", data, message.context))
-
+    # server messages
     def handle_user_connect(self, message):
         ip = message.data.get("ip")
         sock = message.data.get("sock")

@@ -126,10 +126,19 @@ class UserManagerService(ServiceBackend):
         self.wait("user.from_sock.result")
         return self.result
 
-    def user_from_facebook_id(self, id):
+    def user_from_facebook_id(self, fb_id):
         self.send_request(message_type="user.from_facebook.request",
-                          message_data={"id": id})
+                          message_data={"id": fb_id})
         self.wait("user.from_facebook.result")
+        return self.result
+
+    def user_from_id(self, user_id):
+        self.send_request(message_type="user.from_id.request",
+                          message_data={"id": user_id})
+        self.wait("user.from_id.result")
+        if "error" in self.result.keys():
+            self.logger.error(self.result["error"])
+            return None
         return self.result
 
 
