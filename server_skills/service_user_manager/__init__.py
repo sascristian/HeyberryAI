@@ -194,17 +194,19 @@ class UserSkill(MycroftSkill):
 
     def handle_user_from_sock_request(self, message):
         sock = message.data.get("sock", "")
-        user_id = "0"
+        user_id = None
         self.log.info("user id list: " + str(self.user_list))
         for id in self.user_list.keys():
             if self.user_list[id] == sock:
                 user_id = str(id)
-                self.log.info(user_id)
+                self.log.info("user found: " + user_id)
                 break
 
-        if user_id not in self.users.keys():
+        if user_id is None or user_id not in self.users.keys():
             self.log.error("Something went wrong, that sock is not supposed to be open")
             # TODO send close request?
+            self.emitter.emit("user.from_sock.result", {"id": None})
+            return
 
         data = {"id": user_id,
                 "fordbidden_skills": self.users[user_id].forbidden_skills,
@@ -243,11 +245,11 @@ class UserSkill(MycroftSkill):
             self.log.info("Registering new user")
             # new user
             # get new_id
-            self.log.info("new_id")
+            self.log.info("Assigning new id")
             new_id = len(self.user_list.keys())+1
             self.log.info(new_id)
             while str(new_id) in self.user_list.keys():
-                self.log.info("id exists, increasing")
+                self.log.info("assigned id already exists, increasing count")
                 new_id += 1
             # save new user
             new_id = str(new_id)
@@ -266,7 +268,7 @@ class UserSkill(MycroftSkill):
         current_user.current_ip = ip
         current_user.add_new_ip(ip)
         current_user.last_timestamp = time.time()
-        current_user.last_seen = "0 seconds ago"
+        current_user.last_seen = time.asctime()
         current_user.timestamp_history.append(time.time())
         current_user.user_type = type
         current_user.status = "online"
@@ -289,7 +291,7 @@ class UserSkill(MycroftSkill):
         current_user = self.users[user_id]
         current_user.add_nicknames(names)
         current_user.last_timestamp = time.time()
-        current_user.last_seen = "0 seconds ago"
+        current_user.last_seen = time.asctime()
         current_user.timestamp_history.append(time.time())
         current_user.save_user()
 
@@ -306,7 +308,7 @@ class UserSkill(MycroftSkill):
 
         current_user = self.users[user_id]
         current_user.last_timestamp = time.time()
-        current_user.last_seen = "0 seconds ago"
+        current_user.last_seen = time.asctime()
         current_user.timestamp_history.append(time.time())
         current_user.save_user()
 
@@ -323,7 +325,7 @@ class UserSkill(MycroftSkill):
 
         current_user = self.users[user_id]
         current_user.last_timestamp = time.time()
-        current_user.last_seen = "0 seconds ago"
+        current_user.last_seen = time.asctime()
         current_user.timestamp_history.append(time.time())
         current_user.status = "offline"
         current_user.save_user()
