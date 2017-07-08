@@ -143,11 +143,11 @@ def answer_id(sock):
 def get_answer(utterance, user_data, context):
     global parser
     # check if skill/intent that will trigger is authorized for this user
-    intent = parser.determine_intent(utterance)
+    intent, skill = parser.determine_intent(utterance)
     if intent in user_data["forbidden_intents"]:
         logger.warning("Intent " + intent + " is not allowed for " + user_data["nicknames"][0])
         return
-    skill = parser.get_skill_id(intent)
+
     if skill in user_data["forbidden_skills"]:
         logger.warning("Skill " + skill + " is not allowed for " + user_data["nicknames"][0])
         return
