@@ -109,16 +109,33 @@ class User():
             if name not in self.nicknames:
                 self.nicknames.append(name)
 
+    def reset(self):
+        self.name = "user"
+        self.nicknames = []
+        self.public_key = "todo"
+        self.security_level = 0
+        self.forbidden_messages = []
+        self.forbidden_skills = []
+        self.forbidden_intents = []
+        self.last_seen = "never"
+        self.last_timestamp = 0
+        self.known_ips = []
+        self.timestamp_history = []
+        self.photo = None
+        self.user_type = "client"
+        self.save_user()
+
 
 class UserSkill(MycroftSkill):
     def __init__(self):
         super(UserSkill, self).__init__(name="UserSkill")
         self.default_key = "xxxxxxxx"
         self.reload_skill = False
-        self.user_list = self.settings.get("users", {}) # id, sock
+        self.user_list = {} # id, sock
         self.users = {}    # id, user object
         for user_id in self.user_list.keys():
             user = User(id=user_id, emitter=self.emitter)
+            user.reset()
             self.users[user_id] = user
         self.facebook_users = {} #fb_id, user object
 
@@ -197,13 +214,16 @@ class UserSkill(MycroftSkill):
             new_user = User(id=user_id, emitter=self.emitter)
             self.facebook_users[user_id] = new_user
 
-        data = {"id": user_id,
+        try:
+            data = {"id": user_id,
                 "fordbidden_skills": self.facebook_users[user_id].forbidden_skills,
                 "fordbidden_messages": self.facebook_users[user_id].forbidden_messages,
                 "fordbidden_intents": self.facebook_users[user_id].forbidden_intents,
                 "security_level": self.facebook_users[user_id].security_level,
                 "pub_key": self.facebook_users[user_id].public_key,
                 "nicknames": self.facebook_users[user_id].nicknames}
+        except Exception as e:
+            self.log.error(e)
         self.emitter.emit("user.from_facebook.result", data)
 
     def handle_user_from_sock_request(self, message):
@@ -222,13 +242,16 @@ class UserSkill(MycroftSkill):
             self.emitter.emit("user.from_sock.result", {"id": None})
             return
 
-        data = {"id": user_id,
+        try:
+            data = {"id": user_id,
                 "fordbidden_skills": self.users[user_id].forbidden_skills,
                 "fordbidden_messages": self.users[user_id].forbidden_messages,
                 "fordbidden_intents": self.users[user_id].forbidden_intents,
                 "security_level": self.users[user_id].security_level,
                 "pub_key": self.users[user_id].public_key,
                 "nicknames": self.users[user_id].nicknames}
+        except Exception as e:
+            self.log.error(e)
         self.emitter.emit("user.from_sock.result", data)
 
     def handle_user_connect(self, message):
@@ -260,9 +283,9 @@ class UserSkill(MycroftSkill):
             # new user
             # get new_id
             self.log.info("Assigning new id")
-            new_id = len(self.user_list.keys())+1
+            new_id = len(self.users.keys())+1
             self.log.info(new_id)
-            while str(new_id) in self.user_list.keys():
+            while str(new_id) in self.users.keys():
                 self.log.info("assigned id already exists, increasing count")
                 new_id += 1
             # save new user
