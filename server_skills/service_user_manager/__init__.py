@@ -214,17 +214,14 @@ class UserSkill(MycroftSkill):
             new_user = User(id=user_id, emitter=self.emitter)
             self.facebook_users[user_id] = new_user
 
-        try:
-            data = {"id": user_id,
-                "fordbidden_skills": self.facebook_users[user_id].forbidden_skills,
-                "fordbidden_messages": self.facebook_users[user_id].forbidden_messages,
-                "fordbidden_intents": self.facebook_users[user_id].forbidden_intents,
-                "security_level": self.facebook_users[user_id].security_level,
-                "pub_key": self.facebook_users[user_id].public_key,
-                "nicknames": self.facebook_users[user_id].nicknames}
-        except Exception as e:
-            self.log.error(e)
-        self.emitter.emit("user.from_facebook.result", data)
+        data = {"id": user_id,
+            "fordbidden_skills": self.facebook_users[user_id].forbidden_skills,
+            "fordbidden_messages": self.facebook_users[user_id].forbidden_messages,
+            "fordbidden_intents": self.facebook_users[user_id].forbidden_intents,
+            "security_level": self.facebook_users[user_id].security_level,
+            "pub_key": self.facebook_users[user_id].public_key,
+            "nicknames": self.facebook_users[user_id].nicknames}
+        self.emitter.emit(Message("user.from_facebook.result", data, message.context))
 
     def handle_user_from_sock_request(self, message):
         sock = message.data.get("sock", "")
@@ -242,17 +239,14 @@ class UserSkill(MycroftSkill):
             self.emitter.emit("user.from_sock.result", {"id": None})
             return
 
-        try:
-            data = {"id": user_id,
+        data = {"id": user_id,
                 "fordbidden_skills": self.users[user_id].forbidden_skills,
                 "fordbidden_messages": self.users[user_id].forbidden_messages,
                 "fordbidden_intents": self.users[user_id].forbidden_intents,
                 "security_level": self.users[user_id].security_level,
                 "pub_key": self.users[user_id].public_key,
                 "nicknames": self.users[user_id].nicknames}
-        except Exception as e:
-            self.log.error(e)
-        self.emitter.emit("user.from_sock.result", data)
+        self.emitter.emit(Message("user.from_sock.result", data, message.context))
 
     def handle_user_connect(self, message):
         ip = message.data.get("ip")
@@ -311,7 +305,7 @@ class UserSkill(MycroftSkill):
         current_user.status = "online"
         current_user.save_user()
         self.log.info("User updated: " + current_user.name + " " + current_user.current_ip + " " + str(current_user.last_timestamp))
-        self.emitter.emit(Message("user.connected"))
+        self.emitter.emit(Message("user.connected",{},message.context))
 
     def handle_user_names(self, message):
         names = message.data.get("names")
@@ -366,7 +360,7 @@ class UserSkill(MycroftSkill):
         current_user.timestamp_history.append(time.time())
         current_user.status = "offline"
         current_user.save_user()
-        self.emitter.emit(Message("user.disconnected"))
+        self.emitter.emit(Message("user.disconnected",{},message.context))
 
     def stop(self):
         # save all users
