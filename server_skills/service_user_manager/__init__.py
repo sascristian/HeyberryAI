@@ -144,7 +144,9 @@ class UserSkill(MycroftSkill):
             current_user.user_type = "facebook chat"
             current_user.status = "online"
             current_user.last_timestamp = ts
-            current_user.timestamp_history.append(ts)
+            current_user.last_seen = time.asctime()
+            if ts not in current_user.timestamp_history:
+                current_user.timestamp_history.append(ts)
             current_user.save_user()
 
     def handle_fb_message_seen(self, message):
@@ -162,7 +164,9 @@ class UserSkill(MycroftSkill):
         current_user.user_type = "facebook chat"
         current_user.status = "online"
         current_user.last_timestamp = ts
-        current_user.timestamp_history.append(ts)
+        current_user.last_seen = time.asctime()
+        if ts not in current_user.timestamp_history:
+            current_user.timestamp_history.append(ts)
         current_user.save_user()
 
     def handle_fb_message_received(self, message):
@@ -178,6 +182,7 @@ class UserSkill(MycroftSkill):
         current_user.add_nicknames([name])
         current_user.user_type = "facebook chat"
         current_user.status = "online"
+        current_user.last_seen = time.asctime()
         current_user.photo = photo
         current_user.save_user()
 
@@ -195,7 +200,7 @@ class UserSkill(MycroftSkill):
     def handle_user_from_sock_request(self, message):
         sock = message.data.get("sock", "")
         user_id = None
-        self.log.info("user id list: " + str(self.user_list))
+        self.log.info("user id_to_sock: " + str(self.user_list))
         for id in self.user_list.keys():
             if self.user_list[id] == sock:
                 user_id = str(id)
