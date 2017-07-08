@@ -34,7 +34,7 @@ from mycroft.skills.core import MycroftSkill
 sys.path.append(dirname(dirname(__file__)))
 from service_browser import BrowserControl
 from mycroft.skills.settings import SkillSettings
-from mycroft.util.services import UserManagerService
+from mycroft.util.jarbas_services import UserManagerService
 from mycroft.skills.intent_service import IntentParser
 from fuzzywuzzy import fuzz
 

@@ -25,7 +25,7 @@ sys.path.insert(0, path + '/python')
 
 from batcountry import BatCountry
 
-from mycroft.util.services import DreamService as DD
+from mycroft.util.jarbas_services import DreamService as DD
 
 __author__ = 'jarbas'
 

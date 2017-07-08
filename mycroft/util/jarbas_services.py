@@ -179,11 +179,14 @@ class ImageRecogService(ServiceBackend):
     def get_deep_draw(self, class_num=None, server=True, context=None):
         if class_num is None:
             class_num = random.randint(0, 1000)
+        timeout = self.timeout
+        self.timeout = 60 * 40 # 40 mins?
         self.send_request(message_type="class.visualization.request",
                           message_data={"class": class_num},
                           message_context=context,
                           server=server)
         self.wait("class.visualization.result")
+        self.timeout = timeout
         return self.result.get("file", [])
 
 
@@ -208,7 +211,7 @@ class VisionService(ServiceBackend):
 
 
 class ObjectRecogService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
+    def __init__(self, emitter=None, timeout=100, waiting_messages=None, logger=None):
         super(ObjectRecogService, self).__init__(name="ObjectRecogService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
     def recognize_objects(self, picture_path, context=None, server=False):

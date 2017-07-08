@@ -370,7 +370,7 @@ def main():
 
     ignore_logs = ConfigurationManager.instance().get("ignore_logs")
 
-    bonus = ["fb.last.seen.timestamps"]
+    bonus = ["fb.last.seen.timestamps", "user.request"]
     for msg in bonus:
         ignore_logs.append(msg)
     cookies = ["browser_get_cookies_response", "browser_add_cookies_request", "browser_add_cookies_response"]

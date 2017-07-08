@@ -45,7 +45,7 @@ from scipy.misc import imsave
 from scipy.optimize import minimize
 from skimage import img_as_ubyte
 from skimage.transform import rescale
-from mycroft.util.services import StyleTransferService
+from mycroft.util.jarbas_services import StyleTransferService
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 

@@ -22,7 +22,7 @@ from threading import Thread
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-from mycroft.util.services import UserManagerService
+from mycroft.util.jarbas_services import UserManagerService
 from mycroft.skills.intent_service import IntentParser
 
 ws = None

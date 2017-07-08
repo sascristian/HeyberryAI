@@ -19,7 +19,7 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from mycroft.util.services import FaceRecognitionService, VisionService
+from mycroft.util.jarbas_services import FaceRecognitionService, VisionService
 
 __author__ = 'jarbas'
 

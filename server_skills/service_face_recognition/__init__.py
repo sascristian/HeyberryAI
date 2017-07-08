@@ -4,7 +4,7 @@ import urllib
 from os.path import dirname
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
-from mycroft.util.services import FaceRecognitionService
+from mycroft.util.jarbas_services import FaceRecognitionService
 
 __author__ = 'jarbas'
 

@@ -18,7 +18,7 @@
 from adapt.intent import IntentBuilder
 
 from mycroft.skills.core import MycroftSkill
-from mycroft.util.services import ObjectRecogService
+from mycroft.util.jarbas_services import ObjectRecogService
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 
