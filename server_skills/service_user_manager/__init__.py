@@ -112,7 +112,7 @@ class UserSkill(MycroftSkill):
         self.default_key = "xxxxxxxx"
         self.reload_skill = False
         self.user_list = self.settings.get("users", {}) # id, sock
-        self.users = {"0": User("0")}    # id, user object
+        self.users = {}    # id, user object
         for user_id in self.user_list.keys():
             user = User(id=user_id, emitter=self.emitter)
             self.users[user_id] = user
@@ -201,8 +201,11 @@ class UserSkill(MycroftSkill):
                 user_id = str(id)
                 self.log.info(user_id)
                 break
+
         if user_id not in self.users.keys():
-            self.log.error("Something went wrong")
+            self.log.error("Something went wrong, that sock is not supposed to be open")
+            # TODO send close request?
+
         data = {"id": user_id,
                 "fordbidden_skills": self.users[user_id].forbidden_skills,
                 "fordbidden_messages": self.users[user_id].forbidden_messages,
