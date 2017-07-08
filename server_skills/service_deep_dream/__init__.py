@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
 import time
-import random
-from PIL import Image
 import imutils
 import sys
 import os
@@ -201,12 +199,7 @@ class DreamService(MycroftSkill):
             name += ".jpg"
         outpath = self.outputdir + name
         self.log.info("Saving dream: " + outpath)
-        try:
-            cv2.imwrite(outpath, image)
-        except:
-            result = Image.fromarray(np.uint8(image))
-            result.save(outpath)
-
+        cv2.imwrite(outpath, image)
         return outpath
 
     def guided_dream(self, sourcepath, guidepath, name=None, iter=25):
