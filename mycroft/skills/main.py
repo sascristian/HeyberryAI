@@ -370,6 +370,12 @@ def main():
 
     ignore_logs = ConfigurationManager.instance().get("ignore_logs")
 
+    bonus = ["fb.last.seen.timestamps"]
+    for msg in bonus:
+        ignore_logs.append(msg)
+    cookies = ["browser_get_cookies_response", "browser_add_cookies_request", "browser_add_cookies_response"]
+    keys = ["browser_send_keys_to_element", "browser_sent_keys"]
+
     # Listen for messages and echo them for logging
     def _echo(message):
         try:
@@ -377,10 +383,15 @@ def main():
 
             if _message.get("type") in ignore_logs:
                 return
-
-            if _message.get("type") == "registration":
+            elif _message.get("type") in cookies:
+                # do not log cookies from browser messages
+                _message["data"]["cookies"] = ["not showing cookies in logs"]
+            elif _message.get("type") in keys:
+                # do not log keys from browser messages
+                _message["data"]["data"] = ["not showing sent keys in logs"]
+            elif _message.get("type") == "registration":
                 # do not log tokens from registration messages
-                _message["data"]["token"] = None
+                _message["data"]["token"] = ["not showing registration token in logs"]
             message = json.dumps(_message)
         except:
             pass
