@@ -26,17 +26,19 @@ def gen_key(user, passwd, key_lenght=1024, text="jarbas server key", name_real="
     return key
 
 
-def export_key(key_fingerprint, passwd, path=None, private=False):
+def export_key(key_fingerprint, passwd=None, path=None, private=False, save=True):
     if path is None:
         path = gpg_home_dir + '/mykeyfile.asc'
     # export key
-    ascii_armored_public_keys = gpg.export_keys(key_fingerprint, passphrase=passwd)
+    ascii_armored_public_keys = gpg.export_keys(key_fingerprint)
     if private:
         ascii_armored_private_keys = gpg.export_keys(key_fingerprint, True, passphrase=passwd)
-    with open(path, 'w') as f:
-        f.write(ascii_armored_public_keys)
-        if private:
-            f.write(ascii_armored_private_keys)
+    if save:
+        with open(path, 'w') as f:
+            f.write(ascii_armored_public_keys)
+            if private:
+                f.write(ascii_armored_private_keys)
+    return ascii_armored_public_keys
 
 
 def import_key(path=None):
