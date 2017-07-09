@@ -64,15 +64,18 @@ file_socks = {} #sock num: file object
 user = 'JarbasServer@Jarbas.ai'
 passwd = 'welcome to the mycroft collective'
 
-public, private = get_own_keys()
+public, private = get_own_keys(user)
 
-if len(private) == 0:
-    key = generate_server_key(user, passwd)
 
 encrypted = encrypt_string(user, "Jarbas server key loaded")
+if not encrypted.ok:
+    key = generate_server_key(user, passwd)
 
 decrypted = decrypt_string(encrypted, passwd)
-logger.info(decrypted)
+if not decrypted.ok:
+    logger.error("Could not create own gpg key, do you have gpg installed?")
+else:
+    logger.info(decrypted)
 
 
 def handle_failure(event):

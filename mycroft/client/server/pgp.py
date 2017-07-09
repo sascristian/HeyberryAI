@@ -68,20 +68,20 @@ def encrypt_string(user, string='Who are you? How did you get in my house?', ver
         print 'stderr: ', encrypted_data.stderr
         print 'unencrypted_string: ', string
         print 'encrypted_string: ', encrypted_string
-    return encrypted_string
+    return encrypted_data
 
 
 def decrypt_string(encrypted_string, passwd, verbose=False):
-    decrypted_data = gpg.decrypt(encrypted_string, passphrase=passwd)
+    decrypted_data = gpg.decrypt(str(encrypted_string), passphrase=passwd)
     if verbose:
         print 'ok: ', decrypted_data.ok
         print 'status: ', decrypted_data.status
         print 'stderr: ', decrypted_data.stderr
         print 'decrypted string: ', decrypted_data.data
-    return decrypted_data.data
+    return decrypted_data
 
 
-def get_own_keys():
+def get_own_keys(user):
     public_keys, private_keys = list_keys()
 
     my_public_keys = []
@@ -111,12 +111,12 @@ def generate_server_key(user, passwd):
     return key
 
 
-user = 'JarbasServer@Jarbas.ai'
+user = 'xxx'
 passwd = 'welcome to the mycroft collective'
 
-public, private = get_own_keys()
+public, private = get_own_keys(user)
 
 encrypted = encrypt_string(user, "Jarbas server key loaded")
-
+print encrypted.ok
 decrypted = decrypt_string(encrypted, passwd)
-print decrypted
+print decrypted.ok
