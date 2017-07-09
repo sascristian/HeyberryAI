@@ -84,6 +84,7 @@ else:
     ascii_public = export_key(key_id, save=False)
     logger.info(ascii_public)
 
+
 def handle_failure(event):
     # TODO warn user of possible lack of answer (wait for wolfram alpha x seconds first)
     logger.debug("intent failure detected")

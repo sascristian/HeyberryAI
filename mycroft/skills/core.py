@@ -272,15 +272,7 @@ class MycroftSkill(object):
         """
         logger.debug("No initialize function implemented")
 
-    def converse(self, transcript, lang="en-us"):
-        return False
-
-    def make_active(self):
-        # bump skill to active_skill list in intent_service
-        # this ensures converse method is called
-        self.emitter.emit(Message('active_skill_request', {"skill_id":self.skill_id}))
-
-   def _register_decorated(self):
+    def _register_decorated(self):
         """
         Register all intent handlers that has been decorated with an intent.
         """
@@ -288,6 +280,14 @@ class MycroftSkill(object):
         for intent_parser, handler in _intent_list:
             self.register_intent(intent_parser, handler, need_self=True)
         _intent_list = []
+
+    def converse(self, transcript, lang="en-us"):
+        return False
+
+    def make_active(self):
+        # bump skill to active_skill list in intent_service
+        # this ensures converse method is called
+        self.emitter.emit(Message('active_skill_request', {"skill_id":self.skill_id}))
 
     def register_intent(self, intent_parser, handler, need_self=False):
         name = intent_parser.name
