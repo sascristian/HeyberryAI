@@ -206,11 +206,12 @@ class FaceChat(fbchat.Client):
         return users[0].uid
 
     def handle_chat_request(self, message):
+        self.log.info("Processing chat message")
         txt = message.data.get('message')
         user = message.data.get('author_id')
         user_name = message.data.get('author_name')
         user_photo = message.data.get('photo')
-        # TODO read from config skills to be blacklisted
+        self.log.info("chat data: " + txt + " " + user+ " " + user_name+ " " + user_photo)
         if self.active:
             self.log.debug("Adding " + txt + " from user " + user_name + " to queue")
             self.queue.append([user, txt, user_name, user_photo])
@@ -668,7 +669,7 @@ class FacebookSkill(MycroftSkill):
             self.fb_settings = SkillSettings(dirname(__file__) + '/settings.json')
         self.selenium_cookies = True
         # chat client active
-        self.active = True #self.config.get('chat_client', True)
+        self.active = self.config.get('chat_client', True)
         # speak when message received
         self.speak_messages = self.config.get('speak_messages', True)
         # TODO who to warn?
