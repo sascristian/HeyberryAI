@@ -337,7 +337,7 @@ def main():
                                 # get user from sock
                                 user_data = user_manager.user_from_sock(sock_num)
                                 # see if this user can perform this action
-                                if deserialized_message.type in user_data["forbidden_messages"]:
+                                if deserialized_message.type in user_data.get("forbidden_messages",[]):
                                     logger.warning("This user is not allowed to perform this action " + str(sock_num))
                                     continue
                                 user = user_data["id"]

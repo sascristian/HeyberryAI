@@ -249,7 +249,7 @@ class UserSkill(MycroftSkill):
         if user_id is None or user_id not in self.user_list.keys():
             self.log.error("Something went wrong, that sock is not supposed to be open")
             # TODO send close request?
-            self.emitter.emit("user.from_sock.result", {"id": None, "error": "that sock is not supposed to be open"})
+            self.emitter.emit(Message("user.from_sock.result", {"id": None, "error": "that sock is not supposed to be open"}))
             return
 
         data = {"id": user_id,
