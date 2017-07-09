@@ -73,6 +73,7 @@ public, private = get_own_keys(user)
 encrypted = encrypt_string(user, "Jarbas server key loaded")
 if not encrypted.ok:
     key = generate_server_key(user, passwd)
+    encrypted = encrypt_string(user, "Jarbas server key loaded")
 
 decrypted = decrypt_string(encrypted, passwd)
 if not decrypted.ok:
