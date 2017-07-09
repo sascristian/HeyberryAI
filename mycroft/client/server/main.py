@@ -24,6 +24,8 @@ from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 from mycroft.util.jarbas_services import UserManagerService
 from mycroft.skills.intent_service import IntentParser
+from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key
+#from mycroft.client.server.aes import *
 
 ws = None
 parser = None
@@ -58,6 +60,19 @@ names = {} #name, sock this name refers to
 
 message_queue = {}
 file_socks = {} #sock num: file object
+
+user = 'JarbasServer@Jarbas.ai'
+passwd = 'welcome to the mycroft collective'
+
+public, private = get_own_keys()
+
+if len(private) == 0:
+    key = generate_server_key(user, passwd)
+
+encrypted = encrypt_string(user, "Jarbas server key loaded")
+
+decrypted = decrypt_string(encrypted, passwd)
+logger.info(decrypted)
 
 
 def handle_failure(event):

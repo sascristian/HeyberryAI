@@ -44,6 +44,31 @@ class User():
         self.current_ip = None
         self.status = "offline"
         self.user_type = "client"
+        self.default_forbidden_messages = [
+            "incoming_file",
+            "image.classification.request",
+            "style.transfer.request",
+            "deep.dream.request",
+            "class.visualization.request",
+            "face.recognition.request",
+            "object.recognition.request"]
+        self.default_forbidden_skills = ["control_center_skill"] #TODO get skills names, not ids
+        self.default_forbidden_intents = ["StyleTransferIntent",
+                                          "DreamIntent",
+                                          "DeepDrawIntent",
+                                          "ImageClassfyStatusIntent",
+                                          "TestObjectRecogIntent",
+                                          "FollowUserIntent",
+                                          "UnFollowUserIntent",
+                                          "PostTweetIntent",
+                                          "FbLikeRandomPhotoIntent",
+                                          "FbAddSuggestedFriendIntent",
+                                          "FbAddFriendsofFriendsIntent",
+                                          "FbBuildAboutMeIntent",
+                                          "FbLastOnlineIntent",
+                                          "FbChatPersonIntent",
+                                          "FbLikePhotosofPersonIntent"
+                                          ]
 
     def load_user(self, path=None):
         if path is None:
@@ -59,9 +84,9 @@ class User():
         self.nicknames = self.settings[self.user_id].get("nicknames", [])
         self.public_key = self.settings[self.user_id].get("public_key")
         self.security_level = self.settings[self.user_id].get("security_level", 0)
-        self.forbidden_skills = self.settings[self.user_id].get("forbidden_skills", [])
-        self.forbidden_messages = self.settings[self.user_id].get("forbidden_messages", [])
-        self.forbidden_intents = self.settings[self.user_id].get("forbidden_intents", [])
+        self.forbidden_skills = self.settings[self.user_id].get("forbidden_skills", self.default_forbidden_skills)
+        self.forbidden_messages = self.settings[self.user_id].get("forbidden_messages",  self.default_forbidden_messages)
+        self.forbidden_intents = self.settings[self.user_id].get("forbidden_intents", self.default_forbidden_intents)
         self.last_seen = self.settings[self.user_id].get("last_seen", "never")
         self.last_timestamp = self.settings[self.user_id].get("last_ts", 0)
         self.known_ips = self.settings[self.user_id].get("known_ips", [])
