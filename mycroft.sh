@@ -167,6 +167,17 @@ case "$1" in
   stop-mycroft server
   ;;
 
+"restart")
+  case "$2" in
+  ""|"-v"|"--voice"|"-c"|"--cli"|"-d"|"--debug")
+    $0 stop
+    $0 start $2
+    ;;
+  *)
+    usage-exit
+    ;;
+  esac
+  ;;
 *)
   usage-exit
   ;;

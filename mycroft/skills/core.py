@@ -25,6 +25,8 @@ import re
 import time
 from os.path import join, dirname, splitext, isdir
 
+from functools import wraps
+
 from adapt.intent import Intent
 
 from mycroft.client.enclosure.api import EnclosureAPI
@@ -111,7 +113,9 @@ def load_skill(skill_descriptor, emitter, skill_id):
             skill._dir = dirname(skill_descriptor['info'][1])
             skill.skill_id = skill_id
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
+            # Set up intent handlers
             skill.initialize()
+            skill._register_decorated()
             logger.info("Loaded " + skill_descriptor["name"] + " with ID " + str(skill_id))
             return skill
         else:
@@ -164,6 +168,20 @@ def load_skills(emitter, skills_root=SKILLS_DIR):
 def unload_skills(skills):
     for s in skills:
         s.shutdown()
+
+
+_intent_list = []
+
+
+def intent_handler(intent_parser):
+    """ Decorator for adding a method as an intent handler. """
+    def real_decorator(func):
+        @wraps(func)
+        def handler_method(*args, **kwargs):
+            return func(*args, **kwargs)
+        _intent_list.append((intent_parser, func))
+        return handler_method
+    return real_decorator
 
 
 class MycroftSkill(object):
@@ -252,7 +270,7 @@ class MycroftSkill(object):
 
         Usually used to create intents rules and register them.
         """
-        raise Exception("Initialize not implemented for skill: " + self.name)
+        logger.debug("No initialize function implemented")
 
     def converse(self, transcript, lang="en-us"):
         return False
@@ -262,7 +280,16 @@ class MycroftSkill(object):
         # this ensures converse method is called
         self.emitter.emit(Message('active_skill_request', {"skill_id":self.skill_id}))
 
-    def register_intent(self, intent_parser, handler):
+   def _register_decorated(self):
+        """
+        Register all intent handlers that has been decorated with an intent.
+        """
+        global _intent_list
+        for intent_parser, handler in _intent_list:
+            self.register_intent(intent_parser, handler, need_self=True)
+        _intent_list = []
+
+    def register_intent(self, intent_parser, handler, need_self=False):
         name = intent_parser.name
         intent_parser.name = str(self.skill_id) + ':' + intent_parser.name
         self.emitter.emit(Message("register_intent", intent_parser.__dict__))
@@ -271,7 +298,11 @@ class MycroftSkill(object):
         def receive_handler(message):
             try:
                 self.emitter.emit(Message("executing.intent.start", {"status": "start", "intent": name}))
-                handler(message)
+                if need_self:
+                    # When registring from decorator self is required
+                    handler(self, message)
+                else:
+                    handler(message)
             except Exception as e:
                 # TODO: Localize
                 self.speak(
@@ -371,7 +402,7 @@ class MycroftSkill(object):
         if os.path.exists(dialog_dir):
             self.dialog_renderer = DialogLoader().load(dialog_dir)
         else:
-            logger.error('No dialog loaded, ' + dialog_dir + ' does not exist')
+            logger.debug('No dialog loaded, ' + dialog_dir + ' does not exist')
 
     def load_data_files(self, root_directory):
         self.init_dialog(root_directory)
@@ -384,7 +415,7 @@ class MycroftSkill(object):
         if os.path.exists(vocab_dir):
             load_vocabulary(vocab_dir, self.emitter)
         else:
-            logger.error('No vocab loaded, ' + vocab_dir + ' does not exist')
+            logger.debug('No vocab loaded, ' + vocab_dir + ' does not exist')
 
     def load_regex_files(self, regex_dir):
         load_regex(regex_dir, self.emitter)
