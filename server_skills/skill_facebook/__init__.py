@@ -131,6 +131,7 @@ class FaceChat(fbchat.Client):
             self.ws.on("speak", self.handle_speak)
         else:
             self.log.error("No emitter was provided to facebook chat")
+
         self.queue = []  # [[author_id , utterance, name]]
         self.monitor_thread = None
         self.queue_thread = None
@@ -233,6 +234,7 @@ class FaceChat(fbchat.Client):
                 self.log.error("invalid user id " + user)
 
     def onMessage(self, author_id, message, thread_id, thread_type, **kwargs):
+        self.ws.on("fb.chat.message", self.handle_chat_request)
         # for privacy we may want this off
         if not self.privacy:
             self.markAsDelivered(author_id, thread_id)  # mark delivered
