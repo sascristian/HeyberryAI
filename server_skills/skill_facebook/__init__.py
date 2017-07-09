@@ -126,11 +126,8 @@ class FaceChat(fbchat.Client):
             self.login(email, password, max_tries)
 
         self.ws = emitter
-        if self.ws is not None:
-            self.ws.on("fb.chat.message", self.handle_chat_request)
-            self.ws.on("speak", self.handle_speak)
-        else:
-            self.log.error("No emitter was provided to facebook chat")
+        self.ws.on("fb.chat.message", self.handle_chat_request)
+        self.ws.on("speak", self.handle_speak)
 
         self.queue = []  # [[author_id , utterance, name]]
         self.monitor_thread = None
