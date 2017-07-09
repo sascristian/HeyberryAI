@@ -110,13 +110,3 @@ def generate_server_key(user, passwd):
 
     return key
 
-
-user = 'xxx'
-passwd = 'welcome to the mycroft collective'
-
-public, private = get_own_keys(user)
-
-encrypted = encrypt_string(user, "Jarbas server key loaded")
-print encrypted.ok
-decrypted = decrypt_string(encrypted, passwd)
-print decrypted.ok

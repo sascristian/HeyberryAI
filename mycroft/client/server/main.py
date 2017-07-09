@@ -26,11 +26,14 @@ from mycroft.util.jarbas_services import UserManagerService
 from mycroft.skills.intent_service import IntentParser
 from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key
 #from mycroft.client.server.aes import *
-
+import logging
 ws = None
 parser = None
 user_manager = None
 logger = getLogger("Mycroft_Server")
+
+gpglog = logging.getLogger("gnupg")
+gpglog.setLevel("WARNING")
 
 # List to keep track of socket descriptors
 CONNECTION_LIST = []
