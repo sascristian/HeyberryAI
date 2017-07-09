@@ -214,7 +214,7 @@ class FaceChat(fbchat.Client):
         user_photo = message.data.get('photo')
         self.log.info("chat data: " + txt + " " + user+ " " + user_name+ " " + user_photo)
         if self.active:
-            self.log.debug("Adding " + txt + " from user " + user_name + " to queue")
+            self.log.debug("Adding to queue")
             self.queue.append([user, txt, user_name, user_photo])
 
     def handle_speak(self, message):
@@ -234,7 +234,6 @@ class FaceChat(fbchat.Client):
                 self.log.error("invalid user id " + user)
 
     def onMessage(self, author_id, message, thread_id, thread_type, **kwargs):
-        self.ws.on("fb.chat.message", self.handle_chat_request)
         # for privacy we may want this off
         if not self.privacy:
             self.markAsDelivered(author_id, thread_id)  # mark delivered
