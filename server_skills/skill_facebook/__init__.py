@@ -668,7 +668,7 @@ class FacebookSkill(MycroftSkill):
             self.fb_settings = SkillSettings(dirname(__file__) + '/settings.json')
         self.selenium_cookies = True
         # chat client active
-        self.active = self.config.get('chat_client', True)
+        self.active = True #self.config.get('chat_client', True)
         # speak when message received
         self.speak_messages = self.config.get('speak_messages', True)
         # TODO who to warn?
