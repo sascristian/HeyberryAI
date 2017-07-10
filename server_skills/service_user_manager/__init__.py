@@ -134,6 +134,8 @@ class User():
         pass
 
     def add_nicknames(self, names):
+        if self.name == "user":
+            self.name = names[0]
         for name in names:
             if name not in self.nicknames:
                 self.nicknames.append(name)
@@ -255,7 +257,7 @@ class UserSkill(MycroftSkill):
         if user_id is None:
             self.log.error("Something went wrong")
             # TODO send close request?
-            self.emitter.emit(Message("user.from_sock.result", {"id": None, "error": "that sock is not supposed to be open?"}))
+            self.emitter.emit(Message("user.from_sock.result", {"id": None, "error": "user does not seem to exist"}))
             return
 
         data = {"id": user_id,
