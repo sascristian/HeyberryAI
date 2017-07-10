@@ -80,10 +80,10 @@ class User():
             os.makedirs(path)
         path += "/"+str(self.user_id)+".json"
         self.settings = SkillSettings(path)
-
-    def load_user(self):
         if self.user_id not in self.settings.keys():
             self.settings[self.user_id] = {}
+
+    def load_user(self):
         self.name = self.settings[self.user_id].get("name", "user")
         self.nicknames = self.settings[self.user_id].get("nicknames", [])
         self.public_key = self.settings[self.user_id].get("public_key")
