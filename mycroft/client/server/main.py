@@ -109,7 +109,7 @@ class ServerService(ServiceBackend):
 
     def pgp_request(self, sock_num):
         message_type = "client.pgp.public.request"
-        message_data = {"public_key": ascii_public, "key_id": key_id, "cipher": "none"}
+        message_data = {"public_key": ascii_public, "fingerprint": key_id, "cipher": "none"}
         message_context = {"sock_num": sock_num}
         self.send_request(message_type=message_type, message_data=message_data, message_context=message_context, client=True)
         self.wait("client.pgp.public.response")
@@ -141,13 +141,30 @@ def key_exchange_thread():
     # key exchange thread, listen for sockets while main is blocked waiting for answer
     expected_signals = ["client.pgp.public.response", "client.aes.exchange_complete"]
     while True:
-        # Get the list sockets which are ready to be read through select
+        # Get the list sockets which are ready to be write/read through select
         read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
+        # process write request as normal for socks
+        for sock in write_sockets:
+            ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+            if sock_num in message_queue.keys() and sock_num in exchange_socks.keys():
+                i = 0
+                for type, data, context, cipher in message_queue[sock_num]:
+                    logger.debug("Answering sock " + sock_num)
+                    try:
+                        logger.debug("Encryption: " + cipher)
+                        send_message(sock, type, data, context, cipher=cipher)
+                        message_queue[sock_num].pop(i)
+                        i += 1
+                        logger.debug("Sucessfully sent data: " + str(data))
+                    except Exception as e:
+                        logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
+
         # do not read any socket until key exchanges is complete
         for sock in read_sockets:
             ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
             if sock_num in exchange_socks.keys():
                 status = exchange_socks[sock_num]
+                logger.debug("current status: " + status)
                 try:
                     ciphertext = sock.recv(RECV_BUFFER)
                     if not ciphertext:
@@ -172,7 +189,7 @@ def key_exchange_thread():
                     elif status == "sending aes key":
                         # received aes encrypted response
                         logger.debug("Received AES encrypted message: " + ciphertext)
-                        logger.debug("Attempting to decrypt")
+                        logger.debug("Attempting to decrypt aes message")
                         key = sock_ciphers[sock_num]["aes_key"]
                         iv = sock_ciphers[sock_num]["aes_iv"]
                         cipher = AES.new(key, AES.MODE_CFB, iv)
@@ -189,21 +206,6 @@ def key_exchange_thread():
                     offline_client(sock)
                     continue
 
-        # process write request as normal for socks
-        for sock in write_sockets:
-            ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-            if sock_num in message_queue.keys() and sock_num in exchange_socks.keys():
-                i = 0
-                for type, data, context, cipher in message_queue[sock_num]:
-                    logger.debug("Answering sock " + sock_num)
-                    try:
-                        logger.debug("Encryption: " + cipher)
-                        send_message(sock, type, data, context, cipher=cipher)
-                        message_queue[sock_num].pop(i)
-                        i += 1
-                        logger.debug("Sucessfully sent data: " + str(data))
-                    except Exception as e:
-                        logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
 
 
 def key_exchange(sock_num):
