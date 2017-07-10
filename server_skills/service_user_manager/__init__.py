@@ -36,25 +36,14 @@ class User():
         self.user_id = id
         self.name = name
         self.emitter = emitter
-        if reset:
-            self.reset()
-        self.load_user()
-        self.save_user()
-        # session data
-        self.session_key = None #encrypt everything with this shared key
-        self.current_sock = None
-        self.current_ip = None
-        self.status = "offline"
-        self.user_type = "client"
-        self.default_forbidden_messages = [
-            "incoming_file",
-            "image.classification.request",
-            "style.transfer.request",
-            "deep.dream.request",
-            "class.visualization.request",
-            "face.recognition.request",
-            "object.recognition.request"]
-        self.default_forbidden_skills = ["control_center_skill"] #TODO get skills names, not ids
+        self.default_forbidden_messages = ["incoming_file",
+                                            "image.classification.request",
+                                            "style.transfer.request",
+                                            "deep.dream.request",
+                                            "class.visualization.request",
+                                            "face.recognition.request",
+                                            "object.recognition.request"]
+        self.default_forbidden_skills = ["control_center_skill"]  # TODO get skills names, not ids
         self.default_forbidden_intents = ["StyleTransferIntent",
                                           "DreamIntent",
                                           "DeepDrawIntent",
@@ -71,6 +60,17 @@ class User():
                                           "FbChatPersonIntent",
                                           "FbLikePhotosofPersonIntent"
                                           ]
+        if reset:
+            self.reset()
+        self.load_user()
+        self.save_user()
+        # session data
+        self.session_key = None #encrypt everything with this shared key
+        self.current_sock = None
+        self.current_ip = None
+        self.status = "offline"
+        self.user_type = "client"
+
 
     def load_user(self, path=None):
         if path is None:
