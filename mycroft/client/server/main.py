@@ -334,7 +334,7 @@ def handle_message_request(event):
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     message_queue[sock_num].append([type, data, context, cipher])
-    logge.info("Added to queue")
+    logger.info("Added to queue")
 
 
 def main():
@@ -422,9 +422,7 @@ def main():
             ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
             if sock_num in message_queue.keys():
                 i = 0
-                logger.debug("Processing queue")
                 for type, data, context, cipher in message_queue[sock_num]:
-                    logger.debug(cipher)
                     if cipher == "none" and "cipher" in data.keys():
                         cipher = data["cipher"]
                     logger.debug("Answering sock " + sock_num)
