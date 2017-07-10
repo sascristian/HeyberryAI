@@ -103,7 +103,7 @@ class ServerService(ServiceBackend):
     def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
         super(ServerService, self).__init__(name="ServerService", emitter=emitter, timeout=timeout,
                                              waiting_messages=waiting_messages, logger=logger)
-        self.socket_thread = Thread(target=key_exchange_thread())
+        self.socket_thread = Thread(target=key_exchange_thread)
         self.socket_thread.setDaemon(True)
         self.socket_thread.start()
 
