@@ -140,6 +140,7 @@ def key_exchange(sock):
     # send pgp request
     status = "sending pgp"
     exchange_socks[sock_num] = {"sock": sock, "status": status}
+    sock_ciphers[sock_num] = {}
     logger.info("Sending public pgp key to client")
     client_data = service.pgp_request(sock_num)
     logger.debug(client_data)
