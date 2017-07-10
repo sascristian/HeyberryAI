@@ -352,15 +352,14 @@ class UserSkill(MycroftSkill):
             self.log.info("Registering new user")
             # new user
             # get new_id
-            self.log.info("Assigning new id")
-            new_id = len(self.users.keys())+1
-            self.log.info(new_id)
+            new_id = len(self.users.keys()) + 1
+            self.log.info("Assigning new id: " + str(new_id))
             while str(new_id) in self.users.keys():
                 self.log.info("assigned id already exists, increasing count")
                 new_id += 1
             # save new user
             new_id = str(new_id)
-
+            self.log.info("Creating user")
             new_user = User(id=new_id, emitter=self.emitter, name=user_name)
             new_user.public_key = pub_key
             self.users[new_id] = new_user
