@@ -411,6 +411,8 @@ def main():
             if sock_num in message_queue.keys():
                 i = 0
                 for type, data, context, cipher in message_queue[sock_num]:
+                    if cipher == "none" and "cipher" in data.keys():
+                        cipher = data["cipher"]
                     logger.debug("Answering sock " + sock_num)
                     try:
                         logger.debug("Encryption: " + cipher)
