@@ -43,7 +43,7 @@ class User():
                                             "class.visualization.request",
                                             "face.recognition.request",
                                             "object.recognition.request"]
-        self.default_forbidden_skills = ["control_center_skill"]  # TODO get skills names, not ids
+        self.default_forbidden_skills = ["control_center_skill"]  # TODO get parser skills names, not ids
         self.default_forbidden_intents = ["StyleTransferIntent",
                                           "DreamIntent",
                                           "DeepDrawIntent",
@@ -60,6 +60,7 @@ class User():
                                           "FbChatPersonIntent",
                                           "FbLikePhotosofPersonIntent"
                                           ]
+        self.init_user_settings()
         if reset:
             self.reset()
         self.load_user()
@@ -71,8 +72,7 @@ class User():
         self.status = "offline"
         self.user_type = "client"
 
-
-    def load_user(self, path=None):
+    def init_user_settings(self, path=None):
         if path is None:
             path = dirname(__file__) + "/users"
         # check if folders exist
@@ -80,6 +80,8 @@ class User():
             os.makedirs(path)
         path += "/"+str(self.user_id)+".json"
         self.settings = SkillSettings(path)
+
+    def load_user(self):
         if self.user_id not in self.settings.keys():
             self.settings[self.user_id] = {}
         self.name = self.settings[self.user_id].get("name", "user")
