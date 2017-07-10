@@ -68,7 +68,9 @@ allowed_bus_messages = ["recognizer_loop:utterance",
                         "face.recognition.request",
                         "object.recognition.request",
                         "client.aes.exchange_complete",
-                        "client.pgp.public.request"
+                        "client.pgp.public.request",
+                        "client.pgp.public.response",
+                        "client.aes.exchange_complete"
                         ]
 
 names = {} #sock : [names]
@@ -103,9 +105,6 @@ class ServerService(ServiceBackend):
     def __init__(self, emitter=None, timeout=10, waiting_messages=None, logger=None):
         super(ServerService, self).__init__(name="ServerService", emitter=emitter, timeout=timeout,
                                              waiting_messages=waiting_messages, logger=logger)
-        self.socket_thread = Thread(target=key_exchange_thread)
-        self.socket_thread.setDaemon(True)
-        self.socket_thread.start()
 
     def pgp_request(self, sock_num):
         message_type = "client.pgp.public.request"
@@ -133,79 +132,6 @@ class ServerService(ServiceBackend):
         if key is None:
             key = Random.get_random_bytes(32)
         return iv, key
-
-
-def key_exchange_thread():
-    # keep in own thread for better control / future change
-    global status, service, exchange_socks
-    # key exchange thread, listen for sockets while main is blocked waiting for answer
-    expected_signals = ["client.pgp.public.response", "client.aes.exchange_complete"]
-    while True:
-        # Get the list sockets which are ready to be write/read through select
-        read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
-        # process write request as normal for socks
-        for sock in write_sockets:
-            ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-            if sock_num in message_queue.keys() and sock_num in exchange_socks.keys():
-                i = 0
-                for type, data, context, cipher in message_queue[sock_num]:
-                    logger.debug("Sending message to sock " + sock_num)
-                    try:
-                        logger.debug("Encryption: " + cipher)
-                        send_message(sock, type, data, context, cipher=cipher)
-                        message_queue[sock_num].pop(i)
-                        i += 1
-                        logger.debug("Succesfully sent data: " + str(data))
-                    except Exception as e:
-                        logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
-
-        # do not read any socket until key exchanges is complete
-        for sock in read_sockets:
-            ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-            if sock_num in exchange_socks.keys():
-                status = exchange_socks[sock_num]
-                logger.debug("current status: " + status)
-                try:
-                    ciphertext = sock.recv(RECV_BUFFER)
-                    if not ciphertext:
-                        logger.debug("no data?")
-                        continue
-                    if status == "sending pgp":
-                        # receiving client pub key, encrypted with server public key
-                        logger.debug("Received PGP encrypted message: " + ciphertext)
-                        logger.debug("Attempting to decrypt")
-                        decrypted_data = decrypt_string(ciphertext, passwd)
-                        if decrypted_data.ok:
-                            utterance = str(decrypted_data.data)
-                            logger.debug("Decrypted message: " + utterance)
-                        else:
-                            logger.error("Client did not use our public key")
-                            # TODO error messages to bus
-
-                            continue
-                        deserialized_message = Message.deserialize(utterance)
-                        logger.debug("Message type: " + deserialized_message.type)
-
-                    elif status == "sending aes key":
-                        # received aes encrypted response
-                        logger.debug("Received AES encrypted message: " + ciphertext)
-                        logger.debug("Attempting to decrypt aes message")
-                        key = sock_ciphers[sock_num]["aes_key"]
-                        iv = sock_ciphers[sock_num]["aes_iv"]
-                        cipher = AES.new(key, AES.MODE_CFB, iv)
-                        decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
-                        logger.debug("Decrypted message: " + decrypted_data)
-                        deserialized_message = Message.deserialize(decrypted_data)
-                        logger.debug("Message type: " + deserialized_message.type)
-
-                    if deserialized_message.type in expected_signals:
-                        ws.emit(
-                            Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
-                except Exception as e:
-                    logger.error(e)
-                    offline_client(sock)
-                    continue
-
 
 
 def key_exchange(sock_num):
@@ -367,7 +293,6 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
 def handle_message_request(event):
     global message_queue
     # TODO allow files
-
     type = event.data.get("type", "bus")
     logger.info("Request to message client received: " + type)
     cipher = event.data.get("cipher", "none")
@@ -431,6 +356,45 @@ def main():
         # Get the list sockets which are ready to be read through select
         read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
 
+        for sock in exchange_socks:
+            ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+            status = exchange_socks[sock_num]
+            logger.debug("current status: " + status)
+            try:
+                ciphertext = sock.recv(RECV_BUFFER)
+                if not ciphertext:
+                    logger.debug("no data?")
+                    continue
+                if status == "sending pgp":
+                    # receiving client pub key, encrypted with server public key
+                    logger.debug("Received PGP encrypted message: " + ciphertext)
+                    logger.debug("Attempting to decrypt")
+                    decrypted_data = decrypt_string(ciphertext, passwd)
+                    if decrypted_data.ok:
+                        utterance = str(decrypted_data.data)
+                        logger.debug("Decrypted message: " + utterance)
+                    else:
+                        logger.error("Client did not use our public key")
+                        # TODO error messages to bus
+
+                        continue
+                    deserialized_message = Message.deserialize(utterance)
+                    logger.debug("Message type: " + deserialized_message.type)
+
+                elif status == "sending aes key":
+                    # received aes encrypted response
+                    logger.debug("Received AES encrypted message: " + ciphertext)
+                    logger.debug("Attempting to decrypt aes message")
+                    key = sock_ciphers[sock_num]["aes_key"]
+                    iv = sock_ciphers[sock_num]["aes_iv"]
+                    cipher = AES.new(key, AES.MODE_CFB, iv)
+                    decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
+                    logger.debug("Decrypted message: " + decrypted_data)
+                    deserialized_message = Message.deserialize(decrypted_data)
+                    logger.debug("Message type: " + deserialized_message.type)
+            except:
+                offline_client(sock)
+
         for sock in write_sockets:
             ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
             if sock_num in message_queue.keys():
@@ -472,7 +436,9 @@ def main():
                                              ssl_version=ssl.PROTOCOL_TLSv1)
                     CONNECTION_LIST.append(sockfd)
                     logger.debug( "Client (%s, %s) connected" % addr )
-                    key_exchange(sock_num)
+                    event_thread = Thread(target=key_exchange, args=[sock_num])
+                    event_thread.setDaemon(True)
+                    event_thread.start()
                     context = {"user": sock_ciphers[sock_num]["user"], "source": ip + ":" + str(sock_num)}
                     ws.emit(Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": sock_ciphers[sock_num]["pgp"]}, context))
                     # tell client it's id
