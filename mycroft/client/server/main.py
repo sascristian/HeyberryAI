@@ -117,9 +117,9 @@ class ServerService(ServiceBackend):
     def aes_key_exchange(self, sock_num, iv=None, key=None):
         message_type = "client.aes.key"
         iv, key = self.aes_generate_pair(iv, key)
-        sock_ciphers[sock_num]["aes_key"] = key
-        sock_ciphers[sock_num]["aes_iv"] = iv
-        message_data = {"aes_key": key, "iv": iv, "cipher": "pgp"}
+        sock_ciphers[sock_num]["aes_key"] = key.encode("utf-8")
+        sock_ciphers[sock_num]["aes_iv"] = iv.encode("utf-8")
+        message_data = {"aes_key": key.encode("utf-8"), "iv": iv.encode("utf-8"), "cipher": "pgp"}
         message_context = {"sock_num": sock_num}
         self.send_request(message_type=message_type, message_data=message_data, message_context=message_context,
                           client=True)
