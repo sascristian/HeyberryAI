@@ -157,9 +157,10 @@ def _get_last_modified_date(path):
 
 def load_priority():
     global ws, loaded_skills, SKILLS_DIR, PRIORITY_SKILLS, id_counter
-
+    logger.info("Loading priority skills")
     if exists(SKILLS_DIR):
         for skill_folder in PRIORITY_SKILLS:
+            logger.info("Loading " + skill_folder)
             try:
                 skill = loaded_skills.get(skill_folder)
                 skill["path"] = os.path.join(SKILLS_DIR, skill_folder)
@@ -374,7 +375,7 @@ def main():
 
     ignore_logs = ConfigurationManager.instance().get("ignore_logs")
 
-    bonus = ["fb.last.seen.timestamps", "user.request"]
+    bonus = ["fb.last.seen.timestamps", "register_vocab", "register_intent"]
     for msg in bonus:
         ignore_logs.append(msg)
     cookies = ["browser_get_cookies_response", "browser_add_cookies_request", "browser_add_cookies_response"]
