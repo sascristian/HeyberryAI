@@ -215,6 +215,7 @@ def key_exchange(sock_num):
     exchange_socks[sock_num] = status
     logger.info("Sending public pgp key to client")
     client_data = service.pgp_request(sock_num)
+    logger.debug(client_data)
     client_pgp = client_data.get("public_key")
     if client_pgp is None:
         logger.error("Could not receive pgp key")
