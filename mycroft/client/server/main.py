@@ -371,12 +371,12 @@ def handle_message_request(event):
     # allow user to be requested explictly
     user_id = event.data.get("user_id")
     if user_id is None:
-        user_id = event.data.get("sock_num")
+        user_id = event.context.get("sock_num")
         if user_id is None:
             # if not, use context
             user_id = context.get("destinatary", "")
         else:
-            user_id = ":"+user_id
+            user_id = event.data.get("requester", "server_skills")+":"+user_id
     logger.info(user_id)
     if ":" not in str(user_id):
         logger.error("Message_Request: invalid user_id: " + user_id + " in data: " + str(event.data) + " in context: " + str(context))
