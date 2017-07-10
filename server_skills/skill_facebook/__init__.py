@@ -172,6 +172,8 @@ class FaceChat(fbchat.Client):
                     self.ws.emit(
                         Message("recognizer_loop:utterance",
                                 {'utterances': [chatmsg]}, context))
+                else:
+                    self.sendMessage("that action is not allowed for your account", chat[0])
                 # remove from queue
                 self.log.debug("Removing item from queue")
                 self.queue.pop(0)
