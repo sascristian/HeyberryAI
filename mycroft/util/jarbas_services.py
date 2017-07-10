@@ -86,6 +86,7 @@ class ServiceBackend(object):
             returns True if result received, False on timeout
         """
         self.waiting_for = waiting_for
+        self.result = None
         if self.waiting_for != "any" and self.waiting_for not in self.waiting_messages:
             self.emitter.on(waiting_for, self.end_wait)
             self.waiting_messages.append(waiting_for)
