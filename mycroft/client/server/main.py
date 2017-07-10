@@ -31,6 +31,7 @@ from Crypto.Cipher import AES
 from Crypto import Random
 import logging
 import sys
+import base64
 
 ws = None
 parser = None
@@ -116,10 +117,13 @@ class ServerService(ServiceBackend):
 
     def aes_key_exchange(self, sock_num, iv=None, key=None):
         message_type = "client.aes.key"
+
         iv, key = self.aes_generate_pair(iv, key)
-        sock_ciphers[sock_num]["aes_key"] = key.encode("utf-8")
-        sock_ciphers[sock_num]["aes_iv"] = iv.encode("utf-8")
-        message_data = {"aes_key": key.encode("utf-8"), "iv": iv.encode("utf-8"), "cipher": "pgp"}
+        iv = base64.b64encode(iv)
+        key = base64.b64encode(key)
+        sock_ciphers[sock_num]["aes_key"] = key
+        sock_ciphers[sock_num]["aes_iv"] = iv
+        message_data = {"aes_key": key, "iv": iv, "cipher": "pgp"}
         message_context = {"sock_num": sock_num}
         self.send_request(message_type=message_type, message_data=message_data, message_context=message_context,
                           client=True)
@@ -282,6 +286,8 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
     if cipher == "aes":
         # rotate key
         iv, key = service.aes_generate_pair()
+        iv = base64.b64encode(iv)
+        key = base64.b64encode(key)
         sock_ciphers[num]["aes_iv"] = iv
         sock_ciphers[num]["aes_iv"] = key
         cipher = AES.new(key, AES.MODE_CFB, iv)
@@ -390,6 +396,8 @@ def main():
                         logger.debug("Attempting to decrypt aes message")
                         key = sock_ciphers[sock_num]["aes_key"]
                         iv = sock_ciphers[sock_num]["aes_iv"]
+                        iv = base64.b64decode(iv)
+                        key = base64.b64decode(key)
                         cipher = AES.new(key, AES.MODE_CFB, iv)
                         decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
                         logger.debug("Decrypted message: " + decrypted_data)
@@ -456,13 +464,14 @@ def main():
                     utterance = sock.recv(RECV_BUFFER)
 
                     if utterance:
-
                         ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(
                             ",")
                         logger.debug("Received AES encrypted message: " + utterance)
                         logger.debug("Attempting to decrypt")
                         key = sock_ciphers[sock_num]["aes_key"]
                         iv = sock_ciphers[sock_num]["aes_iv"]
+                        iv = base64.b64decode(iv)
+                        key = base64.b64decode(key)
                         cipher = AES.new(key, AES.MODE_CFB, iv)
                         utterance = cipher.decrypt(utterance)[len(iv):]
                         logger.debug("Decryption result: " + utterance)
