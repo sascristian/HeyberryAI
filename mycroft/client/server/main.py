@@ -134,11 +134,12 @@ class ServerService(ServiceBackend):
         return iv, key
 
 
-def key_exchange(sock_num):
+def key_exchange(sock):
     global exchange_socks
+    ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
     # send pgp request
     status = "sending pgp"
-    exchange_socks[sock_num] = status
+    exchange_socks[sock_num] = {"sock": sock, "status": status}
     logger.info("Sending public pgp key to client")
     client_data = service.pgp_request(sock_num)
     logger.debug(client_data)
@@ -159,7 +160,7 @@ def key_exchange(sock_num):
     # generate and send aes key to client
     logger.info("Initiating AES key exchange")
     status = "sending aes key"
-    exchange_socks[sock_num] = status
+    exchange_socks[sock_num]["status"] = status
     aes_result = service.aes_key_exchange(sock_num)
     exchange_socks.pop(sock_num)
 
@@ -356,9 +357,9 @@ def main():
         # Get the list sockets which are ready to be read through select
         read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
 
-        for sock in exchange_socks:
-            ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-            status = exchange_socks[sock_num]
+        for sock_num in exchange_socks:
+            sock = exchange_socks[sock_num]["sock"]
+            status = exchange_socks[sock_num]["status"]
             logger.debug("current status: " + status)
             try:
                 ciphertext = sock.recv(RECV_BUFFER)
