@@ -437,7 +437,7 @@ def main():
                                              ssl_version=ssl.PROTOCOL_TLSv1)
                     CONNECTION_LIST.append(sockfd)
                     logger.debug( "Client (%s, %s) connected" % addr )
-                    event_thread = Thread(target=key_exchange, args=[sock_num])
+                    event_thread = Thread(target=key_exchange, args=[sockfd])
                     event_thread.setDaemon(True)
                     event_thread.start()
                     context = {"user": sock_ciphers[sock_num]["user"], "source": ip + ":" + str(sock_num)}
