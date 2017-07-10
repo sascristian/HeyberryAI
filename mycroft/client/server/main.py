@@ -59,8 +59,8 @@ allowed_bus_messages = ["recognizer_loop:utterance",
                         "face.recognition.request",
                         "object.recognition.request"]
 
-names = {} #name, sock this name refers to
-
+names = {} #sock : [names]
+socks = {} #sock
 message_queue = {}
 file_socks = {} #sock num: file object
 
@@ -332,6 +332,7 @@ def main():
                                 if "mute" not in context.keys():
                                     context["mute"] = True
                                 context["source"] = str(context["source"]) + ":" + sock_num
+                                context["ip"] = ip
 
                                 # authorize user message_type
                                 # get user from sock
@@ -361,7 +362,7 @@ def main():
                                             names[sock_num] = []
                                         names[sock_num].append(name)
                                     ws.emit(
-                                        Message("user.names", {"names": data["names"], "sock": sock_num, "ip":ip}, context))
+                                        Message("user.names", {"names": data["names"], "sock": sock_num, "ip": ip}, context))
                                 elif deserialized_message.type == "id_update":
                                     answer_id(sock)
                                 elif deserialized_message.type == "recognizer_loop:utterance":

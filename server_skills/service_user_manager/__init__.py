@@ -241,10 +241,10 @@ class UserSkill(MycroftSkill):
         ip = message.data.get("ip")
         user_id = None
         if ip is None:
-            for user in self.users:
+            for user_id in self.users:
+                user = self.users[user_id]
                 if user.current_sock == sock:
                     self.user_list[user_id] = sock
-                    user_id = user.user_id
                     break
         else:
             user_id = self.user_from_ip_sock(sock, ip)
@@ -390,9 +390,8 @@ class UserSkill(MycroftSkill):
                 user_id = uid
                 break
         if user_id is None:
-            for user in self.users:
-                if user.current_ip == ip:
-                    user_id = user.user_id
+            for user_id in self.users:
+                if self.users[user_id].current_ip == ip:
                     self.user_list[user_id] = sock
                     break
         return user_id
