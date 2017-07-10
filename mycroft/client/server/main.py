@@ -375,9 +375,11 @@ def handle_message_request(event):
         if user_id is None:
             # if not, use context
             user_id = context.get("destinatary", "")
-
-    if ":" not in user_id:
-        logger.error("Message_Request: invalid user_id: " + user_id + " in data: " + str(event.data) + " in context: " + context)
+        else:
+            user_id = ":"+user_id
+    logger.info(user_id)
+    if ":" not in str(user_id):
+        logger.error("Message_Request: invalid user_id: " + user_id + " in data: " + str(event.data) + " in context: " + str(context))
         return
     context["source"] = event.data.get("requester", "skills") + ":server"
     data = event.data.get("data", {})
