@@ -32,10 +32,12 @@ import time, os
 
 
 class User():
-    def __init__(self, id, name="user", emitter=None):
+    def __init__(self, id, name, emitter, reset=False):
         self.user_id = id
         self.name = name
         self.emitter = emitter
+        if reset:
+            self.reset()
         self.load_user()
         self.save_user()
         # session data
@@ -139,9 +141,9 @@ class User():
         self.nicknames = []
         self.public_key = "todo"
         self.security_level = 0
-        self.forbidden_messages = []
-        self.forbidden_skills = []
-        self.forbidden_intents = []
+        self.forbidden_messages = self.default_forbidden_messages
+        self.forbidden_skills = self.default_forbidden_skills
+        self.forbidden_intents = self.default_forbidden_intents
         self.last_seen = "never"
         self.last_timestamp = 0
         self.known_ips = []
@@ -160,7 +162,6 @@ class UserSkill(MycroftSkill):
         self.users = {}    # id, user object
         for user_id in self.user_list.keys():
             user = User(id=user_id, emitter=self.emitter)
-            #user.reset()
             self.users[user_id] = user
         self.facebook_users = {} #fb_id, user object
 
@@ -360,7 +361,7 @@ class UserSkill(MycroftSkill):
             # save new user
             new_id = str(new_id)
             self.log.info("Creating user")
-            new_user = User(id=new_id, emitter=self.emitter, name=user_name)
+            new_user = User(new_id, user_name, self.emitter, reset=True)
             new_user.public_key = pub_key
             self.users[new_id] = new_user
             current_user = new_id
