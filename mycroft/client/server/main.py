@@ -211,15 +211,19 @@ def key_exchange(sock_num):
     # send pgp request
     status = "sending pgp"
     exchange_socks[sock_num] = status
+    logger.info("Sending public pgp key to client")
     client_data = service.pgp_request(sock_num)
     client_pgp = client_data.get("public_key")
+    logger.info("Received client public pgp key: " + client_pgp)
     # save user pgp key
+    logger.info("importing client pgp key")
     import_result = import_key_from_ascii(client_pgp)
     fp = import_result.results[0]["fingerprint"]
     sock_ciphers[sock_num]["pgp"] = client_pgp
     sock_ciphers[sock_num]["fingerprint"] = fp
     sock_ciphers[sock_num]["user"] = client_data.get("user")
     # generate and send aes key to client
+    logger.info("Initiating AES key exchange")
     status = "sending aes key"
     exchange_socks[sock_num] = status
     aes_result = service.aes_key_exchange(sock_num)
