@@ -100,7 +100,7 @@ else:
 
 
 class ServerService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
+    def __init__(self, emitter=None, timeout=10, waiting_messages=None, logger=None):
         super(ServerService, self).__init__(name="ServerService", emitter=emitter, timeout=timeout,
                                              waiting_messages=waiting_messages, logger=logger)
         self.socket_thread = Thread(target=key_exchange_thread)
@@ -359,7 +359,9 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
 def handle_message_request(event):
     global message_queue
     # TODO allow files
-    type = event.data.get("type")
+
+    type = event.data.get("type", "bus")
+    logger.info("Request to message client received: " + type)
     cipher = event.data.get("cipher", "none")
     # merge contexts of message and message_request
     context = event.context
@@ -369,8 +371,10 @@ def handle_message_request(event):
     # allow user to be requested explictly
     user_id = event.data.get("user_id")
     if user_id is None:
-        # if not, use context
-        user_id = context.get("destinatary", "")
+        user_id = event.data.get("sock_num")
+        if user_id is None:
+            # if not, use context
+            user_id = context.get("destinatary", "")
 
     if ":" not in user_id:
         logger.error("Message_Request: invalid user_id: " + user_id + " in data: " + str(event.data) + " in context: " + context)
