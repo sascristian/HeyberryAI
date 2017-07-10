@@ -51,7 +51,7 @@ class ServiceBackend(object):
             self.emitter.on(msg, self.end_wait)
         self.context = {"source": self.name, "waiting_for": self.waiting_messages}
 
-    def send_request(self, message_type, message_data=None, message_context=None, server=False):
+    def send_request(self, message_type, message_data=None, message_context=None, server=False, client=False):
         """
           send message
         """
@@ -60,7 +60,16 @@ class ServiceBackend(object):
         if message_context is None:
             message_context = {"source": self.name, "waiting_for": self.waiting_messages}
         if not server:
-            self.emitter.emit(Message(message_type, message_data, message_context))
+            if not client:
+                self.emitter.emit(Message(message_type, message_data, message_context))
+            else:
+                type = "bus"
+                if "file" in message_data.keys():
+                    type = "file"
+                self.emitter.emit(Message("message_request",
+                                          {"request_type": type, "requester": self.name,
+                                           "type": message_type,
+                                           "data": message_data}, message_context))
         else:
             type = "bus"
             if "file" in message_data.keys():
