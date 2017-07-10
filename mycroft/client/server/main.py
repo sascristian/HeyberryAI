@@ -214,6 +214,10 @@ def key_exchange(sock_num):
     logger.info("Sending public pgp key to client")
     client_data = service.pgp_request(sock_num)
     client_pgp = client_data.get("public_key")
+    if client_pgp is None:
+        logger.error("Could not receive pgp key")
+        # TODO kick user
+        return
     logger.info("Received client public pgp key: " + client_pgp)
     # save user pgp key
     logger.info("importing client pgp key")
