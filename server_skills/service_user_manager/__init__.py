@@ -361,7 +361,10 @@ class UserSkill(MycroftSkill):
             # save new user
             new_id = str(new_id)
             self.log.info("Creating user")
-            new_user = User(new_id, user_name, self.emitter, reset=True)
+            try:
+                new_user = User(new_id, user_name, self.emitter, reset=True)
+            except Exception as e:
+                self.log.error("Error creating user: " + str(e))
             new_user.public_key = pub_key
             self.users[new_id] = new_user
             current_user = new_id
