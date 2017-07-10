@@ -209,7 +209,6 @@ class FaceChat(fbchat.Client):
         user = message.data.get('author_id')
         user_name = message.data.get('author_name')
         user_photo = message.data.get('photo')
-        self.log.info("chat data: " + txt + " " + user+ " " + user_name+ " " + user_photo)
         if self.active:
             self.log.debug("Adding to queue")
             self.queue.append([user, txt, user_name, user_photo])
