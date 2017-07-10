@@ -121,7 +121,7 @@ class ServerService(ServiceBackend):
         key = base64.b64encode(key)
         sock_ciphers[sock_num]["aes_key"] = key
         sock_ciphers[sock_num]["aes_iv"] = iv
-        message_data = {"aes_key": key, "iv": iv, "cipher": "aes"}
+        message_data = {"aes_key": key, "iv": iv, "cipher": "pgp"}
         message_context = {"sock_num": sock_num}
         self.send_request(message_type=message_type, message_data=message_data, message_context=message_context,
                           client=True)
@@ -364,9 +364,9 @@ def main():
 
         for sock_num in exchange_socks:
             sock = exchange_socks[sock_num]["sock"]
+            status = exchange_socks[sock_num]["status"]
+            logger.debug("current status: " + status)
             if sock in read_sockets:
-                status = exchange_socks[sock_num]["status"]
-                logger.debug("current status: " + status)
                 try:
                     ciphertext = sock.recv(RECV_BUFFER)
                     if not ciphertext:
