@@ -68,7 +68,6 @@ allowed_bus_messages = ["recognizer_loop:utterance",
                         "class.visualization.request",
                         "face.recognition.request",
                         "object.recognition.request",
-                        "client.aes.exchange_complete",
                         "client.pgp.public.request",
                         "client.pgp.public.response",
                         "client.aes.exchange_complete"
@@ -117,13 +116,12 @@ class ServerService(ServiceBackend):
 
     def aes_key_exchange(self, sock_num, iv=None, key=None):
         message_type = "client.aes.key"
-
         iv, key = self.aes_generate_pair(iv, key)
         iv = base64.b64encode(iv)
         key = base64.b64encode(key)
         sock_ciphers[sock_num]["aes_key"] = key
         sock_ciphers[sock_num]["aes_iv"] = iv
-        message_data = {"aes_key": key, "iv": iv, "cipher": "pgp"}
+        message_data = {"aes_key": key, "iv": iv, "cipher": "aes"}
         message_context = {"sock_num": sock_num}
         self.send_request(message_type=message_type, message_data=message_data, message_context=message_context,
                           client=True)
