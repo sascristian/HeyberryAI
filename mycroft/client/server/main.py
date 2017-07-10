@@ -160,11 +160,13 @@ def key_exchange(sock):
     sock_ciphers[sock_num]["pgp"] = client_pgp
     sock_ciphers[sock_num]["fingerprint"] = fp
     sock_ciphers[sock_num]["user"] = client_data.get("user")
+
     # generate and send aes key to client
     logger.info("Initiating AES key exchange")
     status = "sending aes key"
     exchange_socks[sock_num]["status"] = status
     aes_result = service.aes_key_exchange(sock_num)
+    logger.info(aes_result)
     exchange_socks.pop(sock_num)
 
 
@@ -316,14 +318,14 @@ def handle_message_request(event):
             user_id = context.get("destinatary", "")
         else:
             user_id = event.data.get("requester", "server_skills")+":"+user_id
-    logger.info(user_id)
+
     if ":" not in str(user_id):
         logger.error("Message_Request: invalid user_id: " + user_id + " in data: " + str(event.data) + " in context: " + str(context))
         return
     context["source"] = event.data.get("requester", "skills") + ":server"
     data = event.data.get("data", {})
     sock_num = user_id.split(":")[1]
-    logger.info("Message_Request: sock:" + sock_num + " with type: " + type)
+    logger.info("Message_Request: sock:" + sock_num + " with type: " + type + " with data: " + str(data))
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     message_queue[sock_num].append([type, data, context, cipher])
@@ -365,12 +367,12 @@ def main():
         for sock_num in exchange_socks:
             sock = exchange_socks[sock_num]["sock"]
             status = exchange_socks[sock_num]["status"]
-            logger.debug("current status: " + status)
+
             if sock in read_sockets:
+                logger.debug("current status: " + status)
                 try:
                     ciphertext = sock.recv(RECV_BUFFER)
                     if not ciphertext:
-                        logger.debug("no data?")
                         continue
                     if status == "sending pgp":
                         # receiving client pub key, encrypted with server public key
@@ -382,8 +384,7 @@ def main():
                             logger.debug("Decrypted message: " + utterance)
                         else:
                             logger.error("Client did not use our public key")
-                            # TODO error messages to bus
-
+                            # TODO error messages to bus, kick client
                             continue
                         deserialized_message = Message.deserialize(utterance)
                         logger.debug("Message type: " + deserialized_message.type)
