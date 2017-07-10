@@ -169,7 +169,9 @@ def key_exchange(sock):
     status = "sending aes key"
     exchange_socks[sock_num]["status"] = status
     aes_result = service.aes_key_exchange(sock_num)
-    logger.info(aes_result)
+    if "status" not in aes_result.keys():
+        logger.error("AES exchange failed")
+        offline_client(sock)
     exchange_socks.pop(sock_num)
 
 
@@ -371,7 +373,7 @@ def main():
             sock = exchange_socks[sock_num]["sock"]
             status = exchange_socks[sock_num]["status"]
 
-            if sock in read_sockets:
+            if sock in read_sockets and sock not in write_sockets:
                 logger.debug("current status: " + status)
                 try:
                     ciphertext = sock.recv(RECV_BUFFER)
