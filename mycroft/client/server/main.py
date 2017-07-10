@@ -126,7 +126,9 @@ class ServerService(ServiceBackend):
         self.send_request(message_type=message_type, message_data=message_data, message_context=message_context,
                           client=True)
         self.wait("client.aes.exchange_complete")
+        self.logger.info("AES Exchange result:" + str(self.result))
         return self.result
+
 
     def aes_generate_pair(self, iv=None, key=None):
         if iv is None:
@@ -160,6 +162,7 @@ def key_exchange(sock):
     sock_ciphers[sock_num]["pgp"] = client_pgp
     sock_ciphers[sock_num]["fingerprint"] = fp
     sock_ciphers[sock_num]["user"] = client_data.get("user")
+
 
     # generate and send aes key to client
     logger.info("Initiating AES key exchange")
