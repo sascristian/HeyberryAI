@@ -359,42 +359,44 @@ def main():
 
         for sock_num in exchange_socks:
             sock = exchange_socks[sock_num]["sock"]
-            status = exchange_socks[sock_num]["status"]
-            logger.debug("current status: " + status)
-            try:
-                ciphertext = sock.recv(RECV_BUFFER)
-                if not ciphertext:
-                    logger.debug("no data?")
-                    continue
-                if status == "sending pgp":
-                    # receiving client pub key, encrypted with server public key
-                    logger.debug("Received PGP encrypted message: " + ciphertext)
-                    logger.debug("Attempting to decrypt")
-                    decrypted_data = decrypt_string(ciphertext, passwd)
-                    if decrypted_data.ok:
-                        utterance = str(decrypted_data.data)
-                        logger.debug("Decrypted message: " + utterance)
-                    else:
-                        logger.error("Client did not use our public key")
-                        # TODO error messages to bus
-
+            if sock in read_sockets:
+                status = exchange_socks[sock_num]["status"]
+                logger.debug("current status: " + status)
+                try:
+                    ciphertext = sock.recv(RECV_BUFFER)
+                    if not ciphertext:
+                        logger.debug("no data?")
                         continue
-                    deserialized_message = Message.deserialize(utterance)
-                    logger.debug("Message type: " + deserialized_message.type)
+                    if status == "sending pgp":
+                        # receiving client pub key, encrypted with server public key
+                        logger.debug("Received PGP encrypted message: " + ciphertext)
+                        logger.debug("Attempting to decrypt")
+                        decrypted_data = decrypt_string(ciphertext, passwd)
+                        if decrypted_data.ok:
+                            utterance = str(decrypted_data.data)
+                            logger.debug("Decrypted message: " + utterance)
+                        else:
+                            logger.error("Client did not use our public key")
+                            # TODO error messages to bus
 
-                elif status == "sending aes key":
-                    # received aes encrypted response
-                    logger.debug("Received AES encrypted message: " + ciphertext)
-                    logger.debug("Attempting to decrypt aes message")
-                    key = sock_ciphers[sock_num]["aes_key"]
-                    iv = sock_ciphers[sock_num]["aes_iv"]
-                    cipher = AES.new(key, AES.MODE_CFB, iv)
-                    decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
-                    logger.debug("Decrypted message: " + decrypted_data)
-                    deserialized_message = Message.deserialize(decrypted_data)
-                    logger.debug("Message type: " + deserialized_message.type)
-            except:
-                offline_client(sock)
+                            continue
+                        deserialized_message = Message.deserialize(utterance)
+                        logger.debug("Message type: " + deserialized_message.type)
+
+                    elif status == "sending aes key":
+                        # received aes encrypted response
+                        logger.debug("Received AES encrypted message: " + ciphertext)
+                        logger.debug("Attempting to decrypt aes message")
+                        key = sock_ciphers[sock_num]["aes_key"]
+                        iv = sock_ciphers[sock_num]["aes_iv"]
+                        cipher = AES.new(key, AES.MODE_CFB, iv)
+                        decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
+                        logger.debug("Decrypted message: " + decrypted_data)
+                        deserialized_message = Message.deserialize(decrypted_data)
+                        logger.debug("Message type: " + deserialized_message.type)
+                    ws.emit(Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
+                except:
+                    offline_client(sock)
 
         for sock in write_sockets:
             ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
@@ -440,7 +442,7 @@ def main():
                     event_thread = Thread(target=key_exchange, args=[sockfd])
                     event_thread.setDaemon(True)
                     event_thread.start()
-                    context = {"user": sock_ciphers[sock_num]["user"], "source": ip + ":" + str(sock_num)}
+                    context = {"user": sock_ciphers.get(sock_num, {}).get("user", "unknown"), "source": ip + ":" + str(sock_num)}
                     ws.emit(Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": sock_ciphers[sock_num]["pgp"]}, context))
                     # tell client it's id
                     answer_id(sockfd)
