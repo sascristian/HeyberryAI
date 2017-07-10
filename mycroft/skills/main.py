@@ -37,6 +37,9 @@ from mycroft.skills.intent_service import IntentService
 from mycroft.util import connected
 from mycroft.util.log import getLogger
 
+import logging
+logging.getLogger("urllib3.connectionpool").setLevel("WARNING")
+
 logger = getLogger("Skills")
 
 __author__ = 'seanfitz'
