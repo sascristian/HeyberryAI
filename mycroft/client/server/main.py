@@ -149,13 +149,13 @@ def key_exchange_thread():
             if sock_num in message_queue.keys() and sock_num in exchange_socks.keys():
                 i = 0
                 for type, data, context, cipher in message_queue[sock_num]:
-                    logger.debug("Answering sock " + sock_num)
+                    logger.debug("Sending message to sock " + sock_num)
                     try:
                         logger.debug("Encryption: " + cipher)
                         send_message(sock, type, data, context, cipher=cipher)
                         message_queue[sock_num].pop(i)
                         i += 1
-                        logger.debug("Sucessfully sent data: " + str(data))
+                        logger.debug("Succesfully sent data: " + str(data))
                     except Exception as e:
                         logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
 
