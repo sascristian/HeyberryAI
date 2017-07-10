@@ -361,7 +361,7 @@ def main():
                                             names[sock_num] = []
                                         names[sock_num].append(name)
                                     ws.emit(
-                                        Message("user.names", {"names": data["names"], "sock": sock_num}, context))
+                                        Message("user.names", {"names": data["names"], "sock": sock_num, "ip":ip}, context))
                                 elif deserialized_message.type == "id_update":
                                     answer_id(sock)
                                 elif deserialized_message.type == "recognizer_loop:utterance":

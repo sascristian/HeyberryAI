@@ -237,19 +237,22 @@ class UserSkill(MycroftSkill):
         self.emitter.emit(Message("user.from_facebook.result", data, message.context))
 
     def handle_user_from_sock_request(self, message):
-        sock = message.data.get("sock", "")
+        sock = message.data.get("sock")
+        ip = message.data.get("ip")
         user_id = None
-        self.log.info("user id_to_sock: " + str(self.user_list))
-        for id in self.user_list.keys():
-            if self.user_list[id] == sock:
-                user_id = str(id)
-                self.log.info("user found: " + user_id)
-                break
+        if ip is None:
+            for user in self.users:
+                if user.current_sock == sock:
+                    self.user_list[user_id] = sock
+                    user_id = user.user_id
+                    break
+        else:
+            user_id = self.user_from_ip_sock(sock, ip)
 
-        if user_id is None or user_id not in self.user_list.keys():
-            self.log.error("Something went wrong, that sock is not supposed to be open")
+        if user_id is None:
+            self.log.error("Something went wrong")
             # TODO send close request?
-            self.emitter.emit(Message("user.from_sock.result", {"id": None, "error": "that sock is not supposed to be open"}))
+            self.emitter.emit(Message("user.from_sock.result", {"id": None, "error": "that sock is not supposed to be open?"}))
             return
 
         data = {"id": user_id,
@@ -380,18 +383,25 @@ class UserSkill(MycroftSkill):
         self.log.info("User updated: " + current_user.name + " " + current_user.current_ip + " " + str(current_user.last_timestamp))
         self.emitter.emit(Message("user.connected", {} ,message.context))
 
+    def user_from_ip_sock(self, sock, ip):
+        user_id = None
+        for uid in self.user_list.keys():
+            if self.user_list[uid] == sock:
+                user_id = uid
+                break
+        if user_id is None:
+            for user in self.users:
+                if user.current_ip == ip:
+                    user_id = user.user_id
+                    self.user_list[user_id] = sock
+                    break
+        return user_id
+
     def handle_user_names(self, message):
         names = message.data.get("names")
         sock = message.data.get("sock")
-        user_id = None
-        for user in self.user_list:
-            if self.user_list[user] == sock:
-                user_id = user
-                break
-        if user_id is None:
-            self.log.error("Could not understand what user this is")
-            return
-
+        ip = message.data.get("ip")
+        user_id = self.user_from_ip_sock(sock, ip)
         current_user = self.users[user_id]
         current_user.add_nicknames(names)
         current_user.current_sock = sock
@@ -402,14 +412,8 @@ class UserSkill(MycroftSkill):
 
     def handle_user_request(self, message):
         sock = message.data.get("sock")
-        user_id = None
-        for user in self.user_list:
-            if self.user_list[user] == sock:
-                user_id = user
-                break
-        if user_id is None:
-            self.log.error("Could not understand what user this is")
-            return
+        ip = message.data.get("ip")
+        user_id = self.user_from_ip_sock(sock, ip)
 
         current_user = self.users[user_id]
         current_user.last_timestamp = time.time()
@@ -419,15 +423,8 @@ class UserSkill(MycroftSkill):
 
     def handle_user_disconnect(self, message):
         sock = message.data.get("sock")
-        user_id = None
-        for user in self.user_list:
-            if self.user_list[user] == sock:
-                user_id = user
-                break
-        if user_id is None:
-            self.log.error("Could not understand what user this is")
-            return
-
+        ip = message.data.get("ip")
+        user_id = self.user_from_ip_sock(sock, ip)
         current_user = self.users[user_id]
         current_user.last_timestamp = time.time()
         current_user.current_sock = None
