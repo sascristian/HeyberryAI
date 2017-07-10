@@ -328,7 +328,7 @@ class UserSkill(MycroftSkill):
         ip = message.data.get("ip")
         sock = message.data.get("sock")
         pub_key = message.data.get("pub_key")
-        user = message.context.get("user", "user")
+        user_name = message.context.get("user", "user")
 
         type = "sock_client"
         current_user = None
@@ -360,8 +360,8 @@ class UserSkill(MycroftSkill):
                 new_id += 1
             # save new user
             new_id = str(new_id)
-            new_user = User(id=new_id, emitter=self.emitter, name=user)
-            self.log.info("Creating user")
+
+            new_user = User(id=new_id, emitter=self.emitter, name=user_name)
             new_user.public_key = pub_key
             self.users[new_id] = new_user
             current_user = new_id
