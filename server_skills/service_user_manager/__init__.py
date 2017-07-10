@@ -394,6 +394,7 @@ class UserSkill(MycroftSkill):
 
         current_user = self.users[user_id]
         current_user.add_nicknames(names)
+        current_user.current_sock = sock
         current_user.last_timestamp = time.time()
         current_user.last_seen = time.asctime()
         current_user.timestamp_history.append(time.time())
@@ -429,6 +430,7 @@ class UserSkill(MycroftSkill):
 
         current_user = self.users[user_id]
         current_user.last_timestamp = time.time()
+        current_user.current_sock = None
         current_user.last_seen = time.asctime()
         current_user.timestamp_history.append(time.time())
         current_user.status = "offline"
