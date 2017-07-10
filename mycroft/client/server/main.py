@@ -373,7 +373,7 @@ def main():
             sock = exchange_socks[sock_num]["sock"]
             status = exchange_socks[sock_num]["status"]
 
-            if sock in read_sockets and sock not in write_sockets:
+            if sock in read_sockets:
                 logger.debug("current status: " + status)
                 try:
                     ciphertext = sock.recv(RECV_BUFFER)
@@ -410,6 +410,12 @@ def main():
                     ws.emit(Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
                 except:
                     offline_client(sock)
+
+            if sock in write_sockets:
+                if sock_num in message_queue.keys():
+                    i = 0
+                    for type, data, context, cipher in message_queue[sock_num]:
+                        print type, cipher, data, context
 
         for sock in write_sockets:
             ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
