@@ -47,7 +47,7 @@ gpglog.setLevel("WARNING")
 
 # List to keep track of socket descriptors
 CONNECTION_LIST = []
-RECV_BUFFER = 4096  # Advisable to keep it as an exponent of 2
+RECV_BUFFER = 8192  # Advisable to keep it as an exponent of 2
 PORT = 5000
 server_socket = None
 
@@ -80,31 +80,41 @@ message_queue = {}
 file_socks = {} #sock num: file object
 exchange_socks = {} #sock_num, key exhcnage status
 
-user = 'JarbasServer@Jarbas.ai'
+
+# server pgp keys
+user = 'Jarbas@Jarbas.ai'
 passwd = 'welcome to the mycroft collective'
 
-public, private = get_own_keys(user)
+ascii_public = None
+key_id = None
+public = []
+private = []
 
-encrypted = encrypt_string(user, "Jarbas server key loaded")
-if not encrypted.ok:
-    key = generate_server_key(user, passwd)
+
+def load_server_keys():
+    global ascii_public, key_id, public, private
+    public, private = get_own_keys(user)
+
     encrypted = encrypt_string(user, "Jarbas server key loaded")
+    if not encrypted.ok:
+        key = generate_server_key(user, passwd)
+        encrypted = encrypt_string(user, "Jarbas server key loaded")
 
-decrypted = decrypt_string(encrypted, passwd)
-if not decrypted.ok:
-    logger.error("Could not create own gpg key, do you have gpg installed?")
-    sys.exit()
-else:
-    logger.info(decrypted)
-    key_id = public[0]["fingerprint"]
-    ascii_public = export_key(key_id, save=False)
-    logger.info(ascii_public)
+    decrypted = decrypt_string(encrypted, passwd)
+    if not decrypted.ok:
+        logger.error("Could not create own gpg key, do you have gpg installed?")
+        sys.exit()
+    else:
+        logger.info(decrypted)
+        key_id = public[0]["fingerprint"]
+        ascii_public = export_key(key_id, save=False)
+        logger.info(ascii_public)
 
 
-class ServerService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=10, waiting_messages=None, logger=None):
-        super(ServerService, self).__init__(name="ServerService", emitter=emitter, timeout=timeout,
-                                             waiting_messages=waiting_messages, logger=logger)
+class KeyExchangeService(ServiceBackend):
+    def __init__(self, emitter=None, timeout=5, waiting_messages=["client.pgp.public.response", "client.aes.exchange_complete"], logger=None):
+        super(KeyExchangeService, self).__init__(name="KeyExchangeService", emitter=emitter, timeout=timeout,
+                                                 waiting_messages=waiting_messages, logger=logger)
 
     def pgp_request(self, sock_num):
         message_type = "client.pgp.public.request"
@@ -147,31 +157,33 @@ def key_exchange(sock):
     sock_ciphers[sock_num] = {}
     logger.info("Sending public pgp key to client")
     client_data = service.pgp_request(sock_num)
-    logger.debug(client_data)
     client_pgp = client_data.get("public_key")
     if client_pgp is None:
         logger.error("Could not receive pgp key")
-        # TODO kick user
+        offline_client(sock)
         exchange_socks.pop(sock_num)
         return
-    logger.info("Received client public pgp key: " + client_pgp)
+    logger.info("Received client public pgp key: \n" + client_pgp)
     # save user pgp key
     logger.info("importing client pgp key")
     import_result = import_key_from_ascii(client_pgp)
     fp = import_result.results[0]["fingerprint"]
     sock_ciphers[sock_num]["pgp"] = client_pgp
     sock_ciphers[sock_num]["fingerprint"] = fp
+    logger.info("fingerprint: " + str(fp))
     sock_ciphers[sock_num]["user"] = client_data.get("user")
-
 
     # generate and send aes key to client
     logger.info("Initiating AES key exchange")
     status = "sending aes key"
-    exchange_socks[sock_num]["status"] = status
+    exchange_socks[sock_num] = {"sock": sock, "status": status}
     aes_result = service.aes_key_exchange(sock_num)
     if "status" not in aes_result.keys():
         logger.error("AES exchange failed")
         offline_client(sock)
+        # TODO counter, and ban on many reconnect attempts
+    else:
+        logger.info("Key exchange complete")
     exchange_socks.pop(sock_num)
 
 
@@ -282,12 +294,19 @@ def get_msg(message):
 
 
 def send_message(sock, type="speak", data=None, context=None, cipher="none"):
+    global sock_ciphers
     if data is None:
         data = {}
     ip, num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
     message = get_msg(Message(type, data, context))
     if cipher == "pgp":
-        message = encrypt_string(sock_ciphers[num]["fingerprint"], message)
+        logger.debug("target pgp fingerprint: " + str(sock_ciphers[num].get("fingerprint")))
+        message = encrypt_string(sock_ciphers[num].get("fingerprint"), message)
+        if not message.ok:
+            logger.error("Encryption failed: " + message.stderr)
+            # TODO throw error
+        else:
+            message = str(message)
     if cipher == "aes":
         # rotate key
         iv, key = service.aes_generate_pair()
@@ -301,6 +320,7 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
         message = get_msg(Message(type, data, context))
         message = cipher.encrypt(message)
     answer_data(sock, message)
+    return message
 
 
 def handle_message_request(event):
@@ -329,16 +349,22 @@ def handle_message_request(event):
         return
     context["source"] = event.data.get("requester", "skills") + ":server"
     data = event.data.get("data", {})
+    if cipher == "none" and "cipher" in data.keys():
+        cipher = data["cipher"]
     sock_num = user_id.split(":")[1]
     logger.info("Message_Request: sock:" + sock_num + " with type: " + type + " with data: " + str(data))
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     message_queue[sock_num].append([type, data, context, cipher])
     logger.info("Added to queue")
+    logger.info(message_queue)
 
 
 def main():
     global ws, parser, user_manager, service
+    # load pgp keys
+    load_server_keys()
+    # initialize websocket
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
     ws.on('intent_failure', handle_failure)
@@ -346,9 +372,10 @@ def main():
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
+    # initialize intent parser, usermanager, and keyexchange service
     parser = IntentParser(ws)
     user_manager = UserManagerService(ws)
-    service = ServerService(ws)
+    service = KeyExchangeService(ws)
 
     global CONNECTION_LIST, RECV_BUFFER, PORT, server_socket, message_queue, file_socks
     # start server socket
@@ -367,78 +394,41 @@ def main():
     key = dirname(__file__) + "/certs/myapp.key"
 
     while True:
-        # Get the list sockets which are ready to be read through select
+        # Get the list sockets which are ready to be read / written through select
         read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
 
-        for sock_num in exchange_socks:
-            sock = exchange_socks[sock_num]["sock"]
-            status = exchange_socks[sock_num]["status"]
-
-            if sock in read_sockets:
-                logger.debug("current status: " + status)
-                try:
-                    ciphertext = sock.recv(RECV_BUFFER)
-                    if not ciphertext:
-                        continue
-                    if status == "sending pgp":
-                        # receiving client pub key, encrypted with server public key
-                        logger.debug("Received PGP encrypted message: " + ciphertext)
-                        logger.debug("Attempting to decrypt")
-                        decrypted_data = decrypt_string(ciphertext, passwd)
-                        if decrypted_data.ok:
-                            utterance = str(decrypted_data.data)
-                            logger.debug("Decrypted message: " + utterance)
-                        else:
-                            logger.error("Client did not use our public key")
-                            # TODO error messages to bus, kick client
-                            continue
-                        deserialized_message = Message.deserialize(utterance)
-                        logger.debug("Message type: " + deserialized_message.type)
-
-                    elif status == "sending aes key":
-                        # received aes encrypted response
-                        logger.debug("Received AES encrypted message: " + ciphertext)
-                        logger.debug("Attempting to decrypt aes message")
-                        key = sock_ciphers[sock_num]["aes_key"]
-                        iv = sock_ciphers[sock_num]["aes_iv"]
-                        iv = base64.b64decode(iv)
-                        key = base64.b64decode(key)
-                        cipher = AES.new(key, AES.MODE_CFB, iv)
-                        decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
-                        logger.debug("Decrypted message: " + decrypted_data)
-                        deserialized_message = Message.deserialize(decrypted_data)
-                        logger.debug("Message type: " + deserialized_message.type)
-                    ws.emit(Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
-                except:
-                    offline_client(sock)
-
-            if sock in write_sockets:
-                if sock_num in message_queue.keys():
-                    i = 0
-                    for type, data, context, cipher in message_queue[sock_num]:
-                        print type, cipher, data, context
-
         for sock in write_sockets:
-            ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
+            # Send any queued messages to target socket
+            try:
+                ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(
+                 ",")
+            except:
+                logger.error("Socket disconnected")
+                offline_client(sock)
+                continue
             if sock_num in message_queue.keys():
                 i = 0
+                logger.debug("Processing queue")
+                logger.debug(message_queue)
                 for type, data, context, cipher in message_queue[sock_num]:
                     if cipher == "none" and "cipher" in data.keys():
                         cipher = data["cipher"]
                     logger.debug("Answering sock " + sock_num)
                     try:
                         logger.debug("Encryption: " + cipher)
-                        send_message(sock, type, data, context, cipher=cipher)
+                        message = send_message(sock, type, data, context, cipher=cipher)
                         message_queue[sock_num].pop(i)
+                        if len(message_queue[sock_num]) == 0:
+                            message_queue[sock_num] = None
+                            message_queue.pop(sock_num)
                         i += 1
-                        logger.debug("Sucesfully sent data: " + str(data))
+                        logger.debug("Sucessfully sent data: \n" + str(message))
                     except Exception as e:
                         logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
 
         for sock in read_sockets:
-            # New connection
+            # Handle the case in which there is a new connection received through server_socket
             if sock == server_socket:
-                # Handle the case in which there is a new connection received through server_socket
                 try:
                     sockfd, addr = server_socket.accept()
                     ip, sock_num = str(addr).replace("(", "").replace(")", "").replace(" ", "").split(",")
@@ -461,24 +451,76 @@ def main():
                                              ssl_version=ssl.PROTOCOL_TLSv1)
                     CONNECTION_LIST.append(sockfd)
                     logger.debug( "Client (%s, %s) connected" % addr )
-                    event_thread = Thread(target=key_exchange, args=[sockfd])
-                    event_thread.setDaemon(True)
-                    event_thread.start()
+                    key_thread = Thread(target=key_exchange, args=[sockfd])
+                    key_thread.setDaemon(True)
+                    key_thread.start()
                     context = {"user": sock_ciphers.get(sock_num, {}).get("user", "unknown"), "source": ip + ":" + str(sock_num)}
-                    ws.emit(Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": sock_ciphers[sock_num]["pgp"]}, context))
+                    ws.emit(Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": sock_ciphers.get(sock_num, {}).get("pgp")}, context))
                     # tell client it's id
-                    answer_id(sockfd)
+                   # answer_id(sockfd)
                 except Exception as e:
                     logger.error(e)
+
             # Some incoming message from a client
             else:
+                try:
+                    ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(
+                        ",")
+                except:
+                    logger.error("Socket disconnected")
+                    offline_client(sock)
+                    continue
+                # performing key exchange
+                if sock_num in exchange_socks:
+                    status = exchange_socks[sock_num]["status"]
+                    logger.debug("current status: " + status)
+                    try:
+                        ciphertext = sock.recv(RECV_BUFFER)
+                        if not ciphertext:
+                            offline_client(sock)
+                            continue
+                        if status == "sending pgp":
+                            # receiving client pub key, encrypted with server public key
+                            logger.debug("Received PGP encrypted message: " + ciphertext)
+                            logger.debug("Attempting to decrypt")
+                            decrypted_data = decrypt_string(ciphertext, passwd)
+                            if decrypted_data.ok:
+                                utterance = str(decrypted_data.data)
+                                logger.debug("Decrypted message: " + utterance)
+                            else:
+                                logger.error("Client did not use our public key")
+                                offline_client(sock)
+                                continue
+                            deserialized_message = Message.deserialize(utterance)
+                            logger.debug("Message type: " + deserialized_message.type)
+
+                        elif status == "sending aes key":
+                            # received aes encrypted response
+                            logger.debug("Received AES encrypted message: " + ciphertext)
+                            logger.debug("Attempting to decrypt aes message")
+                            key = sock_ciphers[sock_num]["aes_key"]
+                            iv = sock_ciphers[sock_num]["aes_iv"]
+                            iv = base64.b64decode(iv)
+                            key = base64.b64decode(key)
+                            cipher = AES.new(key, AES.MODE_CFB, iv)
+                            decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
+                            logger.debug(iv)
+                            logger.debug(key)
+                            logger.debug("Decrypted message: " + decrypted_data)
+                            deserialized_message = Message.deserialize(decrypted_data)
+                            logger.debug("Message type: " + deserialized_message.type)
+                        ws.emit(
+                            Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
+
+                    except:
+                        offline_client(sock)
+                    continue
+
                 # Data received from client, process it
                 try:
                     utterance = sock.recv(RECV_BUFFER)
 
                     if utterance:
-                        ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(
-                            ",")
                         logger.debug("Received AES encrypted message: " + utterance)
                         logger.debug("Attempting to decrypt")
                         key = sock_ciphers[sock_num]["aes_key"]

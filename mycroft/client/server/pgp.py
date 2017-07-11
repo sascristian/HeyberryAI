@@ -7,7 +7,7 @@ from os import makedirs
 gpg_home_dir = dirname(__file__)+"/gpg"
 if not exists(gpg_home_dir):
     makedirs(gpg_home_dir)
-gpg = gnupg.GPG(gnupghome=gpg_home_dir)
+gpg = gnupg.GPG(gnupghome=gpg_home_dir, options=["--always-trust"])
 
 
 def list_keys():
