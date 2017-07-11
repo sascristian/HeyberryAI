@@ -1,6 +1,6 @@
 # server client for mycroft
 
-work in progress, this branch should work by just running either main.py from server or client folder, change ip adress in client
+work in progress
 
 ![alt tag](https://github.com/JarbasAI/client_server_idea/blob/master/ssl.jpeg)
 
@@ -12,6 +12,9 @@ any client mycoft can run mycroft_client.py and have a cli that asks remote mycr
 
 change port and host in files
 
+# requires
+
+[PR#796](https://github.com/MycroftAI/mycroft-core/pull/796)
 
 # server logs
 
@@ -53,7 +56,6 @@ change port and host in files
 
 # Working
 
-- ssl
 - check if client ip is blacklisted
 - create socket per client, sends internal id to client
 - server forwards client utterances to mycroft messagebus
@@ -67,6 +69,7 @@ change port and host in files
 
 server side:
 
+- ssl
 - user session
 - action authorization (require password for some intents)
 

@@ -1,7 +1,7 @@
 from time import sleep, time, asctime
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
-import urllib
+import urllib, random
 from os.path import dirname
 
 __author__ = 'jarbas'
@@ -115,6 +115,47 @@ class ServiceBackend(object):
         return self.result
 
 
+class ClientService(ServiceBackend):
+    def __init__(self, emitter=None, timeout=10, waiting_messages=None, logger=None):
+        super(ClientService, self).__init__(name="ClientService", emitter=emitter, timeout=timeout,
+                                                   waiting_messages=waiting_messages, logger=logger)
+
+    def ask_key(self, pub_key, name, context=None):
+        self.send_request(message_type="connection.request",
+                          message_data={"pgp": pub_key, "name": name},
+                          message_context=context,
+                          server=False)
+        self.wait("connection.key.exchange")
+        return self.result
+
+
+class UserManagerService(ServiceBackend):
+    def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
+        super(UserManagerService, self).__init__(name="UserManagerService", emitter=emitter, timeout=timeout,
+                                                   waiting_messages=waiting_messages, logger=logger)
+
+    def user_from_sock(self, sock_num):
+        self.send_request(message_type="user.from_sock.request",
+                          message_data={"sock": sock_num})
+        self.wait("user.from_sock.result")
+        return self.result
+
+    def user_from_facebook_id(self, fb_id):
+        self.send_request(message_type="user.from_facebook.request",
+                          message_data={"id": fb_id})
+        self.wait("user.from_facebook.result")
+        return self.result
+
+    def user_from_id(self, user_id):
+        self.send_request(message_type="user.from_id.request",
+                          message_data={"id": user_id})
+        self.wait("user.from_id.result")
+        if "error" in self.result.keys():
+            self.logger.error(self.result["error"])
+            return None
+        return self.result
+
+
 class FaceRecognitionService(ServiceBackend):
     def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
         super(FaceRecognitionService, self).__init__(name="FaceRecognitionService", emitter=emitter, timeout=timeout,
@@ -152,11 +193,14 @@ class ImageRecogService(ServiceBackend):
     def get_deep_draw(self, class_num=None, server=True, context=None):
         if class_num is None:
             class_num = random.randint(0, 1000)
+        timeout = self.timeout
+        self.timeout = 60 * 40 # 40 mins?
         self.send_request(message_type="class.visualization.request",
                           message_data={"class": class_num},
                           message_context=context,
                           server=server)
         self.wait("class.visualization.result")
+        self.timeout = timeout
         return self.result.get("file", [])
 
 
@@ -181,7 +225,7 @@ class VisionService(ServiceBackend):
 
 
 class ObjectRecogService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=25, waiting_messages=None, logger=None):
+    def __init__(self, emitter=None, timeout=100, waiting_messages=None, logger=None):
         super(ObjectRecogService, self).__init__(name="ObjectRecogService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
     def recognize_objects(self, picture_path, context=None, server=False):

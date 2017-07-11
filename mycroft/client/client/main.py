@@ -18,14 +18,22 @@
 import socket, select, sys, json, time, ssl
 from threading import Thread
 from os.path import dirname
-
+from Crypto.Cipher import AES
+from Crypto import Random
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 from time import sleep
+from mycroft.client.client.pgp import get_own_keys, encrypt_string, decrypt_string, generate_client_key, export_key, import_key_from_ascii
+import logging
+from mycroft.util.jarbas_services import ClientService
+import base64
 
-HOST = "174.59.239.227"
-PORT = 5678
+gpglog = logging.getLogger("gnupg")
+gpglog.setLevel("WARNING")
+
+HOST = "localhost"
+PORT = 5000
 
 s = None
 my_id = None
@@ -40,6 +48,38 @@ detected = False
 source = None
 
 waiting_for_id = False
+
+# current message session keys
+server_key = None
+server_fp = None
+aes_key = None
+aes_iv = None
+
+# client pgp
+ascii_public = None
+public = []
+private = []
+key_id = None
+user = 'JarbasClient@Jarbas.ai'
+passwd = 'welcome to the mycroft collective'
+
+
+def load_client_keys():
+    global ascii_public, public, private, key_id
+    encrypted = encrypt_string(user, "Jarbas client key loaded")
+    if not encrypted.ok:
+        key = generate_client_key(user, passwd)
+        encrypted = encrypt_string(user, "Newly generated Jarbas client key loaded")
+
+    decrypted = decrypt_string(encrypted, passwd)
+    if not decrypted.ok:
+        logger.error("Could not create own gpg key, do you have gpg installed?")
+    else:
+        logger.info(decrypted)
+        public, private = get_own_keys(user)
+        key_id = public[0]["fingerprint"]
+        ascii_public = export_key(key_id, save=False)
+        logger.info(ascii_public)
 
 
 def update_id():
@@ -73,9 +113,7 @@ def handle_speak(event):
 
 def handle_id(event):
     global my_id, names, waiting_for_id
-    # id is not supposed to be reset
-    if my_id is None:
-        my_id = str(event.data.get("id"))
+    my_id = str(event.data.get("id"))
     answer = get_msg(Message("names_response", {"names": names, "id": my_id}))
     s.send(answer)
     waiting_for_id = False
@@ -155,15 +193,19 @@ def end_wait(message):
 def infinite_connect():
     global s
     secs = 5
-    while True:
+    c = 0
+    while c <= 3:
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(2)
             s.connect((HOST, PORT))
             s = ssl.wrap_socket(s,
-                            ca_certs=dirname(__file__) + "/certs/myapp.crt",
-                            cert_reqs=ssl.CERT_REQUIRED)
-            logger.debug('Connected to remote host. Start sending messages')
+                            ca_certs=dirname(__file__) + "/certs/myapp.crt")
+
+            logger.debug('Connected to remote host. Exchanging keys')
+            key_exchange()
+            logger.debug("Start sending messages")
+
             return
         except Exception as e:
             logger.error('Unable to connect, error ' + str(e) + ', retrying in ' + str(secs) + ' seconds')
@@ -172,6 +214,7 @@ def infinite_connect():
         sleep(secs)
         if secs < 150:
             secs = secs * 2
+        c +=1
 
 
 def handle_server_request(message):
@@ -201,14 +244,78 @@ def handle_server_request(message):
                 break  # EOF
             s.sendall(chunk)
         sending_file = False
-        message_data.pop("file")
     message_data["source"] = requester
     logger.info("sending message with type: " + str(message_type))
     answer = get_msg(Message(message_type, message_data, message_context))
     s.send(answer)
 
 
+def key_exchange():
+    status = "waiting for pgp"
+    global aes_iv, aes_key, server_key, server_fp
+    try:
+        while True:
+            socket_list = [s]
+            # Get the list sockets which are readable
+            read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [])
+            for sock in read_sockets:
+                # incoming message from remote server
+                if sock == s:
+                    data = sock.recv(8192)
+                    if not data:
+                        logger.error('no data received')
+                        return
+                    else:
+                        logger.debug("status: " + status)
+                        if status == "waiting for pgp":
+                            # save server key, use it to encrypt next message
+                            message = Message.deserialize(data)
+                            data = message.data
+                            server_key = data.get("public_key")
+                            logger.debug("Received server key: \n" + server_key)
+                            import_result = import_key_from_ascii(server_key)
+                            server_fp = import_result.results[0]["fingerprint"]
+                            status = "waiting for aes"
+                            msg = get_msg(Message("client.pgp.public.response", {"public_key": ascii_public}))
+                            logger.debug(msg)
+                            msg = str(encrypt_string(server_fp, msg))
+                            logger.debug("Sending pgp key to server: \n" + msg)
+                            s.send(msg)
+                            status = "waiting for aes"
+                            logger.debug("Pgp key sent, waiting for initial AES key")
+                        elif status == "waiting for aes":
+                            logger.debug("Received PGP encrypted AES key Exchange\n" + str(data))
+                            ciphertext = str(data)
+                            decrypted = decrypt_string(ciphertext, passwd)
+                            if decrypted.ok:
+                                message = decrypted.data
+                                logger.debug("Decrypted Message: \n" + message)
+                            else:
+                                logger.error("Could not decrypt message: " + str(decrypted.stderr))
+                                sys.exit()
+                            message = Message.deserialize(message)
+                            data = message.data
+                            aes_iv = data["iv"]
+                            aes_key = data["aes_key"]
+                            aes_iv = base64.b64decode(aes_iv)
+                            aes_key = base64.b64decode(aes_key)
+                            logger.debug(str(aes_iv))
+                            logger.debug(aes_key)
+                            msg = get_msg(Message("client.aes.exchange.complete", {"status": "success"}))
+                            cipher = AES.new(aes_key, AES.MODE_CFB, aes_iv)
+                            ciphertext = aes_key + cipher.encrypt(msg)
+                            s.send(ciphertext)
+                            logger.debug(ciphertext)
+                            logger.debug("Key exchange complete, you are communicating securely")
+            time.sleep(0.1)
+
+    except KeyboardInterrupt, e:
+        logger.exception(e)
+        sys.exit()
+
+
 def main():
+    load_client_keys()
     global ws, s, sending_file
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
@@ -226,7 +333,6 @@ def main():
     # connect to remote host
     infinite_connect()
 
-
     try:
         while True:
             socket_list = [s]
@@ -238,15 +344,21 @@ def main():
                     continue
                 # incoming message from remote server
                 if sock == s:
-                    data = sock.recv(4096)
+                    data = sock.recv(8192)
                     if not data:
                         logger.error('Disconnected from server')
                         infinite_connect()
+                        return
                     else:
-                        logger.debug("Received data: " + str(data))
-                        message = Message.deserialize(data)
+                        logger.debug("Received data, decrypting")
+                       # data = aes_decrypt(data)
+                        cipher = AES.new(aes_key, AES.MODE_CFB, aes_iv)
+                        logger.debug("iv, key : " + str(aes_iv) + " " + str(aes_key))
+                        decrypted_data = cipher.decrypt(data)[len(aes_iv):]
+                        logger.debug("Data: " + decrypted_data)
+                        #message = Message.deserialize(data)
                         # emit data to bus
-                        ws.emit(message)
+                        #ws.emit(message)
             time.sleep(0.1)
 
     except KeyboardInterrupt, e:

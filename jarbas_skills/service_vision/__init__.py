@@ -147,8 +147,9 @@ class VisionSkill(MycroftSkill):
     def emit_result(self, path, server=False):
         requester = "vision_service"
         message_type = "vision_result"
+        print self.faces
         message_data = {"movement": self.movement,
-                        "num_persons": len(self.faces), "smile_detected": self.smiling, "faces": self.faces}
+                        "num_persons": len(self.faces), "smile_detected": self.smiling}#, "faces": self.faces}
         message_data["file"] = path
         if server:
             # send server a message
