@@ -49,14 +49,16 @@ Or you can go wild, create the mycroft mesh collective:
 # Trust model
 
 - anyone can start ssl connection to server
-- whitelist/blacklist servers
+- whitelist/blacklist ips in server
 - on connecting a pgp_public key is exchanged
 - initial aes key exchanged encrypted with client public-key
 - all communications after are AES encrypted with a new key every message
 - permissions per user (messages, skills, intents)
 - client public_key is the authentication method, lose it, lose special permissions
 - server keeps track of known ips, connection history, nicknames for this key
-
+- server pre-process all client messages before emitting them to messagebus
+- client trusts all server messages and emits them directly to messagebus
+- you can be both server and client
 
 # jarbas client
 
