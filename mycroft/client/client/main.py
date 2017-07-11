@@ -26,11 +26,13 @@ from mycroft.util.log import getLogger
 from time import sleep
 from mycroft.client.client.pgp import get_own_keys, encrypt_string, decrypt_string, generate_client_key, export_key, import_key_from_ascii
 import logging
-from mycroft.util.jarbas_services import ClientService
 import base64
 
 gpglog = logging.getLogger("gnupg")
 gpglog.setLevel("WARNING")
+
+HOST = "174.59.239.227"
+PORT = 5678
 
 HOST = "localhost"
 PORT = 5000
@@ -299,14 +301,12 @@ def key_exchange():
                             aes_key = data["aes_key"]
                             aes_iv = base64.b64decode(aes_iv)
                             aes_key = base64.b64decode(aes_key)
-                            logger.debug(str(aes_iv))
-                            logger.debug(aes_key)
                             msg = get_msg(Message("client.aes.exchange.complete", {"status": "success"}))
                             cipher = AES.new(aes_key, AES.MODE_CFB, aes_iv)
-                            ciphertext = aes_key + cipher.encrypt(msg)
+                            ciphertext = aes_iv + cipher.encrypt(msg)
                             s.send(ciphertext)
-                            logger.debug(ciphertext)
                             logger.debug("Key exchange complete, you are communicating securely")
+                            return
             time.sleep(0.1)
 
     except KeyboardInterrupt, e:
@@ -316,7 +316,7 @@ def key_exchange():
 
 def main():
     load_client_keys()
-    global ws, s, sending_file
+    global ws, s, sending_file, aes_iv, aes_key
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
     ws.on('id', handle_id)
@@ -351,12 +351,14 @@ def main():
                         return
                     else:
                         logger.debug("Received data, decrypting")
-                       # data = aes_decrypt(data)
                         cipher = AES.new(aes_key, AES.MODE_CFB, aes_iv)
-                        logger.debug("iv, key : " + str(aes_iv) + " " + str(aes_key))
                         decrypted_data = cipher.decrypt(data)[len(aes_iv):]
                         logger.debug("Data: " + decrypted_data)
-                        #message = Message.deserialize(data)
+                        deserialized_message = Message.deserialize(decrypted_data)
+                        logger.debug("Message type: " + deserialized_message.type)
+                        aes_iv = deserialized_message.context["aes_iv"]
+                        aes_key = deserialized_message.context["aes_key"]
+
                         # emit data to bus
                         #ws.emit(message)
             time.sleep(0.1)

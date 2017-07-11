@@ -112,7 +112,7 @@ def load_server_keys():
 
 
 class KeyExchangeService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=5, waiting_messages=["client.pgp.public.response", "client.aes.exchange_complete"], logger=None):
+    def __init__(self, emitter=None, timeout=5, waiting_messages=["client.pgp.public.response", "client.aes.exchange.complete"], logger=None):
         super(KeyExchangeService, self).__init__(name="KeyExchangeService", emitter=emitter, timeout=timeout,
                                                  waiting_messages=waiting_messages, logger=logger)
 
@@ -135,7 +135,7 @@ class KeyExchangeService(ServiceBackend):
         message_context = {"sock_num": sock_num}
         self.send_request(message_type=message_type, message_data=message_data, message_context=message_context,
                           client=True)
-        self.wait("client.aes.exchange_complete")
+        self.wait("client.aes.exchange.complete")
         self.logger.info("AES Exchange result:" + str(self.result))
         return self.result
 
@@ -504,8 +504,6 @@ def main():
                             key = base64.b64decode(key)
                             cipher = AES.new(key, AES.MODE_CFB, iv)
                             decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
-                            logger.debug(iv)
-                            logger.debug(key)
                             logger.debug("Decrypted message: " + decrypted_data)
                             deserialized_message = Message.deserialize(decrypted_data)
                             logger.debug("Message type: " + deserialized_message.type)

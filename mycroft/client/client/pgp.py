@@ -30,6 +30,9 @@ def gen_key(user, passwd, key_lenght=1024, text="jarbas client key", name_real="
 
 def export_key(key_fingerprint, passwd=None, path=None, private=False, save=True):
     # export key
+    if key_fingerprint is None:
+        print "bad fingerprint"
+        return None
     ascii_armored_public_keys = gpg.export_keys(key_fingerprint)
     if private:
         ascii_armored_private_keys = gpg.export_keys(key_fingerprint, True, passphrase=passwd)
@@ -109,7 +112,6 @@ def generate_client_key(user, passwd):
     key = gen_key(user, passwd)
 
     print "exporting client key"
-    #export_key(key.fingerprint, path=gpg_home_dir + '/server_private.asc', passwd=passwd, private=True)
-    export_key(key.fingerprint, path=gpg_home_dir + '/server_public.asc', passwd=passwd, private=False)
-
+    #export_key(key.fingerprint, path=gpg_home_dir + '/client_private.asc', passwd=passwd, private=True)
+    export_key(key.fingerprint, path=gpg_home_dir + '/client_public.asc', passwd=passwd, private=False)
     return key

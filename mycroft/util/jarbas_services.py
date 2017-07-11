@@ -51,7 +51,7 @@ class ServiceBackend(object):
             self.emitter.on(msg, self.end_wait)
         self.context = {"source": self.name, "waiting_for": self.waiting_messages}
 
-    def send_request(self, message_type, message_data=None, message_context=None, server=False):
+    def send_request(self, message_type, message_data=None, message_context=None, server=False, client=False):
         """
           send message
         """
@@ -60,7 +60,16 @@ class ServiceBackend(object):
         if message_context is None:
             message_context = {"source": self.name, "waiting_for": self.waiting_messages}
         if not server:
-            self.emitter.emit(Message(message_type, message_data, message_context))
+            if not client:
+                self.emitter.emit(Message(message_type, message_data, message_context))
+            else:
+                type = "bus"
+                if "file" in message_data.keys():
+                    type = "file"
+                self.emitter.emit(Message("message_request",
+                                          {"request_type": type, "requester": self.name,
+                                           "type": message_type,
+                                           "data": message_data}, message_context))
         else:
             type = "bus"
             if "file" in message_data.keys():
@@ -77,6 +86,7 @@ class ServiceBackend(object):
             returns True if result received, False on timeout
         """
         self.waiting_for = waiting_for
+        self.result = None
         if self.waiting_for != "any" and self.waiting_for not in self.waiting_messages:
             self.emitter.on(waiting_for, self.end_wait)
             self.waiting_messages.append(waiting_for)
@@ -112,20 +122,6 @@ class ServiceBackend(object):
          """
         if self.result is None:
             self.result = {}
-        return self.result
-
-
-class ClientService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=10, waiting_messages=None, logger=None):
-        super(ClientService, self).__init__(name="ClientService", emitter=emitter, timeout=timeout,
-                                                   waiting_messages=waiting_messages, logger=logger)
-
-    def ask_key(self, pub_key, name, context=None):
-        self.send_request(message_type="connection.request",
-                          message_data={"pgp": pub_key, "name": name},
-                          message_context=context,
-                          server=False)
-        self.wait("connection.key.exchange")
         return self.result
 
 
