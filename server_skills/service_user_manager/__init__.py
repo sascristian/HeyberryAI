@@ -162,12 +162,24 @@ class UserSkill(MycroftSkill):
         super(UserSkill, self).__init__(name="UserSkill")
         self.default_key = "xxxxxxxx"
         self.reload_skill = False
-        self.user_list = {} # id, sock
+        # build users db from disk
+        self.user_list = {}  # id, sock
+        user_files = os.listdir(dirname(__file__)+"/users")
+        for file in user_files:
+            if ".json" in file:
+                user_id = file.replace(".json", "")
+                self.user_list[user_id] = None
         self.users = {}    # id, user object
         for user_id in self.user_list.keys():
             user = User(id=user_id, emitter=self.emitter)
+            user.status = "offline"
             self.users[user_id] = user
+
         self.facebook_users = {} #fb_id, user object
+        for user_id in self.users:
+            user = self.users[user_id]
+            if user.user_type == "facebook chat":
+                self.facebook_users[user_id] = user
 
     def initialize(self):
         self.emitter.on("user.connect", self.handle_user_connect)

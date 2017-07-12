@@ -392,7 +392,7 @@ def main():
                     logger.debug("Answering sock " + sock_num)
                     try:
                         logger.debug("Encryption: " + cipher)
-                        message = send_message(sock, type, data, context, cipher=cipher)
+                        send_message(sock, type, data, context, cipher=cipher)
                         message_queue[sock_num].pop(i)
                         if len(message_queue[sock_num]) == 0:
                             message_queue[sock_num] = None
@@ -433,7 +433,10 @@ def main():
 
                 except Exception as e:
                     logger.error(e)
-                    offline_client(sockfd)
+                    try:
+                        offline_client(sockfd)
+                    except:
+                        pass
 
             # Some incoming message from a client
             else:
@@ -496,8 +499,6 @@ def main():
                         iv = sock_ciphers[sock_num]["aes_iv"]
                         iv = base64.b64decode(iv)
                         key = base64.b64decode(key)
-                        logger.debug(iv)
-                        logger.debug(key)
                         cipher = AES.new(key, AES.MODE_CFB, iv)
                         utterance = cipher.decrypt(utterance)[len(iv):]
 
