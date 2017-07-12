@@ -159,6 +159,7 @@ def key_exchange(sock):
     logger.info("Sending public pgp key to client")
     client_data = service.pgp_request(sock_num)
     client_pgp = client_data.get("public_key")
+    names = client_data.get("names")
     if client_pgp is None:
         logger.error("Could not receive pgp key")
         offline_client(sock)
@@ -184,9 +185,9 @@ def key_exchange(sock):
         # TODO counter, and ban on many reconnect attempts
     else:
         logger.info("Key exchange complete")
-        context = {"user": client_data.get("user", "unknown name"), "source": ip + ":" + str(sock_num)}
+        context = {"user": names[0], "source": ip + ":" + str(sock_num)}
         ws.emit(
-            Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": client_pgp},
+            Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": client_pgp, "nicknames":names},
                     context))
         # tell client it's id
     exchange_socks.pop(sock_num)

@@ -333,6 +333,7 @@ class UserSkill(MycroftSkill):
         ip = message.data.get("ip")
         sock = message.data.get("sock")
         pub_key = message.data.get("pub_key")
+        nicknames = message.data.get("nicknames", [])
         user_name = message.context.get("user", "user")
 
         type = "sock_client"
@@ -366,7 +367,7 @@ class UserSkill(MycroftSkill):
             new_id = str(new_id)
             self.log.info("Creating user")
             try:
-                new_user = User(new_id, user_name, self.emitter, reset=True)
+                new_user = User(new_id, user_name, self.emitter, reset=False)
             except Exception as e:
                 self.log.error("Error creating user: " + str(e))
             new_user.public_key = pub_key
@@ -386,6 +387,7 @@ class UserSkill(MycroftSkill):
         current_user.timestamp_history.append(time.time())
         current_user.user_type = type
         current_user.status = "online"
+        current_user.add_nicknames(nicknames)
         current_user.save_user()
         self.log.info("User updated: " + current_user.name + " " + current_user.current_ip + " " + str(current_user.last_timestamp))
         self.emitter.emit(Message("user.connected", {} ,message.context))
