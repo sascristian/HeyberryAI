@@ -5,10 +5,12 @@ Some steps were done to connect mycroft instances together, every instance can r
 # usage cases
 
 Computational Server:
+
     - host deep dream, facebook, everything heavy
     - clients connect for heavy processing/private skills
 
 House/Company Server:
+
     - connect all your mycrofts, "kitchen", "living room", "magic mirror", use them as a single one or to relay orders
 
 
