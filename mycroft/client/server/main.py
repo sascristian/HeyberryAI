@@ -511,7 +511,7 @@ def main():
                                 # TODO check if incoming_file was received before warning
                                 # do nothing, TODO log warning for potential atack?
                                 logger.error("Unknown data received: " + str(e))
-                                logger.warning("Binary data could mean attack or maybe bad decryption")
+                                logger.warning("Binary data could mean attack, illegal file transfer or maybe bad decryption")
                                 continue
                             logger.debug("Message type: " + deserialized_message.type)
                             if deserialized_message.type in allowed_bus_messages:
