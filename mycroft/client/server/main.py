@@ -504,11 +504,16 @@ def main():
 
                         logger.debug("Decryption successfull")
                         if sock_num not in file_socks:
-                            logger.debug(
-                                "received: " + str(utterance).strip() + " from socket: " + sock_num + " from ip: " + ip)
-
-                            deserialized_message = Message.deserialize(utterance)
-                            logger.debug("Message type: " + deserialized_message.type )
+                            try:
+                                deserialized_message = Message.deserialize(utterance)
+                            except Exception as e:
+                                # probably sending binary data, file chunk?
+                                # TODO check if incoming_file was received before warning
+                                # do nothing, TODO log warning for potential atack?
+                                logger.error("Unknown data received: " + str(e))
+                                logger.warning("Binary data could mean attack or maybe bad decryption")
+                                continue
+                            logger.debug("Message type: " + deserialized_message.type)
                             if deserialized_message.type in allowed_bus_messages:
                                 data = deserialized_message.data
                                 # build context
