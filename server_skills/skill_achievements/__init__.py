@@ -125,7 +125,7 @@ class AchievementsSkill(MycroftSkill):
             self.tweet_request(text + " #AchievementUnlocked")
             self.settings["achievements"][name]["tweeted"] = True
         if self.settings["achievements"][name]["count"] % 100 == 0:
-            text = self.settings["achievements"][name]["count"] + " X " + \
+            text = str(self.settings["achievements"][name]["count"]) + " times " + \
                    self.settings["achievements"][self.last_achievement]["text"] + " " + self.settings["achievements"][
                        self.last_achievement].get("url", "")
             self.tweet_request(text + " #AchievementUnlocked")
