@@ -370,6 +370,7 @@ class UserSkill(MycroftSkill):
                 new_user = User(new_id, user_name, self.emitter, reset=False)
             except Exception as e:
                 self.log.error("Error creating user: " + str(e))
+                return
             new_user.public_key = pub_key
             self.users[new_id] = new_user
             current_user = new_id
@@ -390,7 +391,7 @@ class UserSkill(MycroftSkill):
         current_user.add_nicknames(nicknames)
         current_user.save_user()
         self.log.info("User updated: " + current_user.name + " " + current_user.current_ip + " " + str(current_user.last_timestamp))
-        self.emitter.emit(Message("user.connected", {} ,message.context))
+        self.emitter.emit(Message("user.connected", {"internal_id":current_user.id, "name":current_user.name, "ip":current_user.current_ip, "sock":current_user.current_sock} ,message.context))
 
     def user_from_ip_sock(self, sock, ip):
         user_id = None
