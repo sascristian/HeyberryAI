@@ -294,8 +294,6 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
         sock_ciphers[num]["aes_iv"] = new_iv
         context["aes_iv"] = new_iv
         # encrypt message
-        logger.debug("encoded iv:" + str(iv))
-        logger.debug("decoded iv:" + str(iv))
         message = Message_to_raw_data(Message(type, data, context))
         message = iv + cipher.encrypt(message)
     send_raw_data(sock, message)
@@ -335,8 +333,6 @@ def handle_message_to_sock_request(event):
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     message_queue[sock_num].append([type, data, context, cipher])
-    logger.info("Added to queue")
-    logger.info(message_queue)
 
 
 def main():
@@ -388,7 +384,6 @@ def main():
             if sock_num in message_queue.keys():
                 i = 0
                 logger.debug("Processing queue")
-                logger.debug(message_queue)
                 for type, data, context, cipher in message_queue[sock_num]:
                     if cipher == "none" and "cipher" in data.keys():
                         cipher = data["cipher"]
@@ -436,6 +431,7 @@ def main():
 
                 except Exception as e:
                     logger.error(e)
+                    offline_client(sockfd)
 
             # Some incoming message from a client
             else:
@@ -457,12 +453,10 @@ def main():
                             continue
                         if status == "sending pgp":
                             # receiving client pub key, encrypted with server public key
-                            logger.debug("Received PGP encrypted message: " + ciphertext)
-                            logger.debug("Attempting to decrypt")
+                            logger.debug("Received PGP encrypted message: \n" + ciphertext)
                             decrypted_data = decrypt_string(ciphertext, passwd)
                             if decrypted_data.ok:
                                 utterance = str(decrypted_data.data)
-                                logger.debug("Decrypted message: " + utterance)
                             else:
                                 logger.error("Client did not use our public key")
                                 offline_client(sock)
@@ -473,7 +467,6 @@ def main():
                         elif status == "sending aes key":
                             # received aes encrypted response
                             logger.debug("Received AES encrypted message: " + ciphertext)
-                            logger.debug("Attempting to decrypt aes message")
 
                             key = sock_ciphers[sock_num]["aes_key"]
                             iv = sock_ciphers[sock_num]["aes_iv"]
@@ -481,8 +474,6 @@ def main():
                             key = base64.b64decode(key)
                             cipher = AES.new(key, AES.MODE_CFB, iv)
                             decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
-
-                            logger.debug("Decrypted message: " + decrypted_data)
                             deserialized_message = Message.deserialize(decrypted_data)
                             logger.debug("Message type: " + deserialized_message.type)
                         ws.emit(
@@ -498,7 +489,6 @@ def main():
 
                     if utterance:
                         logger.debug("Received AES encrypted message: " + utterance)
-                        logger.debug("Attempting to decrypt")
 
                         key = sock_ciphers[sock_num]["aes_key"]
                         iv = sock_ciphers[sock_num]["aes_iv"]
@@ -553,16 +543,7 @@ def main():
                                     deserialized_message.data["path"] = "../tmp_file.jpg"
 
                                 # pre-process message type
-                                if deserialized_message.type == "names_response":
-                                    for name in data["names"]:
-                                        logger.debug("Setting alias: " + name + " for socket: " + sock_num)
-                                        if sock_num not in names.keys():
-                                            names[sock_num] = []
-                                        names[sock_num].append(name)
-                                    ws.emit(
-                                        Message("user.names", {"names": data["names"], "sock": sock_num, "ip": ip}, context))
-
-                                elif deserialized_message.type == "recognizer_loop:utterance":
+                                if deserialized_message.type == "recognizer_loop:utterance":
                                     utterance = data["utterances"][0]
                                     # get answer
                                     validate_user_utterance(utterance, user_data, context)
