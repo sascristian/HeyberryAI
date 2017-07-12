@@ -159,7 +159,7 @@ def key_exchange(sock):
     logger.info("Sending public pgp key to client")
     client_data = service.pgp_request(sock_num)
     client_pgp = client_data.get("public_key")
-    names = client_data.get("names")
+    names = client_data.get("names", ["unnamed user"])
     if client_pgp is None:
         logger.error("Could not receive pgp key")
         offline_client(sock)
