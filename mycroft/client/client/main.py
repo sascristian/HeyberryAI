@@ -261,7 +261,7 @@ def key_exchange():
                             import_result = import_key_from_ascii(server_key)
                             server_fp = import_result.results[0]["fingerprint"]
                             status = "waiting for aes"
-                            msg = get_msg(Message("client.pgp.public.response", {"public_key": ascii_public}))
+                            msg = get_msg(Message("client.pgp.public.response", {"public_key": ascii_public, "names":names}))
                             logger.debug(msg)
                             msg = str(encrypt_string(server_fp, msg))
                             logger.debug("Sending pgp key to server: \n" + msg)
@@ -274,7 +274,7 @@ def key_exchange():
                             decrypted = decrypt_string(ciphertext, passwd)
                             if decrypted.ok:
                                 message = decrypted.data
-                                logger.debug("Decrypted Message: \n" + message)
+                                logger.debug("message successfully decrypted")
                             else:
                                 logger.error("Could not decrypt message: " + str(decrypted.stderr))
                                 sys.exit()
