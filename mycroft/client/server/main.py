@@ -284,6 +284,7 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
     if cipher == "aes":
         # start encryptor
         iv = sock_ciphers[num]["aes_iv"]
+        iv = base64.b64decode(iv)
         key = sock_ciphers[num]["aes_key"]
         cipher = AES.new(key, AES.MODE_CFB, iv)
         # generate new iv
@@ -292,7 +293,8 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
         sock_ciphers[num]["aes_iv"] = new_iv
         context["aes_iv"] = new_iv
         # encrypt message
-        iv = base64.b64decode(iv)
+        logger.debug("encoded iv:" + str(iv))
+        logger.debug("decoded iv:" + str(iv))
         message = Message_to_raw_data(Message(type, data, context))
         message = iv + cipher.encrypt(message)
     send_raw_data(sock, message)
