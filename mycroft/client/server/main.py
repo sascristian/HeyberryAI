@@ -331,7 +331,7 @@ def handle_message_to_sock_request(event):
     if cipher == "none" and "cipher" in data.keys():
         cipher = data["cipher"]
     sock_num = user_id.split(":")[1]
-    logger.info("Message_Request: sock:" + sock_num + " with type: " + type + " with data: " + str(data))
+    logger.info("Message_Request: sock:" + sock_num + " with type: " + type)
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     message_queue[sock_num].append([type, data, context, cipher])
