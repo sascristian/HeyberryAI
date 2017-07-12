@@ -216,6 +216,7 @@ def handle_speak(event):
 def connect():
     ws.run_forever()
 
+
 # answer
 def send_raw_data(sock, raw_data):
     # send the message to the client who has send us the message
@@ -397,7 +398,7 @@ def main():
                             message_queue[sock_num] = None
                             message_queue.pop(sock_num)
                         i += 1
-                        logger.debug("Sucessfully sent data: \n" + str(message))
+                        logger.debug("Sucessfully sent encrypted data")
                     except Exception as e:
                         logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
 
@@ -454,7 +455,7 @@ def main():
                             continue
                         if status == "sending pgp":
                             # receiving client pub key, encrypted with server public key
-                            logger.debug("Received PGP encrypted message: \n" + ciphertext)
+                            logger.debug("Received PGP encrypted message")
                             decrypted_data = decrypt_string(ciphertext, passwd)
                             if decrypted_data.ok:
                                 utterance = str(decrypted_data.data)
@@ -467,7 +468,7 @@ def main():
 
                         elif status == "sending aes key":
                             # received aes encrypted response
-                            logger.debug("Received AES encrypted message: " + ciphertext)
+                            logger.debug("Received AES encrypted message")
 
                             key = sock_ciphers[sock_num]["aes_key"]
                             iv = sock_ciphers[sock_num]["aes_iv"]
@@ -489,7 +490,7 @@ def main():
                     utterance = sock.recv(RECV_BUFFER)
 
                     if utterance:
-                        logger.debug("Received AES encrypted message: " + utterance)
+                        logger.debug("Received AES encrypted message")
 
                         key = sock_ciphers[sock_num]["aes_key"]
                         iv = sock_ciphers[sock_num]["aes_iv"]
