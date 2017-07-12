@@ -286,6 +286,7 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
         iv = sock_ciphers[num]["aes_iv"]
         iv = base64.b64decode(iv)
         key = sock_ciphers[num]["aes_key"]
+        key = base64.b64decode(key)
         cipher = AES.new(key, AES.MODE_CFB, iv)
         # generate new iv
         new_iv, key = service.aes_generate_pair()
