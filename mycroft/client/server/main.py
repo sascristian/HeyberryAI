@@ -230,17 +230,15 @@ def send_raw_data(sock, raw_data):
 
 
 def offline_client(sock):
-    global names
     try:
-        sock.close()
-        CONNECTION_LIST.remove(sock)
         ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
         logger.debug("Client is offline: " + str(sock.getpeername()))
-        names.pop(sock_num, None)
+        sock.close()
+        CONNECTION_LIST.remove(sock)
         ws.emit(Message("user.disconnect", {"ip": ip, "sock": sock_num}))
-    except:
+    except Exception as e:
         # already removed
-        pass
+        logger.error(e)
 
 
 def validate_user_utterance(utterance, user_data, context):
