@@ -20,7 +20,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
-__author__ = 'eward'
+__author__ = 'jarbas'
 
 LOGGER = getLogger(__name__)
 
@@ -171,7 +171,7 @@ class UserSkill(MycroftSkill):
                 self.user_list[user_id] = None
         self.users = {}    # id, user object
         for user_id in self.user_list.keys():
-            user = User(id=user_id, emitter=self.emitter)
+            user = User(id=user_id, emitter=self.emitter, name="user")
             user.status = "offline"
             self.users[user_id] = user
 
@@ -192,6 +192,23 @@ class UserSkill(MycroftSkill):
         self.emitter.on("user.from_sock.request", self.handle_user_from_sock_request)
         self.emitter.on("user.from_id.request", self.handle_user_from_id_request)
         self.emitter.on("user.from_facebook.request", self.handle_user_from_facebook_request)
+        # build users id list db from disk
+        user_files = os.listdir(dirname(__file__) + "/users")
+        for file in user_files:
+            if ".json" in file:
+                user_id = file.replace(".json", "")
+                self.user_list[user_id] = None
+        # build user objects
+        for user_id in self.user_list.keys():
+            user = User(id=user_id, emitter=self.emitter, name="user")
+            user.status = "offline"
+            self.users[user_id] = user
+
+        # sort facebook users
+        for user_id in self.users:
+            user = self.users[user_id]
+            if user.user_type == "facebook chat":
+                self.facebook_users[user_id] = user
 
     # internal messages
     def handle_user_from_id_request(self, message):
