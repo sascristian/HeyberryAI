@@ -293,8 +293,8 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
         # generate new iv
         new_iv, key = service.aes_generate_pair()
         new_iv = base64.b64encode(new_iv)
-        #sock_ciphers[num]["aes_iv"] = new_iv
-        context["aes_iv"] = sock_ciphers[num]["aes_iv"]#new_iv
+        sock_ciphers[num]["aes_iv"] = new_iv
+        context["aes_iv"] = new_iv
         # encrypt message
         message = Message_to_raw_data(Message(type, data, context))
         message = iv + cipher.encrypt(message)
