@@ -559,6 +559,9 @@ def main():
                                     ws.emit(Message(deserialized_message.type, deserialized_message.data, context))
 
                         else:
+                            if sock_num not in file_socks.keys():
+                                # unauthorized file transfer
+                                continue
                             if utterance == "end_of_file":
                                 logger.info("file received for " + str(sock_num))
                                 file_socks[sock_num].close()
