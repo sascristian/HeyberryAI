@@ -74,7 +74,7 @@ allowed_bus_messages = ["recognizer_loop:utterance",
                         ]
 
 names = {} #sock : [names]
-sock_ciphers = {} #sock : {iv, cipherobject}
+sock_ciphers = {} #sock : {iv, aes_key}
 
 message_queue = {}
 file_socks = {} #sock num: file object
@@ -118,13 +118,14 @@ class KeyExchangeService(ServiceBackend):
 
     def pgp_request(self, sock_num):
         message_type = "client.pgp.public.request"
-        message_data = {"public_key": ascii_public, "fingerprint": key_id, "cipher": "none"}
+        message_data = {"public_key": ascii_public, "fingerprint": key_id, "cipher": "none", "sock_num":sock_num}
         message_context = {"sock_num": sock_num}
         self.send_request(message_type=message_type, message_data=message_data, message_context=message_context, client=True)
         self.wait("client.pgp.public.response")
         return self.result
 
     def aes_key_exchange(self, sock_num, iv=None, key=None):
+        global sock_ciphers
         message_type = "client.aes.key"
         iv, key = self.aes_generate_pair(iv, key)
         iv = base64.b64encode(iv)
@@ -149,7 +150,7 @@ class KeyExchangeService(ServiceBackend):
 
 
 def key_exchange(sock):
-    global exchange_socks
+    global exchange_socks, sock_ciphers
     ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
     # send pgp request
     status = "sending pgp"
@@ -172,7 +173,6 @@ def key_exchange(sock):
     sock_ciphers[sock_num]["fingerprint"] = fp
     logger.info("fingerprint: " + str(fp))
     sock_ciphers[sock_num]["user"] = client_data.get("user")
-
     # generate and send aes key to client
     logger.info("Initiating AES key exchange")
     status = "sending aes key"
@@ -184,6 +184,11 @@ def key_exchange(sock):
         # TODO counter, and ban on many reconnect attempts
     else:
         logger.info("Key exchange complete")
+        context = {"user": client_data.get("user", "unknown name"), "source": ip + ":" + str(sock_num)}
+        ws.emit(
+            Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": client_pgp},
+                    context))
+        # tell client it's id
     exchange_socks.pop(sock_num)
 
 
@@ -210,28 +215,13 @@ def handle_speak(event):
 def connect():
     ws.run_forever()
 
-
-# Function to broadcast messages to all connected clients
-def broadcast_data(sock, message):
-    # Do not send the message to master socket and the client who has send us the message
-    for socket in CONNECTION_LIST:
-        if socket != server_socket and socket != sock:
-            try:
-                logger.debug("Broadcasting " + message)
-                socket.send(message)
-            except:
-                # broken socket connection may be, chat client pressed ctrl+c for example
-                # offline_client(sock, addr)
-                pass
-
-
 # answer
-def answer_data(sock, message):
+def send_raw_data(sock, raw_data):
     # send the message to the client who has send us the message
     for socket in CONNECTION_LIST:
         if socket == sock:
             try:
-                socket.send(message)
+                socket.send(raw_data)
             except:
                 # broken socket connection may be, chat client pressed ctrl+c for example
                 offline_client(sock)
@@ -242,7 +232,6 @@ def offline_client(sock):
     try:
         sock.close()
         CONNECTION_LIST.remove(sock)
-        # broadcast_data(sock, "Client (%s, %s) is offline" % addr)
         ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
         logger.debug("Client is offline: " + str(sock.getpeername()))
         names.pop(sock_num, None)
@@ -252,22 +241,7 @@ def offline_client(sock):
         pass
 
 
-# answer id
-def answer_id(sock):
-    # send the message to the client who has send us the message
-    for socket in CONNECTION_LIST:
-        if socket == sock:
-            try:
-                ip, sock_num = sock.getpeername()
-                logger.debug("Sending Id to Client " + str(sock.getpeername()))
-                answer = get_msg(Message("id", {"id": sock_num}))
-                socket.send(answer)
-            except:
-                # broken socket connection may be, chat client pressed ctrl+c for example
-                offline_client(sock)
-
-
-def get_answer(utterance, user_data, context):
+def validate_user_utterance(utterance, user_data, context):
     global parser
     # check if skill/intent that will trigger is authorized for this user
     intent, skill = parser.determine_intent(utterance)
@@ -286,11 +260,11 @@ def get_answer(utterance, user_data, context):
     logger.debug("Waiting answer for user " + context["source"])
 
 
-def get_msg(message):
-    if hasattr(message, 'serialize'):
-        return message.serialize()
+def Message_to_raw_data(Message):
+    if hasattr(Message, 'serialize'):
+        return Message.serialize()
     else:
-        return json.dumps(message.__dict__)
+        return json.dumps(Message.__dict__)
 
 
 def send_message(sock, type="speak", data=None, context=None, cipher="none"):
@@ -298,7 +272,7 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
     if data is None:
         data = {}
     ip, num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
-    message = get_msg(Message(type, data, context))
+    message = Message_to_raw_data(Message(type, data, context))
     if cipher == "pgp":
         logger.debug("target pgp fingerprint: " + str(sock_ciphers[num].get("fingerprint")))
         message = encrypt_string(sock_ciphers[num].get("fingerprint"), message)
@@ -308,22 +282,23 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
         else:
             message = str(message)
     if cipher == "aes":
-        # rotate key
+        # start encryptor
+        iv = sock_ciphers[num]["aes_iv"]
+        key = sock_ciphers[num]["aes_key"]
+        cipher = AES.new(key, AES.MODE_CFB, iv)
+        # generate new iv
         iv, key = service.aes_generate_pair()
         iv = base64.b64encode(iv)
-        key = base64.b64encode(key)
         sock_ciphers[num]["aes_iv"] = iv
-        sock_ciphers[num]["aes_iv"] = key
-        cipher = AES.new(key, AES.MODE_CFB, iv)
         context["aes_iv"] = iv
-        context["aes_key"] = key
-        message = get_msg(Message(type, data, context))
+        # encrypt message
+        message = Message_to_raw_data(Message(type, data, context))
         message = cipher.encrypt(message)
-    answer_data(sock, message)
+    send_raw_data(sock, message)
     return message
 
 
-def handle_message_request(event):
+def handle_message_to_sock_request(event):
     global message_queue
     # TODO allow files
     type = event.data.get("type", "bus")
@@ -361,14 +336,14 @@ def handle_message_request(event):
 
 
 def main():
-    global ws, parser, user_manager, service
+    global ws, parser, user_manager, service, sock_ciphers
     # load pgp keys
     load_server_keys()
     # initialize websocket
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
     ws.on('intent_failure', handle_failure)
-    ws.on('message_request', handle_message_request)
+    ws.on('message_request', handle_message_to_sock_request)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
@@ -454,10 +429,7 @@ def main():
                     key_thread = Thread(target=key_exchange, args=[sockfd])
                     key_thread.setDaemon(True)
                     key_thread.start()
-                    context = {"user": sock_ciphers.get(sock_num, {}).get("user", "unknown"), "source": ip + ":" + str(sock_num)}
-                    ws.emit(Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": sock_ciphers.get(sock_num, {}).get("pgp")}, context))
-                    # tell client it's id
-                   # answer_id(sockfd)
+
                 except Exception as e:
                     logger.error(e)
 
@@ -498,12 +470,14 @@ def main():
                             # received aes encrypted response
                             logger.debug("Received AES encrypted message: " + ciphertext)
                             logger.debug("Attempting to decrypt aes message")
+
                             key = sock_ciphers[sock_num]["aes_key"]
                             iv = sock_ciphers[sock_num]["aes_iv"]
                             iv = base64.b64decode(iv)
                             key = base64.b64decode(key)
                             cipher = AES.new(key, AES.MODE_CFB, iv)
                             decrypted_data = cipher.decrypt(ciphertext)[len(iv):]
+
                             logger.debug("Decrypted message: " + decrypted_data)
                             deserialized_message = Message.deserialize(decrypted_data)
                             logger.debug("Message type: " + deserialized_message.type)
@@ -521,12 +495,16 @@ def main():
                     if utterance:
                         logger.debug("Received AES encrypted message: " + utterance)
                         logger.debug("Attempting to decrypt")
+
                         key = sock_ciphers[sock_num]["aes_key"]
                         iv = sock_ciphers[sock_num]["aes_iv"]
                         iv = base64.b64decode(iv)
                         key = base64.b64decode(key)
+                        logger.debug(iv)
+                        logger.debug(key)
                         cipher = AES.new(key, AES.MODE_CFB, iv)
                         utterance = cipher.decrypt(utterance)[len(iv):]
+
                         logger.debug("Decryption result: " + utterance)
                         if sock_num not in file_socks:
                             logger.debug(
@@ -557,7 +535,7 @@ def main():
                                 if deserialized_message.type in user_data.get("forbidden_messages",[]):
                                     logger.warning("This user is not allowed to perform this action " + str(sock_num))
                                     continue
-                                user = user_data["id"]
+                                user = user_data.get("id", sock_num)
 
                                 context["user"] = user
                                 # handle message
@@ -579,12 +557,11 @@ def main():
                                         names[sock_num].append(name)
                                     ws.emit(
                                         Message("user.names", {"names": data["names"], "sock": sock_num, "ip": ip}, context))
-                                elif deserialized_message.type == "id_update":
-                                    answer_id(sock)
+
                                 elif deserialized_message.type == "recognizer_loop:utterance":
                                     utterance = data["utterances"][0]
                                     # get answer
-                                    get_answer(utterance, user_data, context)
+                                    validate_user_utterance(utterance, user_data, context)
                                 elif deserialized_message.type == "incoming_file":
                                     logger.info("started receiving file for " + str(sock_num))
                                     file_socks[sock_num] = open("../tmp_file.jpg", 'wb')
