@@ -526,7 +526,7 @@ def main():
                                 # authorize user message_type
                                 # get user from sock
                                 user_data = user_manager.user_from_sock(sock_num)
-                                # see if this user can perform this action
+                                # see if this user can perform this action # TODO default forbidden
                                 if deserialized_message.type in user_data.get("forbidden_messages",[]):
                                     logger.warning("This user is not allowed to perform this action " + str(sock_num))
                                     continue
