@@ -293,7 +293,7 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
         context["aes_iv"] = iv
         # encrypt message
         message = Message_to_raw_data(Message(type, data, context))
-        message = cipher.encrypt(message)
+        message = iv + cipher.encrypt(message)
     send_raw_data(sock, message)
     return message
 
