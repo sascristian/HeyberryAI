@@ -247,11 +247,11 @@ def validate_user_utterance(utterance, user_data, context):
     global parser
     # check if skill/intent that will trigger is authorized for this user
     intent, skill = parser.determine_intent(utterance)
-    if intent in user_data["forbidden_intents"]:
+    if intent in user_data.get("forbidden_intents",[]):
         logger.warning("Intent " + intent + " is not allowed for " + user_data["nicknames"][0])
         return
 
-    if skill in user_data["forbidden_skills"]:
+    if skill in user_data.get("forbidden_skills", []):
         logger.warning("Skill " + skill + " is not allowed for " + user_data["nicknames"][0])
         return
     logger.debug("emitting utterance to bus: " + str(utterance))
@@ -395,10 +395,9 @@ def main():
                         send_message(sock, type, data, context, cipher=cipher)
                         message_queue[sock_num].pop(i)
                         if len(message_queue[sock_num]) == 0:
-                            message_queue[sock_num] = None
                             message_queue.pop(sock_num)
                         i += 1
-                        logger.debug("Sucessfully sent encrypted data")
+                        logger.debug("Succesfully sent encrypted data")
                     except Exception as e:
                         logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
 
