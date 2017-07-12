@@ -34,8 +34,8 @@ gpglog.setLevel("WARNING")
 HOST = "174.59.239.227"
 PORT = 5678
 
-HOST = "localhost"
-PORT = 5000
+#HOST = "localhost"
+#PORT = 5000
 
 s = None
 my_id = None
@@ -48,8 +48,6 @@ waiting = False
 ask = False
 detected = False
 source = None
-
-waiting_for_id = False
 
 # current message session keys
 server_key = None
@@ -84,20 +82,6 @@ def load_client_keys():
         logger.info(ascii_public)
 
 
-def update_id():
-    global ws, waiting_for_id, s
-    answer = get_msg(Message("id_update", {"id": "unknown"}))
-    s.send(answer)
-    # wait
-    waiting_for_id = True
-    start_time = time.time()
-    elapsed = 0
-    while waiting_for_id and elapsed <= 20:
-        elapsed = time.time() - start_time
-        time.sleep(0.1)
-    waiting_for_id = False
-
-
 def handle_speak(event):
     global my_id, source, ws
     utterance = event.data.get('utterance')
@@ -113,19 +97,6 @@ def handle_speak(event):
         logger.info("Speak: " + utterance)
 
 
-def handle_id(event):
-    global my_id, names, waiting_for_id
-    my_id = str(event.data.get("id"))
-    answer = get_msg(Message("names_response", {"names": names, "id": my_id}))
-    s.send(answer)
-    waiting_for_id = False
-
-
-def handle_id_request(event):
-    global my_id, names, ws
-    ws.emit(Message("names_response", {"names": names, "id": my_id}))
-
-
 def connect():
     ws.run_forever()
 
@@ -137,9 +108,21 @@ def get_msg(message):
         return json.dumps(message.__dict__)
 
 
+def send_raw_data(Message, cipher="aes", message=True):
+    if message:
+        if Message.context is None:
+            Message.context = {"source": names[0]}
+        raw_data = get_msg(Message)
+    else:
+        raw_data = Message
+    cipher = AES.new(aes_key, AES.MODE_CFB, aes_iv)
+    ciphertext = aes_iv + cipher.encrypt(raw_data)
+    s.send(ciphertext)
+
+
 def handle_utterance(event):
     global ask, detected, source
-    source = event.data.get("source")
+    source = event.data.get("source", names[0])
     if source is None:
         source = "unknown"
     logger.debug("Processing utterance: " + event.data.get("utterances")[0] + " from source: " + source)
@@ -149,8 +132,7 @@ def handle_utterance(event):
         logger.debug("No intent failure or execution detected for 20 seconds")
     if ask:
         logger.debug("Asking server for answer")
-        answer = get_msg(event)
-        s.send(answer)
+        send_raw_data(event)
     else:
         logger.debug("Not asking server")
 
@@ -234,27 +216,27 @@ def handle_server_request(message):
         sending_file = True
         bin_file = open(message_data["file"], "rb")
         # message_data["file"] = bin_file.read()
-        answer = get_msg(Message("incoming_file", {"target":"server"}))
-        s.send(answer)
+        send_raw_data(Message("incoming_file", {"target": "server"}))
         i = 0
         while True:
             i += 1
             chunk = bin_file.read(4096)
             print "sending chunk " + str(i)
             if not chunk:
-                s.send("end_of_file")
+                send_raw_data("end_of_file", message=False)
                 break  # EOF
-            s.sendall(chunk)
+            cipher = AES.new(aes_key, AES.MODE_CFB, aes_iv)
+            cipherchunk = aes_iv + cipher.encrypt(chunk)
+            s.sendall(cipherchunk)
         sending_file = False
     message_data["source"] = requester
     logger.info("sending message with type: " + str(message_type))
-    answer = get_msg(Message(message_type, message_data, message_context))
-    s.send(answer)
+    send_raw_data(Message(message_type, message_data, message_context))
 
 
 def key_exchange():
     status = "waiting for pgp"
-    global aes_iv, aes_key, server_key, server_fp
+    global aes_iv, aes_key, server_key, server_fp, my_id
     try:
         while True:
             socket_list = [s]
@@ -274,6 +256,7 @@ def key_exchange():
                             message = Message.deserialize(data)
                             data = message.data
                             server_key = data.get("public_key")
+                            my_id = data.get("sock_num")
                             logger.debug("Received server key: \n" + server_key)
                             import_result = import_key_from_ascii(server_key)
                             server_fp = import_result.results[0]["fingerprint"]
@@ -301,10 +284,7 @@ def key_exchange():
                             aes_key = data["aes_key"]
                             aes_iv = base64.b64decode(aes_iv)
                             aes_key = base64.b64decode(aes_key)
-                            msg = get_msg(Message("client.aes.exchange.complete", {"status": "success"}))
-                            cipher = AES.new(aes_key, AES.MODE_CFB, aes_iv)
-                            ciphertext = aes_iv + cipher.encrypt(msg)
-                            s.send(ciphertext)
+                            send_raw_data(Message("client.aes.exchange.complete", {"status": "success"}))
                             logger.debug("Key exchange complete, you are communicating securely")
                             return
             time.sleep(0.1)
@@ -319,8 +299,6 @@ def main():
     global ws, s, sending_file, aes_iv, aes_key
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
-    ws.on('id', handle_id)
-    ws.on('id_request', handle_id_request)
     ws.on('recognizer_loop:utterance', handle_utterance)
     ws.on('intent_failure', handle_intent_failure)
     ws.on("server_request", handle_server_request)
@@ -357,10 +335,8 @@ def main():
                         deserialized_message = Message.deserialize(decrypted_data)
                         logger.debug("Message type: " + deserialized_message.type)
                         aes_iv = deserialized_message.context["aes_iv"]
-                        aes_key = deserialized_message.context["aes_key"]
-
                         # emit data to bus
-                        #ws.emit(message)
+                        ws.emit(deserialized_message)
             time.sleep(0.1)
 
     except KeyboardInterrupt, e:
