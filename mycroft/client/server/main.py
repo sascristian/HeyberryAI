@@ -209,7 +209,7 @@ def handle_speak(event):
     if sock_num not in message_queue.keys():
         message_queue[sock_num] = []
     logger.debug("Adding answer to answering queue")
-    message_queue[sock_num].append([answer_type, event.data, event.context])
+    message_queue[sock_num].append([answer_type, event.data, event.context, "aes"])
 
 
 def connect():
