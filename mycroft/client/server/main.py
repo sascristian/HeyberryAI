@@ -502,7 +502,7 @@ def main():
                         cipher = AES.new(key, AES.MODE_CFB, iv)
                         utterance = cipher.decrypt(utterance)[len(iv):]
 
-                        logger.debug("Decryption result: " + utterance)
+                        logger.debug("Decryption successfull")
                         if sock_num not in file_socks:
                             logger.debug(
                                 "received: " + str(utterance).strip() + " from socket: " + sock_num + " from ip: " + ip)
