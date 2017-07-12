@@ -293,6 +293,7 @@ def send_message(sock, type="speak", data=None, context=None, cipher="none"):
         # generate new iv
         new_iv, key = service.aes_generate_pair()
         new_iv = base64.b64encode(new_iv)
+        new_iv = iv
         sock_ciphers[num]["aes_iv"] = new_iv
         context["aes_iv"] = new_iv
         # encrypt message
@@ -453,6 +454,7 @@ def main():
                     try:
                         ciphertext = sock.recv(RECV_BUFFER)
                         if not ciphertext:
+                            logger.debug("no data, aborting exchange")
                             offline_client(sock)
                             continue
                         if status == "sending pgp":
