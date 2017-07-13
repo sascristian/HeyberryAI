@@ -380,33 +380,6 @@ def main():
         # Get the list sockets which are ready to be read / written through select
         read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, CONNECTION_LIST, [])
 
-        for sock in write_sockets:
-            # Send any queued messages to target socket
-            try:
-                ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(
-                 ",")
-            except:
-                logger.error("Socket disconnected")
-                offline_client(sock)
-                continue
-            if sock_num in message_queue.keys():
-                i = 0
-                logger.debug("Processing queue")
-                for type, data, context, cipher in message_queue[sock_num]:
-                    if cipher == "none" and "cipher" in data.keys():
-                        cipher = data["cipher"]
-                    logger.debug("Answering sock " + sock_num)
-                    try:
-                        logger.debug("Encryption: " + cipher)
-                        send_message(sock, type, data, context, cipher=cipher)
-                        message_queue[sock_num].pop(i)
-                        if len(message_queue[sock_num]) == 0:
-                            message_queue.pop(sock_num)
-                        i += 1
-                        logger.debug("Succesfully sent encrypted data")
-                    except Exception as e:
-                        logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
-
         for sock in read_sockets:
             # Handle the case in which there is a new connection received through server_socket
             if sock == server_socket:
@@ -431,7 +404,7 @@ def main():
                                              keyfile=key,
                                              ssl_version=ssl.PROTOCOL_TLSv1)
                     CONNECTION_LIST.append(sockfd)
-                    logger.debug( "Client (%s, %s) connected" % addr )
+                    logger.debug("Client (%s, %s) connected" % addr)
                     key_thread = Thread(target=key_exchange, args=[sockfd])
                     key_thread.setDaemon(True)
                     key_thread.start()
@@ -518,7 +491,8 @@ def main():
                                 # TODO check if incoming_file was received before warning
                                 # do nothing, TODO log warning for potential atack?
                                 logger.error("Unknown data received: " + str(e))
-                                logger.warning("Binary data could mean attack, illegal file transfer or maybe bad decryption")
+                                logger.warning(
+                                    "Binary data could mean attack, illegal file transfer or maybe bad decryption")
                                 continue
                             logger.debug("Message type: " + deserialized_message.type)
                             if deserialized_message.type in allowed_bus_messages:
@@ -541,7 +515,7 @@ def main():
                                 # get user from sock
                                 user_data = user_manager.user_from_sock(sock_num)
                                 # see if this user can perform this action # TODO default forbidden
-                                if deserialized_message.type in user_data.get("forbidden_messages",[]):
+                                if deserialized_message.type in user_data.get("forbidden_messages", []):
                                     logger.warning("This user is not allowed to perform this action " + str(sock_num))
                                     continue
                                 user = user_data.get("id", sock_num)
@@ -590,6 +564,35 @@ def main():
                     logger.error(e)
                     offline_client(sock)
                     continue
+
+        for sock in write_sockets:
+            # Send any queued messages to target socket
+            try:
+                ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(
+                 ",")
+            except:
+                logger.error("Socket disconnected")
+                offline_client(sock)
+                continue
+            if sock_num in message_queue.keys():
+                i = 0
+                logger.debug("Processing queue")
+                for type, data, context, cipher in message_queue[sock_num]:
+                    if cipher == "none" and "cipher" in data.keys():
+                        cipher = data["cipher"]
+                    logger.debug("Answering sock " + sock_num)
+                    try:
+                        logger.debug("Encryption: " + cipher)
+                        send_message(sock, type, data, context, cipher=cipher)
+                        message_queue[sock_num].pop(i)
+                        if len(message_queue[sock_num]) == 0:
+                            message_queue.pop(sock_num)
+                        i += 1
+                        logger.debug("Succesfully sent encrypted data")
+                    except Exception as e:
+                        logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
+
+
     server_socket.close()
 
 
