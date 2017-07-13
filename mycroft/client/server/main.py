@@ -223,7 +223,7 @@ def send_raw_data(sock, raw_data):
     for socket in CONNECTION_LIST:
         if socket == sock:
             try:
-                socket.send(raw_data)
+                socket.sendall(raw_data)
             except Exception as e:
                 logger.error("Error sending raw_data: " + str(e))
                 # broken socket connection may be, chat client pressed ctrl+c for example
