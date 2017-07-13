@@ -395,20 +395,23 @@ def main():
             if sock_num in message_queue.keys():
                 i = 0
                 logger.debug("Processing queue")
-                for type, data, context, cipher in message_queue[sock_num]:
-                    if cipher == "none" and "cipher" in data.keys():
-                        cipher = data["cipher"]
-                    logger.debug("Answering sock " + sock_num)
-                    try:
-                        logger.debug("Encryption: " + cipher)
-                        send_message(sock, type, data, context, cipher=cipher)
-                        message_queue[sock_num].pop(i)
-                        if len(message_queue[sock_num]) == 0:
-                            message_queue.pop(sock_num)
-                        i += 1
-                        logger.debug("Succesfully sent encrypted data")
-                    except Exception as e:
-                        logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
+                try:
+                    for type, data, context, cipher in message_queue[sock_num]:
+                        try:
+                            logger.debug("Answering sock " + sock_num)
+                            if cipher == "none" and "cipher" in data.keys():
+                                cipher = data["cipher"]
+                            logger.debug("Encryption: " + cipher)
+                            send_message(sock, type, data, context, cipher=cipher)
+                            message_queue[sock_num].pop(i)
+                            if len(message_queue[sock_num]) == 0:
+                                message_queue.pop(sock_num)
+                            i += 1
+                            logger.debug("Successfully sent encrypted data")
+                        except Exception as e:
+                            logger.debug("Answering sock " + sock_num + " failed with: " + str(e))
+                except Exception as e:
+                    logger.error("Could not process queue: " + str(e))
 
         for sock in read_sockets:
             # Handle the case in which there is a new connection received through server_socket
