@@ -230,11 +230,19 @@ def send_raw_data(sock, raw_data):
 
 
 def offline_client(sock):
+    global CONNECTION_LIST, exchange_socks, sock_ciphers
     try:
         ip, sock_num = str(sock.getpeername()).replace("(", "").replace(")", "").replace(" ", "").split(",")
         logger.debug("Client is offline: " + str(sock.getpeername()))
-        sock.close()
-        CONNECTION_LIST.remove(sock)
+        if sock in CONNECTION_LIST:
+            sock.close()
+            CONNECTION_LIST.remove(sock)
+        if sock_num in exchange_socks:
+            exchange_socks.pop(sock_num)
+        if sock_num in sock_ciphers:
+            sock_ciphers.pop(sock_num)
+        if sock_num in file_socks:
+            file_socks.pop(sock_num)
         ws.emit(Message("user.disconnect", {"ip": ip, "sock": sock_num}))
     except Exception as e:
         # already removed
@@ -446,6 +454,7 @@ def main():
                     continue
                 # performing key exchange
                 if sock_num in exchange_socks:
+                    logger.debug("Processing key exchange for: " + sock_num)
                     status = exchange_socks[sock_num]["status"]
                     logger.debug("current status: " + status)
                     try:
