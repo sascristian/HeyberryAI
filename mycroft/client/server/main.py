@@ -224,9 +224,11 @@ def send_raw_data(sock, raw_data):
         if socket == sock:
             try:
                 socket.send(raw_data)
-            except:
+            except Exception as e:
+                logger.error("Error sending raw_data: " + str(e))
                 # broken socket connection may be, chat client pressed ctrl+c for example
                 offline_client(sock)
+                return
 
 
 def offline_client(sock):
@@ -245,6 +247,7 @@ def offline_client(sock):
             file_socks.pop(sock_num)
         ws.emit(Message("user.disconnect", {"ip": ip, "sock": sock_num}))
     except Exception as e:
+        logger.debug("client seems to already be offline")
         # already removed
         logger.error(e)
 
@@ -437,7 +440,7 @@ def main():
                     key_thread.start()
 
                 except Exception as e:
-                    logger.error(e)
+                    logger.error("Could not initiate connection to socket, error: " + str(e))
                     try:
                         offline_client(sockfd)
                     except:
@@ -491,7 +494,8 @@ def main():
                         ws.emit(
                             Message(deserialized_message.type, deserialized_message.data, deserialized_message.context))
 
-                    except:
+                    except Exception as e:
+                        logger.error("An error ocured during key exchange: " + str(e))
                         offline_client(sock)
                     continue
 
@@ -518,7 +522,7 @@ def main():
                                 # TODO check if incoming_file was received before warning
                                 # do nothing, TODO log warning for potential atack?
                                 logger.error("Unknown data received: " + str(e))
-                                logger.warning("Binary data could mean attack, illegal file transfer or maybe bad decryption")
+                                #logger.warning("Binary data could mean attack, illegal file transfer or maybe bad decryption")
                                 continue
                             logger.debug("Message type: " + deserialized_message.type)
                             if deserialized_message.type in allowed_bus_messages:
@@ -588,7 +592,7 @@ def main():
                         logger.debug("no data received from " + sock_num)
                         offline_client(sock)
                 except Exception as e:
-                    logger.error(e)
+                    logger.error("Error occurred processing socket " + sock_num + ": " + str(e))
                     offline_client(sock)
                     continue
     server_socket.close()
