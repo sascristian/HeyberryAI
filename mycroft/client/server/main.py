@@ -588,9 +588,9 @@ def main():
 
                         ws.emit(Message("user.request", {"ip": ip, "sock": sock_num}))
 
-                    else:
-                        logger.debug("no data received from " + sock_num)
-                        offline_client(sock)
+                    #else:
+                    #    logger.debug("no data received from " + sock_num)
+                    #    offline_client(sock)
                 except Exception as e:
                     logger.error("Error occurred processing socket " + sock_num + ": " + str(e))
                     offline_client(sock)
