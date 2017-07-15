@@ -203,7 +203,8 @@ class MyServerFactory(WebSocketServerFactory):
        Remove client from list of managed connections.
        """
         logger.info("deregistering client: " + str(client.peer))
-        self.clients.pop(client.peer)
+        if client.peer in self.clients.keys():
+            self.clients.pop(client.peer)
 
     # internals
     def message_queue(self):
