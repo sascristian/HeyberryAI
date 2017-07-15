@@ -6,6 +6,7 @@ from Crypto import Random
 import logging
 import base64
 import json
+import time
 from os.path import dirname
 from threading import Thread
 
@@ -24,10 +25,10 @@ from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 from mycroft.util.jarbas_services import UserManagerService
-from mycroft.util.jarbas_services import ServiceBackend
 
 from mycroft.skills.intent_service import IntentParser
-from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key, export_key, import_key_from_ascii
+from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key, export_key, \
+    import_key_from_ascii
 
 # logs
 NAME = "Jarbas_Server"
@@ -39,7 +40,6 @@ gpglog.setLevel("WARNING")
 
 # how to react to messages
 class MyServerProtocol(WebSocketServerProtocol):
-
     def onConnect(self, request):
         logger.info("Client connecting: {0}".format(request.peer))
 
@@ -96,29 +96,33 @@ class MyServerFactory(WebSocketServerFactory):
         # mycroft utils
         self.parser = IntentParser(self.emitter)
         self.user_manager = UserManagerService(self.emitter)
-        # messages to send
-        self.message_queue = {}
+
+        # messages to send queue
+        self.message_queue = []
+        self.queue_thread = Thread(target=self.message_queue)
+        self.queue_thread.setDaemon(True)
+        self.queue_thread.start()
 
         # allowed data
         self.blacklisted_ips = []
         self.whitelisted_ips = []
         self.blacklist = True
         self.allowed_bus_messages = ["recognizer_loop:utterance",
-                                "names_response",
-                                "id_update",
-                                "incoming_file",
-                                "vision_result",
-                                "vision.faces.result",
-                                "vision.feed.result",
-                                "image.classification.request",
-                                "style.transfer.request",
-                                "class.visualization.request",
-                                "face.recognition.request",
-                                "object.recognition.request",
-                                "client.pgp.public.request",
-                                "client.pgp.public.response",
-                                "client.aes.exchange_complete"
-                                ]
+                                     "names_response",
+                                     "id_update",
+                                     "incoming_file",
+                                     "vision_result",
+                                     "vision.faces.result",
+                                     "vision.feed.result",
+                                     "image.classification.request",
+                                     "style.transfer.request",
+                                     "class.visualization.request",
+                                     "face.recognition.request",
+                                     "object.recognition.request",
+                                     "client.pgp.public.request",
+                                     "client.pgp.public.response",
+                                     "client.aes.exchange_complete"
+                                     ]
         self.file_socks = {}
 
     # initialize methods
@@ -161,7 +165,8 @@ class MyServerFactory(WebSocketServerFactory):
         # send pgp request
         logger.info("Sending public pgp key to client")
         message_type = "client.pgp.public.request"
-        message_data = {"public_key": self.ascii_public, "fingerprint": self.key_id, "cipher": cipher, "sock_num": sock_num}
+        message_data = {"public_key": self.ascii_public, "fingerprint": self.key_id, "cipher": cipher,
+                        "sock_num": sock_num}
         message_context = {"sock_num": sock_num}
         self.send_message(client, message_type, message_data, message_context, cipher)
 
@@ -190,7 +195,8 @@ class MyServerFactory(WebSocketServerFactory):
             #  if not whitelisted kick
             # TODO kick client
             return
-        self.clients[client.peer] = {"object": client, "status": "waiting pgp", "aes_key": None, "aes_iv": None, "user_object": None, "pgp": None, "fingerprint": None}
+        self.clients[client.peer] = {"object": client, "status": "waiting pgp", "aes_key": None, "aes_iv": None,
+                                     "user_object": None, "pgp": None, "fingerprint": None}
 
     def unregister_client(self, client):
         """
@@ -198,6 +204,19 @@ class MyServerFactory(WebSocketServerFactory):
        """
         logger.info("deregistering client: " + str(client.peer))
         self.clients.pop(client.peer)
+
+    # internals
+    def message_queue(self):
+        while True:
+            for msg in self.message_queue:
+                logger.debug("Processing queue")
+                if msg[4] == "none" and "cipher" in msg[2].keys():
+                    msg[4] = msg[2]["cipher"]
+                logger.debug("Encryption: " + msg[4])
+                self.send_message(msg)
+                self.message_queue.remove(msg)
+                logger.debug("Sucessfully sent encrypted data")
+            time.sleep(0.1)
 
     def process_message(self, client, payload, isBinary):
         """
@@ -280,7 +299,7 @@ class MyServerFactory(WebSocketServerFactory):
 
         else:
             # not supposed to happen
-            logger.error("client is doing something wrong")
+            logger.error("someone is doing something wrong")
             # TODO kick client
 
     def process_message_type(self, client, deserialized_message):
@@ -324,11 +343,12 @@ class MyServerFactory(WebSocketServerFactory):
             # pre-process message type
             if deserialized_message.type == "recognizer_loop:utterance":
                 utterance = data["utterances"][0]
-                # get answer
+                # validate user utterance
                 self.validate_user_utterance(utterance, user_data, context)
             elif deserialized_message.type == "incoming_file":
                 logger.info("started receiving file for " + str(sock_num))
                 self.file_socks[sock_num] = open("../tmp_file.jpg", 'wb')
+                # TODO file sending
             else:
                 logger.info("no special handling provided for " + deserialized_message.type)
                 # message is whitelisted and no special handling was provided
@@ -390,6 +410,7 @@ class MyServerFactory(WebSocketServerFactory):
         client.sendMessage(message.encode("utf-8"))
         return message
 
+    # mycroft handlers
     def handle_message_to_sock_request(self, event):
         # TODO allow files
         type = event.data.get("type", "bus")
@@ -403,9 +424,9 @@ class MyServerFactory(WebSocketServerFactory):
         # allow user to be requested explictly
         user_id = event.data.get("user_id")
         if user_id is None:
-            user_id = event.context.get("sock_num")
+            user_id = context.get("sock_num")
             if user_id is None:
-                # if not, use context
+                # if not, use destinatary
                 user_id = context.get("destinatary", "")
             else:
                 user_id = event.data.get("requester", "server_skills") + ":" + user_id
@@ -421,11 +442,12 @@ class MyServerFactory(WebSocketServerFactory):
             cipher = data["cipher"]
         sock_num = user_id.split(":")[1]
         logger.info("Message_Request: sock:" + sock_num + " with type: " + type)
-        if sock_num not in self.message_queue.keys():
-            self.message_queue[sock_num] = []
-        self.message_queue[sock_num].append([type, data, context, cipher])
+        for client in self.clients:
+            c, ip, sock = client.split(":")
+            if sock == sock_num:
+                self.message_queue.append([self.clients[client]["object"], type, data, context, cipher])
+                return
 
-    # mycroft handlers
     def handle_failure(self, event):
         # TODO warn user of possible lack of answer (wait for wolfram alpha x seconds first)
         logger.debug("intent failure detected")
@@ -438,23 +460,26 @@ class MyServerFactory(WebSocketServerFactory):
         logger.debug("Answer: " + utterance + " Target: " + target)
         target, sock_num = target.split(":")
         answer_type = "speak"
-        if sock_num not in self.message_queue.keys():
-            self.message_queue[sock_num] = []
-        logger.debug("Adding answer to answering queue")
-        self.message_queue[sock_num].append([answer_type, event.data, event.context, "aes"])
+        for client in self.clients:
+            c, ip, sock = client.split(":")
+            if sock == sock_num:
+                logger.debug("Adding answer to answering queue")
+                self.message_queue.append(
+                    [self.clients[client["object"]], answer_type, event.data, event.context, "aes"])
+                return
+        logger.error("Speak targetted to non existing client")
 
 
 if __name__ == '__main__':
-
     # more logs
     log.startLogging(sys.stdout)
 
     # server
     host = "127.0.0.1"
-    port = 5678
+    port = 5000
     adress = u"ws://" + host + u":" + str(port)
-    cert = dirname(__file__)+'/certs/myapp.crt'
-    key = dirname(__file__)+'/certs/myapp.key'
+    cert = 'certs/myapp.crt'
+    key = 'certs/myapp.key'
 
     # SSL server context: load server key and certificate
     contextFactory = ssl.DefaultOpenSSLContextFactory(key, cert)
