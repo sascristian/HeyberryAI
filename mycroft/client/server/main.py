@@ -453,8 +453,8 @@ if __name__ == '__main__':
     host = "127.0.0.1"
     port = 5000
     adress = u"ws://" + host + u":" + str(port)
-    cert = 'certs/myapp.crt'
-    key = 'certs/myapp.key'
+    cert = dirname(__file__)+'/certs/myapp.crt'
+    key = dirname(__file__)+'/certs/myapp.key'
 
     # SSL server context: load server key and certificate
     contextFactory = ssl.DefaultOpenSSLContextFactory(key, cert)
