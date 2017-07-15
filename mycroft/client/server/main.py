@@ -451,7 +451,7 @@ if __name__ == '__main__':
 
     # server
     host = "127.0.0.1"
-    port = 5000
+    port = 5678
     adress = u"ws://" + host + u":" + str(port)
     cert = dirname(__file__)+'/certs/myapp.crt'
     key = dirname(__file__)+'/certs/myapp.key'
