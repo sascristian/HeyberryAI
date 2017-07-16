@@ -413,7 +413,29 @@ class DreamService(MycroftSkill):
                        'softmax2_pre_activation/matmul',
                        'softmax2_pre_activation',
                        'softmax2']
-        self.layer_nickanmes = {"flowers":'mixed4d_3x3_bottleneck_pre_relu'}
+        self.layer_nicknames = {"Plants": ["mixed4a_3x3_bottleneck_pre_relu", 83],
+                                "Fractals": ["mixed4a_3x3_bottleneck_pre_relu", 84],
+                                "Snakes and lizards": ["mixed4c_pool_reduce", 7],
+                                "Feathers": ["mixed4c_pool_reduce", 14],
+                                "Rodents": ["mixed4c_pool_reduce", 23],
+                                "Spirals": ["mixed4c_pool_reduce", 53],
+                                "3d": ["mixed4c_pool_reduce", 54],
+                                "Shiny": ["mixed4c_pool_reduce", 56],
+                                "Houses": ["mixed4c_pool_reduce", 61],
+                                "fish": ["mixed5a_1x1", 158],
+                                "balls": ["mixed5a_1x1", 9],
+                                "bark": ["mixed5a_1x1", 107],
+                                "clocks": ["mixed5a_1x1", 134],
+                                "flowers on metal": ["mixed5a_1x1", 198],
+                                "quadrilaterals": ["mixed4c", 56],
+                                "letters": ["mixed4c", 87],
+                                "squares":["mixed4a_3x3_bottleneck_pre_relu", 51],
+                                "wool": ["mixed4e", 62],
+                                "arches": ["mixed4c", 477],
+                                "fluffy dogs": ["mixed4c", 111],
+                                "flowers": ["mixed4c_3x3_bottleneck", 30],
+                                }
+
         self.iter_value = 10
         self.octave_value = 4
         self.octave_scale_value = 1.4
@@ -537,9 +559,17 @@ class DreamService(MycroftSkill):
         # Optionally print the inputs and layers of the specified graph.
         if not self.print_model:
             self.log.debug(self.graph.get_operations())
-        # TODO get everything from message
-        image = self.render(dreampic, layer=layer, channel=self.channel_value, iter_n=iter, step=self.step_size,
-                    octave_n=self.octave_value, octave_scale=self.octave_scale_value)
+        # TODO get all paramsfrom message
+        image = None
+        while image is None:
+            try:
+                image = self.render(dreampic, layer=layer, channel=self.channel_value, iter_n=iter, step=self.step_size,
+                        octave_n=self.octave_value, octave_scale=self.octave_scale_value)
+            except:
+                # bad layer, cant dream # TODO make list accurate
+                self.layers.pop(layer)
+                layer = random.choice(self.layers)
+
         # write the output image to file
         if name is None:
             name = time.asctime().replace(" ", "_") + ".jpg"
