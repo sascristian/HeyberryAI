@@ -22,6 +22,7 @@ import time
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
+import os
 
 __author__ = 'jarbas'
 
@@ -34,6 +35,8 @@ class PoetrySkill(MycroftSkill):
         super(PoetrySkill, self).__init__(name="PoetrySkill")
         self.styles = ["blackmetal", "deathmetal","scifi","viking", "shakespeare", "camoes", "family", "friends", "inspirational", "love", "life"]
         self.path = dirname(realpath(__file__))
+        if not os.path.exists(self.path+"/results"):
+            os.mkdir(self.path+"/results")
 
     def initialize(self):
         # TODO regex style into single intent
