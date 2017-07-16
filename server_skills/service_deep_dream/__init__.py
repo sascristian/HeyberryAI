@@ -494,7 +494,6 @@ class DreamService(MycroftSkill):
 
     def handle_dream_intent(self, message):
         search = message.data.get("Subject")
-        # TODO dream by layer intent, give names to layers
         cat = message.data.get("Nickname")
         if cat:
             search = search.replace(cat, "").replace(" in ","")
@@ -536,6 +535,7 @@ class DreamService(MycroftSkill):
             result = self.guided_dream(source, guide, name, iter)
         else:
             try:
+                self.speak("Activating " + layer + " channel: " + str(channel))
                 result = self.dream(source, name, iter, layer, channel)
             except Exception as e:
                 self.log.error(str(e))
