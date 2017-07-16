@@ -412,15 +412,15 @@ class DreamService(MycroftSkill):
                        'softmax2_pre_activation/matmul',
                        'softmax2_pre_activation',
                        'softmax2']
-        self.layer_nicknames = {"Plants": ["mixed4a_3x3_bottleneck_pre_relu", 83],
-                                "Fractals": ["mixed4a_3x3_bottleneck_pre_relu", 84],
-                                "Snakes and lizards": ["mixed4c_pool_reduce", 7],
-                                "Feathers": ["mixed4c_pool_reduce", 14],
-                                "Rodents": ["mixed4c_pool_reduce", 23],
-                                "Spirals": ["mixed4c_pool_reduce", 53],
+        self.layer_nicknames = {"plants": ["mixed4a_3x3_bottleneck_pre_relu", 83],
+                                "fractals": ["mixed4a_3x3_bottleneck_pre_relu", 84],
+                                "snakes and lizards": ["mixed4c_pool_reduce", 7],
+                                "feathers": ["mixed4c_pool_reduce", 14],
+                                "rodents": ["mixed4c_pool_reduce", 23],
+                                "spirals": ["mixed4c_pool_reduce", 53],
                                 "3d": ["mixed4c_pool_reduce", 54],
-                                "Shiny": ["mixed4c_pool_reduce", 56],
-                                "Houses": ["mixed4c_pool_reduce", 61],
+                                "shiny": ["mixed4c_pool_reduce", 56],
+                                "houses": ["mixed4c_pool_reduce", 61],
                                 "fish": ["mixed5a_1x1", 158],
                                 "balls": ["mixed5a_1x1", 9],
                                 "bark": ["mixed5a_1x1", 107],
@@ -520,6 +520,7 @@ class DreamService(MycroftSkill):
         iter = message.data.get("iter_num", self.iter)
         categorie = message.data.get("categorie")
         channel = None
+        layer = None
         if categorie:
             # TODO fuzzy match
             if categorie in self.layer_nicknames.keys():
