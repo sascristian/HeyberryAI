@@ -78,7 +78,7 @@ class DreamService(MycroftSkill):
         # wget https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
         # unzip -d model inception5h.zip
         # helper resize function using TF
-        self.resize = tffunc(np.float32, np.int32)(resize)
+        self.resize = tffunc(self.sess, np.float32, np.int32)(resize)
 
     def initialize(self):
         self.emitter.on("deep.dream.request", self.handle_dream)
@@ -158,6 +158,8 @@ class DreamService(MycroftSkill):
         # creating TensorFlow session and loading the model
         self.graph = tf.Graph()
         self.sess = tf.InteractiveSession(graph=self.graph)
+        # update resize function using TF session
+        self.resize = tffunc(self.sess, np.float32, np.int32)(resize)
         with tf.gfile.FastGFile(self.model_fn, 'rb') as f:
             graph_def = tf.GraphDef()
             graph_def.ParseFromString(f.read())
@@ -282,7 +284,7 @@ def create_skill():
     return DreamService()
 
 
-def tffunc(*argtypes):
+def tffunc(session, *argtypes):
     '''Helper that transforms TF-graph generating function into a regular one.
     See "resize" function below.
     '''
@@ -292,7 +294,7 @@ def tffunc(*argtypes):
         out = f(*placeholders)
 
         def wrapper(*args, **kw):
-            return out.eval(dict(zip(placeholders, args)), session=kw.get('session'))
+            return out.eval(dict(zip(placeholders, args)), session=session)
 
         return wrapper
 
