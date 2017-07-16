@@ -497,7 +497,7 @@ class DreamService(MycroftSkill):
         # TODO dream by layer intent, give names to layers
         cat = message.data.get("Nickname")
         if cat:
-            search = search.replace(cat, "").replace("in","")
+            search = search.replace(cat, "").replace(" in ","")
         if search:
             # collect dream entropy
             self.speak("dreaming about " + search)
