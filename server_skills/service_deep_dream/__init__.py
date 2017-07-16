@@ -535,7 +535,6 @@ class DreamService(MycroftSkill):
             result = self.guided_dream(source, guide, name, iter)
         else:
             try:
-                self.speak("Activating " + layer + " channel: " + str(channel))
                 result = self.dream(source, name, iter, layer, channel)
             except Exception as e:
                 self.log.error(str(e))
@@ -590,6 +589,7 @@ class DreamService(MycroftSkill):
         image = None
         if not channel:
             channel = self.channel_value
+        self.speak("Using layer: " + layer + " and channel: " + str(channel), metadata={"channel":channel, "layer":layer})
         while image is None:
             try:
                 image = self.render(dreampic, layer=layer, channel=channel, iter_n=iter, step=self.step_size,
