@@ -1,2 +1,1 @@
-(poem about|poetry about) (?P<Style>.*)
-(poem style|poetry style) (?P<Style>.*)
+(with|about|off|of) (?P<Style>.*)
