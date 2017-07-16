@@ -240,21 +240,21 @@ class DreamService(ServiceBackend):
         super(DreamService, self).__init__(name="DreamService", emitter=emitter, timeout=timeout,
                                                    waiting_messages=waiting_messages, logger=logger)
 
-    def dream_from_file(self, picture_path, name=None, iter=20, context=None, server=False):
+    def dream_from_file(self, picture_path, name=None, iter=20, categorie=None, context=None, server=False):
         if name is None:
             name = asctime().replace(" ","_")
         self.send_request(message_type="deep.dream.request",
-                          message_data={"dream_source": picture_path, "dream_name": name, "num_iter": iter},
+                          message_data={"dream_source": picture_path, "dream_name": name, "num_iter": iter, "categorie":categorie},
                           message_context=context,
                           server=server)
         self.wait("deep.dream.result")
         return self.result.get("file")
 
-    def dream_from_url(self, picture_url, name=None, iter=20, context=None, server=False):
+    def dream_from_url(self, picture_url, name=None, iter=20, categorie=None, context=None, server=False):
         if name is None:
             name = asctime().replace(" ","_")
         self.send_request(message_type="deep.dream.request",
-                          message_data={"dream_source": url_to_pic(picture_url), "dream_name": name, "num_iter": iter},
+                          message_data={"dream_source": url_to_pic(picture_url), "dream_name": name, "num_iter": iter, "categorie":categorie},
                           message_context=context,
                           server=server)
         self.wait("deep.dream.result")

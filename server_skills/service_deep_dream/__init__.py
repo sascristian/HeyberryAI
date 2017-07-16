@@ -486,14 +486,16 @@ class DreamService(MycroftSkill):
         self.emitter.on("deep.dream.request", self.handle_dream)
 
         dream_intent = IntentBuilder("DreamIntent") \
-            .require("dream").optionally("Subject").build()
+            .require("dream").optionally("Subject").optionally("Nickname").build()
         self.register_intent(dream_intent,
                              self.handle_dream_intent)
 
-        # TODO dream by layer intent, give names to layes
+
 
     def handle_dream_intent(self, message):
         search = message.data.get("Subject")
+        # TODO dream by layer intent, give names to layers
+        cat = message.data.get("Nickname")
         if search:
             # collect dream entropy
             self.speak("dreaming about " + search)
@@ -506,7 +508,7 @@ class DreamService(MycroftSkill):
         urllib.urlretrieve(url, filepath)
 
         dreamer = DD(self.emitter)
-        dreamer.dream_from_file(filepath, context=message.context, server=False)
+        dreamer.dream_from_file(filepath, categorie=cat, context=message.context, server=False)
 
     def handle_dream(self, message):
         # TODO dreaming queue, all params from message
@@ -516,7 +518,12 @@ class DreamService(MycroftSkill):
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
         iter = message.data.get("iter_num", self.iter)
-
+        categorie = message.data.get("categorie")
+        channel = None
+        if categorie:
+            # TODO fuzzy match
+            if categorie in self.layer_nicknames.keys():
+                layer, channel = self.layer_nicknames[categorie]
         result = None
         link = None
         start = time.time()
@@ -526,7 +533,7 @@ class DreamService(MycroftSkill):
             result = self.guided_dream(source, guide, name, iter)
         else:
             try:
-                result = self.dream(source, name, iter)
+                result = self.dream(source, name, iter, layer, channel)
             except Exception as e:
                 self.log.error(str(e))
         elapsed_time = time.time() - start
@@ -548,7 +555,7 @@ class DreamService(MycroftSkill):
                                   message.context))
 
     #### dreaming functions
-    def dream(self, imagepah, name=None, iter=25, layer=None):
+    def dream(self, imagepah, name=None, iter=25, layer=None, channel=None):
         self.speak("please wait while the dream is processed, this can take up to 15 minutes")
         if layer is None:
             layer = random.choice(self.layers)
@@ -578,9 +585,11 @@ class DreamService(MycroftSkill):
             self.log.debug(self.graph.get_operations())
         # TODO get all paramsfrom message
         image = None
+        if not channel:
+            channel = self.channel_value
         while image is None:
             try:
-                image = self.render(dreampic, layer=layer, channel=self.channel_value, iter_n=iter, step=self.step_size,
+                image = self.render(dreampic, layer=layer, channel=channel, iter_n=iter, step=self.step_size,
                         octave_n=self.octave_value, octave_scale=self.octave_scale_value)
             except:
                 # bad layer, cant dream # TODO make list accurate
