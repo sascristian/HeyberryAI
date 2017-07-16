@@ -1,25 +1,29 @@
-# Adapted by github.com/jnordberg from https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/tutorials/deepdream
-# Adapted by github.com/ProGamerGov from https://github.com/jnordberg/dreamcanvas
-
 import cv2
+import numpy as np
 import time
+import imutils
+import sys
+import os
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
+from mycroft.configuration import ConfigurationManager
 from imgurpython import ImgurClient
 import urllib2
 import random
 import json
 from bs4 import BeautifulSoup
+from os.path import dirname
 import urllib
 
-import scipy.ndimage as spi
-from skimage.io import imread, imsave
-import numpy as np
-import os
-from os.path import dirname
-import tensorflow as tf
-from PIL import Image
+try:
+    path = ConfigurationManager.get("caffe_path")
+except:
+    path = "../caffe"
+
+sys.path.insert(0, path + '/python')
+
+from batcountry import BatCountry
 
 from mycroft.util.jarbas_services import DreamService as DD
 
@@ -47,38 +51,60 @@ class DreamService(MycroftSkill):
 
         self.client = ImgurClient(client_id, client_secret)
 
-        self.channel_value = 139
-        # TODO all layers
-        self.layers = ['mixed4d_3x3_bottleneck_pre_relu']
-        self.iter_value = 10
-        self.octave_value = 4
-        self.octave_scale_value = 1.4
-        self.step_size = 1.5
-        self.tile_size = 512
+        try:
+            self.path = self.config_core["caffe_path"]
+        except:
+            self.path = "../caffe"
 
-        self.model_path = dirname(__file__) + '/model/tensorflow_inception_graph.pb'
-        self.model_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.model_path)
-        self.print_model = True
-        self.verbose = True
-        self.last_layer = None
-        self.last_grad = None
-        self.last_channel = None
-        self.graph = None
-        self.sess = None
-        self.t_input = None
         self.iter = self.config.get("iter_num", 25) #dreaming iterations
+        self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
+                        "inception_5b/pool", "inception_5b/5x5",
+                        "inception_5b/5x5_reduce", "inception_5b/3x3",
+                        "inception_5b/3x3_reduce", "inception_5b/1x1",
+                        "inception_5a/output", "inception_5a/pool_proj",
+                        "inception_5a/pool", "inception_5a/5x5",
+                        "inception_5a/5x5_reduce", "inception_5a/3x3",
+                        "inception_5a/3x3_reduce", "inception_5a/1x1",
+                        "pool4/3x3_s2", "inception_4e/output", "inception_4e/pool_proj",
+                        "inception_4e/pool", "inception_4e/5x5",
+                        "inception_4e/5x5_reduce", "inception_4e/3x3",
+                        "inception_4e/3x3_reduce", "inception_4e/1x1",
+                        "inception_4d/output", "inception_4d/pool_proj",
+                        "inception_4d/pool", "inception_4d/5x5",
+                        "inception_4d/5x5_reduce", "inception_4d/3x3",
+                        "inception_4d/3x3_reduce", "inception_4d/1x1",
+                        "inception_4c/output", "inception_4c/pool_proj",
+                        "inception_4c/pool", "inception_4c/5x5",
+                        "inception_4c/5x5_reduce", "inception_4c/3x3",
+                        "inception_4c/3x3_reduce", "inception_4c/1x1",
+                        "inception_4b/output", "inception_4b/pool_proj",
+                        "inception_4b/pool", "inception_4b/5x5",
+                        "inception_4b/5x5_reduce", "inception_4b/3x3",
+                        "inception_4b/3x3_reduce", "inception_4b/1x1",
+                        "inception_4a/output", "inception_4a/pool_proj",
+                        "inception_4a/pool", "inception_4a/5x5",
+                        "inception_4a/5x5_reduce", "inception_4a/3x3",
+                        "inception_4a/3x3_reduce", "inception_4a/1x1",
+                        "inception_3b/output", "inception_3b/pool_proj",
+                        "inception_3b/pool", "inception_3b/5x5",
+                        "inception_3b/5x5_reduce", "inception_3b/3x3",
+                        "inception_3b/3x3_reduce", "inception_3b/1x1",
+                        "inception_3a/output", "inception_3a/pool_proj",
+                        "inception_3a/pool", "inception_3a/5x5",
+                        "inception_3a/5x5_reduce", "inception_3a/3x3",
+                        "inception_3a/3x3_reduce", "inception_3a/1x1",
+                        "pool2/3x3_s2","conv2/norm2","conv2/3x3",
+                        "conv2/3x3_reduce", "pool1/norm1"] #"pool1/3x3_s2" , "conv17x7_s2"
+
+        # image dimensions
+        self.w = 640
+        self.h = 480
 
         self.outputdir = self.config_core["database_path"] + "/dreams/"
 
         # check if folders exist
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
-
-        # TODO check if model exists, if not download!
-        # wget https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
-        # unzip -d model inception5h.zip
-        # helper resize function using TF
-        self.resize = tffunc(np.float32, np.int32)(resize)
 
     def initialize(self):
         self.emitter.on("deep.dream.request", self.handle_dream)
@@ -105,7 +131,7 @@ class DreamService(MycroftSkill):
         dreamer.dream_from_file(dirname(__file__)+"/dream_seed.jpg", context=message.context, server=False)
 
     def handle_dream(self, message):
-        # TODO dreaming queue, all params from message
+        # TODO dreaming queue
         self.log.info("Dream request received")
         self.context = message.context
         source = message.data.get("dream_source")
@@ -148,30 +174,24 @@ class DreamService(MycroftSkill):
         self.speak("please wait while the dream is processed, this can take up to 15 minutes")
         if layer is None:
             layer = random.choice(self.layers)
-
-        dreampic = spi.imread(imagepah, mode="RGB")
+        # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
+        # TODO any model
+        self.log.info(layer)
+        self.model = "bvlc_googlenet"
+        self.path += '/models/' + self.model
+        self.log.info(self.path)
+        try:
+            bc = BatCountry(self.path)  # path,model_path=path)
+        except Exception as e:
+            self.log.error(e)
+        img = cv2.imread(imagepah)
+        dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
         if dreampic is None:
             self.log.error("Could not load seed dream pic " + imagepah)
             self.speak("I can't dream without a seed.. retry later")
             return
-
-        # creating TensorFlow session and loading the model
-        self.graph = tf.Graph()
-        self.sess = tf.InteractiveSession(graph=self.graph)
-        with tf.gfile.FastGFile(self.model_fn, 'rb') as f:
-            graph_def = tf.GraphDef()
-            graph_def.ParseFromString(f.read())
-        self.t_input = tf.placeholder(np.float32, name='input')  # define the input tensor
-        imagenet_mean = 117.0
-        t_preprocessed = tf.expand_dims(self.t_input - imagenet_mean, 0)
-        tf.import_graph_def(graph_def, {'input': t_preprocessed})
-
-        # Optionally print the inputs and layers of the specified graph.
-        if not self.print_model:
-            self.log.debug(self.graph.get_operations())
-        # TODO get everything from message
-        image = self.render(dreampic, layer=layer, channel=self.channel_value, iter_n=iter, step=self.step_size,
-                    octave_n=self.octave_value, octave_scale=self.octave_scale_value)
+        image = bc.dream(np.float32(dreampic), end=layer, iter_n=iter)
+        bc.cleanup()
         # write the output image to file
         if name is None:
             name = time.asctime().replace(" ", "_") + ".jpg"
@@ -179,77 +199,12 @@ class DreamService(MycroftSkill):
             name += ".jpg"
         outpath = self.outputdir + name
         self.log.info("Saving dream: " + outpath)
-        imsave(outpath, image)
+        cv2.imwrite(outpath, image)
         return outpath
 
     def guided_dream(self, sourcepath, guidepath, name=None, iter=25):
         self.log.error("Guided dream not implemented")
         return None
-
-    ## dream internals
-    def T(self, layer):
-        '''Helper for getting layer output tensor'''
-        return self.graph.get_tensor_by_name("import/%s:0" % layer)
-
-    def calc_grad_tiled(self, img, t_grad, tile_size=512):
-        '''Compute the value of tensor t_grad over the image in a tiled way.
-        Random shifts are applied to the image to blur tile boundaries over
-        multiple iterations.'''
-        sz = tile_size
-        h, w = img.shape[:2]
-        sx, sy = np.random.randint(sz, size=2)
-        img_shift = np.roll(np.roll(img, sx, 1), sy, 0)
-        grad = np.zeros_like(img)
-        for y in range(0, max(h - sz // 2, sz), sz):
-            for x in range(0, max(w - sz // 2, sz), sz):
-                sub = img_shift[y:y + sz, x:x + sz]
-                g = self.sess.run(t_grad, {self.t_input: sub})
-                grad[y:y + sz, x:x + sz] = g
-        return np.roll(np.roll(grad, -sx, 1), -sy, 0)
-
-    def render_deepdream(self, t_grad, img0, iter_n=10, step=1.5, octave_n=4, octave_scale=1.4):
-        # split the image into a number of octaves
-        img = img0
-        octaves = []
-        for i in range(octave_n - 1):
-            hw = img.shape[:2]
-            lo = self.resize(img, np.int32(np.float32(hw) / octave_scale))
-            hi = img - self.resize(lo, hw)
-            img = lo
-            octaves.append(hi)
-
-        # generate details octave by octave
-        for octave in range(octave_n):
-            if octave > 0:
-                hi = octaves[-octave]
-                img = self.resize(img, hi.shape[:2]) + hi
-            for i in range(iter_n):
-                # g = calc_grad_tiled(img, t_grad)
-                g = self.calc_grad_tiled(img, t_grad, self.tile_size)
-                img += g * (step / (np.abs(g).mean() + 1e-7))
-                if self.verbose:
-                    self.log.info("Iteration Number: %d" % i)
-            if self.verbose:
-                self.log.info("Octave Number: %d" % octave)
-
-        return Image.fromarray(np.uint8(np.clip(img / 255.0, 0, 1) * 255))
-
-    def render(self, img, layer='mixed4d_3x3_bottleneck_pre_relu', channel=139, iter_n=10, step=1.5, octave_n=4,
-               octave_scale=1.4):
-        if self.last_layer == layer and self.last_channel == channel:
-            t_grad = self.last_grad
-        else:
-            if channel == 4242:
-                t_obj = tf.square(self.T(layer))
-            else:
-                t_obj = self.T(layer)[:, :, :, channel]
-            t_score = tf.reduce_mean(t_obj)  # defining the optimization objective
-            t_grad = tf.gradients(t_score, self.t_input)[0]  # behold the power of automatic differentiation!
-            self.last_layer = layer
-            self.last_grad = t_grad
-            self.last_channel = channel
-        img0 = np.float32(img)
-        return self.render_deepdream(t_grad, img0, iter_n, step, octave_n, octave_scale)
 
     ## pic search
     def get_soup(self, url, header):
@@ -280,26 +235,3 @@ class DreamService(MycroftSkill):
 
 def create_skill():
     return DreamService()
-
-
-def tffunc(*argtypes):
-    '''Helper that transforms TF-graph generating function into a regular one.
-    See "resize" function below.
-    '''
-    placeholders = list(map(tf.placeholder, argtypes))
-
-    def wrap(f):
-        out = f(*placeholders)
-
-        def wrapper(*args, **kw):
-            return out.eval(dict(zip(placeholders, args)), session=kw.get('session'))
-
-        return wrapper
-
-    return wrap
-
-
-# Helper function that uses TF to resize an image
-def resize(img, size):
-    img = tf.expand_dims(img, 0)
-    return tf.image.resize_bilinear(img, size)[0, :, :, :]
