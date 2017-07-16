@@ -412,8 +412,8 @@ class DreamService(MycroftSkill):
                        'softmax2_pre_activation/matmul',
                        'softmax2_pre_activation',
                        'softmax2']
-        self.layer_nicknames = {"plants": ["mixed4a_3x3_bottleneck_pre_relu", 83],
-                                "fractals": ["mixed4a_3x3_bottleneck_pre_relu", 84],
+        self.layer_nicknames = {"plants": ["mixed4a_3x3_bottleneck_pre_relu", 84],
+                                "fractals": ["mixed4a_3x3_bottleneck_pre_relu", 83],
                                 "snakes and lizards": ["mixed4c_pool_reduce", 7],
                                 "feathers": ["mixed4c_pool_reduce", 14],
                                 "rodents": ["mixed4c_pool_reduce", 23],
@@ -496,6 +496,8 @@ class DreamService(MycroftSkill):
         search = message.data.get("Subject")
         # TODO dream by layer intent, give names to layers
         cat = message.data.get("Nickname")
+        if cat:
+            search = search.replace(cat, "").replace("in","")
         if search:
             # collect dream entropy
             self.speak("dreaming about " + search)
