@@ -467,18 +467,22 @@ class DreamService(MycroftSkill):
         self.resize = tffunc(self.sess, np.float32, np.int32)(resize)
 
     def maybe_download_and_extract(self):
-        """Download and extract model tar file."""
+        # """Download and extract model zip file."""
+        # TODO extract, maybe use a thread so this doesnt hang here on load?
+        return
+        ## wget https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
+        # unzip -d model inception5h.zip
+        url = "https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip"
         dest_directory = dirname(__file__) + '/model'
         if not os.path.exists(dest_directory):
             os.makedirs(dest_directory)
-        filename = "http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'".split('/')[-1]
+        filename = url.split('/')[-1]
         filepath = os.path.join(dest_directory, filename)
         if not os.path.exists(filepath):
             self.log.info("Model is not in folder, downloading")
-            urllib.urlretrieve("http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz", filepath)
+            urllib.urlretrieve(url, filepath)
             statinfo = os.stat(filepath)
             self.log.info('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
-        tarfile.open(filepath, 'r:gz').extractall(dest_directory)
 
     def initialize(self):
         self.emitter.on("deep.dream.request", self.handle_dream)
