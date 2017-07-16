@@ -451,7 +451,7 @@ class DreamService(MycroftSkill):
         self.graph = None
         self.sess = None
         self.t_input = None
-        self.iter = self.config.get("iter_num", 25) #dreaming iterations
+        self.iter = self.config.get("iter_num", 40) #dreaming iterations
 
         self.outputdir = self.config_core["database_path"] + "/dreams/"
 
