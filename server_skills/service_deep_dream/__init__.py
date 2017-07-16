@@ -558,7 +558,8 @@ class DreamService(MycroftSkill):
             self.log.error("Could not load seed dream pic " + imagepah)
             self.speak("I can't dream without a seed.. retry later")
             return
-
+        else:
+            self.log.info("Loaded dream seed " + imagepah)
         # creating TensorFlow session and loading the model
         self.graph = tf.Graph()
         self.sess = tf.InteractiveSession(graph=self.graph)
@@ -583,7 +584,7 @@ class DreamService(MycroftSkill):
                         octave_n=self.octave_value, octave_scale=self.octave_scale_value)
             except:
                 # bad layer, cant dream # TODO make list accurate
-                self.layers.pop(layer)
+                self.layers.remove(layer)
                 layer = random.choice(self.layers)
 
         # write the output image to file
