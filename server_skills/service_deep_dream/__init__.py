@@ -1,8 +1,6 @@
 # Adapted from https://github.com/ProGamerGov/Protobuf-Dreamer
 
-import cv2
 import time
-import tarfile
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
@@ -503,12 +501,12 @@ class DreamService(MycroftSkill):
             url = random.choice(pics)
         else:
             url = "https://unsplash.it/640/480/?random"
-        req = urllib.urlopen(url)
-        arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
-        img = cv2.imdecode(arr, -1)  # 'load it as it is'
-        cv2.imwrite(dirname(__file__)+"/dream_seed.jpg", img)
+
+        filepath = dirname(__file__)+"/dream_seed.jpg"
+        urllib.urlretrieve(url, filepath)
+
         dreamer = DD(self.emitter)
-        dreamer.dream_from_file(dirname(__file__)+"/dream_seed.jpg", context=message.context, server=False)
+        dreamer.dream_from_file(filepath, context=message.context, server=False)
 
     def handle_dream(self, message):
         # TODO dreaming queue, all params from message
