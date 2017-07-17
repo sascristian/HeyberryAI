@@ -433,7 +433,7 @@ class MyServerFactory(WebSocketServerFactory):
         # TODO allow files
         type = event.data.get("type", "bus")
         logger.info("Request to message client received: " + type)
-        cipher = event.data.get("cipher", "none")
+        cipher = event.data.get("cipher", "aes")
         # merge contexts of message and message_request
         context = event.context
         if context is None:
