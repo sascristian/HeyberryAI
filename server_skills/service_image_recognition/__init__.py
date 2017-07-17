@@ -126,8 +126,9 @@ class ImageRecognitionSkill(MycroftSkill):
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
         results = imgrecog.get_classification(dirname(__file__)+"/obama.jpg", server=False)
-        if results:
-            label, score = results[0]
+        if not results:
+            return
+        label, score = results[0]
         self.context["destinatary"] = dest
         self.speak("test image classification is " + label + " with a score of " + str(score) + " per cent")
 
