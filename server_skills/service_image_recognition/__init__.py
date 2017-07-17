@@ -126,8 +126,10 @@ class ImageRecognitionSkill(MycroftSkill):
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
         results = imgrecog.get_classification(dirname(__file__)+"/obama.jpg", server=False)
+        label, score = results[0]
+        score = str(int(score*100))
         self.context["destinatary"] = dest
-        self.speak("in test image i see " + results[0] + ", or maybe it is " + results[1])
+        self.speak("test image classification is " + label + " with a score of " + score + " per cent")
 
     def handle_classify(self, message):
         if message.context is not None:
