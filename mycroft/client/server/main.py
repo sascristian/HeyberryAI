@@ -99,7 +99,7 @@ class MyServerFactory(WebSocketServerFactory):
 
         # messages to send queue
         self.message_queue = []
-        self.queue_thread = Thread(target=self.message_queue)
+        self.queue_thread = Thread(target=self._queue)
         self.queue_thread.setDaemon(True)
         self.queue_thread.start()
 
@@ -207,7 +207,7 @@ class MyServerFactory(WebSocketServerFactory):
             self.clients.pop(client.peer)
 
     # internals
-    def message_queue(self):
+    def _queue(self):
         while True:
             for msg in self.message_queue:
                 logger.debug("Processing queue")
@@ -468,7 +468,7 @@ class MyServerFactory(WebSocketServerFactory):
                 self.message_queue.append(
                     [self.clients[client["object"]], answer_type, event.data, event.context, "aes"])
                 return
-        logger.error("Speak targetted to non existing client")
+        logger.error("Speak targeted to non existing client")
 
 
 if __name__ == '__main__':
