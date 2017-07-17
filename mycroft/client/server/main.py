@@ -204,7 +204,6 @@ class MyServerFactory(WebSocketServerFactory):
        """
         logger.info("deregistering client: " + str(client.peer))
         if client.peer in self.clients.keys():
-            client.disconnect()
             self.clients.pop(client.peer)
 
     # internals
@@ -306,7 +305,7 @@ class MyServerFactory(WebSocketServerFactory):
         logger.debug("Message type: " + deserialized_message.type)
         if deserialized_message.type in self.allowed_bus_messages:
             data = deserialized_message.data
-            logger.debug("Message data: " + deserialized_message.data)
+            logger.debug("Message data: " + str(deserialized_message.data))
             ctype, ip, sock_num = client.peer.split(":")
             # build context
             context = deserialized_message.context
@@ -321,7 +320,7 @@ class MyServerFactory(WebSocketServerFactory):
                 context["mute"] = True
             context["source"] = str(context["source"]) + ":" + sock_num
             context["ip"] = ip
-            logger.debug("Message context: " + context)
+            logger.debug("Message context: " + str(context))
             # authorize user message_type
             # get user from sock
             user_data = self.user_manager.user_from_sock(sock_num)
