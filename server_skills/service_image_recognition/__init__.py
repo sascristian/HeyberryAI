@@ -126,7 +126,8 @@ class ImageRecognitionSkill(MycroftSkill):
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
         results = imgrecog.get_classification(dirname(__file__)+"/obama.jpg", server=False)
-        label, score = results[0]
+        if results:
+            label, score = results[0]
         self.context["destinatary"] = dest
         self.speak("test image classification is " + label + " with a score of " + str(score) + " per cent")
 
@@ -149,9 +150,9 @@ class ImageRecognitionSkill(MycroftSkill):
         # send result
         msg_type = "image.classification.result"
         msg_data = {"classification": result}
-        self.context["destinatary"] = user_id
         # to source socket
         if ":" in user_id:
+            self.context["destinatary"] = user_id
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
                                           {"data":msg_data,
