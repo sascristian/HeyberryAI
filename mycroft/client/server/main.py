@@ -214,7 +214,7 @@ class MyServerFactory(WebSocketServerFactory):
                 if msg[4] == "none" and "cipher" in msg[2].keys():
                     msg[4] = msg[2]["cipher"]
                 logger.debug("Encryption: " + msg[4])
-                self.send_message(msg)
+                self.send_message(msg[0], msg[1], msg[2], msg[3], msg[4])
                 self.message_queue.remove(msg)
                 logger.debug("Sucessfully sent encrypted data")
             time.sleep(0.1)
