@@ -313,9 +313,9 @@ class MyServerFactory(WebSocketServerFactory):
             if context is None:
                 context = {}
             if "source" not in context.keys():
-                if sock_num in self.names.keys():
+                try:
                     context["source"] = self.clients[client.peer]["names"][0]
-                else:
+                except:
                     context["source"] = "unknown"
             if "mute" not in context.keys():
                 context["mute"] = True
