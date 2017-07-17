@@ -81,8 +81,8 @@ class ImageRecognitionSkill(MycroftSkill):
         if not os.path.exists(filepath):
             self.log.info("Downloading model to " + filepath)
             urllib.urlretrieve(self.DATA_URL, filepath)
-            statinfo = os.stat(filepath)
-            self.log.info('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
+            self.log.info('Successfully downloaded' + filename)
+        # TODO check if extracted befoe extracting
         tarfile.open(filepath, 'r:gz').extractall(dest_directory)
 
     def run_inference_on_image(self, image):
