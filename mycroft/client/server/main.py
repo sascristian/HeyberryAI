@@ -466,7 +466,7 @@ class MyServerFactory(WebSocketServerFactory):
             if sock == sock_num:
                 logger.debug("Adding answer to answering queue")
                 self.message_queue.append(
-                    [self.clients[client["object"]], answer_type, event.data, event.context, "aes"])
+                    [self.clients[client]["object"], answer_type, event.data, event.context, "aes"])
                 return
         logger.error("Speak targeted to non existing client")
 
