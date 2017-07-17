@@ -58,11 +58,12 @@ class ImageRecognitionSkill(MycroftSkill):
         self.DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
         # number of predictions to return
         self.num_top_predictions = 5
+        # download model if missing
+        self.maybe_download_and_extract()
         # Creates node ID --> English string lookup.
         self.node_lookup = NodeLookup(self.model_dir)
 
     def initialize(self):
-        self.maybe_download_and_extract()
         self.emitter.on("image.classification.request", self.handle_classify)
 
         image_recog_status_intent = IntentBuilder("ImageClassfyStatusIntent") \
