@@ -188,12 +188,12 @@ class MyServerFactory(WebSocketServerFactory):
         # see if blacklisted
         if ip in self.blacklisted_ips and self.blacklist:
             logger.warning("Blacklisted ip tried to connect: " + ip)
-            # TODO kick client
+            self.unregister_client(client)
             return
         elif ip not in self.whitelisted_ips and not self.blacklist:
             logger.warning("Unknown ip tried to connect: " + ip)
             #  if not whitelisted kick
-            # TODO kick client
+            self.unregister_client(client)
             return
         self.clients[client.peer] = {"object": client, "status": "waiting pgp", "aes_key": None, "aes_iv": None,
                                      "user_object": None, "pgp": None, "fingerprint": None}
@@ -204,6 +204,7 @@ class MyServerFactory(WebSocketServerFactory):
        """
         logger.info("deregistering client: " + str(client.peer))
         if client.peer in self.clients.keys():
+            client.disconnect()
             self.clients.pop(client.peer)
 
     # internals
@@ -226,7 +227,6 @@ class MyServerFactory(WebSocketServerFactory):
         logger.info("processing message from client: " + str(client.peer))
         client_data = self.clients[client.peer]
         client_type, ip, sock_num = client.peer.split(":")
-        logger.info("Client status: " + client_data["status"])
         if client_data["status"] == "waiting pgp":
             logger.info("Receiving public pgp key")
             decrypted_data = decrypt_string(payload, self.passwd)
@@ -283,8 +283,7 @@ class MyServerFactory(WebSocketServerFactory):
                 client_data["status"] = "connected"
             else:
                 logger.error("Secure connection failed")
-                # TODO kick client
-                self.clients.pop(client.peer)
+                self.unregister_client(client)
         elif client_data["status"] == "connected":
             # decypt AES
             key = self.clients[client.peer]["aes_key"]
@@ -294,19 +293,20 @@ class MyServerFactory(WebSocketServerFactory):
             cipher = AES.new(key, AES.MODE_CFB, iv)
             message = cipher.decrypt(payload)[len(iv):]
             deserialized_message = Message.deserialize(message)
-            logger.debug(deserialized_message)
+            logger.debug(message)
             # parse message type
             self.process_message_type(client, deserialized_message)
 
         else:
             # not supposed to happen
             logger.error("someone is doing something wrong")
-            # TODO kick client
+            self.unregister_client(client)
 
     def process_message_type(self, client, deserialized_message):
         logger.debug("Message type: " + deserialized_message.type)
         if deserialized_message.type in self.allowed_bus_messages:
             data = deserialized_message.data
+            logger.debug("Message data: " + deserialized_message.data)
             ctype, ip, sock_num = client.peer.split(":")
             # build context
             context = deserialized_message.context
@@ -321,7 +321,7 @@ class MyServerFactory(WebSocketServerFactory):
                 context["mute"] = True
             context["source"] = str(context["source"]) + ":" + sock_num
             context["ip"] = ip
-
+            logger.debug("Message context: " + context)
             # authorize user message_type
             # get user from sock
             user_data = self.user_manager.user_from_sock(sock_num)
