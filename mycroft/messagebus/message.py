@@ -83,7 +83,10 @@ class Message(object):
         This will take the same parameters as a message object but use
         the current message object as a refrence.  It will copy the context
         form the existing message object and add any context passed in to
-        the function. The new message will then have data passed in plus the
+        the function.  Check for a target passed in to the function from
+        the data object and add that to the context as a target.  If the
+        context has a client name then that will become the target in the
+        context.  The new message will then have data passed in plus the
         new context generated.
 
         Args:
@@ -98,12 +101,17 @@ class Message(object):
         new_context = self.context if self.context else {}
         for key in context:
             new_context[key] = context[key]
+        if data.get('target') is not None:
+            new_context['target'] = data['target']
+        elif context.get('client_name') is not None:
+            context['target'] = context['client_name']
         return Message(type, data, context=new_context)
 
     def publish(self, type, data, context={}):
         """
 
-        Copy the original context and add passed in context. Return a new message object with
+        Copy the original context and add passed in context.  Delete
+        any target in the new context. Return a new message object with
         passed in data and new context.  Type remains unchanged.
 
         Args:
@@ -117,5 +125,8 @@ class Message(object):
         new_context = self.context.copy() if self.context else {}
         for key in context:
             new_context[key] = context[key]
+
+        if new_context.get("target") is not None:
+            del new_context['target']
 
         return Message(type, data, context=new_context)

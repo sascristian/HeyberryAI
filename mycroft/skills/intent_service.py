@@ -162,6 +162,7 @@ class IntentService(object):
                 # no skill wants to handle utterance, proceed
 
         best_intent = None
+        logger.debug(context)
         for utterance in utterances:
             try:
                 # normalize() changes "it's a boy" to "it is boy", etc.
@@ -175,8 +176,11 @@ class IntentService(object):
                 continue
 
         if best_intent and best_intent.get('confidence', 0.0) > 0.0:
+            logger.debug("context: " + str(context))
+            logger.debug("best_intent: " + str(best_intent))
             reply = message.reply(
                 best_intent.get('intent_type'), best_intent, context)
+            logger.debug("reply context: " + str(reply.context))
             self.emitter.emit(reply)
             # update active skills
             skill_id = int(best_intent['intent_type'].split(":")[0])
