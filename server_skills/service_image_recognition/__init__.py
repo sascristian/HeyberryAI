@@ -127,10 +127,13 @@ class ImageRecognitionSkill(MycroftSkill):
         imgrecog = ImageRecogService(self.emitter, timeout=130)
         results = imgrecog.get_classification(dirname(__file__)+"/obama.jpg", server=False)
         if not results:
+            self.log.error("no classification received")
             return
+        self.log.info(results)
         label, score = results[0]
+        score = score * 100
         self.context["destinatary"] = dest
-        self.speak("test image classification is " + label + " with a score of " + str(score) + " per cent")
+        self.speak("test image classification is " + label + " with a score of " + str(score)[:4] + " per cent")
 
     def handle_classify(self, message):
         if message.context is not None:
@@ -148,6 +151,7 @@ class ImageRecognitionSkill(MycroftSkill):
 
         self.log.info("predicting")
         result = self.run_inference_on_image(pic)
+        self.log.info("prediction ready, sending data")
         # send result
         msg_type = "image.classification.result"
         msg_data = {"classification": result}
