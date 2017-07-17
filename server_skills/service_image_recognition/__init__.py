@@ -147,7 +147,6 @@ class ImageRecognitionSkill(MycroftSkill):
 
         self.log.info("predicting")
         result = self.run_inference_on_image(pic)
-        self.log.info(result)
         # send result
         msg_type = "image.classification.result"
         msg_data = {"classification": result}
