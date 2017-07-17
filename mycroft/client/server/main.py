@@ -368,7 +368,7 @@ class MyServerFactory(WebSocketServerFactory):
             client_data = self.clients[client.peer]
             context = {"user": client_data["names"][0], "source": ip + ":" + str(sock_num)}
             self.emitter.emit(
-                Message("user.disconnect",
+                Message("user.request",
                         {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
                         context))
 
