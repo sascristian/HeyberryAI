@@ -1,14 +1,14 @@
 from mycroft.util.markov import MarkovChain
 import random
 
-limit = 300
+limit = 25000
 train = False
 
-style = ""
+style = "lusiadas"
 try:
-    chain = MarkovChain(3, pad=False).load(style + ".json")
+    chain = MarkovChain(5, pad=False).load(style + ".json")
 except:
-    chain = MarkovChain(3, pad=False)
+    chain = MarkovChain(5, pad=False)
 
 
 if train:
@@ -19,7 +19,7 @@ if train:
       #  lines = file.readlines()
       #  if len(lines) < 2:
         lines = file.read()
-        lines = lines.split(".")
+        lines = lines.split("\n")
 
     print "training on: " + str(len(lines)) + " lines"
     c = 0
@@ -28,7 +28,10 @@ if train:
             break
         line = random.choice(lines)
         lines.remove(line)
+        if line.isdigit():
+            continue
         line += "."
+        line = line.decode("latin-1")
         words = line.split(" ")
         size = len(words)
         if size > 250:
@@ -47,7 +50,7 @@ if train:
             file.write(line+".\n")
 
 print "generating\n\n\n"
-generated = chain.generate_sequence(20)
+generated = chain.generate_sequence(200)
 text = ""
 for word in generated:
     try:

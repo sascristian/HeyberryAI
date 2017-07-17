@@ -262,6 +262,8 @@ class UserSkill(MycroftSkill):
         if ip is None:
             for user_id in self.users:
                 user = self.users[user_id]
+                if "facebook" in user.user_type:
+                    continue
                 if user.current_sock == sock:
                     self.user_list[user_id] = sock
                     break

@@ -204,6 +204,13 @@ class MyServerFactory(WebSocketServerFactory):
        """
         logger.info("deregistering client: " + str(client.peer))
         if client.peer in self.clients.keys():
+            client_data = self.clients[client.peer]
+            j, ip, sock_num = client.peer.split(":")
+            context = {"user": client_data["names"][0], "source": ip + ":" + str(sock_num)}
+            self.emitter.emit(
+                Message("user.disconnect",
+                        {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
+                        context))
             self.clients.pop(client.peer)
 
     # internals
@@ -280,6 +287,10 @@ class MyServerFactory(WebSocketServerFactory):
             if deserialized_message.data.get("status", "failed") == "success":
                 logger.debug("Secure connection ready")
                 client_data["status"] = "connected"
+                context = {"user": client_data["names"][0], "source": ip + ":" + str(sock_num)}
+                self.emitter.emit(
+                    Message("user.connect", {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
+                            context))
             else:
                 logger.error("Secure connection failed")
                 self.unregister_client(client)
@@ -353,6 +364,13 @@ class MyServerFactory(WebSocketServerFactory):
                 logger.info("no special handling provided for " + deserialized_message.type)
                 # message is whitelisted and no special handling was provided
                 self.emitter.emit(Message(deserialized_message.type, deserialized_message.data, context))
+            # notify user action
+            client_data = self.clients[client.peer]
+            context = {"user": client_data["names"][0], "source": ip + ":" + str(sock_num)}
+            self.emitter.emit(
+                Message("user.disconnect",
+                        {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
+                        context))
 
     def validate_user_utterance(self, utterance, user_data, context):
         # check if skill/intent that will trigger is authorized for this user
