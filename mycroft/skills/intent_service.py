@@ -130,6 +130,7 @@ class IntentService(object):
             context = {}
         # by default set destinatary of reply to source of this message
         context["destinatary"] = context.get("source", "all")
+        context["target"] = context.get("target", context["destinatary"])
         context["mute"] = context.get("mute", False)
         context["source"] = source_name
         return context
