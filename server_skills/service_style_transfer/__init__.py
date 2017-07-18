@@ -87,8 +87,8 @@ class StyleTransferSkill(MycroftSkill):
     def handle_style_transfer_intent(self, message):
         if message.context is None:
             message.context = self.context
-        style_img = [dirname(__file__) + "/styles/HRGIGER/alien.jpg", dirname(
-            __file__) + "/styles/HRGIGER/giger.jpg"]
+        style_img = [dirname(__file__) + "/styles/HRGiger/alien.jpg", dirname(
+            __file__) + "/styles/HRGiger/giger.jpg"]
         target_img = dirname(__file__) + "/test.jpg"
         iter_num = message.data.get("iter_num", 400)
         self.speak("testing style transfer")
