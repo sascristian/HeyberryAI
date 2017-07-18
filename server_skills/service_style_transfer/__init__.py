@@ -20,7 +20,7 @@ from mycroft import MYCROFT_ROOT_PATH
 __author__ = 'jarbas'
 
 # default arguments
-CHECKPOINT_OUTPUT = False
+CHECKPOINT_OUTPUT = True
 CONTENT_WEIGHT = 5e0
 CONTENT_WEIGHT_BLEND = 1
 STYLE_WEIGHT = 5e2
@@ -59,7 +59,7 @@ class StyleTransferSkill(MycroftSkill):
 
         self.client = ImgurClient(client_id, client_secret)
         self.waiting = False
-        self.save_path = dirname(__file__) + "/style_transfer"
+        self.save_path = dirname(__file__) + "/style_transfer_results"
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
         self.maybe_download()
@@ -212,7 +212,10 @@ class StyleTransferSkill(MycroftSkill):
 
                 if iteration is not None:
                     if CHECKPOINT_OUTPUT:
-                        output_file = CHECKPOINT_OUTPUT % iteration
+                        if not os.path.exists(self.save_path + "/" + name):
+                            os.mkdir(self.save_path + "/" + name)
+                        output_file = self.save_path + "/" + name + "/" + str(
+                            iteration) + '.jpg'
                 else:
                     output_file = self.save_path + "/" + name + '.jpg'
                 if output_file:
