@@ -118,6 +118,8 @@ class ImageRecognitionSkill(MycroftSkill):
                 human_string = self.node_lookup.id_to_string(node_id)
                 score = predictions[node_id]
                 self.log.info('%s (score = %.5f)' % (human_string, score))
+                score = score * 100
+                score = str(score)[:4]
                 results.append([human_string, score])
             return results
 
@@ -131,9 +133,8 @@ class ImageRecognitionSkill(MycroftSkill):
             return
         self.log.info(results)
         label, score = results[0]
-        score = score * 100
         self.context["destinatary"] = dest
-        self.speak("test image classification is " + label + " with a score of " + str(score)[:4] + " per cent")
+        self.speak("test image classification is " + label + " with a score of " + score + " per cent")
 
     def handle_classify(self, message):
         if message.context is not None:
@@ -166,8 +167,6 @@ class ImageRecognitionSkill(MycroftSkill):
                 self.emitter.emit(Message("message_request",
                                           {"data": msg_data,
                                            "type": msg_type, "context": self.context}, self.context))
-
-
     def stop(self):
         pass
 
