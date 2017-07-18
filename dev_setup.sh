@@ -71,4 +71,6 @@ wget http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.t
 unzip ${TOP}/mycroft/models/inception/inception5h.zip -d ${TOP}/mycroft/models/inception
 tar -xzvf ${TOP}/mycroft/models/inception/inception-2015-12-05.tgz ${TOP}/mycroft/models/inception
 # vgg19
-wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat P ${TOP}/mycroft/models/vgg19
+wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat -P ${TOP}/mycroft/models/vgg19
+wget https://s3.amazonaws.com/cadl/models/vgg16.tfmodel -P ${TOP}/mycroft/models/vgg16
+wget https://s3.amazonaws.com/cadl/models/synset.txt -P ${TOP}/mycroft/models/vgg16

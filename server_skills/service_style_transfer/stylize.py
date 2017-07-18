@@ -1,6 +1,6 @@
 # Copyright (c) 2015-2017 Anish Athalye. Released under GPLv3.
 
-from mycroft.models.vgg19 import vgg
+from mycroft.models.vgg19 import vgg19
 
 import tensorflow as tf
 import numpy as np
@@ -36,7 +36,7 @@ def stylize(network, initial, initial_noiseblend, content, styles, preserve_colo
     content_features = {}
     style_features = [{} for _ in styles]
 
-    vgg_weights, vgg_mean_pixel = vgg.load_net(network)
+    vgg_weights, vgg_mean_pixel = vgg19.load_net(network)
 
     layer_weight = 1.0
     style_layers_weights = {}
@@ -55,8 +55,8 @@ def stylize(network, initial, initial_noiseblend, content, styles, preserve_colo
     g = tf.Graph()
     with g.as_default(), g.device('/cpu:0'), tf.Session() as sess:
         image = tf.placeholder('float', shape=shape)
-        net = vgg.net_preloaded(vgg_weights, image, pooling)
-        content_pre = np.array([vgg.preprocess(content, vgg_mean_pixel)])
+        net = vgg19.net_preloaded(vgg_weights, image, pooling)
+        content_pre = np.array([vgg19.preprocess(content, vgg_mean_pixel)])
         for layer in CONTENT_LAYERS:
             content_features[layer] = net[layer].eval(feed_dict={image: content_pre})
 
@@ -65,8 +65,8 @@ def stylize(network, initial, initial_noiseblend, content, styles, preserve_colo
         g = tf.Graph()
         with g.as_default(), g.device('/cpu:0'), tf.Session() as sess:
             image = tf.placeholder('float', shape=style_shapes[i])
-            net = vgg.net_preloaded(vgg_weights, image, pooling)
-            style_pre = np.array([vgg.preprocess(styles[i], vgg_mean_pixel)])
+            net = vgg19.net_preloaded(vgg_weights, image, pooling)
+            style_pre = np.array([vgg19.preprocess(styles[i], vgg_mean_pixel)])
             for layer in STYLE_LAYERS:
                 features = net[layer].eval(feed_dict={image: style_pre})
                 features = np.reshape(features, (-1, features.shape[3]))
@@ -81,12 +81,12 @@ def stylize(network, initial, initial_noiseblend, content, styles, preserve_colo
             noise = np.random.normal(size=shape, scale=np.std(content) * 0.1)
             initial = tf.random_normal(shape) * 0.256
         else:
-            initial = np.array([vgg.preprocess(initial, vgg_mean_pixel)])
+            initial = np.array([vgg19.preprocess(initial, vgg_mean_pixel)])
             initial = initial.astype('float32')
             noise = np.random.normal(size=shape, scale=np.std(content) * 0.1)
             initial = (initial) * initial_content_noise_coeff + (tf.random_normal(shape) * 0.256) * (1.0 - initial_content_noise_coeff)
         image = tf.Variable(initial)
-        net = vgg.net_preloaded(vgg_weights, image, pooling)
+        net = vgg19.net_preloaded(vgg_weights, image, pooling)
 
         # content loss
         content_layers_weights = {}
@@ -157,7 +157,7 @@ def stylize(network, initial, initial_noiseblend, content, styles, preserve_colo
                         best_loss = this_loss
                         best = image.eval()
 
-                    img_out = vgg.unprocess(best.reshape(shape[1:]), vgg_mean_pixel)
+                    img_out = vgg19.unprocess(best.reshape(shape[1:]), vgg_mean_pixel)
 
                     if preserve_colors and preserve_colors == True:
                         original_image = np.clip(content, 0, 255)

@@ -1,7 +1,7 @@
-tensor flow models, downloaded on install, used for image recognition, object
- recognition, style transfer, deep dreaming
+tensor flow models, downloaded on install script or manually, usage
 
 - vgg16
-- vgg19
-- inception5
-- ssd_mobilenet_v1_coco_11_06_2017
+- vgg19 (style transfer)
+- inception 5h (deep dreaming)
+- inception v3 (image classification)
+- ssd_mobilenet_v1_coco_11_06_2017 (object recognition)
