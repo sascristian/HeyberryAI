@@ -198,7 +198,7 @@ class MyServerFactory(WebSocketServerFactory):
         self.clients[client.peer] = {"object": client, "status": "waiting pgp", "aes_key": None, "aes_iv": None,
                                      "user_object": None, "pgp": None, "fingerprint": None}
 
-    def unregister_client(self, client, code=3000, reason=u""):
+    def unregister_client(self, client, code=3078, reason=u"unregister cxlient request"):
         """
        Remove client from list of managed connections.
        """
@@ -312,7 +312,25 @@ class MyServerFactory(WebSocketServerFactory):
             logger.debug(message)
             # parse message type
             self.process_message_type(client, deserialized_message)
-
+        elif client_data["status"] == "receiving file":
+            # decypt AES
+            key = self.clients[client.peer]["aes_key"]
+            iv = self.clients[client.peer]["aes_iv"]
+            iv = base64.b64decode(iv)
+            key = base64.b64decode(key)
+            cipher = AES.new(key, AES.MODE_CFB, iv)
+            message = cipher.decrypt(payload)[len(iv):]
+            # close open file
+            if message == "end_of_file":
+                self.clients[client.peer]["status"] = "connected"
+                logger.info("file received for " + client.peer)
+                self.clients[client.peer]["file"].close()
+                self.client[client.peer].pop("extension")
+                self.client[client.peer].pop("file")
+            # write file chunk
+            else:
+                logger.info("file chunk received for " + client.peer)
+                self.clients[client.peer]["file"].write(message)
         else:
             # not supposed to happen
             logger.error("someone is doing something wrong, client status seems to be invalid: " + client_data["status"])
@@ -350,12 +368,14 @@ class MyServerFactory(WebSocketServerFactory):
             context["user"] = user
 
             # check if message also sent files
-            if "file" in deserialized_message.data.keys():
-                deserialized_message.data["file"] = "../tmp_file.jpg"
-            elif "feed_path" in deserialized_message.data.keys():
-                deserialized_message.data["feed_path"] = "../tmp_file.jpg"
-            elif "path" in deserialized_message.data.keys():
-                deserialized_message.data["path"] = "../tmp_file.jpg"
+            # TODO file formats
+            if self.clients[client.peer].get("file_path"):
+                if "file" in deserialized_message.data.keys():
+                    deserialized_message.data["file"] = self.clients[client.peer]["file_path"]
+                elif "feed_path" in deserialized_message.data.keys():
+                    deserialized_message.data["feed_path"] = self.clients[client.peer]["file_path"]
+                elif "path" in deserialized_message.data.keys():
+                    deserialized_message.data["path"] = self.clients[client.peer]["file_path"]
 
             # pre-process message type
             if deserialized_message.type == "recognizer_loop:utterance":
@@ -363,9 +383,13 @@ class MyServerFactory(WebSocketServerFactory):
                 # validate user utterance
                 self.validate_user_utterance(utterance, user_data, context)
             elif deserialized_message.type == "incoming_file":
-                logger.info("started receiving file for " + str(sock_num))
-                self.file_socks[sock_num] = open("../tmp_file.jpg", 'wb')
-                # TODO file sending
+                logger.info("started receiving file for " + client.peer)
+                self.clients[client.peer]["status"] = "receiving file"
+                extension = deserialized_message.data.get("extension", ".jpg")
+                path = "../" + client.peer + extension
+                self.clients[client.peer]["extension"] = extension
+                self.clients[client.peer]["file_path"] = path
+                self.clients[client.peer]["file"] = open(path, 'wb')
             else:
                 logger.info("no special handling provided for " + deserialized_message.type)
                 # message is whitelisted and no special handling was provided
