@@ -114,14 +114,16 @@ class StyleTransferSkill(MycroftSkill):
         if name is None:
             name = time.asctime().replace(" ", "_")
         # load images
-        self.log.info("loading images")
+
         try:
+            self.log.info("loading content image: " + target_img)
             content_image = imread(target_img)
+            self.log.info("loading style images: " + str(style_img))
             style_images = [imread(style) for style in style_img]
             self.log.info("images loaded")
-        except:
+        except Exception as e:
             self.log.error(
-                "Could not load images: " + style_img + " | " + target_img)
+                "Could not load images: " + str(e))
             self.send_result()
             return
         # prepare style transfer
