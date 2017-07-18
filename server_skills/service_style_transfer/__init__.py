@@ -101,6 +101,7 @@ class StyleTransferSkill(MycroftSkill):
                    metadata={"file": file, "url": url, "elapsed_time": time})
 
     def handle_style_transfer(self, message):
+        self.log.info("Style Transfer request")
         if message.context is not None:
             self.context.update(message.context)
         name = message.data.get("name")
@@ -113,6 +114,7 @@ class StyleTransferSkill(MycroftSkill):
         if name is None:
             name = time.asctime().replace(" ", "_")
         # load images
+        self.log.info("loading images")
         try:
             content_image = imread(target_img)
             style_images = [imread(style) for style in style_img]
@@ -128,6 +130,7 @@ class StyleTransferSkill(MycroftSkill):
                 "Starting style transfer, this may take up to 7 hours, i will let you know when ready")
         start = time.time()
         try:
+            self.log.info("scaling images")
             width = message.data.get("width") # optionally resize pic
             if width is not None:
                 new_shape = (int(math.floor(float(content_image.shape[0]) /
@@ -145,6 +148,7 @@ class StyleTransferSkill(MycroftSkill):
 
             style_blend_weights = None
             # how much each style matters
+            self.log.info("Processing style weights")
             if style_blend_weights is None:
                 # default is equal weights
                 style_blend_weights = [1.0 / len(style_images) for _ in
@@ -154,6 +158,7 @@ class StyleTransferSkill(MycroftSkill):
                 style_blend_weights = [weight / total_blend_weight
                                        for weight in style_blend_weights]
 
+            self.log.info("Processing initial guess and noiseblend")
             initial = None
             initial_noiseblend = None
             if initial is not None:
@@ -176,6 +181,7 @@ class StyleTransferSkill(MycroftSkill):
 
             print_iterations = None
             checkpoint_iterations = None
+            self.log.info("Performing Style Transfer")
             for iteration, image in stylize(
                     network=VGG_PATH,
                     initial=initial,
@@ -201,12 +207,16 @@ class StyleTransferSkill(MycroftSkill):
             ):
                 output_file = None
                 combined_rgb = image
+
                 if iteration is not None:
                     if CHECKPOINT_OUTPUT:
                         output_file = CHECKPOINT_OUTPUT % iteration
                 else:
                     output_file = self.save_path + "/" + name + '.jpg'
                 if output_file:
+                    if iteration is None:
+                        iteration = "final"
+                    self.log.info("Saving iteration " + str(iteration))
                     imsave(output_file, combined_rgb)
 
         except Exception as e:
@@ -214,7 +224,10 @@ class StyleTransferSkill(MycroftSkill):
             self.speak(e)
             return
         e_time = time.time() - start
-        # save image
+        minutes = e_time / 60
+        self.log.info("Style Transfer finished, elapsed time: " + str(
+            minutes) + " minutes")
+        # send result
         out_path = self.save_path + "/" + name + '.jpg'
         self.send_result(out_path, e_time)
 
