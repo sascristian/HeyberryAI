@@ -1,29 +1,54 @@
 # Changes in this fork
 
-            - when executing an intent a "executing_intent" message is emitted with status "starting", "failed", or "executed"
+            - no pairing
+            - no config update from mycroft.ai
+            - added "intent.start", "intent.end", "intent.failed" messages
             - in skills/core.py SKILLS_DIR is now jarbas_skills folder instead of opt
-            - msm/skill manager removed from skills/main.py
             - skills now have a "make_active" method that puts them on active skill list inside intent_service
-            - added intent_layer class to intent_service.py
-            - blacklisted pairing and configuration skill for privacy
+            - added IntentLayer class to intent_service.py
             - do not remove articles in normalize (too much normalization IMO)
+            - added MarkovChain util
+            - added art util
+            - added BackendService abstract class and a bunch of services using it
+
+            # temporary changes
+            - no msm
             - do not use virtual env, opencv doesnt like it, i use a machine just for jarbas so no need, this means you must run dev_setup.sh with sudo
+
+- [PR#859](https://github.com/MycroftAI/mycroft-core/pull/859)
+
+            - helper class added to intent_service
+            - intent from utterance
+            - skill from intent
+            - skill from utterance
+
+- [PR#]()
+
+            - priority skills are loaded first
+            - read from config
+
+- [PR#860](https://github.com/MycroftAI/mycroft-core/pull/860)
+
+            - enable / disable intent can be requested in messagebus
 
 - [PR#783](https://github.com/MycroftAI/mycroft-core/pull/783)
 
             - skills have internal id, internal id used instead of name in intent messages
-            - added priority skills to be loaded first, read from config
-            - intent service now listens for external messages
-            - intent parser helper class, get intent from utterance, source skill from intent
             - skills main now listens for external messages for skill_manifest, skill_shutdown and skill_reload
-            - enable and disable intent can be requested from outside
 
 - [PR#790](https://github.com/MycroftAI/mycroft-core/pull/790)
 
-            - adds "source", "more_speech", "mute", "destinatary" context to all  messages
+            - uses message context to target messages to source of utterance
+            - uses message context to mute (not trigger tts)
+            - uses message context to tell if more speech is expected
             - adds "metadata" field to speak method
-            - on intent_service make the target the source of speech
-            - speech and cli clients check if they are the target of utterance
+            - clients check if they are the target of utterance before processing it
+            - adds data to message context:
+                - target = cli/speech/facebook - default = "all"
+                - mute = trigger tts or not - default = "false"
+                - more_speech = more speak messages expected- default = "False"
+                - destinatary = used to track remote_client to send message to
+                - source = source of message, default = source skill / source client
 
 - [PR#556](https://github.com/MycroftAI/mycroft-core/pull/556)
 
@@ -33,8 +58,18 @@
 
 - Server/Client
 
-            Readme will be updated
+            - client / server (a "firewall" that connects to the mycroft messagebus )
+            - client connects to server, by secure websockets
+            - server sends public pgp key
+            - client sends public pgp encrypted with server pgp
+            - server sends AES key encrypted with client pgp, client pgp key authorizes client / creates account in server
+            - all communication after is AES encrypted, if plaintext received client is kicked
+            - server does all kinds of processing (receiving files, requesting stuff from clients, authorizing action per client)
+            - on first run a new pgp key is automatically created (client and server)
 
-            - in server mycroft/client/server run self_signed.py, copy certs/myapp.crt into mycroft/client/client/certs/myapp.crt
-            - change ip in mycroft/client/client/main.py
-            - run main.py from server and from client in different machines, they should communicate
+client server basically connect jabas/mycroft instances, server can work as:
+
+            - fallback mechanism
+            - chat room
+            - relay
+            - ...
