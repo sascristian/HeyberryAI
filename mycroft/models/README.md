@@ -5,3 +5,8 @@ tensor flow models, downloaded on install script or manually, usage
 - inception 5h (deep dreaming)
 - inception v3 (image classification)
 - ssd_mobilenet_v1_coco_11_06_2017 (object recognition)
+
+# TODO
+
+standardize "importable" model classes
+python 2 all the things
