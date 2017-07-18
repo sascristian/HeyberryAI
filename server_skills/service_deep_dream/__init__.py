@@ -443,7 +443,7 @@ class DreamService(MycroftSkill):
         self.tile_size = 512
 
         self.model_path = root_path + \
-                          'mycroft/models/inception/tensorflow_inception_graph.pb'
+                          '/mycroft/models/inception/tensorflow_inception_graph.pb'
         self.model_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.model_path)
         self.print_model = True
         self.verbose = True
