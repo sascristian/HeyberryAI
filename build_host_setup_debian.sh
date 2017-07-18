@@ -27,7 +27,9 @@ sudo apt-get install -y \
     automake \
     xvfb \
     firefox \
-    cvlc \
+    vlc \
     libopencv-dev \
-    python-opencv
+    python-opencv \
+    libxml2-dev \
+    libxslt1-dev \
 

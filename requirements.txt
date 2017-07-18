@@ -51,3 +51,4 @@ selenium
 mock
 numpy
 imutils
+python-Levenshtein
