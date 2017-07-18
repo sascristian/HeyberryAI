@@ -152,19 +152,21 @@ class ImageRecognitionSkill(MycroftSkill):
         self.log.info("predicting")
         result = self.run_inference_on_image(pic)
         self.log.info("prediction ready, sending data")
+        self.log.debug(result)
         # send result
         msg_type = "image.classification.result"
         msg_data = {"classification": result}
+        # to bus
+        self.emitter.emit(Message(msg_type,
+                                  msg_data, self.context))
         # to source socket
         if ":" in user_id:
             self.context["destinatary"] = user_id
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"data":msg_data,
+                                          {"data": msg_data,
                                            "type": msg_type, "context": self.context}, self.context))
-        # to bus
-        self.emitter.emit(Message(msg_type,
-                                  msg_data, self.context))
+
 
     def stop(self):
         pass
