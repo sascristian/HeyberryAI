@@ -33,7 +33,7 @@ import os.path
 import re
 from six.moves import urllib
 import tensorflow as tf
-
+from mycroft import MYCROFT_ROOT_PATH as root_path
 import numpy as np
 import os, urllib, tarfile
 from os.path import dirname
@@ -53,7 +53,7 @@ class ImageRecognitionSkill(MycroftSkill):
         # Path to classify_image_graph_def.pb,
         # imagenet_synset_to_human_label_map.txt, and
         # imagenet_2012_challenge_label_map_proto.pbtxt
-        self.model_dir = dirname(__file__) + "/model"
+        self.model_dir = root_path + "/models/inception"
         # where to download
         self.DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
         # number of predictions to return

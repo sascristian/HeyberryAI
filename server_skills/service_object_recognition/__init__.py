@@ -21,7 +21,7 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.util.jarbas_services import ObjectRecogService
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
-
+from mycroft import MYCROFT_ROOT_PATH as root_path
 import os
 import sys
 import cv2
@@ -31,21 +31,18 @@ from os.path import dirname
 
 sys.path.append(dirname(__file__))
 
-from object_detection.utils import label_map_util
-from object_detection.utils import visualization_utils as vis_util
+import label_map_util
 
 __author__ = 'eClarity' , 'jarbas'
 
 LOGGER = getLogger(__name__)
 
-CWD_PATH = os.path.dirname(__file__)
-
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 MODEL_NAME = 'ssd_mobilenet_v1_coco_11_06_2017'
-PATH_TO_CKPT = os.path.join(CWD_PATH, 'object_detection', MODEL_NAME, 'frozen_inference_graph.pb')
+PATH_TO_CKPT = os.path.join(root_path, MODEL_NAME, 'frozen_inference_graph.pb')
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = os.path.join(CWD_PATH, 'object_detection', 'data', 'mscoco_label_map.pbtxt')
+PATH_TO_LABELS = os.path.join(root_path, MODEL_NAME, 'mscoco_label_map.pbtxt')
 
 NUM_CLASSES = 90
 

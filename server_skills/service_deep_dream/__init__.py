@@ -4,6 +4,7 @@ import time
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
+from mycroft import MYCROFT_ROOT_PATH as root_path
 from imgurpython import ImgurClient
 import urllib2
 import random
@@ -441,7 +442,7 @@ class DreamService(MycroftSkill):
         self.step_size = 1.5
         self.tile_size = 512
 
-        self.model_path = dirname(__file__) + '/model/tensorflow_inception_graph.pb'
+        self.model_path = root_path + '/models/inception/tensorflow_inception_graph.pb'
         self.model_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.model_path)
         self.print_model = True
         self.verbose = True
