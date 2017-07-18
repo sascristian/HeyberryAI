@@ -266,11 +266,13 @@ class StyleTransferService(ServiceBackend):
         super(StyleTransferService, self).__init__(name="StyleTransferService", emitter=emitter, timeout=timeout,
                                                    waiting_messages=waiting_messages, logger=logger)
 
-    def transfer_from_file(self, picture_path, style_path, name=None, iter=350, context=None, server=False):
+    def transfer_from_file(self, picture_path, styles_path, name=None,
+                           iter=350, context=None, server=False):
         if name is None:
             name = asctime().replace(" ", "_")
         self.send_request(message_type="style.transfer.request",
-                          message_data={"style_img": style_path, "target_img": picture_path, "name": name, "num_iter": iter},
+                          message_data={"style_img": styles_path,
+                                        "target_img": picture_path, "name": name, "num_iter": iter},
                           message_context=context,
                           server=server)
         self.wait("style.transfer.result")
