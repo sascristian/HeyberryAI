@@ -176,11 +176,6 @@ class StyleTransferSkill(MycroftSkill):
                 if initial_noiseblend < 1.0:
                     initial = content_image
 
-            if CHECKPOINT_OUTPUT and "%s" not in CHECKPOINT_OUTPUT:
-                self.log.error(
-                    "To save intermediate images, the checkpoint output "
-                    "parameter must contain `%s` (e.g. `foo%s.jpg`)")
-
             print_iterations = None
             checkpoint_iterations = None
             self.log.info("Performing Style Transfer")
