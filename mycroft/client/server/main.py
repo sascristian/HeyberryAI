@@ -276,6 +276,7 @@ class MyServerFactory(WebSocketServerFactory):
             logger.info("Sending AES session key to client")
             self.clients[client.peer]["status"] = "waiting AES"
             self.send_message(client, message_type, message_data, message_context, "pgp")
+            return
         elif not isBinary:
             logger.error("Plaintext received, binary data always expected after pgp exchange, something is wrong!")
             self.unregister_client(client)
