@@ -284,7 +284,7 @@ class ControlCenterSkill(MycroftSkill):
     def stop(self):
         pass
 
-    def converse(self, transcript, lang="en-us"):
+    def converse(self, utterances, lang="en-us"):
         return False
 
 

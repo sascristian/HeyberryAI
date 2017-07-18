@@ -98,9 +98,9 @@ class KonamiCodeSkill(MycroftSkill):
     def stop(self):
         self.layers.reset()
 
-    def converse(self, transcript, lang="en-us"):
+    def converse(self, utterances, lang="en-us"):
         # check if some of the intents will be handled
-        intent, id = self.intent_parser.determine_intent(transcript[0])
+        intent, id = self.intent_parser.determine_intent(utterances[0])
         if id != self.skill_id:
             # no longer inside this conversation
             # wrong cheat code entry

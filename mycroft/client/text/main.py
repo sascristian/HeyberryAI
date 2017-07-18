@@ -258,15 +258,16 @@ def rebuild_filtered_log():
 def handle_speak(event):
     global chat
     mutex.acquire()
-    try:
-        utterance = event.data.get('utterance')
-        if bSimple:
-            print(">> " + utterance)
-        else:
-            chat.append(">> " + utterance)
-        draw_screen()
-    finally:
-        mutex.release()
+    if event.context.target == "cli" or event.context.target == "all" :
+        try:
+            utterance = event.data.get('utterance')
+            if bSimple:
+                print(">> " + utterance)
+            else:
+                chat.append(">> " + utterance)
+            draw_screen()
+        finally:
+            mutex.release()
 
 
 def handle_speak(event):

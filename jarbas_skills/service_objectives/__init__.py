@@ -436,9 +436,9 @@ class ObjectivesSkill(MycroftSkill):
                 self.speak("Decreasing weight of last executed way by " + str(self.way_reward))
         self.save_weights()
 
-    def converse(self, transcript, lang="en-us"):
+    def converse(self, utterances, lang="en-us"):
         # check if some of the intents will be handled
-        intent, id = self.parser.determine_intent(transcript[0])
+        intent, id = self.parser.determine_intent(utterances[0])
         if intent == "PositiveFeedbackIntent":
             self.feedback("positive")
             return True

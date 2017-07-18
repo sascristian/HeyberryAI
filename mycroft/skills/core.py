@@ -254,7 +254,7 @@ class MycroftSkill(object):
         """
         raise Exception("Initialize not implemented for skill: " + self.name)
 
-    def converse(self, transcript, lang="en-us"):
+    def converse(self, utterances, lang="en-us"):
         return False
 
     def make_active(self):
@@ -330,10 +330,12 @@ class MycroftSkill(object):
 
     def get_context(self, context=None):
         if context is None:
-            context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False}
+            context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False, "target": "all"}
         else:
             if "destinatary" not in context.keys():
                 context["destinatary"] = self.context.get("destinatary", "all")
+            if "target" not in context.keys():
+                context["target"] = self.context.get("destinatary", "all")
             if "mute" not in context.keys():
                 context["mute"] = self.context.get("mute", False)
             if "more_speech" not in context.keys():
