@@ -24,6 +24,7 @@ sudo apt-get install -y \
     curl \
     libicu-dev \
     pkg-config \
-    automake
-    gnupg
+    automake \
+    gnupg \
+    unzip
 

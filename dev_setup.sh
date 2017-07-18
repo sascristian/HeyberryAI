@@ -64,3 +64,9 @@ pip2 install -r requirements.txt
 # install pygtk for desktop_launcher skill
 #${TOP}/scripts/install-pygtk.sh
 
+# download and extract tensorflow models
+# inception
+wget https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip -P ${TOP}/mycroft/models/inception
+wget http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz -P ${TOP}/mycroft/models/inception
+unzip ${TOP}/mycroft/models/inception/inception5h.zip -d ${TOP}/mycroft/models/inception
+tar -xzvf ${TOP}/mycroft/models/inception/inception-2015-12-05.tgz ${TOP}/mycroft/models/inception
