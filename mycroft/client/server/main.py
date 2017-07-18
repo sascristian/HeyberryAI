@@ -71,7 +71,7 @@ class MyServerProtocol(WebSocketServerProtocol):
        Client lost connection, either disconnected or some error.
        Remove client from list of tracked connections.
        """
-        self.factory.unregister_client(self, reason="connection lost")
+        self.factory.unregister_client(self, reason=u"connection lost")
         logger.info("WebSocket connection closed: {0}".format(reason))
 
 
@@ -188,17 +188,17 @@ class MyServerFactory(WebSocketServerFactory):
         # see if blacklisted
         if ip in self.blacklisted_ips and self.blacklist:
             logger.warning("Blacklisted ip tried to connect: " + ip)
-            self.unregister_client(client, reason="Blacklisted ip")
+            self.unregister_client(client, reason=u"Blacklisted ip")
             return
         elif ip not in self.whitelisted_ips and not self.blacklist:
             logger.warning("Unknown ip tried to connect: " + ip)
             #  if not whitelisted kick
-            self.unregister_client(client, reason="Unknown ip")
+            self.unregister_client(client, reason=u"Unknown ip")
             return
         self.clients[client.peer] = {"object": client, "status": "waiting pgp", "aes_key": None, "aes_iv": None,
                                      "user_object": None, "pgp": None, "fingerprint": None}
 
-    def unregister_client(self, client, code=3000, reason=""):
+    def unregister_client(self, client, code=3000, reason=u""):
         """
        Remove client from list of managed connections.
        """
@@ -280,7 +280,7 @@ class MyServerFactory(WebSocketServerFactory):
             return
         elif not isBinary:
             logger.error("Plaintext received, binary data always expected after pgp exchange, something is wrong!")
-            self.unregister_client(client, reason="Plaintext received, binary data always expected after pgp exchange")
+            self.unregister_client(client, reason=u"Plaintext received, binary data always expected after pgp exchange")
             return
         if client_data["status"] == "waiting AES":
             key = self.clients[client.peer]["aes_key"]
@@ -299,7 +299,7 @@ class MyServerFactory(WebSocketServerFactory):
                             context))
             else:
                 logger.error("Secure connection failed")
-                self.unregister_client(client, reason="Secure connection failed")
+                self.unregister_client(client, reason=u"Secure connection failed")
         elif client_data["status"] == "connected":
             # decypt AES
             key = self.clients[client.peer]["aes_key"]
@@ -316,7 +316,7 @@ class MyServerFactory(WebSocketServerFactory):
         else:
             # not supposed to happen
             logger.error("someone is doing something wrong, client status seems to be invalid: " + client_data["status"])
-            self.unregister_client(client, reason="client status seems to be invalid: " + client_data["status"])
+            self.unregister_client(client, reason=u"client status seems to be invalid: " + client_data["status"])
 
     def process_message_type(self, client, deserialized_message):
         logger.debug("Message type: " + deserialized_message.type)
