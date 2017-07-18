@@ -314,7 +314,7 @@ class MyServerFactory(WebSocketServerFactory):
 
         else:
             # not supposed to happen
-            logger.error("someone is doing something wrong")
+            logger.error("someone is doing something wrong, client status seems to be invalid: " + client_data["status"])
             self.unregister_client(client)
 
     def process_message_type(self, client, deserialized_message):
