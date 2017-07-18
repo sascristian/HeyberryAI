@@ -176,8 +176,10 @@ class StyleTransferSkill(MycroftSkill):
                 if initial_noiseblend < 1.0:
                     initial = content_image
 
-            print_iterations = None
-            checkpoint_iterations = None
+            # print progress every print_iterations
+            print_iterations = 20
+            # save every checkpoint_iterations
+            checkpoint_iterations = 20
             self.log.info("Performing Style Transfer")
             for iteration, image in stylize(
                     network=VGG_PATH,
