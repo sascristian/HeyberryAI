@@ -363,6 +363,7 @@ class MyServerFactory(WebSocketServerFactory):
             # see if this user can perform this action
             if deserialized_message.type in user_data.get("forbidden_messages", []):
                 logger.warning("This user is not allowed to perform this action " + str(sock_num))
+                self.send_message(client, "speak", {"utterance": "Messages of type " + deserialized_message.type + " are not allowed for your account"}, context)
                 return
             user = user_data.get("id", sock_num)
             context["user"] = user
@@ -381,7 +382,8 @@ class MyServerFactory(WebSocketServerFactory):
             if deserialized_message.type == "recognizer_loop:utterance":
                 utterance = data["utterances"][0]
                 # validate user utterance
-                self.validate_user_utterance(utterance, user_data, context)
+                self.validate_user_utterance(utterance, user_data, context,
+                                             client)
             elif deserialized_message.type == "incoming_file":
                 logger.info("started receiving file for " + client.peer)
                 self.clients[client.peer]["status"] = "receiving file"
@@ -402,15 +404,23 @@ class MyServerFactory(WebSocketServerFactory):
                         {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
                         context))
 
-    def validate_user_utterance(self, utterance, user_data, context):
+    def validate_user_utterance(self, utterance, user_data, context, client):
         # check if skill/intent that will trigger is authorized for this user
         intent, skill = self.parser.determine_intent(utterance)
         if intent in user_data["forbidden_intents"]:
             logger.warning("Intent " + intent + " is not allowed for " + user_data["nicknames"][0])
+            self.send_message(client, "speak", {
+                "utterance": intent + " is not allowed for your account"},
+                              context)
+
             return
 
         if skill in user_data["forbidden_skills"]:
             logger.warning("Skill " + skill + " is not allowed for " + user_data["nicknames"][0])
+            self.send_message(client, "speak", {
+                "utterance": skill + " is not allowed for your account"},
+                              context)
+
             return
         logger.debug("emitting utterance to bus: " + str(utterance))
         self.emitter.emit(
