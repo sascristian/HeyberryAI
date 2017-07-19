@@ -198,7 +198,7 @@ class MyServerFactory(WebSocketServerFactory):
         self.clients[client.peer] = {"object": client, "status": "waiting pgp", "aes_key": None, "aes_iv": None,
                                      "user_object": None, "pgp": None, "fingerprint": None}
 
-    def unregister_client(self, client, code=3078, reason=u"unregister cxlient request"):
+    def unregister_client(self, client, code=3078, reason=u"unregister client request"):
         """
        Remove client from list of managed connections.
        """
@@ -206,10 +206,13 @@ class MyServerFactory(WebSocketServerFactory):
         if client.peer in self.clients.keys():
             client_data = self.clients[client.peer]
             j, ip, sock_num = client.peer.split(":")
-            context = {"user": client_data["names"][0], "source": ip + ":" + str(sock_num)}
+            context = {"user": client_data.get("names", ["unknown_user"])[0],
+                       "source": ip +  ":" + str(sock_num)}
             self.emitter.emit(
                 Message("user.disconnect",
-                        {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
+                        {"reason": reason, "ip": ip, "sock": sock_num,
+                         "pub_key": client_data.get("pgp", None), "nicknames":
+                             client_data.get("names",[])},
                         context))
             client.sendClose(code, reason)
             self.clients.pop(client.peer)
