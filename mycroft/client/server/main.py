@@ -415,7 +415,7 @@ class MyServerFactory(WebSocketServerFactory):
                            user_data.get("nicknames", [client.peer])[0])
             self.send_message(client, "speak", {
                 "utterance": intent + " is not allowed for your account"},
-                              context)
+                              context, cipher="aes")
 
             return
 
@@ -423,7 +423,7 @@ class MyServerFactory(WebSocketServerFactory):
             logger.warning("Skill " + skill + " is not allowed for " + user_data.get("nicknames", [client.peer])[0])
             self.send_message(client, "speak", {
                 "utterance": skill + " is not allowed for your account"},
-                              context)
+                              context, cipher="aes")
 
             return
         logger.debug("emitting utterance to bus: " + str(utterance))
