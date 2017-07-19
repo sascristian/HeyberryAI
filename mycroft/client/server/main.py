@@ -513,7 +513,8 @@ class MyServerFactory(WebSocketServerFactory):
     def handle_failure(self, event):
         # TODO warn user of possible lack of answer (wait for wolfram alpha x seconds first)
         logger.debug("intent failure detected")
-        event.data.type = "server.intent.failure"
+        event.data["data"] = event.data
+        event.data["type"] = "server.intent.failure"
         self.handle_message_to_sock_request(event)
 
     def handle_speak(self, event):
