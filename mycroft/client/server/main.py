@@ -411,7 +411,8 @@ class MyServerFactory(WebSocketServerFactory):
         # check if skill/intent that will trigger is authorized for this user
         intent, skill = self.parser.determine_intent(utterance)
         if intent in user_data["forbidden_intents"]:
-            logger.warning("Intent " + intent + " is not allowed for " + user_data["nicknames"][0])
+            logger.warning("Intent " + intent + " is not allowed for " +
+                           user_data.get("nicknames", [client.peer])[0])
             self.send_message(client, "speak", {
                 "utterance": intent + " is not allowed for your account"},
                               context)
@@ -419,7 +420,7 @@ class MyServerFactory(WebSocketServerFactory):
             return
 
         if skill in user_data["forbidden_skills"]:
-            logger.warning("Skill " + skill + " is not allowed for " + user_data["nicknames"][0])
+            logger.warning("Skill " + skill + " is not allowed for " + user_data.get("nicknames", [client.peer])[0])
             self.send_message(client, "speak", {
                 "utterance": skill + " is not allowed for your account"},
                               context)
