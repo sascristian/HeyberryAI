@@ -58,7 +58,7 @@ class EnglishQuestionParser():
 
 
 class LILACSQuestionParser():
-    def __init__(self, host="http://spotlight.sztaki.hu:2222/rest/annotate"):
+    def __init__(self, host="http://model.dbpedia-spotlight.org/en/annotate"):
         # 222 2en 8pt 5fr
         self.parser = EnglishQuestionParser()
         self.host = host
@@ -148,3 +148,4 @@ def test_qp():
         print "parents: " + str(parents)
         print "relevant_nodes: " + str(midle)
         print "synonims: " + str(synonims)
+
