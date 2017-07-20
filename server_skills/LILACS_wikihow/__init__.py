@@ -35,7 +35,7 @@ class LILACSWikiHowSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("wikihow.request", self.handle_ask_wikihow)
         test_intent = IntentBuilder("TestWikihowIntent") \
-            .require("test").build()
+            .require("testh").build()
         self.register_intent(test_intent, self.handle_ask_wikihow)
 
     def handle_ask_wikihow(self, message):

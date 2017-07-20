@@ -30,6 +30,7 @@ from adapt.intent import IntentBuilder
 from mycroft.messagebus.message import Message
 from mycroft.api import Api
 from mycroft.util.log import getLogger
+from mycroft.skills.core import MycroftSkill
 
 __author__ = 'jarbas'
 
@@ -69,7 +70,7 @@ class LILACSWolframalphaSkill(MycroftSkill):
         self.emitter.on("wolframalpha.request", self.handle_ask_wolframalpha)
 
         test_intent = IntentBuilder("TestWolframIntent") \
-            .require("test").build()
+            .require("testr").build()
         self.register_intent(test_intent, self.handle_ask_wolframalpha)
 
     def handle_ask_wolframalpha(self, message):

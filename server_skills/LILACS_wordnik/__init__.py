@@ -41,7 +41,7 @@ class LILACSWordnikSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("wordnik.request", self.handle_ask_wordnik)
         test_intent = IntentBuilder("TestWordnikIntent") \
-            .require("test").build()
+            .require("testn").build()
         self.register_intent(test_intent, self.handle_ask_wordnik)
 
     def handle_ask_wordnik(self, message):
