@@ -47,7 +47,7 @@ class LILACSWordnikSkill(MycroftSkill):
     def handle_ask_wordnik(self, message):
         node = message.data.get("subject", "life")
         result = self.adquire(node)
-        self.speak(result)
+        self.speak(str(result))
         self.emitter.emit(Message("wordnik.result", result, self.context))
 
     def adquire(self, subject):

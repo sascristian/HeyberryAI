@@ -41,7 +41,7 @@ class LILACSWikipediaSkill(MycroftSkill):
     def handle_ask_wikipedia(self, message):
         node = message.data.get("subject", "life")
         result = self.adquire(node)
-        self.speak(result)
+        self.speak(str(result))
         self.emitter.emit(Message("wikipedia.result", result, self.context))
 
     def adquire(self, subject):

@@ -41,7 +41,7 @@ class LILACSConceptNetSkill(MycroftSkill):
     def handle_ask_conceptnet(self, message):
         node = message.data.get("subject", "life")
         result = self.adquire(node)
-        self.speak(result)
+        self.speak(str(result))
         self.emitter.emit(Message("conceptnet.result", result, self.context))
 
     def adquire(self, subject):
