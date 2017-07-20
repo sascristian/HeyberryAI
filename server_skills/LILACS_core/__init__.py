@@ -28,7 +28,8 @@ from LILACS_core.crawler import ConceptCrawler
 from LILACS_core.question_parser import LILACSQuestionParser
 # import helper questions functions
 from LILACS_core.questions import *
-from LILACS_knowledge.knowledgeservice import KnowledgeService
+
+from mycroft.util.jarbas_services import KnowledgeService
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 

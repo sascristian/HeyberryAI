@@ -125,6 +125,64 @@ class ServiceBackend(object):
         return self.result
 
 
+class KnowledgeService(ServiceBackend):
+    def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
+        super(KnowledgeService, self).__init__(name="KnowledgeService",
+                                       emitter=emitter, timeout=timeout,
+                                                   waiting_messages=waiting_messages, logger=logger)
+
+    def adquire(self, subject, where="wolfram"):
+        if "wikipedia" in where:
+            return self.ask_wikipedia(subject)
+        if "wikidata" in where:
+            return self.ask_wikidata(subject)
+        if "dbpedia" in where:
+            return self.ask_dbpedia(subject)
+        if "wordnik" in where:
+            return self.ask_wordnik(subject)
+        if "wikihow" in where:
+            return self.ask_wikihow(subject)
+        if "wolfram" in where:
+            return self.ask_wolfram(subject)
+        if "concept" in where:
+            return self.ask_conceptnet(subject)
+
+    def ask_wikipedia(self, subject):
+        self.send_request("wikipedia.request", {"subject": subject})
+        self.wait("wikipedia.result")
+        return self.result
+
+    def ask_wikidata(self, subject):
+        self.send_request("wikidata.request", {"subject": subject})
+        self.wait("wikidata.result")
+        return self.result
+
+    def ask_dbpedia(self, subject):
+        self.send_request("dbpedia.request", {"subject": subject})
+        self.wait("dbpedia.result")
+        return self.result
+
+    def ask_wolfram(self, subject):
+        self.send_request("wolframalpha.request", {"subject": subject})
+        self.wait("wolframalpha.result")
+        return self.result
+
+    def ask_wikihow(self, subject):
+        self.send_request("wikihow.request", {"subject": subject})
+        self.wait("wikihow.result")
+        return self.result
+
+    def ask_conceptnet(self, subject):
+        self.send_request("conceptnet.request", {"subject": subject})
+        self.wait("conceptnet.result")
+        return self.result
+
+    def ask_wordnik(self, subject):
+        self.send_request("wordnik.request", {"subject": subject})
+        self.wait("wordnik.result")
+        return self.result
+
+
 class UserManagerService(ServiceBackend):
     def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
         super(UserManagerService, self).__init__(name="UserManagerService", emitter=emitter, timeout=timeout,
