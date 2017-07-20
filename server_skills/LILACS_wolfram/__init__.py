@@ -57,7 +57,8 @@ class LILACSWolframalphaSkill(MycroftSkill):
         super(LILACSWolframalphaSkill, self).__init__(
             name="LILACS_WolframalphaSkill")
         self.parser = LILACSQuestionParser()
-        if self.config_core.get("WolframAlphaSkill").get("proxy"):
+        if False:
+        #if self.config_core.get("WolframAlphaSkill").get("proxy"):
             self.client = WAApi()
         else:
             try:
