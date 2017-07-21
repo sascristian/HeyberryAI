@@ -172,32 +172,32 @@ class KnowledgeService(ServiceBackend):
         return self.result
 
     def ask_wikidata(self, subject):
-        self.send_request("wikidata.request", {"subject": subject})
+        self.send_request("wikidata.request", {"Subject": subject})
         self.wait("wikidata.result")
         return self.result
 
     def ask_dbpedia(self, subject):
-        self.send_request("dbpedia.request", {"subject": subject})
+        self.send_request("dbpedia.request", {"Subject": subject})
         self.wait("dbpedia.result")
         return self.result
 
     def ask_wolfram(self, subject):
-        self.send_request("wolframalpha.request", {"subject": subject})
+        self.send_request("wolframalpha.request", {"Subject": subject})
         self.wait("wolframalpha.result")
         return self.result
 
     def ask_wikihow(self, subject):
-        self.send_request("wikihow.request", {"subject": subject})
+        self.send_request("wikihow.request", {"Subject": subject})
         self.wait("wikihow.result")
         return self.result
 
     def ask_conceptnet(self, subject):
-        self.send_request("conceptnet.request", {"subject": subject})
+        self.send_request("conceptnet.request", {"Subject": subject})
         self.wait("conceptnet.result")
         return self.result
 
     def ask_wordnik(self, subject):
-        self.send_request("wordnik.request", {"subject": subject})
+        self.send_request("wordnik.request", {"Subject": subject})
         self.wait("wordnik.result")
         return self.result
 
