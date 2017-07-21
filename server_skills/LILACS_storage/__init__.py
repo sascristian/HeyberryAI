@@ -62,6 +62,7 @@ class LILACSJsonStorageSkill(MycroftSkill):
                                                                   sucess}))
 
     def save(self, node_dict, data_source=None):
+        # TODO check hash before writing to file?
         if data_source is None:
             data_source = self.storage
         try:

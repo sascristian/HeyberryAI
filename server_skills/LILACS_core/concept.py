@@ -530,24 +530,13 @@ class ConceptConnector():
             self.logger.info("adding antonim: " + new_concept_name + " to concept: " + concept_name)
             self.concepts[concept_name].add_antonim(new_concept_name)
 
-    def save_concept(self, name, data=None, child_concepts=None,
-                     parent_concepts=None, synonims=None, antonims=None, i=5):
-        if data is None:
-            data = {}
-        if synonims is None:
-            synonims = []
-        if antonims is None:
-            antonims = []
-        if parent_concepts is None:
-            parent_concepts = {}
-        if child_concepts is None:
-            child_concepts = {}
+    def save_concept(self, name, i=5):
         node_dict = {"name": name,
-                     "parent_concepts": parent_concepts,
-                     "child_concepts": child_concepts,
-                     "synonims": synonims,
-                     "antonims": antonims,
-                     "data": data}
+                     "parent_concepts": self.get_parents(name),
+                     "child_concepts": self.get_childs(name),
+                     "synonims": self.get_synonims(name),
+                     "antonims": self.get_antonims(name),
+                     "data": self.get_data(name)}
         self.storage.save(node_dict)
 
         self.logger.info("saved node_data: " + str(node_dict))
@@ -555,31 +544,13 @@ class ConceptConnector():
         if i > 0:
             for name in node_dict["parent_concepts"]:
                 if name in self.get_concept_names():
-                    new_dict = {"name": name,
-                                 "parent_concepts": self.get_parents(name),
-                                 "child_concepts": self.get_childs(name),
-                                 "synonims": self.get_synonims(name),
-                                 "antonims": self.get_antonims(name),
-                                 "data": self.get_data(name)}
-                    self.save_concept(new_dict, i - 1)
+                    self.save_concept(name, i - 1)
             for name in node_dict["child_concepts"]:
                 if name in self.get_concept_names():
-                    new_dict = {"name": name,
-                                "parent_concepts": self.get_parents(name),
-                                "child_concepts": self.get_childs(name),
-                                "synonims": self.get_synonims(name),
-                                "antonims": self.get_antonims(name),
-                                "data": self.get_data(name)}
-                    self.save_concept(new_dict, i - 1)
+                    self.save_concept(name, i - 1)
             for name in node_dict["synonims"]:
                 if name in self.get_concept_names():
-                    new_dict = {"name": name,
-                                "parent_concepts": self.get_parents(name),
-                                "child_concepts": self.get_childs(name),
-                                "synonims": self.get_synonims(name),
-                                "antonims": self.get_antonims(name),
-                                "data": self.get_data(name)}
-                    self.save_concept(new_dict, i - 1)
+                    self.save_concept(name, i - 1)
 
     def load_concept(self, name, i=5):
         node_dict = {"name": name,

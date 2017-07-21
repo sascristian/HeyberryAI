@@ -189,14 +189,7 @@ class LilacsCoreSkill(MycroftSkill):
         if nodes is None:
             nodes = self.connector.get_concept_names()
         for node in nodes:
-            node_dict = {"name": node}
-            node_dict["parents"] = self.connector.get_parents(node)
-            node_dict["childs"] = self.connector.get_childs(node)
-            node_dict["cousins"] = self.connector.get_cousins(node)
-            node_dict["synonims"] = self.connector.get_synonims(node)
-            node_dict["antonims"] = self.connector.get_antonims(node)
-            node_dict["data"] = self.connector.get_data(node)
-            self.storage.save(node_dict)
+            self.storage.save(node)
 
     def parse_utterance(self, utterance):
         # get question type from utterance
