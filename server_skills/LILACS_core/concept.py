@@ -450,19 +450,19 @@ class ConceptConnector():
             else:
                 self.logger.info("loading concept data " + new_concept_name)
                 # load concept data
-                for antonim in concept["antonims"]:
+                for antonim in concept.get("antonims", []):
                     if antonim not in antonims:
                         synonims.append(antonim)
-                for synonim in concept["synonims"]:
+                for synonim in concept.get("synonims", []):
                     if synonim not in synonims:
                         synonims.append(synonim)
-                for key in concept["data"].keys():
+                for key in concept.get("data", {}).keys():
                     if key not in data.keys():
                         data[key] = concept["data"][key]
-                for parent in concept["parents"].keys():
+                for parent in concept.get("parents", {}).keys():
                     if parent not in parent_concepts.keys():
                         parent_concepts[parent] = concept["parent"][parent]
-                for child in concept["childs"].keys():
+                for child in concept.get("childs", {}).keys():
                     if child not in child_concepts.keys():
                         child_concepts[child] = concept["childs"][child]
         else:
