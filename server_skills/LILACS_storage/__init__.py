@@ -66,7 +66,12 @@ class LILACSJsonStorageSkill(MycroftSkill):
         if data_source is None:
             data_source = self.storage
         try:
-            with open(data_source + "/" + node_dict["name"] + ".json", 'w') as \
+            with open(data_source + "/" + node_dict.get("node",
+                                                        node_dict.get(
+                                                            "name",
+                                                            "default")) +
+                                                                ".json", \
+                    'w') as \
                     myfile:
                 node_json = json.dumps(node_dict)
                 print node_json

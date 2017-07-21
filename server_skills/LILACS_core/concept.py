@@ -433,9 +433,19 @@ class ConceptConnector():
     def add_consumed_by(self, concept_name, consumed_by):
         self.concepts[concept_name].add_consumed_by(consumed_by)
 
-    def create_concept(self, new_concept_name, data={},
-                           child_concepts={}, parent_concepts={}, synonims=[], antonims=[]):
+    def create_concept(self, new_concept_name, data=None,
+                           child_concepts=None, parent_concepts=None,
+                       synonims=None,
+                       antonims=None):
 
+        if data is None:
+            data = {}
+        if child_concepts is None:
+            child_concepts = {}
+        if synonims is None:
+            synonims = []
+        if antonims is None:
+            antonims = []
         # safe - checking
         if new_concept_name in parent_concepts:
             parent_concepts.pop(new_concept_name)
