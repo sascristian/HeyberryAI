@@ -101,10 +101,10 @@ class LILACSCuriositySkill(MycroftSkill):
     def stop(self):
         self.handle_deactivate_intent("global stop")
 
-    def converse(self, transcript, lang="en-us"):
+    def converse(self, utterances, lang="en-us"):
         # parse all utterances for entitys
-        if "bump curiosity" not in transcript[0]:
-            nodes, parents, synonims = self.parser.tag_from_dbpedia(transcript[0])
+        if "bump curiosity" not in utterances[0]:
+            nodes, parents, synonims = self.parser.tag_from_dbpedia(utterances[0])
             self.log.info("nodes: " + str(nodes))
             self.log.info("parents: " + str(parents))
             self.log.info("synonims: " + str(synonims))

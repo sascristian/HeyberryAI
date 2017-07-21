@@ -99,18 +99,18 @@ class LILACSChatbotSkill(MycroftSkill):
         if self.active:
            self.handle_deactivate_intent("global stop")
 
-    def converse(self, transcript, lang="en-us"):
+    def converse(self, utterances, lang="en-us"):
         # TODO check if intent would be handled by some skill and dont ove-ride
 
         # add utterance to markov chain
-        self.chain.add_tokens(transcript[0].split(" "))
+        self.chain.add_tokens(utterances[0].split(" "))
         # HACK -> check manually fo stop while intent is not parsed
-        if "stop" in transcript[0] or "off" in transcript[0] or "deactivate" in transcript[0]:
+        if "stop" in utterances[0] or "off" in utterances[0] or "deactivate" in utterances[0]:
             return False
 
         # parse 1st utterance for entitys
         if self.active:
-            nodes, parents, synonims = self.parser.tag_from_dbpedia(transcript[0])
+            nodes, parents, synonims = self.parser.tag_from_dbpedia(utterances[0])
             self.log.info("nodes: " + str(nodes))
             self.log.info("parents: " + str(parents))
             self.log.info("synonims: " + str(synonims))
@@ -149,7 +149,7 @@ class LILACSChatbotSkill(MycroftSkill):
                 #    self.log.info("asking brobot to generate a random response")
                 #    reply = broback(transcript[0])
                 #except:
-                self.log.error("Could not get chatbot response for: " + transcript[0])
+                self.log.error("Could not get chatbot response for: " + utterances[0])
                 #self.speak("Use teach skill to input correct chatbot answer")
                 words = self.chain.generate_sequence(random.randint(4,15),
                                                      reply)
