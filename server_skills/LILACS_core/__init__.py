@@ -19,7 +19,7 @@ import random
 import webbrowser
 
 from adapt.intent import IntentBuilder
-
+import os
 import sys
 from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
@@ -136,7 +136,14 @@ class LilacsCoreSkill(MycroftSkill):
 
     def handle_list_nodes_intent(self, message):
         nodes = self.connector.get_concept_names()
-        self.speak("the following nodes are available")
+        self.speak("the following nodes are in memory")
+        if nodes == []:
+            self.speak("none")
+        for node in nodes:
+            self.speak(node)
+        nodes = os.listdir(dirname(dirname(
+            __file__))+"/LILACS_storage/json")
+        self.speak("the following nodes are in storage")
         if nodes == []:
             self.speak("none")
         for node in nodes:
