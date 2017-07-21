@@ -557,8 +557,8 @@ class LilacsCoreSkill(MycroftSkill):
         # TODO check for empty how to and return false
         # the following how_tos are available
         self.speak("the following how tos are available")
-        for how in how_to:
-            self.speak(how)
+        for step in how_to[0]["steps"]:
+            self.speak(step)
         # TODO create intent tree
         # TODO start selection query
         # TODO speak how to

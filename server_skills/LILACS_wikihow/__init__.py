@@ -21,6 +21,7 @@ from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 
 import bs4
+import requests
 
 __author__ = 'jarbas'
 
