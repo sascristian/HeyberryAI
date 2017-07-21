@@ -17,7 +17,7 @@
 
 import random
 import webbrowser
-
+from time import sleep
 from adapt.intent import IntentBuilder
 import os
 import sys
@@ -139,15 +139,20 @@ class LilacsCoreSkill(MycroftSkill):
         self.speak("the following nodes are in memory")
         if nodes == []:
             self.speak("none")
-        for node in nodes:
-            self.speak(node)
+        else:
+            for node in nodes:
+                self.speak(node)
+                sleep(0.5)
+
         nodes = os.listdir(dirname(dirname(
             __file__))+"/LILACS_storage/json")
         self.speak("the following nodes are in storage")
         if nodes == []:
             self.speak("none")
-        for node in nodes:
-            self.speak(node.replace(".json",""))
+            sleep(0.5)
+        else:
+            for node in nodes:
+                self.speak(node.replace(".json",""))
 
     def handle_focus_intent(self, message):
         # TODO use dialog
