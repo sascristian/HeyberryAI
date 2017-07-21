@@ -1,5 +1,6 @@
 from mycroft.util.log import getLogger
 
+from mycroft.util.jarbas_services import LILACSstorageService
 
 __authors__ = ["jarbas", "heinzschmidt"]
 
@@ -294,6 +295,7 @@ class ConceptConnector():
         self.logger = getLogger("ConceptConnector")
         self.emitter = emitter
         self.emitter.on("new_node", self.new_node)
+        self.storage = LILACSstorageService(self.emitter)
 
     def new_node(self, message):
         # create node signaled from outside
@@ -441,7 +443,28 @@ class ConceptConnector():
             child_concepts.pop(new_concept_name)
 
         if new_concept_name not in self.concepts:
-            self.logger.info("creating concept " + new_concept_name)
+            self.logger.info("Trying to load concept json " + new_concept_name)
+            concept = self.storage.load(new_concept_name)
+            if not concept:
+                self.logger.info("creating concept " + new_concept_name)
+            else:
+                self.logger.info("loading concept data " + new_concept_name)
+                # load concept data
+                for antonim in concept["antonims"]:
+                    if antonim not in antonims:
+                        synonims.append(antonim)
+                for synonim in concept["synonims"]:
+                    if synonim not in synonims:
+                        synonims.append(synonim)
+                for key in concept["data"].keys():
+                    if key not in data.keys():
+                        data[key] = concept["data"][key]
+                for parent in concept["parents"].keys():
+                    if parent not in parent_concepts.keys():
+                        parent_concepts[parent] = concept["parent"][parent]
+                for child in concept["childs"].keys():
+                    if child not in child_concepts.keys():
+                        child_concepts[child] = concept["childs"][child]
         else:
             self.logger.info("updating concept " + new_concept_name)
         # handle new concept
