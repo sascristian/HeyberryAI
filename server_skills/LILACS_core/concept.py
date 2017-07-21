@@ -559,6 +559,9 @@ class ConceptConnector():
                      "antonims": [],
                      "data": {}}
         loaded = self.storage.load(name)
+        if not loaded["sucess"]:
+            self.log.info("no node to load")
+            return
         node_dict.update(loaded)
 
         self.logger.info("loaded node_data: " + str(node_dict))
