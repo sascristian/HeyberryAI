@@ -235,10 +235,16 @@ class LilacsCoreSkill(MycroftSkill):
             nodes.append(node)
         # load nodes from storage
         for node in nodes:
+            if self.debug:
+                self.speak("loading node: " + node)
             self.connector.load_concept(node)
         for node in parents:
+            if self.debug:
+                self.speak("loading node: " + node)
             self.connector.load_concept(node)
         for node in synonims:
+            if self.debug:
+                self.speak("loading node: " + node)
             self.connector.load_concept(node)
         #nodes += midle
         childs = {}

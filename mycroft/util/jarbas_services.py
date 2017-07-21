@@ -135,11 +135,13 @@ class LILACSstorageService(ServiceBackend):
     def save(self, node_dict):
         self.send_request("LILACS.node.json.save.request", {"node": node_dict})
         self.wait("LILACS.node.json.save.result")
+        self.logger.info("saved node: " + node_dict["name"])
         return self.result
 
     def load(self, node_name):
         self.send_request("LILACS.node.json.load.request", {"node": node_name})
         self.wait("LILACS.node.json.load.result")
+        self.logger.info("loaded node: " + node_name)
         return self.result
 
 
