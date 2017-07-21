@@ -346,7 +346,7 @@ class LilacsCoreSkill(MycroftSkill):
                 self.connector.create_concept(node, data=data[node], synonims=[], child_concepts= {}, parent_concepts={}, antonims=[])
 
         # update crawler
-        #self.save_nodes(nodes)
+        self.save_nodes(nodes)
         self.crawler.update_connector(self.connector)
 
     def handle_learning(self, utterance):
