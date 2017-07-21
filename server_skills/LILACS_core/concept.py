@@ -550,7 +550,7 @@ class ConceptConnector():
                      "data": data}
         self.storage.save(node_dict)
 
-    def load_concept(self, name):
+    def load_concept(self, name, i=5):
         node_dict = {"name": name,
                      "parent_concepts":{},
                      "child_concepts": {},
@@ -562,3 +562,13 @@ class ConceptConnector():
         self.create_concept(node_dict["name"], node_dict["data"],node_dict[
             "child_concepts"], node_dict["parent_concepts"], node_dict[
             "synonims"], node_dict["antonims"])
+        # load parents childs synonims
+        for name in node_dict["parent_concepts"]:
+            if name not in self.get_concept_names():
+                self.load_concept(name, i-1)
+        for name in node_dict["child_concepts"]:
+            if name not in self.get_concept_names():
+                self.load_concept(name, i-1)
+        for name in node_dict["synonims"]:
+            if name not in self.get_concept_names():
+                self.load_concept(name, i-1)

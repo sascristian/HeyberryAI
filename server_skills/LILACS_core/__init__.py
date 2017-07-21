@@ -147,7 +147,7 @@ class LilacsCoreSkill(MycroftSkill):
         if nodes == []:
             self.speak("none")
         for node in nodes:
-            self.speak(node)
+            self.speak(node.replace(".json",""))
 
     def handle_focus_intent(self, message):
         # TODO use dialog
