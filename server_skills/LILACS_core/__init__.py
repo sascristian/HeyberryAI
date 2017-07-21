@@ -233,6 +233,9 @@ class LilacsCoreSkill(MycroftSkill):
         nodes.append(target_node)
         for node in midle:
             nodes.append(node)
+        # load nodes from storage
+        for node in nodes:
+            self.connector.load_concept(node)
         #nodes += midle
         childs = {}
         antonims = {}
