@@ -67,6 +67,7 @@ class LILACSJsonStorageSkill(MycroftSkill):
             with open(data_source + "/" + node_dict["name"] + ".json", 'w') as \
                     myfile:
                 node_json = json.dumps(node_dict)
+                print node_json
                 myfile.write(node_json)
             return True
         except:
@@ -78,7 +79,9 @@ class LILACSJsonStorageSkill(MycroftSkill):
         if os.path.exists(data_source + "/" + node_name + ".json"):
             with open(data_source + "/" + node_name + ".json", 'r') as myfile:
                 file_content = myfile.read()
+                print file_content
                 node_json = json.loads(file_content)
+                print node_json
             return dict(node_json)
         return None
 
