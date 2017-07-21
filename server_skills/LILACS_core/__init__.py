@@ -203,7 +203,6 @@ class LilacsCoreSkill(MycroftSkill):
                                      "childs": {}, "parents": {},
                                      "synonims": [],
                                      "antonims": []}
-                        self.storage.save(node_dict)
                     self.connector.create_concept(n,
                                                   data=node_dict["data"],
                                                   child_concepts=node_dict[
@@ -225,7 +224,6 @@ class LilacsCoreSkill(MycroftSkill):
                                      "childs": {}, "parents": {},
                                      "synonims": [],
                                      "antonims": []}
-                        self.storage.save(node_dict)
                     self.connector.create_concept(
                         n,
                         data=node_dict["data"],
@@ -245,7 +243,6 @@ class LilacsCoreSkill(MycroftSkill):
                                  "childs": {}, "parents": {},
                                  "synonims": [],
                                  "antonims": []}
-                    self.storage.save(node_dict)
                 self.connector.create_concept(
                     node_dict["name"],
                     data=node_dict["data"],
