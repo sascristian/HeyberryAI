@@ -445,7 +445,7 @@ class ConceptConnector():
         if new_concept_name not in self.concepts:
             self.logger.info("Trying to load concept json " + new_concept_name)
             concept = self.storage.load(new_concept_name)
-            if not concept:
+            if concept is None:
                 self.logger.info("creating concept " + new_concept_name)
             else:
                 self.logger.info("loading concept data " + new_concept_name)
