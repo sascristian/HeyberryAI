@@ -552,6 +552,9 @@ class ConceptConnector():
                     self.save_concept(name, i - 1)
 
     def load_concept(self, name, i=5):
+        if name is None or name == "" or name == " ":
+            self.logger.info("no node to load")
+            return
         node_dict = {"node": name,
                      "parent_concepts":{},
                      "child_concepts": {},
@@ -562,7 +565,7 @@ class ConceptConnector():
         if not loaded["sucess"]:
             self.logger.info("no node to load")
             return
-        node_dict.update(loaded)
+        node_dict.update(loaded["node"])
 
         self.logger.info("loaded node_data: " + str(node_dict))
         self.create_concept(node_dict["node"], node_dict["data"],node_dict[

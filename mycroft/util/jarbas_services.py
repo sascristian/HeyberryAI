@@ -141,7 +141,6 @@ class LILACSstorageService(ServiceBackend):
     def load(self, node_name):
         self.send_request("LILACS.node.json.load.request", {"node": node_name})
         self.wait("LILACS.node.json.load.result")
-        self.logger.info("loaded node: " + node_name)
         return self.result
 
 
