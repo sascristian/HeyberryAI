@@ -472,8 +472,7 @@ class ConceptConnector():
                               synonims=synonims, antonims=antonims)
 
         self.add_concept(new_concept_name, concept)
-        self.save_concept(name=new_concept_name, data=data, child_concepts=child_concepts, parent_concepts=parent_concepts,
-                              synonims=synonims, antonims=antonims)
+        self.save_concept(name=new_concept_name)
         # handle parent concepts
         for concept_name in parent_concepts:
             self.logger.info("checking if parent node exists: " + concept_name)
@@ -531,7 +530,7 @@ class ConceptConnector():
             self.concepts[concept_name].add_antonim(new_concept_name)
 
     def save_concept(self, name, i=5):
-        node_dict = {"name": name,
+        node_dict = {"node": name,
                      "parent_concepts": self.get_parents(name),
                      "child_concepts": self.get_childs(name),
                      "synonims": self.get_synonims(name),
@@ -553,7 +552,7 @@ class ConceptConnector():
                     self.save_concept(name, i - 1)
 
     def load_concept(self, name, i=5):
-        node_dict = {"name": name,
+        node_dict = {"node": name,
                      "parent_concepts":{},
                      "child_concepts": {},
                      "synonims": [],
@@ -563,7 +562,7 @@ class ConceptConnector():
         node_dict.update(loaded)
 
         self.logger.info("loaded node_data: " + str(node_dict))
-        self.create_concept(node_dict["name"], node_dict["data"],node_dict[
+        self.create_concept(node_dict["node"], node_dict["data"],node_dict[
             "child_concepts"], node_dict["parent_concepts"], node_dict[
             "synonims"], node_dict["antonims"])
         self.logger.info("created concept in memory: " + node_dict["name"])
