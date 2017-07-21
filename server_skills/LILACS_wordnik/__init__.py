@@ -32,8 +32,8 @@ class LILACSWordnikSkill(MycroftSkill):
         super(LILACSWordnikSkill, self).__init__(
             name="LILACS_Wordnik_Skill")
         apiUrl = 'http://api.wordnik.com/v4'
-        apiKey = self.config.get("Wordnik", self.config_core.get(
-            "APIS", {}).get("Wordnik"))
+        apiKey = self.config_core.get(
+            "APIS", {}).get("Wordnik",  self.config.get("Wordnik"))
         client = swagger.ApiClient(apiKey, apiUrl)
         self.wordApi = WordApi.WordApi(client)
         self.limit = 5
