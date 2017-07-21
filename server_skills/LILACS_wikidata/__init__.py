@@ -35,11 +35,11 @@ class LILACSWikidataSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("wikidata.request", self.handle_ask_wikidata)
         test_intent = IntentBuilder("TestWikidataIntent") \
-            .require("test").build()
+            .require("test").optionally("Subject").build()
         self.register_intent(test_intent, self.handle_ask_wikidata)
 
     def handle_ask_wikidata(self, message):
-        node = message.data.get("subject", "life")
+        node = message.data.get("Subject", "life")
         result = self.adquire(node)
         self.speak(str(result))
         self.emitter.emit(Message("wikidata.result", result, self.context))

@@ -30,6 +30,7 @@ from mycroft.util.jarbas_services import KnowledgeService
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from mycroft.util.markov import MarkovChain
+from threading import Timer
 
 __author__ = 'jarbas'
 
@@ -46,6 +47,8 @@ class LILACSChatbotSkill(MycroftSkill):
         self.parser = None
         self.service = None
         self.TIMEOUT = 2
+        self.utterance = None
+        self.chain = None
 
     def initialize(self):
         # register intents
@@ -53,25 +56,25 @@ class LILACSChatbotSkill(MycroftSkill):
         self.service = KnowledgeService(self.emitter)
         self.build_intents()
 
-        # make thread to keep active
-        self.make_bump_thread()
+        # make timer thread to keep active
+        self.timer_thread = Timer(60, self.make_active)
+        self.timer_thread.setDaemon(True)
+        self.timer_thread.start()
 
-        self.chain = MarkovChain(2)
+        try:
+            self.chain = MarkovChain(2).load(dirname(
+                __file__)+"/markovbot.json")
+        except:
+            self.chain = MarkovChain(2)
+        self.emitter.on("speak", self.handle_speak)
 
-    def ping(self):
-        while True:
-            i = 0
-            if self.active:
-                self.make_active()
-            while i < 60 * self.TIMEOUT:
-                i += 1
-                sleep(1)
-            i = 0
-
-    def make_bump_thread(self):
-        timer_thread = Thread(target=self.ping)
-        timer_thread.setDaemon(True)
-        timer_thread.start()
+    def handle_speak(self, message):
+        utterance = message.data.get("utterance")
+        if self.utterance:
+            self.chain.add_tokens([utterance, self.utterance])
+            self.chain.save(dirname(
+                __file__)+"/markovbot.json")
+            self.utterance = None
 
     def build_intents(self):
         # build intents
@@ -102,8 +105,9 @@ class LILACSChatbotSkill(MycroftSkill):
     def converse(self, utterances, lang="en-us"):
         # TODO check if intent would be handled by some skill and dont ove-ride
 
-        # add utterance to markov chain
-        self.chain.add_tokens(utterances[0].split(" "))
+        # capture utterance to markov chain
+        self.utterance = utterances[0]
+
         # HACK -> check manually fo stop while intent is not parsed
         if "stop" in utterances[0] or "off" in utterances[0] or "deactivate" in utterances[0]:
             return False
@@ -131,8 +135,11 @@ class LILACSChatbotSkill(MycroftSkill):
                     dict = self.service.adquire(node, "concept net")
                     usages = dict["concept net"]["surfaceText"]
                     for usage in usages:
-                        self.chain.add_tokens(usage.split(" "))
-                        possible_responses.append(usage.replace("[", "").replace("]", ""))
+                        usage = usage.replace("[", "").replace("]", "")
+                        self.chain.add_tokens([utterances[0], usage])
+                        possible_responses.append(usage)
+                    self.chain.save(dirname(
+                        __file__) + "/markovbot.json")
                 except:
                     self.log.info("could not get reply for node " + node)
 
@@ -141,20 +148,14 @@ class LILACSChatbotSkill(MycroftSkill):
                 # say something random
                 reply = random.choice(possible_responses)
             except:
-                starts = ["Why?"]
-                reply = random.choice(starts)
-                # dont know what to say
-                # TODO consider ask user a question and play dumb / cleverbot / other ? backends everywhere??
-                #try:
-                #    self.log.info("asking brobot to generate a random response")
-                #    reply = broback(transcript[0])
-                #except:
-                self.log.error("Could not get chatbot response for: " + utterances[0])
-                #self.speak("Use teach skill to input correct chatbot answer")
-                words = self.chain.generate_sequence(random.randint(4,15),
-                                                     reply)
+                reply = ""
+                self.log.error("Could not get concept net response for: " +
+                               utterances[0])
+                words = self.chain.generate_sequence(random.randint(2, 10),
+                                                     utterances[0])
                 for word in words:
                     reply += " " + word
+                self.log.debug("Markov Chain reply: " + reply)
                 #return False
 
             self.speak(reply)

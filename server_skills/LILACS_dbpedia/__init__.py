@@ -38,11 +38,11 @@ class LILACSDBpediaSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("dbpedia.request", self.handle_ask_dbpedia)
         test_intent = IntentBuilder("TestdbpediaIntent") \
-            .require("testd").build()
+            .require("testd").optionally("Subject").build()
         self.register_intent(test_intent, self.handle_ask_dbpedia)
 
     def handle_ask_dbpedia(self, message):
-        node = message.data.get("subject", "life")
+        node = message.data.get("Subject", "life")
         result = self.adquire(node)
         self.speak(str(result))
         self.emitter.emit(Message("dbpedia.result", result, self.context))

@@ -35,11 +35,11 @@ class LILACSConceptNetSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("conceptnet.request", self.handle_ask_conceptnet)
         test_intent = IntentBuilder("TestconceptnetIntent") \
-            .require("testc").build()
+            .require("testc").optionally("Subject").build()
         self.register_intent(test_intent, self.handle_ask_conceptnet)
 
     def handle_ask_conceptnet(self, message):
-        node = message.data.get("subject", "life")
+        node = message.data.get("Subject", "life")
         result = self.adquire(node)
         self.speak(str(result))
         self.emitter.emit(Message("conceptnet.result", result, self.context))
