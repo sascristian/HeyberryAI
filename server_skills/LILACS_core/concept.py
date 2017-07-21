@@ -560,7 +560,7 @@ class ConceptConnector():
                      "data": {}}
         loaded = self.storage.load(name)
         if not loaded["sucess"]:
-            self.log.info("no node to load")
+            self.logger.info("no node to load")
             return
         node_dict.update(loaded)
 
