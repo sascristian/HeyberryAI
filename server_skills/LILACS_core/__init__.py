@@ -29,7 +29,7 @@ from LILACS_core.question_parser import LILACSQuestionParser
 # import helper questions functions
 from LILACS_core.questions import *
 
-from mycroft.util.jarbas_services import KnowledgeService
+from mycroft.util.jarbas_services import KnowledgeService, LILACSstorageService
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
@@ -48,6 +48,7 @@ class LilacsCoreSkill(MycroftSkill):
         self.crawler = None
         self.parser = None
         self.service = None
+        self.storage = None
         self.debug = False
 
         # number of examples to list
@@ -85,6 +86,7 @@ class LilacsCoreSkill(MycroftSkill):
         self.connector = ConceptConnector(emitter=self.emitter)
         self.create_concepts()
         self.crawler = ConceptCrawler(self.connector)
+        self.storage = LILACSstorageService(self.emitter)
 
     def build_intents(self):
         # build intents
@@ -171,13 +173,95 @@ class LilacsCoreSkill(MycroftSkill):
         self.speak_dialog("whatisLILACS")
 
     # core methods
+    def save_all_nodes(self):
+        for node in self.connector.get_concept_names():
+            node_dict = {"name": node}
+            node_dict["parents"] = self.connector.get_parents(node)
+            node_dict["childs"] = self.connector.get_childs(node)
+            node_dict["cousins"] = self.connector.get_cousins(node)
+            node_dict["synonims"] = self.connector.get_synonims(node)
+            node_dict["antonims"] = self.connector.get_antonims(node)
+            node_dict["data"] = self.connector.get_data(node)
+            self.storage.save(node_dict)
+
     def parse_utterance(self, utterance):
         # get question type from utterance
         center_node, target_node, parents, synonims, midle, question = self.parser.process_entitys(utterance)
         # TODO try to load concepts from storage
+        # TODO save nodes in storage
+        nodes = [center_node, target_node]
+        for n in midle:
+            nodes.append(n)
+        for node in parents:
+            nodes = parents[node]
+            nodes.append(node)
+            for n in nodes:
+                if n not in self.connector.get_concept_names():
+                    node_dict = self.storage.load(n)
+                    if not node_dict:
+                        node_dict = {"name": n, "data": {},
+                                     "childs": {}, "parents": {},
+                                     "synonims": [],
+                                     "antonims": []}
+                        self.storage.save(node_dict)
+                    self.connector.create_concept(node_dict["name"],
+                                                  data=node_dict["data"],
+                                                  child_concepts=node_dict[
+                                                      "childs"],
+                                                  parent_concepts=node_dict[
+                                                      "parents"],
+                                                  synonims=node_dict[
+                                                      "synonims"],
+                                                  antonims=node_dict[
+                                                      "antonims"])
+        for node in synonims:
+            nodes.append(node)
+            nodes = synonims[node]
+            for n in nodes:
+                if n not in self.connector.get_concept_names():
+                    node_dict = self.storage.load(n)
+                    if not node_dict:
+                        node_dict = {"name": n, "data": {},
+                                     "childs": {}, "parents": {},
+                                     "synonims": [],
+                                     "antonims": []}
+                        self.storage.save(node_dict)
+                    self.connector.create_concept(
+                        node_dict["name"],
+                        data=node_dict["data"],
+                        child_concepts=node_dict[
+                            "childs"],
+                        parent_concepts=node_dict[
+                            "parents"],
+                        synonims=node_dict[
+                            "synonims"],
+                        antonims=node_dict[
+                            "antonims"])
+        for n in nodes:
+            if n not in self.connector.get_concept_names():
+                node_dict = self.storage.load(n)
+                if not node_dict:
+                    node_dict = {"name": n, "data": {},
+                                 "childs": {}, "parents": {},
+                                 "synonims": [],
+                                 "antonims": []}
+                    self.storage.save(node_dict)
+                self.connector.create_concept(
+                    node_dict["name"],
+                    data=node_dict["data"],
+                    child_concepts=node_dict[
+                        "childs"],
+                    parent_concepts=node_dict[
+                        "parents"],
+                    synonims=node_dict[
+                        "synonims"],
+                    antonims=node_dict[
+                        "antonims"])
         # TODO input relevant nodes in connector
         # TODO update crawler with new nodes
-        # TODO save nodes in storage
+        self.handle_update_connector(nodes, parents, {}, synonims, {})
+        self.crawler.update_connector(self.connector)
+
         return center_node, target_node, parents, synonims, midle, question
 
     def deduce_answer(self, utterance):
@@ -819,7 +903,7 @@ class LilacsCoreSkill(MycroftSkill):
             self.speak_dialog("wrong_answer_confused")
 
     def stop(self):
-        pass
+        self.save_all_nodes()
 
 
 def create_skill():

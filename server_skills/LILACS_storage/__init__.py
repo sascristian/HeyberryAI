@@ -18,30 +18,70 @@
 
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-import sys
+from mycroft.messagebus.message import Message
 from os.path import dirname
-sys.path.append(dirname(dirname(__file__)))
-from LILACS_storage.main import main as service
-
-from threading import Thread
+import json
+import os
 
 __author__ = 'jarbas'
 
 logger = getLogger(__name__)
 
 
-class LILACSStorageSkill(MycroftSkill):
+class LILACSJsonStorageSkill(MycroftSkill):
     def __init__(self):
-        super(LILACSStorageSkill, self).__init__(name="LILACS_Storage_Skill")
+        super(LILACSJsonStorageSkill, self).__init__(
+            name="LILACS_Json_Storage_Skill")
+        self.storage = dirname(__file__) + "/json"
+        if not os.path.exists(self.storage):
+            os.mkdir(self.storage)
 
     def initialize(self):
-        timer_thread = Thread(target=self.service)
-        timer_thread.setDaemon(True)
-        timer_thread.start()
+        self.emitter.on("LILACS.node.json.load.request", self.handle_load_node)
+        self.emitter.on("LILACS.node.json.save.request", self.handle_save_node)
 
-    def service(self):
-        service()
+    def handle_load_node(self, message):
+        node = message.data.get("node")
+        data = self.load(node)
+        if data:
+            sucess = True
+        else:
+            sucess = False
+        self.emitter.emit(Message("LILACS.node.json.load.result", {"node":
+                                                                       data,
+                                                              "sucess":
+                                                                  sucess}))
+
+    def handle_save_node(self, message):
+        node = message.data.get("node")
+        sucess = self.save(node)
+        self.emitter.emit(Message("LILACS.node.json.save.result", {"node":
+                                                                       node,
+                                                              "sucess":
+                                                                  sucess}))
+
+    def save(self, node_dict, data_source=None):
+        if data_source is None:
+            data_source = self.storage
+        try:
+            with open(data_source + "/" + node_dict["name"] + ".json", 'w') as \
+                    myfile:
+                node_json = json.dumps(node_dict)
+                myfile.write(node_json)
+            return True
+        except:
+            return False
+
+    def load(self, node_name, data_source=None):
+        if data_source is None:
+            data_source = self.storage
+        if os.path.exists(data_source + "/" + node_name + ".json"):
+            with open(data_source + "/" + node_name + ".json", 'r') as myfile:
+                file_content = myfile.read()
+                node_json = json.loads(file_content)
+            return dict(node_json)
+        return None
 
 
 def create_skill():
-    return LILACSStorageSkill()
+    return LILACSJsonStorageSkill()

@@ -125,8 +125,27 @@ class ServiceBackend(object):
         return self.result
 
 
+class LILACSstorageService(ServiceBackend):
+    def __init__(self, emitter=None, timeout=10, waiting_messages=None,
+                 logger=None):
+        super(LILACSstorageService, self).__init__(name="LILACSstorageService",
+                                       emitter=emitter, timeout=timeout,
+                                                   waiting_messages=waiting_messages, logger=logger)
+
+    def save(self, node_dict):
+        self.send_request("LILACS.node.json.save.request", {"node": node_dict})
+        self.wait("LILACS.node.json.save.result")
+        return self.result
+
+    def load(self, node_name):
+        self.send_request("LILACS.node.json.load.request", {"node": node_name})
+        self.wait("LILACS.node.json.load.result")
+        return self.result
+
+
 class KnowledgeService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=125, waiting_messages=None, logger=None):
+    def __init__(self, emitter=None, timeout=15, waiting_messages=None,
+                 logger=None):
         super(KnowledgeService, self).__init__(name="KnowledgeService",
                                        emitter=emitter, timeout=timeout,
                                                    waiting_messages=waiting_messages, logger=logger)
