@@ -633,6 +633,8 @@ class LilacsCoreSkill(MycroftSkill):
         wordnik = {}
 
         if self.debug:
+            self.speak("answering what")
+            self.speak("node name:" + node)
             self.speak("node data: " + str(data))
 
         # get data from web
