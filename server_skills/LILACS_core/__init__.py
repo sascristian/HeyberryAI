@@ -236,6 +236,10 @@ class LilacsCoreSkill(MycroftSkill):
         # load nodes from storage
         for node in nodes:
             self.connector.load_concept(node)
+        for node in parents:
+            self.connector.load_concept(node)
+        for node in synonims:
+            self.connector.load_concept(node)
         #nodes += midle
         childs = {}
         antonims = {}
