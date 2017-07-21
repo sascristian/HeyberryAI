@@ -755,7 +755,7 @@ class LilacsCoreSkill(MycroftSkill):
                     self.log.error("no wordnik for " + node)
 
         self.crawler.update_connector(self.connector)
-
+        self.save_nodes([node])
         # read node data
         try:
             self.log.info("showing pic in browser")
