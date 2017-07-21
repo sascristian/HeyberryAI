@@ -32,6 +32,7 @@ class LILACSJsonStorageSkill(MycroftSkill):
     def __init__(self):
         super(LILACSJsonStorageSkill, self).__init__(
             name="LILACS_Json_Storage_Skill")
+        self.reload_skill = False
         self.storage = dirname(__file__) + "/json"
         if not os.path.exists(self.storage):
             os.mkdir(self.storage)

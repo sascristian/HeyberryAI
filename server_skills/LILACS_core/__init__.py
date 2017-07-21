@@ -173,8 +173,10 @@ class LilacsCoreSkill(MycroftSkill):
         self.speak_dialog("whatisLILACS")
 
     # core methods
-    def save_all_nodes(self):
-        for node in self.connector.get_concept_names():
+    def save_nodes(self, nodes=None):
+        if nodes is None:
+            nodes = self.connector.get_concept_names()
+        for node in nodes:
             node_dict = {"name": node}
             node_dict["parents"] = self.connector.get_parents(node)
             node_dict["childs"] = self.connector.get_childs(node)
@@ -326,6 +328,7 @@ class LilacsCoreSkill(MycroftSkill):
                 self.connector.create_concept(node, data=data[node], synonims=[], child_concepts= {}, parent_concepts={}, antonims=[])
 
         # update crawler
+        self.save_nodes(nodes)
         self.crawler.update_connector(self.connector)
 
     def handle_learning(self, utterance):
@@ -719,6 +722,7 @@ class LilacsCoreSkill(MycroftSkill):
                         self.speak("creating concept: " + cousin)
                     self.connector.create_concept(new_concept_name=cousin.lower(), data={}, child_concepts={},
                                               parent_concepts={}, synonims=[], antonims=[])
+
                 if cousin not in self.connector.get_cousins(node):
                     if self.debug:
                         self.speak("adding cousin: " + cousin + " to concept: " + node)
@@ -834,7 +838,7 @@ class LilacsCoreSkill(MycroftSkill):
             self.speak_dialog("wrong_answer_confused")
 
     def stop(self):
-        self.save_all_nodes()
+        self.save_nodes()
 
 
 def create_skill():
