@@ -256,6 +256,8 @@ class ConceptCrawler():
 
         next_node = self.choose_next_node(center_node, direction)
 
+        if next_node not in self.concept_db.get_concept_names():
+            self.concept_db.load_concept(next_node)
 
         crawl_depth = 1
         while True:
