@@ -113,12 +113,30 @@ class ConceptCrawler():
         # - choose stronger connections preferably
         # - number of times we visited this node
 
+        if node is None:
+            return node
+
         # TODO load node and all its connected nodes from storage
+        #total_nodes = [node]
+        #concept = self.concept_db.concepts.get(node)
+        #if concept:
+        #    connections = concept.connections
+        #    for connection in connections:
+        #        self.logger.info("checking connection: " + connection)
+        #        nodes = connections[connection]
+        #        for node in nodes:
+        #            self.logger.info("relevant node to load: " + node)
+        #            if node not in total_nodes:
+        #               total_nodes.append(node)
+        #for node in total_nodes:
+        #    if node not in self.concept_db.concepts.keys():
+        #        self.logger.info("loading node: " + node)
+        #        self.concept_db.load_concept(node)
+
         # TODO if node not loaded ask knowledge service for node info
         # TODO send update nodes to storage
 
-        if node is None:
-            return node
+
 
         # keep count of visits to this node
         if node in self.visits:
@@ -137,7 +155,6 @@ class ConceptCrawler():
             nodes = self.concept_db.get_parents(node)
             self.logger.info("parents of " + node + " : " + str(nodes))
             # check if node as synonims
-            synonims = []
             synonims = self.concept_db.get_synonims(node)
             self.logger.info("synonim of " + node + " : " + str(synonims))
 

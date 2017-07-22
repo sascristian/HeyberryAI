@@ -48,7 +48,6 @@ class LilacsCoreSkill(MycroftSkill):
         self.crawler = None
         self.parser = None
         self.service = None
-        self.storage = None
         self.debug = False
 
         # number of examples to list
@@ -86,7 +85,6 @@ class LilacsCoreSkill(MycroftSkill):
         self.connector = ConceptConnector(emitter=self.emitter)
         self.create_concepts()
         self.crawler = ConceptCrawler(self.connector)
-        self.storage = LILACSstorageService(self.emitter)
 
     def build_intents(self):
         # build intents
@@ -189,7 +187,8 @@ class LilacsCoreSkill(MycroftSkill):
         if nodes is None:
             nodes = self.connector.get_concept_names()
         for node in nodes:
-            self.storage.save(node)
+            self.log.info("saving node: " + node)
+            self.connector.save_concept(node)
 
     def parse_utterance(self, utterance):
         # get question type from utterance
@@ -231,19 +230,18 @@ class LilacsCoreSkill(MycroftSkill):
         nodes.append(target_node)
         for node in midle:
             nodes.append(node)
-        # load nodes from storage
-        for node in nodes:
-            if self.debug:
-                self.speak("loading node: " + node)
-            #self.connector.load_concept(node)
+
+        # load all nodes from memory
+        total_nodes = nodes
         for node in parents:
-            if self.debug:
-                self.speak("loading node: " + node)
-            #self.connector.load_concept(node)
+            total_nodes.extend(parents[node])
         for node in synonims:
-            if self.debug:
-                self.speak("loading node: " + node)
-            #self.connector.load_concept(node)
+            total_nodes.extend(synonims[node])
+
+        for node in total_nodes:
+            if node not in self.connector.get_concept_names():
+                self.connector.load_concept(node)
+
         #nodes += midle
         childs = {}
         antonims = {}
@@ -295,22 +293,40 @@ class LilacsCoreSkill(MycroftSkill):
         if self.debug:
             self.speak("answered: " + str(self.answered))
 
-    def handle_update_connector(self, nodes=[], parents={}, childs={}, synonims={}, antonims={}, data={}):
+
+    def handle_update_connector(self, nodes=None, parents=None, childs=None, synonims=None, antonims=None, data=None):
         # nodes = [ node_names ]
         # parents = { node_name: [node_parents] }
         # childs = { node_name: [node_childs] }
         # synonims = { node_name: [node_synonims] }
         # antonims = { node_name: [node_antonims] }
-
+        if nodes is None:
+            nodes = []
+        if parents is None:
+            parents = {}
+        if childs is None:
+            childs = {}
+        if synonims is None:
+            synonims = {}
+        if antonims is None:
+            antonims = {}
+        if data is None:
+            data = {}
         # create_concept(self, new_concept_name, data={},
         #                   child_concepts={}, parent_concepts={}, synonims=[], antonims=[])
 
-        # TODO update storage
+
+        total_nodes = nodes
+        total_nodes.extend(parents.keys())
+        total_nodes.extend(childs.keys())
+        total_nodes.extend(synonims.keys())
+        total_nodes.extend(antonims.keys())
+
         # make empty nodes
         for node in nodes:
-            self.log.info("processing node: " + node)
             if node is not None and node != "" and node != " ":
-                self.connector.create_concept(node, parent_concepts={}, child_concepts= {},synonims= [], antonims=[], data={} )
+                self.log.info("processing node: " + node)
+                self.connector.create_concept(node)
         # make all nodes with parents
         for node in parents:
             self.log.info("processing parents of node: " + node)
@@ -319,7 +335,7 @@ class LilacsCoreSkill(MycroftSkill):
                 for p in parents[node]:
                     self.log.info("parent: " + p)
                     pdict.setdefault(p, 5)  # gen 5 for auto-adquire
-                self.connector.create_concept(node, parent_concepts=pdict, child_concepts= {},synonims= [], antonims=[], data={})
+                self.connector.create_concept(node, parent_concepts=pdict)
         # make all nodes with childs
         for node in childs:
             self.log.info("processing childs of node: " + node)
@@ -328,25 +344,25 @@ class LilacsCoreSkill(MycroftSkill):
                 for c in childs[node]:
                     self.log.info("child: " + c)
                     cdict.setdefault(c, 5)  # gen 5 for auto-adquire
-                self.connector.create_concept(node, child_concepts=cdict, parent_concepts= {}, synonims= [], antonims=[], data={})
+                self.connector.create_concept(node, child_concepts=cdict)
         # make all nodes with synonims
         for node in synonims:
             self.log.info("processing synonims of node: " + node)
             if node is not None and node != "" and node != " ":
-                self.connector.create_concept(node, synonims=[synonims[node]], child_concepts={}, parent_concepts={}, antonims=[], data={})
+                self.connector.create_concept(node, synonims={synonims[node]:5})
         # make all nodes with antonims
         for node in antonims:
             self.log.info("processing antonims of node: " + node)
             if node is not None and node != "" and node != " ":
-                self.connector.create_concept(node, synonims=[], child_concepts={}, parent_concepts={}, antonims=[antonims[node]], data={})
+                self.connector.create_concept(node, antonims={antonims[node]:5})
         # make all nodes with data
         for node in data:
             self.log.info("processing data of node: " + node)
             if node is not None and node != "" and node != " ":
-                self.connector.create_concept(node, data=data[node], synonims=[], child_concepts= {}, parent_concepts={}, antonims=[])
+                self.connector.create_concept(node, data=data[node])
 
         # update crawler
-        #self.save_nodes(nodes)
+        self.save_nodes(total_nodes)
         self.crawler.update_connector(self.connector)
 
     def handle_learning(self, utterance):
@@ -413,8 +429,7 @@ class LilacsCoreSkill(MycroftSkill):
                     if c not in concepts:
                         if self.debug:
                             self.speak("creating concept: " + c)
-                        self.connector.create_concept(new_concept_name=c, data={}, child_concepts={},
-                                                      parent_concepts={}, synonims=[], antonims=[])
+                        self.connector.create_concept(new_concept_name=c)
                     if c not in self.connector.get_cousins(node):
                         if self.debug:
                             self.speak("adding cousin: " + c + " to concept: " + node)
@@ -738,8 +753,7 @@ class LilacsCoreSkill(MycroftSkill):
                 if cousin not in concepts:
                     if self.debug:
                         self.speak("creating concept: " + cousin)
-                    self.connector.create_concept(new_concept_name=cousin.lower(), data={}, child_concepts={},
-                                              parent_concepts={}, synonims=[], antonims=[])
+                    self.connector.create_concept(new_concept_name=cousin.lower())
 
                 if cousin not in self.connector.get_cousins(node):
                     if self.debug:
@@ -779,7 +793,7 @@ class LilacsCoreSkill(MycroftSkill):
             self.log.info("showing pic in browser")
             pic = data["pic"][0]
             self.log.info(pic)
-            webbrowser.open(pic)
+            #webbrowser.open(pic)
         except:
             self.log.info("could not show pic in browser")
 

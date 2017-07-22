@@ -143,6 +143,19 @@ class LILACSstorageService(ServiceBackend):
         self.wait("LILACS.node.json.load.result")
         return self.result
 
+    def process_result(self):
+        """
+         process and return only desired data
+         """
+        if self.result is None:
+            self.result = {}
+        # dont load empty connections
+        for key in dict(self.result):
+            data = self.result[key]
+            if data == {}:
+                self.result.pop(key)
+        return self.result
+
 
 class KnowledgeService(ServiceBackend):
     def __init__(self, emitter=None, timeout=15, waiting_messages=None,
