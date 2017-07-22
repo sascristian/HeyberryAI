@@ -235,15 +235,15 @@ class LilacsCoreSkill(MycroftSkill):
         for node in nodes:
             if self.debug:
                 self.speak("loading node: " + node)
-            self.connector.load_concept(node)
+            #self.connector.load_concept(node)
         for node in parents:
             if self.debug:
                 self.speak("loading node: " + node)
-            self.connector.load_concept(node)
+            #self.connector.load_concept(node)
         for node in synonims:
             if self.debug:
                 self.speak("loading node: " + node)
-            self.connector.load_concept(node)
+            #self.connector.load_concept(node)
         #nodes += midle
         childs = {}
         antonims = {}
@@ -346,7 +346,7 @@ class LilacsCoreSkill(MycroftSkill):
                 self.connector.create_concept(node, data=data[node], synonims=[], child_concepts= {}, parent_concepts={}, antonims=[])
 
         # update crawler
-        self.save_nodes(nodes)
+        #self.save_nodes(nodes)
         self.crawler.update_connector(self.connector)
 
     def handle_learning(self, utterance):
@@ -773,7 +773,7 @@ class LilacsCoreSkill(MycroftSkill):
                     self.log.error("no wordnik for " + node)
 
         self.crawler.update_connector(self.connector)
-        self.save_nodes([node])
+        #self.save_nodes([node])
         # read node data
         try:
             self.log.info("showing pic in browser")
@@ -856,7 +856,8 @@ class LilacsCoreSkill(MycroftSkill):
             self.speak_dialog("wrong_answer_confused")
 
     def stop(self):
-        self.save_nodes()
+        #self.save_nodes()
+        pass
 
 
 def create_skill():
