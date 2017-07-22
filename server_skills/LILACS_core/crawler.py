@@ -96,11 +96,8 @@ class ConceptCrawler():
     def mark_as_crawled(self, node):
         self.logger.info("Marking node as crawled: " + node)
         # remove current node from uncrawled nodes list
-        i = 0
-        for uncrawled_node in self.uncrawled:
-            if uncrawled_node == node:
-                self.uncrawled.pop(i)
-            i += 1
+        if node in self.uncrawled:
+            self.uncrawled.remove(node)
         # add current node to crawled list
         if node not in self.crawled:
             self.crawled.append(node)
@@ -151,46 +148,53 @@ class ConceptCrawler():
 
         self.mark_as_crawled(node)
         # are we checking parents or childs?
-        if direction == "parents":
-            nodes = self.concept_db.get_parents(node)
-            self.logger.info("parents of " + node + " : " + str(nodes))
-            # check if node as synonims
-            synonims = self.concept_db.get_synonims(node)
-            self.logger.info("synonim of " + node + " : " + str(synonims))
+        nodes = {}
+        try:
 
-            for synonim in synonims:
-                # get connections of these synonims also
-                self.logger.info("found synonim: " + synonim)
-                self.crawled.append(synonim)
-                self.logger.info("adding synonim connections to crawl list")
-                p = {}
-                try:
-                    p = self.concept_db.get_parents(synonim)
-                except:
-                    pass
-                self.logger.debug("synonim connections: " + str(p))
-                for n in p:
-                    nodes.setdefault(n, p[n])
-        elif direction == "childs":
-            nodes = self.concept_db.get_childs(node)
-            # check if node as synonims
-            synonims = self.concept_db.get_synonims(node)
-            for synonim in synonims:
-                # get connections of these synonims also
-                self.logger.info("found synonim: " + synonim)
-                self.logger.info("adding synonim connections to crawl list")
-                c = {}
-                try:
-                    c = self.concept_db.get_childs(synonim)
-                except:
-                    pass
-                self.logger.debug("synonim connections: " + str(c))
-                for n in c:
-                    nodes.setdefault(n, c[n])
-        else:
-            self.logger.error("Invalid crawl direction")
-            return None
+            if direction == "parents":
+                nodes = self.concept_db.get_parents(node)
+                self.logger.info("parents of " + node + " : " + str(nodes))
+                # check if node as synonims
+                synonims = self.concept_db.get_synonims(node)
+                self.logger.info("synonim of " + node + " : " + str(synonims))
 
+                for synonim in synonims:
+                    # get connections of these synonims also
+                    self.logger.info("found synonim: " + synonim)
+                    self.crawled.append(synonim)
+                    self.logger.info("adding synonim connections to crawl list")
+                    p = {}
+                    try:
+                        p = self.concept_db.get_parents(synonim)
+                    except:
+                        pass
+                    self.logger.debug("synonim connections: " + str(p))
+                    for n in p:
+                        nodes.setdefault(n, p[n])
+            elif direction == "childs":
+
+                nodes = self.concept_db.get_childs(node)
+
+                # check if node as synonims
+                synonims = self.concept_db.get_synonims(node)
+
+                for synonim in synonims:
+                    # get connections of these synonims also
+                    self.logger.info("found synonim: " + synonim)
+                    self.logger.info("adding synonim connections to crawl list")
+                    c = {}
+                    try:
+                        c = self.concept_db.get_childs(synonim)
+                    except:
+                        pass
+                    self.logger.debug("synonim connections: " + str(c))
+                    for n in c:
+                        nodes.setdefault(n, c[n])
+            else:
+                self.logger.error("Invalid crawl direction")
+                return None
+        except Exception as e:
+            self.logger.error(e)
         # if no connections found return
         if len(nodes) == 0:
             self.logger.info(node + " doesn't have any " + direction + " connection")
@@ -200,16 +204,17 @@ class ConceptCrawler():
         for node in dict(nodes):
             self.uncrawled.append(node)
             # add all antonims from these nodes to do no crawl
-            for antonim in self.concept_db.get_antonims(node):
-                self.do_not_crawl.append(antonim)
-                self.logger.info("blacklisting node " + antonim + " because it is an antonim of: " + node)
+            if node in self.concept_db.get_concept_names():
+                for antonim in self.concept_db.get_antonims(node):
+                    #print antonim
+                    self.do_not_crawl.append(antonim)
+                    self.logger.info("blacklisting node " + antonim + " because it is an antonim of: " + node)
             # remove any node we are not supposed to crawl
             if node in self.do_not_crawl:
                 self.logger.info("we are in a blacklisted node: " + node)
                 nodes.pop(node)
 
         # create a weighted list giving preference
-
 
         new_weights = {}
         for node in nodes:

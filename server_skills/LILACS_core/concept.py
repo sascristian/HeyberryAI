@@ -435,7 +435,7 @@ class ConceptConnector():
             if loaded_concept["sucess"]:
                 self.logger.info("loading concept data " + new_concept_name)
                 node_dict = loaded_concept["node"]
-                #concept.load_from_dict(node_dict)
+                concept.load_from_dict(node_dict)
                 self.logger.info("loaded concept into memory")
         else:
             self.logger.info("updating concept")
