@@ -160,10 +160,13 @@ class LILACSQuestionParser():
             print e
         except HTTPError as e:
             print e
+        except Exception as e:
+            print e
         return subjects, parents, synonims
 
 
-def test_qp(questions = ["how to kill animals ( a cow ) and make meat", "what is a living being", "why are humans living beings", "give examples of animals"]
+def test_qp(questions = ["what is war", "how to kill animals ( a cow ) and make "
+                         "meat", "what is a living being", "why are humans living beings", "give examples of animals"]
 ):
     parser = LILACSQuestionParser()
 
@@ -180,4 +183,4 @@ def test_qp(questions = ["how to kill animals ( a cow ) and make meat", "what is
         print "synonims: " + str(synonims)
         print "parse: " + str(parse)
 
-test_qp()
+#test_qp()
