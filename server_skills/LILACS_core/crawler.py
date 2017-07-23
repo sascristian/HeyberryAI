@@ -36,13 +36,17 @@ class ConceptCrawler():
         #
         self.short_path = []
 
-    def update_connector(self, connector):
+    def update_connector(self, connector, save=False):
         self.logger.info("Updating crawler connector")
         self.concept_db = connector
-        for node in self.concept_db.get_concept_names():
-            if node not in self.concept_db.saved:
-                self.logger.info("saving updated node: " + node)
-                self.concept_db.save_concept(node)
+        if save:
+            # this will always save whatever was in memory, ensures all noes
+            # in connections are saved, but most will be empty, nodes with
+            # data are already saved on data update
+            for node in self.concept_db.get_concept_names():
+                if node not in self.concept_db.saved:
+                    self.logger.info("saving updated node: " + node)
+                    self.concept_db.save_concept(node)
 
     def find_all_paths(self, center_node, target_node, path=[], direction="parents"):
         # TODO give a depth parameter, there may be "infinite" nodes and make this super slow
