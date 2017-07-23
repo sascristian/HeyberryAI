@@ -192,7 +192,22 @@ class LilacsCoreSkill(MycroftSkill):
 
     def parse_utterance(self, utterance):
         # get question type from utterance
-        center_node, target_node, parents, synonims, midle, question = self.parser.process_entitys(utterance)
+        center_node, target_node, parents, synonims, midle, \
+        parse = self.parser.process_entitys(utterance)
+        question = parse["QuestionWord"]
+        # differenciate what is {x} from what is {x} of {y}
+        target = parse.get("QuestionTarget")
+        if target:
+            # question += "_"+target
+            question += "_of"
+        if self.debug:
+            self.speak(str(parse))
+        self.log.info(parse)
+        if not center_node:
+            self.log.debug("no center node detected, using poor parse")
+            center_node = parse.get("Query1", parse.get("Query"))
+        if not target_node:
+            target_node = parse.get("Query2", "")
         # TODO try to load concepts from storage
         # TODO input relevant nodes in connector
         # TODO update crawler with new nodes
@@ -205,13 +220,15 @@ class LilacsCoreSkill(MycroftSkill):
         try:
             center_node, target_node, parents, synonims, midle, question = \
             self.parse_utterance(utterance)
+
         except Exception as e:
             logger.error(e)
             center_node = None
 
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
-            self.speak("i dont understand what the question is about")
+            self.speak("i am not sure what the question is about")
+
             self.answered = self.handle_learning(utterance)
             return
 
@@ -286,6 +303,10 @@ class LilacsCoreSkill(MycroftSkill):
             self.answered = self.handle_compare_intent(center_node, target_node)
         elif question == "examples":
             self.answered = self.handle_examples_intent(center_node)
+        elif question == "what_of":
+            pass
+            #self.answered = self.handle_what_of_intent(center_node,
+        # target_node)
         else:# question == "unknown":
             self.answered = self.handle_unknown_intent(utterance)
 

@@ -16,9 +16,7 @@ class EnglishQuestionParser():
 
     def __init__(self):
         self.regexes = [
-            #re.compile(
-            #    ".*(?P<QuestionWord>are) "
-            #    "(?P<Query>.*)"),
+
             re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which|whose) "
                 "(?P<Query1>.*) (?P<QuestionVerb>is|are|was|were) "
@@ -30,12 +28,16 @@ class EnglishQuestionParser():
             re.compile(
                 "(?P<Query1>.*) (?P<QuestionVerb>and) "
                 "(?P<Query2>.*) (?P<QuestionWord>in common)"),
+
             re.compile(
-                ".*(?P<QuestionWord>talk|rant|think) "
-                "(?P<QuestionVerb>\w+) (?P<Query>.*)"),
+                ".*(?P<QuestionWord>who|what|when|where|why|which|how|talk|rant|think) "
+                "(?P<QuestionVerb>\w+)"
+                "(?P<Query1>.*) (?P<QuestionTarget>of|from|at) "
+                "(?P<Query2>.*)"),
             re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which|how|example|examples) "
                 "(?P<QuestionVerb>\w+) (?P<Query>.*)")
+
         ]
 
     def _normalize(self, groupdict):
@@ -45,6 +47,9 @@ class EnglishQuestionParser():
             return {
                 'QuestionWord': groupdict.get('QuestionWord'),
                 'QuestionVerb': groupdict.get('QuestionVerb'),
+                'QuestionTarget': groupdict.get('QuestionTarget'),
+                'Query1': groupdict.get('Query1'),
+                'Query2': groupdict.get('Query2'),
                 'Query': ' '.join([groupdict.get('Query1'), groupdict.get(
                     'Query2')])
             }
@@ -60,6 +65,7 @@ class EnglishQuestionParser():
 class LILACSQuestionParser():
     def __init__(self, host="http://model.dbpedia-spotlight.org/en/annotate"):
         # 222 2en 8pt 5fr
+        #host = "http://spotlight.sztaki.hu:2222/rest/annotate"
         self.parser = EnglishQuestionParser()
         self.host = host
 
@@ -82,12 +88,8 @@ class LILACSQuestionParser():
                 target_node = node
 
         parse = self.poor_parse(text)
-        try:
-            question = parse["QuestionWord"]
-        except:
-            question = "unknown"
         middle = [node for node in subjects if node != center_node and node != target_node]
-        return center_node, target_node, parents, synonims, middle, question
+        return center_node, target_node, parents, synonims, middle, parse
 
     def poor_parse(self, text):
         return self.parser.parse(text)
@@ -98,7 +100,9 @@ class LILACSQuestionParser():
         parents = {}
         synonims = {}
         try:
-            annotations = spotlight.annotate(self.host, text, spotter='Default')
+            annotations = spotlight.annotate(self.host, text,
+                                             spotter='Default', support=5,
+                                             confidence=0.1)
             for annotation in annotations:
 
                 # how sure we are this is about this dbpedia entry
@@ -108,7 +112,7 @@ class LILACSQuestionParser():
                 # smaller is closer to be main topic of sentence
                 offset = annotation["offset"]
                 # TODO tweak this value and make configuable
-                if float(score) < 0.4:
+                if float(score) < 0.2:
                     continue
                 subjects.setdefault(subject, offset)
                 # categorie of this <- linked nodes <- parsing for dbpedia search
@@ -134,13 +138,14 @@ class LILACSQuestionParser():
         return subjects, parents, synonims
 
 
-def test_qp():
+def test_qp(questions = ["how to kill animals ( a cow ) and make meat", "what is a living being", "why are humans living beings", "give examples of animals"]
+):
     parser = LILACSQuestionParser()
 
-    questions = ["how to kill animals ( a cow ) and make meat", "what is a living being", "why are humans living beings", "give examples of animals"]
-
     for text in questions:
-        center_node, target_node, parents, synonims, midle, question = parser.process_entitys(text)
+        center_node, target_node, parents, synonims, midle, \
+        parse = parser.process_entitys(text)
+        question = parse["QuestionWord"]
         print "\nQuestion: " + text
         print "question_type: " + question
         print "center_node: " + center_node
@@ -148,4 +153,6 @@ def test_qp():
         print "parents: " + str(parents)
         print "relevant_nodes: " + str(midle)
         print "synonims: " + str(synonims)
+        print "parse: " + str(parse)
 
+#test_qp(["what is the speed of light"])
