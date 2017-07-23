@@ -71,11 +71,11 @@ class LILACSWolframalphaSkill(MycroftSkill):
         self.emitter.on("wolframalpha.request", self.handle_ask_wolframalpha)
 
         test_intent = IntentBuilder("TestWolframIntent") \
-            .require("testr").optionally("Subject").build()
+            .require("testr").require("Subject").build()
         self.register_intent(test_intent, self.handle_ask_wolframalpha)
 
     def handle_ask_wolframalpha(self, message):
-        node = message.data.get("Subject", "what is the meaning of life")
+        node = message.data.get("Subject")
         result = self.adquire(node)
         self.speak(str(result))
         self.emitter.emit(Message("wolframalpha.result", result, self.context))

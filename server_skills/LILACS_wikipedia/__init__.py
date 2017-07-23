@@ -35,11 +35,11 @@ class LILACSWikipediaSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("wikipedia.request", self.handle_ask_wikipedia)
         test_intent = IntentBuilder("TestWikipediaIntent") \
-            .require("testp").optionally("Subject").build()
+            .require("testp").require("Subject").build()
         self.register_intent(test_intent, self.handle_ask_wikipedia)
 
     def handle_ask_wikipedia(self, message):
-        node = message.data.get("Subject", "life")
+        node = message.data.get("Subject")
         result = self.adquire(node)
         self.speak(str(result))
         self.emitter.emit(Message("wikipedia.result", result, self.context))

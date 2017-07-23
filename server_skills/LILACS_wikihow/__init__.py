@@ -36,11 +36,11 @@ class LILACSWikiHowSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("wikihow.request", self.handle_ask_wikihow)
         test_intent = IntentBuilder("TestWikihowIntent") \
-            .require("testh").optionally("Subject").build()
+            .require("testh").require("Subject").build()
         self.register_intent(test_intent, self.handle_ask_wikihow)
 
     def handle_ask_wikihow(self, message):
-        node = message.data.get("Subject", "become evil")
+        node = message.data.get("Subject")
         result = self.adquire(node)
         self.speak(str(result))
         self.emitter.emit(Message("wikihow.result", result, self.context))
