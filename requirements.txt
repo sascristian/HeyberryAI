@@ -50,6 +50,6 @@ pyvirtualdisplay
 selenium
 mock
 numpy
-tensorflow>=1.2
+tensorflow
 python-Levenshtein
 imutils
