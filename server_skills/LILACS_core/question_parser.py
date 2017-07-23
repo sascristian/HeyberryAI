@@ -70,39 +70,44 @@ class LILACSQuestionParser():
         self.host = host
 
     def process_entitys(self, text):
-
-        subjects, parents, synonims = self.tag_from_dbpedia(text)
-        center = 666
-        center_node = ""
-        for node in subjects:
-            if subjects[node] < center:
-                center = subjects[node]
-                center_node = node
-
-        target = 666
-        #TODO better select target mechanism
-        target_node = ""
-        for node in subjects:
-            if subjects[node] < target and node != center_node:
-                target = subjects[node]
-                target_node = node
-
+        subjects = []
+        parents = {}
+        synonims = {}
         parse = self.poor_parse(text)
+        try:
+            subjects, parents, synonims = self.tag_from_dbpedia(text)
+            center = 666
+            center_node = ""
+            for node in subjects:
+                if subjects[node] < center:
+                    center = subjects[node]
+                    center_node = node
+
+            target = 666
+            #TODO better select target mechanism
+            target_node = ""
+            for node in subjects:
+                if subjects[node] < target and node != center_node:
+                    target = subjects[node]
+                    target_node = node
+        except:
+            center_node = parse.get("Query1", parse.get("Query"))
+            target_node = parse.get("Query2", "")
+
         middle = [node for node in subjects if node != center_node and node != target_node]
         return center_node, target_node, parents, synonims, middle, parse
 
     def poor_parse(self, text):
         return self.parser.parse(text)
 
-    def tag_from_dbpedia(self, text):
+    def tag_from_dbpedia(self, text, spotter='Default'):
         text = text.lower()
         subjects = {}
         parents = {}
         synonims = {}
         try:
             annotations = spotlight.annotate(self.host, text,
-                                             spotter='Default', support=5,
-                                             confidence=0.1)
+                                             spotter=spotter)
             for annotation in annotations:
 
                 # how sure we are this is about this dbpedia entry
@@ -155,4 +160,4 @@ def test_qp(questions = ["how to kill animals ( a cow ) and make meat", "what is
         print "synonims: " + str(synonims)
         print "parse: " + str(parse)
 
-#test_qp(["what is the speed of light"])
+test_qp(["what is war"])

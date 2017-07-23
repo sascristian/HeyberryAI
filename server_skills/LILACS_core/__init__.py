@@ -203,11 +203,6 @@ class LilacsCoreSkill(MycroftSkill):
         if self.debug:
             self.speak(str(parse))
         self.log.info(parse)
-        if not center_node:
-            self.log.debug("no center node detected, using poor parse")
-            center_node = parse.get("Query1", parse.get("Query"))
-        if not target_node:
-            target_node = parse.get("Query2", "")
         # TODO try to load concepts from storage
         # TODO input relevant nodes in connector
         # TODO update crawler with new nodes
