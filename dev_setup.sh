@@ -53,7 +53,7 @@ pip install --upgrade virtualenv
 
 # copy global open-cv to virtual env, pip open-cv version doesnt work
 # https://medium.com/@manuganji/installation-of-opencv-numpy-scipy-inside-a-virtualenv-bf4d82220313
-sudo cp /usr/lib/python2.7/dist-packages/cv*
+sudo cp /usr/lib/python2.7/dist-packages/cv.py
 $VIRTUALENV_ROOT/lib/python2.7/site-packages/
 
 # tensorflow from binary
