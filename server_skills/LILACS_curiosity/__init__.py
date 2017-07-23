@@ -56,17 +56,21 @@ class LILACSCuriositySkill(MycroftSkill):
         timer_thread.start()
 
     def build_intents(self):
+        self.emitter.on("speak", self.handle_speak)
+
         # build intents
         deactivate_intent = IntentBuilder("DeactivateCuriosityIntent") \
             .require("deactivateCuriosityKeyword").build()
         activate_intent=IntentBuilder("ActivateCuriosityIntent") \
             .require("activateCuriosityKeyword").build()
 
-
         # register intents
         self.register_intent(deactivate_intent, self.handle_deactivate_intent)
         self.register_intent(activate_intent, self.handle_activate_intent)
 
+    def handle_speak(self, message):
+        utterance = message.data["utterance"]
+        self.curiosity(utterance)
 
     def handle_deactivate_intent(self, message):
         self.active = False
@@ -79,14 +83,14 @@ class LILACSCuriositySkill(MycroftSkill):
     def stop(self):
         self.handle_deactivate_intent("global stop")
 
-    def converse(self, utterances, lang="en-us"):
+    def curiosity(self, utterance):
         if not self.active:
             return False
         # parse all utterances for entitys
         try:
-            nodes, parents, synonims = self.parser.tag_from_dbpedia(
-            utterances[0])
-        except:
+            nodes, parents, synonims = self.parser.tag_from_dbpedia(utterance)
+        except Exception as e:
+            self.log.error(e)
             return False
         self.log.info("nodes: " + str(nodes))
         self.log.info("parents: " + str(parents))
@@ -137,8 +141,11 @@ class LILACSCuriositySkill(MycroftSkill):
             node_dict["data"] = {}
             self.emitter.emit(Message("new_node", node_dict))
 
+    def converse(self, utterances, lang="en-us"):
+        self.curiosity(utterances[0])
         # tell intent skill you did not handle intent
         return False
+
 
 def create_skill():
     return LILACSCuriositySkill()
