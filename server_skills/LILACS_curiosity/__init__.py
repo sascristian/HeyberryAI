@@ -92,6 +92,7 @@ class LILACSCuriositySkill(MycroftSkill):
         except Exception as e:
             self.log.error(e)
             return False
+        self.context["source"] = "LILACS_curiosity"
         self.log.info("nodes: " + str(nodes))
         self.log.info("parents: " + str(parents))
         self.log.info("synonims: " + str(synonims))
@@ -114,7 +115,7 @@ class LILACSCuriositySkill(MycroftSkill):
             connections["antonims"] = {}
             node_dict["connections"] = connections
             node_dict["data"] = {}
-            self.context["source"] = "LILACS_curiosity"
+
             self.emitter.emit(Message("new_node", node_dict, self.context))
         for node in parents:
             node_dict = {}
@@ -128,7 +129,7 @@ class LILACSCuriositySkill(MycroftSkill):
             connections["antonims"] = {}
             node_dict["connections"] = connections
             node_dict["data"] = {}
-            self.emitter.emit(Message("new_node", node_dict))
+            self.emitter.emit(Message("new_node", node_dict, self.context))
         for node in synonims:
             node_dict = {}
             node_dict["name"] = node
@@ -139,7 +140,7 @@ class LILACSCuriositySkill(MycroftSkill):
             connections["antonims"] = {}
             node_dict["connections"] = connections
             node_dict["data"] = {}
-            self.emitter.emit(Message("new_node", node_dict))
+            self.emitter.emit(Message("new_node", node_dict, self.context))
 
     def converse(self, utterances, lang="en-us"):
         self.curiosity(utterances[0])

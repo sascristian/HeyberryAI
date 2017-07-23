@@ -280,9 +280,9 @@ class ConceptConnector():
 
     def new_node(self, message):
         # create node signaled from outside
-        self.logger.info("Loading externally signaled node from " +
+        self.logger.info("Loading into memory externally signaled node from " +
         message.context.get("source", "unknown source"))
-        node_name = message.data["node"]
+        node_name = message.data["name"]
         node_dict = message.data
         self.create_concept(new_concept_name=node_name)
         self.concepts[node_name].load_from_dict(node_dict)
