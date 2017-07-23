@@ -280,8 +280,8 @@ class ConceptConnector():
 
     def new_node(self, message):
         # create node signaled from outside
-        node_name = message.data["node_name"]
-        node_dict = message.data.get("node", {})
+        node_name = message.data["node"]
+        node_dict = message.data
         self.create_concept(new_concept_name=node_name)
         self.concepts[node_name].load_from_dict(node_dict)
         # TODO if configured gather additional node info from knowledge service?
