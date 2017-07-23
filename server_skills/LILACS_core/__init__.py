@@ -202,7 +202,13 @@ class LilacsCoreSkill(MycroftSkill):
     def deduce_answer(self, utterance):
         # try to undestand what user asks
         self.log.info("Deducing answer to: " + utterance)
-        center_node, target_node, parents, synonims, midle, question = self.parse_utterance(utterance)
+        try:
+            center_node, target_node, parents, synonims, midle, question = \
+            self.parse_utterance(utterance)
+        except Exception as e:
+            logger.error(e)
+            center_node = None
+
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
             self.speak("i dont understand the question")
