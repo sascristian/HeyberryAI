@@ -52,3 +52,5 @@ mock
 numpy
 python-Levenshtein
 imutils
+Pillow
+imgurpython
