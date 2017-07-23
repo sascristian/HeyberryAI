@@ -30,12 +30,17 @@ class EnglishQuestionParser():
                 "(?P<Query2>.*) (?P<QuestionWord>in common)"),
 
             re.compile(
-                ".*(?P<QuestionWord>who|what|when|where|why|which|how|talk|rant|think) "
+                ".*(?P<QuestionWord>who|what|when|where|why|which|how "
+                "to|how|talk"
+                "|rant|think) "
+                ""
                 "(?P<QuestionVerb>\w+)"
                 "(?P<Query1>.*) (?P<QuestionTarget>of|from|at) "
                 "(?P<Query2>.*)"),
             re.compile(
-                ".*(?P<QuestionWord>who|what|when|where|why|which|how|example|examples) "
+                ".*(?P<QuestionWord>who|what|when|where|why|which|how to|ho"
+                "w|example|examples) "
+                ""
                 "(?P<QuestionVerb>\w+) (?P<Query>.*)")
 
         ]
@@ -70,29 +75,44 @@ class LILACSQuestionParser():
         self.host = host
 
     def process_entitys(self, text):
-        subjects = []
-        parents = {}
-        synonims = {}
         parse = self.poor_parse(text)
-        try:
-            subjects, parents, synonims = self.tag_from_dbpedia(text)
-            center = 666
-            center_node = ""
-            for node in subjects:
-                if subjects[node] < center:
-                    center = subjects[node]
-                    center_node = node
+        subjects, parents, synonims = self.tag_from_dbpedia(text)
+        center = 666
+        center_node = ""
+        for node in subjects:
+            if subjects[node] < center:
+                center = subjects[node]
+                center_node = node
 
-            target = 666
-            #TODO better select target mechanism
-            target_node = ""
-            for node in subjects:
-                if subjects[node] < target and node != center_node:
-                    target = subjects[node]
-                    target_node = node
-        except:
-            center_node = parse.get("Query1", parse.get("Query"))
-            target_node = parse.get("Query2", "")
+        target = 666
+        #TODO better select target mechanism
+        target_node = ""
+        for node in subjects:
+            if subjects[node] < target and node != center_node:
+                target = subjects[node]
+                target_node = node
+        # aproximate guess from regex
+        if target_node == "":
+            verb = parse.get("QuestionVerb", "")
+            verbs = ["is","are","was","were", "of"]
+            if verb in verbs:
+                verb = ""
+            target_node = parse.get("Query2", verb)
+        if center_node == "":
+            center_node = parse.get("Query1", parse.get("Query", ""))
+            center_node = center_node.replace(" is the ", "")
+            center_node = center_node.replace("is the ", "")
+            center_node = center_node.replace(" is ", "")
+            center_node = center_node.replace(" the ", "")
+            center_node = center_node.replace(" a ", "")
+            center_node = center_node.replace(" an ", "")
+            center_node = center_node.replace("a ", "")
+            center_node = center_node.replace("an ", "")
+            words = center_node.split(" ")
+            if len(words) > 1:
+                center_node = words[0]
+                if target_node == "":
+                    target_node = words[1]
 
         middle = [node for node in subjects if node != center_node and node != target_node]
         return center_node, target_node, parents, synonims, middle, parse
@@ -150,7 +170,7 @@ def test_qp(questions = ["how to kill animals ( a cow ) and make meat", "what is
     for text in questions:
         center_node, target_node, parents, synonims, midle, \
         parse = parser.process_entitys(text)
-        question = parse["QuestionWord"]
+        question = parse.get("QuestionWord", "unknown")
         print "\nQuestion: " + text
         print "question_type: " + question
         print "center_node: " + center_node
@@ -160,4 +180,4 @@ def test_qp(questions = ["how to kill animals ( a cow ) and make meat", "what is
         print "synonims: " + str(synonims)
         print "parse: " + str(parse)
 
-test_qp(["what is war"])
+test_qp()

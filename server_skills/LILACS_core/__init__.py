@@ -273,7 +273,7 @@ class LilacsCoreSkill(MycroftSkill):
         self.answered = False
         if question == "what":
             self.answered = self.handle_what_intent(center_node)
-        elif question == "how":
+        elif question == "how to":
             self.answered = self.handle_how_intent(utterance)
         elif question == "who":
             # TODO find a good backend for persons only!
