@@ -16,8 +16,7 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from threading import Thread
-from time import sleep
+from threading import Timer
 
 from adapt.intent import IntentBuilder
 import sys
@@ -52,21 +51,7 @@ class LILACSCuriositySkill(MycroftSkill):
         self.service = KnowledgeService(self.emitter)
         self.build_intents()
 
-        # make thread to keep active
-        self.make_bump_thread()
-
-    def ping(self):
-        while True:
-            i = 0
-            if self.active:
-                self.make_active()
-            while i < 60 * self.TIMEOUT:
-                i += 1
-                sleep(1)
-            i = 0
-
-    def make_bump_thread(self):
-        timer_thread = Thread(target=self.ping)
+        timer_thread = Timer(60, target=self.make_active)
         timer_thread.setDaemon(True)
         timer_thread.start()
 
@@ -77,18 +62,11 @@ class LILACSCuriositySkill(MycroftSkill):
         activate_intent=IntentBuilder("ActivateCuriosityIntent") \
             .require("activateCuriosityKeyword").build()
 
-        bump_intent = IntentBuilder("BumpCuriositySkillIntent"). \
-            require("bumpCuriosityKeyword").build()
 
         # register intents
         self.register_intent(deactivate_intent, self.handle_deactivate_intent)
         self.register_intent(activate_intent, self.handle_activate_intent)
-        self.register_intent(bump_intent, self.handle_set_on_top_active_list())
 
-    def handle_set_on_top_active_list(self):
-        # dummy intent just to bump curiosity skill to top of active skill list
-        # called on a timer in order to always use converse method
-        pass
 
     def handle_deactivate_intent(self, message):
         self.active = False
@@ -102,48 +80,62 @@ class LILACSCuriositySkill(MycroftSkill):
         self.handle_deactivate_intent("global stop")
 
     def converse(self, utterances, lang="en-us"):
+        if not self.active:
+            return False
         # parse all utterances for entitys
-        if "bump curiosity" not in utterances[0]:
-            nodes, parents, synonims = self.parser.tag_from_dbpedia(utterances[0])
-            self.log.info("nodes: " + str(nodes))
-            self.log.info("parents: " + str(parents))
-            self.log.info("synonims: " + str(synonims))
-            # if flag get info for nodes
-            # TODO use appropriate backends
-            if self.get_node_info:
-                backend = "dbpedia"
-                for node in nodes:
-                    node_info = self.service.adquire(node, backend)
-                    print node_info
-
-            #signal core to create nodes
+        try:
+            nodes, parents, synonims = self.parser.tag_from_dbpedia(
+            utterances[0])
+        except:
+            return False
+        self.log.info("nodes: " + str(nodes))
+        self.log.info("parents: " + str(parents))
+        self.log.info("synonims: " + str(synonims))
+        # if flag get info for nodes
+        # TODO use appropriate backends fo each field
+        if self.get_node_info:
+            backend = "dbpedia"
             for node in nodes:
-                node_dict = {}
-                node_dict.setdefault("node_name", node)
-                node_dict.setdefault("parents", {})
-                node_dict.setdefault("childs", {})
-                node_dict.setdefault("synonims", [])
-                node_dict.setdefault("antonims", [])
-                node_dict.setdefault("data", {})
-                self.emitter.emit(Message("new_node", node_dict))
-            for node in parents:
-                node_dict = {}
-                node_dict.setdefault("node_name", node)
-                node_dict.setdefault("parents", parents[node])
-                node_dict.setdefault("childs", {})
-                node_dict.setdefault("synonims", [])
-                node_dict.setdefault("antonims", [])
-                node_dict.setdefault("data", {})
-                self.emitter.emit(Message("new_node", node_dict))
-            for node in synonims:
-                node_dict = {}
-                node_dict.setdefault("node_name", node)
-                node_dict.setdefault("parents", {})
-                node_dict.setdefault("childs", {})
-                node_dict.setdefault("synonims", [synonims[node]])
-                node_dict.setdefault("antonims", [])
-                node_dict.setdefault("data", {})
-                self.emitter.emit(Message("new_node", node_dict))
+                node_info = self.service.adquire(node, backend)
+                print node_info
+
+        #signal core to create nodes
+        for node in nodes:
+            node_dict = {}
+            node_dict["name"] = node
+            connections = {}
+            connections["parents"] = {}
+            connections["childs"] = {}
+            connections["synonims"] = {}
+            connections["antonims"] = {}
+            node_dict["connections"] = connections
+            node_dict["data"] = {}
+
+            self.emitter.emit(Message("new_node", node_dict))
+        for node in parents:
+            node_dict = {}
+            node_dict["name"] = node
+            connections = {}
+            connections["parents"] = {}
+            for p in parents[node]:
+                connections["parents"][p] = 5
+            connections["childs"] = {}
+            connections["synonims"] = {}
+            connections["antonims"] = {}
+            node_dict["connections"] = connections
+            node_dict["data"] = {}
+            self.emitter.emit(Message("new_node", node_dict))
+        for node in synonims:
+            node_dict = {}
+            node_dict["name"] = node
+            connections = {}
+            connections["parents"] = {}
+            connections["childs"] = {}
+            connections["synonims"] = {synonims[node]: 5}
+            connections["antonims"] = {}
+            node_dict["connections"] = connections
+            node_dict["data"] = {}
+            self.emitter.emit(Message("new_node", node_dict))
 
         # tell intent skill you did not handle intent
         return False
