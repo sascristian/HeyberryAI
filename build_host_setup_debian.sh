@@ -32,6 +32,9 @@ sudo apt-get install -y \
     python-opencv \
     libxml2-dev \
     libxslt1-dev \
+    build-essential \
+    gfortran \
+    libatlas-base-dev
 
 # copy geckodriver to usr/bin for browser service
 TOP=$(cd $(dirname $0) && pwd -L)
