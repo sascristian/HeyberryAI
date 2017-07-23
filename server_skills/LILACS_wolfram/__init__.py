@@ -102,23 +102,33 @@ class LILACSWolframalphaSkill(MycroftSkill):
 
     def wolfram_to_nodes(self, query, lang="en-us"):
         responses = self.ask_wolfram(query)
-        txt = query.lower().replace("the ", "").replace("an ", "").replace("a ",
+        txt = query.lower().replace("the ", "").replace("an ", "").replace(
+            "a ",
                                                                            "")
-        center_node, target_node, parents, synonims, midle, question = self.parser.process_entitys(
+        try:
+            center_node, target_node, parents, synonims, midle, question = \
+            self.parser.process_entitys(
             txt)
-        response = responses[0]
+            response = responses[0]
 
-        txt = response.lower().replace("the ", "").replace("an ", "").replace(
-            "a ", "")
-        if txt != "no answer":
-            midle2, parents2, synonims2 = self.parser.tag_from_dbpedia(txt)
+            txt = response.lower().replace("the ", "").replace("an ", "").replace(
+                "a ", "")
+            if txt != "no answer":
+                midle2, parents2, synonims2 = self.parser.tag_from_dbpedia(txt)
 
-            for parent in parents2:
-                if parent not in parents:
-                    parents.setdefault(parent, parents2[parent])
-            midle += midle2
-            for synonim in synonims2:
-                synonims.setdefault(synonim, synonims2[synonim])
+                for parent in parents2:
+                    if parent not in parents:
+                        parents.setdefault(parent, parents2[parent])
+                midle += midle2
+                for synonim in synonims2:
+                    synonims.setdefault(synonim, synonims2[synonim])
+        except Exception as e:
+            self.log.error(e)
+            center_node = None
+            midle = []
+            parents = {}
+            synonims = {}
+            response = responses[0]
 
         return response, parents, synonims, midle
 
@@ -134,7 +144,8 @@ class LILACSWolframalphaSkill(MycroftSkill):
             if e.response.status_code == 401:
                 self.emitter.emit(Message("mycroft.not.paired"))
             return
-        except:
+        except Exception as e:
+            self.log.error(e)
             print "error asking wolfram alpha, did you insert an api key?"
 
         response = ["no answer"]
@@ -156,6 +167,7 @@ class LILACSWolframalphaSkill(MycroftSkill):
 
         else:
             if len(others) > 0:
+                response.remove("no answer")
                 for other in others:
                     response.append(self.ask_wolfram(other))
 
