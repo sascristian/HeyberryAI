@@ -56,8 +56,7 @@ pip install --upgrade virtualenv
 sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
 
 # tensorflow from binary
-pip2 install --upgrade https://storage.googleapis
-.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp34-cp34m-linux_x86_64.whl
+pip2 install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp34-cp34m-linux_x86_64.whl
 
 # install requirements (except pocketsphinx)
 pip2 install -r requirements.txt
