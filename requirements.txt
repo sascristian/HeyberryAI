@@ -50,7 +50,6 @@ pyvirtualdisplay
 selenium
 mock
 numpy
-opencv-python
 tensorflow>=1.2
-imutils
 python-Levenshtein
+imutils

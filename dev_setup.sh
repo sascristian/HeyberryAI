@@ -52,7 +52,8 @@ easy_install pip==7.1.2 # force version of pip
 pip install --upgrade virtualenv
 
 # install requirements (except pocketsphinx)
-pip2 install -r requirements.txt 
+pip2 install -r requirements.txt
+
 
 if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
   CORES=1
@@ -73,6 +74,10 @@ echo "WARNING: The following can take a long time to run!"
 
 # install pygtk for desktop_launcher skill
 ${TOP}/scripts/install-pygtk.sh
+
+# copy global open-cv to vitual env
+sudo cp /usr/lib/pymodules/python2.7/cv* $VIRTUALENV_ROOT/lib/python2
+.7/site-packages/
 
 
 
