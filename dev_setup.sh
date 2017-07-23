@@ -75,9 +75,9 @@ echo "WARNING: The following can take a long time to run!"
 # install pygtk for desktop_launcher skill
 ${TOP}/scripts/install-pygtk.sh
 
-# copy global open-cv to vitual env
-sudo cp /usr/lib/pymodules/python2.7/cv* $VIRTUALENV_ROOT/lib/python2
-.7/site-packages/
+# copy global open-cv to virtual env, pip open-cv version doesnt work
+# https://medium.com/@manuganji/installation-of-opencv-numpy-scipy-inside-a-virtualenv-bf4d82220313
+sudo cp /usr/lib/pymodules/python2.7/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
 
 
 
