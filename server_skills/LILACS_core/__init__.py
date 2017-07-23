@@ -441,14 +441,18 @@ class LilacsCoreSkill(MycroftSkill):
                 self.log.info("no " + r + " in wordnik")
         return w_dict
 
-    def handle_think_about(self, node, related=[]):
-
+    def handle_think_about(self, node, related=None):
+        if related is None:
+            related = []
         # talk until no more related subjects
         # say what
         talked = self.handle_what_intent(node)
         if not talked:
             # no what ask wolfram
             talked = self.handle_unknown_intent(node)
+        else:
+            # save updated data, only start node will be saved otherwise
+            self.connector.save_concept(node)
 
 
         # check wordnik backend for more related nodes
