@@ -33,3 +33,6 @@ sudo apt-get install -y \
     libxml2-dev \
     libxslt1-dev \
 
+# copy geckodriver to usr/bin for browser service
+TOP=$(cd $(dirname $0) && pwd -L)
+cp ${TOP}/geckodriver /usr/bin

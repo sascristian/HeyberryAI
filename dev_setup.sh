@@ -29,7 +29,7 @@ set -Ee
 
 if [ $(id -u) -eq 0 ]; then
   echo "This script should not be run as root or with sudo."
-  #exit 1
+  exit 1
 fi
 
 TOP=$(cd $(dirname $0) && pwd -L)
@@ -74,6 +74,5 @@ echo "WARNING: The following can take a long time to run!"
 # install pygtk for desktop_launcher skill
 ${TOP}/scripts/install-pygtk.sh
 
-# copy geckodriver to usr/bin for browser service
-cp ${TOP}/geckodriver /usr/bin
+
 
