@@ -35,4 +35,4 @@ sudo apt-get install -y \
 
 # copy geckodriver to usr/bin for browser service
 TOP=$(cd $(dirname $0) && pwd -L)
-cp ${TOP}/geckodriver /usr/bin
+sudo cp ${TOP}/geckodriver /usr/bin
