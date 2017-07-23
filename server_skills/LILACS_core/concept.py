@@ -277,18 +277,23 @@ class ConceptConnector():
         self.emitter.on("new_node", self.new_node)
         self.storage = LILACSstorageService(self.emitter)
         self.saved = []
+        self.curiosity_save = False
+        self.curiosity_load = False
 
     def new_node(self, message):
-        # create node signaled from outside
-        self.logger.info("Loading into memory externally signaled node from " +
-        message.context.get("source", "unknown source"))
         node_name = message.data["name"]
         node_dict = message.data
-        self.create_concept(new_concept_name=node_name)
-        self.concepts[node_name].load_from_dict(node_dict)
-        self.logger.info("Node loaded: " + node_name)
-        # TODO if configured gather additional node info from knowledge service?
-        # TODO update node in storage
+        save = message.data.get("save", self.curiosity_save)
+        load = message.data.get("load", self.curiosity_load)
+        # create node signaled from outside
+        if load:
+            self.logger.info("Loading into memory externally signaled node from " + message.context.get("source", "unknown source"))
+            self.create_concept(new_concept_name=node_name)
+            self.concepts[node_name].load_from_dict(node_dict)
+            self.logger.info("Node loaded: " + node_name)
+            if save:
+                self.logger.info("Updating storage")
+                self.save_concept(node_name)
 
     def get_concept_names(self):
         concepts = []
