@@ -51,6 +51,14 @@ cd ${TOP}
 easy_install pip #==7.1.2 # force version of pip
 pip install --upgrade virtualenv
 
+# copy global open-cv to virtual env, pip open-cv version doesnt work
+# https://medium.com/@manuganji/installation-of-opencv-numpy-scipy-inside-a-virtualenv-bf4d82220313
+sudo cp /usr/lib/pymodules/python2.7/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
+
+# tensorflow from binary
+pip2 install --upgrade https://storage.googleapis
+.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp34-cp34m-linux_x86_64.whl
+
 # install requirements (except pocketsphinx)
 pip2 install -r requirements.txt
 
@@ -75,9 +83,6 @@ echo "WARNING: The following can take a long time to run!"
 # install pygtk for desktop_launcher skill
 ${TOP}/scripts/install-pygtk.sh
 
-# copy global open-cv to virtual env, pip open-cv version doesnt work
-# https://medium.com/@manuganji/installation-of-opencv-numpy-scipy-inside-a-virtualenv-bf4d82220313
-sudo cp /usr/lib/pymodules/python2.7/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
 
 
 
