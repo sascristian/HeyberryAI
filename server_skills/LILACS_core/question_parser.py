@@ -94,7 +94,7 @@ class LILACSQuestionParser():
         # aproximate guess from regex
         if target_node == "":
             verb = parse.get("QuestionVerb", "")
-            verbs = ["is","are","was","were", "of"]
+            verbs = ["is","are","was","were", "of", "will", "the"]
             if verb in verbs:
                 verb = ""
             target_node = parse.get("Query2", verb)
@@ -102,6 +102,8 @@ class LILACSQuestionParser():
             center_node = parse.get("Query1", parse.get("Query", ""))
             center_node = center_node.replace(" is the ", "")
             center_node = center_node.replace("is the ", "")
+            center_node = center_node.replace("is ", "")
+            center_node = center_node.replace("the ", "")
             center_node = center_node.replace(" is ", "")
             center_node = center_node.replace(" the ", "")
             center_node = center_node.replace(" a ", "")
@@ -182,5 +184,3 @@ def test_qp(questions = ["what is war", "how to kill animals ( a cow ) and make 
         print "relevant_nodes: " + str(midle)
         print "synonims: " + str(synonims)
         print "parse: " + str(parse)
-
-#test_qp()
