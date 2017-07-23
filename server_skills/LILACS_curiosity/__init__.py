@@ -51,7 +51,7 @@ class LILACSCuriositySkill(MycroftSkill):
         self.service = KnowledgeService(self.emitter)
         self.build_intents()
 
-        timer_thread = Timer(60, target=self.make_active)
+        timer_thread = Timer(60, self.make_active)
         timer_thread.setDaemon(True)
         timer_thread.start()
 
