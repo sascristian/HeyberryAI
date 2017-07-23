@@ -159,8 +159,8 @@ class IntentService(object):
                 # intent stops conversing whether its being used or not
                 self.add_active_skill(skill[0])
                 return
-                # no skill wants to handle utterance, proceed
 
+        # no skill wants to handle utterance, proceed
         best_intent = None
         for utterance in utterances:
             try:
