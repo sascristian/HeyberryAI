@@ -226,12 +226,9 @@ class LilacsCoreSkill(MycroftSkill):
             self.speak("related: " + str(midle))
 
         # update nodes in connector
-        nodes = []
-        nodes.append(center_node)
-        nodes.append(target_node)
+        nodes = [center_node, target_node]
         for node in midle:
             nodes.append(node)
-
         # load all nodes from memory
         total_nodes = nodes
         for node in parents:
