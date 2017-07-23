@@ -41,7 +41,7 @@ class LILACSWikidataSkill(MycroftSkill):
     def handle_ask_wikidata(self, message):
         node = message.data.get("Subject")
         result = self.adquire(node)
-        self.speak(str(result))
+        #self.speak(str(result))
         self.emitter.emit(Message("wikidata.result", result, self.context))
 
     def adquire(self, subject):
