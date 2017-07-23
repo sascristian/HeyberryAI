@@ -114,8 +114,8 @@ class LILACSCuriositySkill(MycroftSkill):
             connections["antonims"] = {}
             node_dict["connections"] = connections
             node_dict["data"] = {}
-
-            self.emitter.emit(Message("new_node", node_dict))
+            self.context["source"] = "LILACS_curiosity"
+            self.emitter.emit(Message("new_node", node_dict, self.context))
         for node in parents:
             node_dict = {}
             node_dict["name"] = node

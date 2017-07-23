@@ -280,10 +280,13 @@ class ConceptConnector():
 
     def new_node(self, message):
         # create node signaled from outside
+        self.logger.info("Loading externally signaled node from " +
+        message.context.get("source", "unknown source"))
         node_name = message.data["node"]
         node_dict = message.data
         self.create_concept(new_concept_name=node_name)
         self.concepts[node_name].load_from_dict(node_dict)
+        self.logger.info("Node loaded: " + node_name)
         # TODO if configured gather additional node info from knowledge service?
         # TODO update node in storage
 
