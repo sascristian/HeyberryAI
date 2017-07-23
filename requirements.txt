@@ -54,3 +54,5 @@ python-Levenshtein
 imutils
 Pillow
 imgurpython
+scipy
+tweepy
