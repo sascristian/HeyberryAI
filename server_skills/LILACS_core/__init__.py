@@ -236,7 +236,7 @@ class LilacsCoreSkill(MycroftSkill):
         for node in parents:
             total_nodes.extend(parents[node])
         for node in synonims:
-            total_nodes.extend(synonims[node])
+            total_nodes.append(synonims[node])
 
         for node in total_nodes:
             if node not in self.connector.get_concept_names():
