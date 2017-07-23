@@ -500,7 +500,7 @@ class ConceptConnector():
             self.logger.info("no node to save")
             return
         self.logger.info("saving: " + name)
-
+        self.saved.append(name)
         if name not in self.concepts.keys():
             self.logger.error("Can not save this node because it doesnt exist in memory yet")
             return

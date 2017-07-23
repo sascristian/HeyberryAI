@@ -39,6 +39,10 @@ class ConceptCrawler():
     def update_connector(self, connector):
         self.logger.info("Updating crawler connector")
         self.concept_db = connector
+        for node in self.concept_db.get_concept_names():
+            if node not in self.concept_db.saved:
+                self.logger.info("saving updated node: " + node)
+                self.concept_db.save_concept(node)
 
     def find_all_paths(self, center_node, target_node, path=[], direction="parents"):
         # TODO give a depth parameter, there may be "infinite" nodes and make this super slow
@@ -113,27 +117,9 @@ class ConceptCrawler():
         if node is None:
             return node
 
-        # TODO load node and all its connected nodes from storage
-        #total_nodes = [node]
-        #concept = self.concept_db.concepts.get(node)
-        #if concept:
-        #    connections = concept.connections
-        #    for connection in connections:
-        #        self.logger.info("checking connection: " + connection)
-        #        nodes = connections[connection]
-        #        for node in nodes:
-        #            self.logger.info("relevant node to load: " + node)
-        #            if node not in total_nodes:
-        #               total_nodes.append(node)
-        #for node in total_nodes:
-        #    if node not in self.concept_db.concepts.keys():
-        #        self.logger.info("loading node: " + node)
-        #        self.concept_db.load_concept(node)
-
+        # TODO load node and all its connected nodes from storag
         # TODO if node not loaded ask knowledge service for node info
         # TODO send update nodes to storage
-
-
 
         # keep count of visits to this node
         if node in self.visits:

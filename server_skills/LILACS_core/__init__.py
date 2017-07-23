@@ -292,6 +292,7 @@ class LilacsCoreSkill(MycroftSkill):
         self.log.info("answered: " + str(self.answered))
         if self.debug:
             self.speak("answered: " + str(self.answered))
+        self.save_nodes(total_nodes)
 
 
     def handle_update_connector(self, nodes=None, parents=None, childs=None, synonims=None, antonims=None, data=None):
@@ -364,6 +365,7 @@ class LilacsCoreSkill(MycroftSkill):
         # update crawler
         self.save_nodes(total_nodes)
         self.crawler.update_connector(self.connector)
+        self.connector.saved = []
 
     def handle_learning(self, utterance):
         self.log.info("learning correct answer")
