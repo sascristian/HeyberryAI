@@ -2,9 +2,9 @@
 TOP=$(cd $(dirname $0) && pwd -L)
 
 if [ -z "$WORKON_HOME" ]; then
-    VIRTUALENV_ROOT=${VIRTUALENV_ROOT:-"${HOME}/.virtualenvs/mycroft"}
+    VIRTUALENV_ROOT=${VIRTUALENV_ROOT:-"${HOME}/.virtualenvs/jarbas"}
 else
-    VIRTUALENV_ROOT="$WORKON_HOME/mycroft"
+    VIRTUALENV_ROOT="$WORKON_HOME/jarbas"
 fi
 
 ${TOP}/scripts/prepare-msm.sh
