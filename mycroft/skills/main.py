@@ -41,6 +41,9 @@ logger = getLogger("Skills")
 
 __author__ = 'seanfitz'
 
+pairing = False
+msm = False
+
 ws = None
 loaded_skills = {}
 last_modified_skill = 0
@@ -89,16 +92,16 @@ def install_default_skills(speak=True):
 def skills_manager(message):
     global skills_manager_timer, ws
 
-    #if connected():
-    #    if skills_manager_timer is None:
-     #       pass
-            # ws.emit(
-            #     Message("speak", {'utterance':
-            #             mycroft.dialog.get("checking for updates")}))
+    if msm:
+        if connected():
+            if skills_manager_timer is None:
+                 ws.emit(
+                     Message("speak", {'utterance':
+                             mycroft.dialog.get("checking for updates")}))
 
-        # Install default skills and look for updates via Github
-        #logger.debug("==== Invoking Mycroft Skill Manager: " + MSM_BIN)
-        #install_default_skills(False)
+            # Install default skills and look for updates via Github
+            logger.debug("==== Invoking Mycroft Skill Manager: " + MSM_BIN)
+            install_default_skills(False)
 
     # Perform check again once and hour
     skills_manager_timer = Timer(3600, _skills_manager_dispatch)
@@ -117,9 +120,10 @@ def _load_skills():
     check_connection()
 
     # Create skill_manager listener and invoke the first time
-    #ws.on('skill_manager', skills_manager)
-    #ws.on('mycroft.internet.connected', install_default_skills)
-    #ws.emit(Message('skill_manager', {}))
+    if msm:
+        ws.on('skill_manager', skills_manager)
+        ws.on('mycroft.internet.connected', install_default_skills)
+        ws.emit(Message('skill_manager', {}))
 
     # Create the Intent manager, which converts utterances to intents
     # This is the heart of the voice invoked skill system
@@ -135,13 +139,15 @@ def check_connection():
     if connected():
         ws.emit(Message('mycroft.internet.connected'))
         # check for pairing, if not automatically start pairing
-        if not is_paired():
-            # begin the process
-            payload = {
-                'utterances': ["pair my device"],
-                'lang': "en-us"
-            }
-            ws.emit(Message("recognizer_loop:utterance", payload))
+        if pairing:
+            if not is_paired():
+                # begin the process
+                payload = {
+                    'utterances': ["pair my device"],
+                    'lang': "en-us"
+                }
+                ws.emit(Message("recognizer_loop:utterance", payload,
+                                {"source": "skills"}))
     else:
         thread = Timer(1, check_connection)
         thread.daemon = True
