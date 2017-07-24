@@ -36,6 +36,8 @@ sudo apt-get install -y \
     gfortran \
     libatlas-base-dev
 
-# copy geckodriver to usr/bin for browser service
-TOP=$(cd $(dirname $0) && pwd -L)
-sudo cp ${TOP}/geckodriver /usr/bin
+# get geckodriver to usr/bin for browser service
+wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
+tar -xvzf geckodriver*
+chmod +x geckodriver
+sudo mv geckodriver /usr/local/bin/
