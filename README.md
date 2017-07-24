@@ -54,7 +54,7 @@ Used for inter skill communication in image recognition, face recognition, objec
 
 [Markov Chain](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/markov.py) helper class, save and load functionality
 
-Example usage in [Poetry Skill]()
+Example usage in [Poetry Skill](https://github.com/JarbasAI/JarbasAI/tree/patch-15/jarbas_skills/skill_poetry)
 
 # Art util
 
