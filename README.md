@@ -118,6 +118,6 @@ client server basically connect jabas/mycroft instances, server can work as:
 Lots of skills pre-packaged
 
 [Browser Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/browser_service.md)
-[Objectives Service(https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/objectives.md)
+[Objectives Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/objectives.md)
 
 TODO finish this
