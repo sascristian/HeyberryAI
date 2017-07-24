@@ -32,11 +32,17 @@ Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to
             - no config update from mycroft.ai
             - added "intent.start", "intent.end", "intent.failed" messages
             - in skills/core.py SKILLS_DIR is now jarbas_skills folder instead of opt
-            - added IntentLayer class to intent_service.py
             - do not remove articles in normalize (too much normalization IMO)
 
             # temporary changes
             - no msm
+
+
+# Intent Layers
+
+[IntentLayers](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/intent_layer.md) class, allows to activate and deactivate intents grouped in layers
+
+Example usage in [KonamiCode Skill](https://github.com/JarbasAI/JarbasAI/tree/patch-15/jarbas_skills/skill_konami_code)
 
 # Services
 
@@ -47,6 +53,8 @@ Used for inter skill communication in image recognition, face recognition, objec
 # MarkovChain
 
 [Markov Chain](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/markov.py) helper class, save and load functionality
+
+Example usage in [Poetry Skill]()
 
 # Art util
 
