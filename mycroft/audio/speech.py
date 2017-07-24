@@ -45,6 +45,7 @@ def handle_speak(event):
     target = event.data.get("target", "all")
     if target != "speech" and target != "all":
         return
+
     # This is a bit of a hack for Picroft.  The analog audio on a Pi blocks
     # for 30 seconds fairly often, so we don't want to break on periods
     # (decreasing the chance of encountering the block).  But we will
@@ -86,27 +87,25 @@ def mute_and_speak(utterance):
             utterance: The sentence to be spoken
     """
     global tts_hash
-    global tts
     global disable_speak_flag
 
     lock.acquire()
     # update TTS object if configuration has changed
     if tts_hash != hash(str(config.get('tts', ''))):
+        global tts
+        # Stop tts playback thread
+        tts.playback.stop()
+        tts.playback.join()
+        # Create new tts instance
         tts = TTSFactory.create()
         tts.init(ws)
         tts_hash = hash(str(config.get('tts', '')))
 
-    ws.emit(Message("mycroft.audio.speech.start"))
+    logger.info("Speak: " + utterance)
     try:
-        logger.info("Speak: " + utterance)
-        ws.emit(Message("mycroft.mic.mute"))
-
-        if not disable_speak_flag:
-            tts.execute(utterance)
+        tts.execute(utterance)
     finally:
-        ws.emit(Message("mycroft.mic.unmute"))
         lock.release()
-        ws.emit(Message("mycroft.audio.speech.end"))
 
 
 def handle_stop(event):

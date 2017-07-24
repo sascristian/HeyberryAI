@@ -259,20 +259,17 @@ def handle_speak(event):
     global chat
     mutex.acquire()
     if event.context.target == "cli" or event.context.target == "all" :
-        try:
-            utterance = event.data.get('utterance')
-            if bSimple:
-                print(">> " + utterance)
-            else:
-                chat.append(">> " + utterance)
-            draw_screen()
-        finally:
-            mutex.release()
+        utterance = event.data.get('utterance')
+        if bSimple:
+            print(">> " + utterance)
+        else:
+            chat.append(">> " + utterance)
+        draw_screen()
+
 
 
 def handle_speak(event):
     global chat
-    global tts_threads
     global disable_speak_flag
     target = event.data.get("target", "all")
     mute = event.data.get("mute", False)
@@ -284,10 +281,6 @@ def handle_speak(event):
     else:
         chat.append(">> " + utterance)
     draw_screen()
-    if not bQuiet and not mute and not disable_speak_flag:
-        t = Thread(start_tts, utterance)
-        t.start()
-        tts_threads.append(t)
 
 
 def connect():

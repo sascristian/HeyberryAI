@@ -170,8 +170,8 @@ def load_services_callback():
     ws.on('mycroft.audio.service.next', _next)
     ws.on('mycroft.audio.service.prev', _prev)
     ws.on('mycroft.audio.service.track_info', _track_info)
-    ws.on('mycroft.audio.speech.start', _lower_volume)
-    ws.on('mycroft.audio.speech.end', _restore_volume)
+    ws.on('recognizer_loop:audio_output_start', _lower_volume)
+    ws.on('recognizer_loop:audio_output_end', _restore_volume)
     ws.on('mycroft.stop', _stop)
 
 

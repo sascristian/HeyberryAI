@@ -16,10 +16,9 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import re
+import time
 import sys
 from threading import Thread, Lock
-import time
 
 from mycroft.client.enclosure.api import EnclosureAPI
 from mycroft.client.speech.listener import RecognizerLoop
@@ -27,8 +26,6 @@ from mycroft.configuration import ConfigurationManager
 from mycroft.identity import IdentityManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
-from mycroft.tts import TTSFactory
-from mycroft.util import kill, create_signal, check_for_signal, stop_speaking
 from mycroft.util.log import getLogger
 from mycroft.lock import Lock as PIDLock  # Create/Support PID locking file
 
@@ -38,8 +35,6 @@ lock = Lock()
 loop = None
 
 config = ConfigurationManager.get()
-
-disable_speak_flag = False
 
 
 def handle_record_begin():
@@ -68,20 +63,12 @@ def handle_utterance(event):
     ws.emit(Message('recognizer_loop:utterance', event))
 
 
-def set_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = True
-
-
-def unset_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = False
-
-
 def handle_multi_utterance_intent_failure(event):
     logger.info("Failed to find intent on multiple intents.")
     # TODO: Localize
-    ws.emit(Message('speak', {"utterance": "Sorry, I didn't catch that. Please rephrase your request."}))
+    data = {'utterance':
+            "Sorry, I didn't catch that. Please rephrase your request."}
+    ws.emit(Message('speak', data))
 
 
 def handle_sleep(event):
@@ -105,11 +92,19 @@ def handle_mic_unmute(event):
 def handle_stop(event):
     global _last_stop_signal
     _last_stop_signal = time.time()
-    stop_speaking()
 
 
 def handle_paired(event):
     IdentityManager.update(event.data)
+
+
+def handle_audio_start(event):
+    if not loop.is_muted():
+        loop.mute()  # only mute if necessary
+
+
+def handle_audio_end(event):
+    loop.unmute()  # restore
 
 
 def handle_open():
@@ -145,8 +140,8 @@ def main():
     ws.on('mycroft.mic.mute', handle_mic_mute)
     ws.on('mycroft.mic.unmute', handle_mic_unmute)
     ws.on("mycroft.paired", handle_paired)
-    ws.on('do_not_speak_flag_enable', set_speak_flag)
-    ws.on('do_not_speak_flag_disable', unset_speak_flag)
+    ws.on('recognizer_loop:audio_output_start', handle_audio_start)
+    ws.on('recognizer_loop:audio_output_end', handle_audio_end)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
@@ -155,7 +150,6 @@ def main():
         loop.run()
     except KeyboardInterrupt, e:
         logger.exception(e)
-        event_thread.exit()
         sys.exit()
 
 
