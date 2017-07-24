@@ -38,6 +38,10 @@ Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to
             - no msm
 
 
+# Forslund audio service
+
+Audio playback is now handled by forslund's [audio service](https://github.com/forslund/mycroft-core/tree/audio-service)
+
 # Intent Layers
 
 [IntentLayers](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/intent_layer.md) class, allows to activate and deactivate intents grouped in layers
