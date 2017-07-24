@@ -40,6 +40,19 @@ else
     VIRTUALENV_ROOT="$WORKON_HOME/jarbas"
 fi
 
+# skip mimic build?
+if [[ "$1" == '-sm' ]] ; then
+  build_mimic='n'
+fi
+
+if [[ "$1" != '-sm' ]] && hash mimic ; then
+  if mimic -lv | grep -q Voice ; then
+    echo "Existing mimic installation. press y to build mimic again, any other key to skip."
+    read -n1 build_mimic
+  fi
+fi
+
+
 # create virtualenv, consistent with virtualenv-wrapper conventions
 if [ ! -d ${VIRTUALENV_ROOT} ]; then
    mkdir -p $(dirname ${VIRTUALENV_ROOT})
@@ -56,15 +69,15 @@ pip install --upgrade virtualenv
 sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
 
 # tensorflow from binary
-pip2 install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
+pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
 
 # install other requirements
-pip2 install -r requirements.txt
+pip install -r requirements.txt
 
 
 if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
   CORES=1
-else
+else 
   CORES=$(nproc)
 fi
 
@@ -76,12 +89,14 @@ echo "Building with $CORES cores."
 
 #build and install mimic
 cd "${TOP}"
-echo "WARNING: The following can take a long time to run!"
-"${TOP}/scripts/install-mimic.sh"
+
+build_mimic="${build_mimic:-y}"
+if [[ "$build_mimic" == 'y' ]] ; then
+  echo "WARNING: The following can take a long time to run!"
+  "${TOP}/scripts/install-mimic.sh"
+else
+  echo "Skipping mimic build."
+fi
 
 # install pygtk for desktop_launcher skill
-${TOP}/scripts/install-pygtk.sh
-
-
-
-
+"${TOP}/scripts/install-pygtk.sh"

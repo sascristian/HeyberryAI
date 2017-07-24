@@ -15,20 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
+from abc import ABCMeta, abstractmethod
 
-import sys
-from mycroft.client.enclosure import Enclosure
-
-
-def main():
-    enclosure = Enclosure()
-    try:
-        enclosure.run()
-    except Exception as e:
-        print(e)
-    finally:
-        sys.exit()
+__author__ = 'seanfitz, jdorleans'
 
 
-if __name__ == "__main__":
-    main()
+class LocalRecognizer(object):
+    __metaclass__ = ABCMeta
+
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def found_wake_word(self, frame_data):
+        """Tests whether the wake word exists in the raw audio data"""
+        pass
