@@ -57,3 +57,7 @@ imgurpython
 scipy
 tweepy
 python-dateutil==2.6.0
+autobahn
+twisted
+python-gnupg
+pycrypto

@@ -34,7 +34,8 @@ sudo apt-get install -y \
     libxslt1-dev \
     build-essential \
     gfortran \
-    libatlas-base-dev
+    libatlas-base-dev \
+    gnupg
 
 # get geckodriver to usr/bin for browser service
 wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
