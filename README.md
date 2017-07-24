@@ -60,6 +60,8 @@ Example usage in [Poetry Skill](https://github.com/JarbasAI/JarbasAI/tree/patch-
 
 Generate random [pictures utility](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/art.py) based on [this blog post](https://jeremykun.com/2012/01/01/random-psychedelic-art/)
 
+Example usage in [Art Skill](https://github.com/JarbasAI/JarbasAI/tree/patch-15/jarbas_skills/skill_art)
+
 # [PR#925](https://github.com/MycroftAI/mycroft-core/pull/925)
 
 [Converse method](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/Converse.md), allow skills to handle utterances instead of intent service
