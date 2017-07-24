@@ -7,6 +7,12 @@ This branch is a work in progress, all jarbas changes are being merged one by on
 
 Check the jarbas_docs folder for more info on each change as it is added
 
+This should install in a virtual env same as mycroft, not everything will work out of the box
+
+- no google stt
+- no shared api keys (twitter/facebook/weather/wolfram...)
+- No intent_failure handling unless connected to a [server](https://github.com/JarbasAI/JarbasAI/tree/patch-13)
+- some skills not fully functional  / added yet
 
 # Want to help me work on mycroft full time?
 
@@ -32,25 +38,25 @@ Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to
             # temporary changes
             - no msm
 
-- Services
+# Services
 
 [Backend Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/service.md), A helper class to emit and wait for bus messages was added, needed in several skills
 
-Used for image recognition, face recognition, object recognition, deep dream, style transfer, vision, user manager...
+Used for inter skill communication in image recognition, face recognition, object recognition, deep dream, style transfer, vision, user manager...
 
-- MarkovChain
+# MarkovChain
 
 [Markov Chain](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/markov.py) helper class, save and load functionality
 
-- Art util
+# Art util
 
 Generate random [pictures utility](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/art.py) based on [this blog post](https://jeremykun.com/2012/01/01/random-psychedelic-art/)
 
-- [PR#925](https://github.com/MycroftAI/mycroft-core/pull/925)
+# [PR#925](https://github.com/MycroftAI/mycroft-core/pull/925)
 
 [Converse method](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/Converse.md), allow skills to handle utterances instead of intent service
 
-- [PR#859](https://github.com/MycroftAI/mycroft-core/pull/859)
+# [PR#859](https://github.com/MycroftAI/mycroft-core/pull/859)
 
  [IntentParser](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/Intent_parse.md) class
 
@@ -59,27 +65,27 @@ Generate random [pictures utility](https://github.com/JarbasAI/JarbasAI/blob/pat
             - skill from intent
             - skill from utterance
 
-- [PR#858](https://github.com/MycroftAI/mycroft-core/pull/858)
+# [PR#858](https://github.com/MycroftAI/mycroft-core/pull/858)
 
 [priority skills](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/Priority_skills.md) list
 
             - priority skills are loaded first
             - read from config
 
-- [PR#860](https://github.com/MycroftAI/mycroft-core/pull/860)
+# [PR#860](https://github.com/MycroftAI/mycroft-core/pull/860)
 
 needed for [intent_layers](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/intent_layer.md)
 
             - enable / disable intent can be requested in messagebus
 
-- [PR#783](https://github.com/MycroftAI/mycroft-core/pull/783)
+# [PR#783](https://github.com/MycroftAI/mycroft-core/pull/783)
 
 control skills externally, allow run-levels, [external skill load and reload](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/external_reload_shutdown.md))
 
             - skills have internal id, internal id used instead of name in intent messages
             - skills main now listens for external messages for skill_manifest, skill_shutdown and skill_reload
 
-- [PR#790](https://github.com/MycroftAI/mycroft-core/pull/790)
+# [PR#790](https://github.com/MycroftAI/mycroft-core/pull/790)
 
 [target bus messages](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/speech_target.md)
 
@@ -95,7 +101,7 @@ control skills externally, allow run-levels, [external skill load and reload](ht
                 - destinatary = used to track remote_client to send message to
                 - source = source of message, default = source skill / source client
 
-- [PR#556](https://github.com/MycroftAI/mycroft-core/pull/556)
+# [PR#556](https://github.com/MycroftAI/mycroft-core/pull/556)
 
 [stop speak messages](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/mute_unmute.md)
 
@@ -103,7 +109,7 @@ control skills externally, allow run-levels, [external skill load and reload](ht
             - this flag is a global mute switch, if set no tts is ever made
             - skill to mute/unmute not yet merged
 
-- Server/Client
+# Server/Client
 
 [jarbas networking](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/Server_Client.md)
 
@@ -123,11 +129,12 @@ client server basically connect jabas/mycroft instances, server can work as:
             - relay
             - ...
 
-- Essential Skills
+# Essential Skills
 
 Lots of skills pre-packaged
 
 [Browser Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/browser_service.md)
+
 [Objectives Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/objectives.md)
 
 TODO finish this
