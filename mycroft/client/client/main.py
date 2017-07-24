@@ -316,7 +316,7 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
 if __name__ == '__main__':
 
     log.startLogging(sys.stdout)
-    host = "174.59.239.227"
+    host = "192.168.15.19"
     port = 5678
     adress = u"ws://" + host + u":" + str(port)
     factory = MyClientFactory(adress)
