@@ -26,15 +26,25 @@ Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to
             - no config update from mycroft.ai
             - added "intent.start", "intent.end", "intent.failed" messages
             - in skills/core.py SKILLS_DIR is now jarbas_skills folder instead of opt
-            - skills now have a "make_active" method that puts them on active skill list inside intent_service
-            - added [IntentLayer](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/intent_layer.md) class to intent_service.py
+            - added IntentLayer class to intent_service.py
             - do not remove articles in normalize (too much normalization IMO)
-            - added [MarkovChain util](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/markov.py)
-            - added [art](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/art.py) [util](https://jeremykun.com/2012/01/01/random-psychedelic-art/)
-            - added [BackendService](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/jarbas_services.py) abstract class and a bunch of [services](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/service.md)using it
 
             # temporary changes
             - no msm
+
+- Services
+
+[Backend Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/service.md), A helper class to emit and wait for bus messages was added, needed in several skills
+
+Used for image recognition, face recognition, object recognition, deep dream, style transfer, vision, user manager...
+
+- MarkovChain
+
+[Markov Chain](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/markov.py) helper class, save and load functionality
+
+- Art util
+
+Generate random [pictures utility](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/util/art.py) based on [this blog post](https://jeremykun.com/2012/01/01/random-psychedelic-art/)
 
 - [PR#925](https://github.com/MycroftAI/mycroft-core/pull/925)
 
