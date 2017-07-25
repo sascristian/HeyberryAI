@@ -23,6 +23,8 @@ from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 from mycroft.client.client.pgp import get_own_keys, encrypt_string, decrypt_string, generate_client_key, export_key, import_key_from_ascii
 
+# ask server if no intent start or failure detected in 20 seconds
+assume_failure = False
 
 # logs
 NAME = "Jarbas_Client"
@@ -256,6 +258,8 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
         # ask server
         if not self.detected:
             logger.debug("No intent failure or execution detected for 20 seconds")
+            if assume_failure:
+                self.ask = True
         if self.ask:
             logger.debug("Asking server for answer")
             if self.client is None or self.status != "connected":
@@ -299,7 +303,7 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
         elapsed = 0
         logger.debug("Waiting for intent handling before asking server")
         self.waiting = True
-        self.ask = True
+        self.ask = False
         self.detected = False
         # wait maximum 20 seconds
         while self.waiting and elapsed < 20:
