@@ -27,6 +27,8 @@ from requests.exceptions import ConnectionError
 
 import mycroft.dialog
 from mycroft.client.speech.mic import MutableMicrophone, ResponsiveRecognizer
+from mycroft.client.speech.pocketsphinx_audio_consumer \
+    import PocketsphinxAudioConsumer
 from mycroft.client.speech.recognizer.pocketsphinx_recognizer \
     import PocketsphinxRecognizer
 from mycroft.configuration import ConfigurationManager
@@ -117,7 +119,11 @@ class AudioConsumer(Thread):
 
     # TODO: Localization
     def wake_up(self, audio):
-        if self.wakeup_recognizer.found_wake_word(audio.frame_data):
+        try:
+            flag = self.wakeup_recognizer.is_recognized(audio.frame_data,
+        except:
+            flag = self.wakeup_recognizer.found_wake_word(audio.frame_data):
+        if flag:
             SessionManager.touch()
             self.state.sleeping = False
             self.__speak(mycroft.dialog.get("i am awake", self.stt.lang))
@@ -201,19 +207,17 @@ class RecognizerLoop(EventEmitter):
         """
         config = ConfigurationManager.get()
         self._config_hash = hash(str(config))
-        lang = config.get('lang')
+        self.lang = config.get('lang')
         self.config = config.get('listener')
-        rate = self.config.get('sample_rate')
+        self.rate = self.config.get('sample_rate')
         device_index = self.config.get('device_index')
 
-        self.microphone = MutableMicrophone(device_index, rate)
+        self.microphone = MutableMicrophone(device_index, self.rate)
         # FIXME - channels are not been used
         self.microphone.CHANNELS = self.config.get('channels')
-        self.mycroft_recognizer = self.create_mycroft_recognizer(rate, lang)
-        # TODO - localization
-        self.wakeup_recognizer = self.create_wakeup_recognizer(rate, lang)
-        self.remote_recognizer = ResponsiveRecognizer(self.mycroft_recognizer)
+
         self.state = RecognizerLoopState()
+        self.audio_consumer = None
 
     def create_mycroft_recognizer(self, rate, lang):
         # Create a local recognizer to hear the wakeup word, e.g. 'Hey Mycroft'
@@ -221,7 +225,7 @@ class RecognizerLoop(EventEmitter):
         phonemes = self.config.get('phonemes')
         threshold = self.config.get('threshold')
         return PocketsphinxRecognizer(wake_word, phonemes,
-                                      threshold, rate, lang)
+                                      threshold, self.rate, self.lang)
 
     def create_wakeup_recognizer(self, rate, lang):
         wake_word = self.config.get('standup_word', "wake up").lower()
@@ -236,13 +240,30 @@ class RecognizerLoop(EventEmitter):
         """
         self.state.running = True
         queue = Queue()
-        self.producer = AudioProducer(self.state, queue, self.microphone,
-                                      self.remote_recognizer, self)
-        self.producer.start()
-        self.consumer = AudioConsumer(self.state, queue, self,
-                                      STTFactory.create(),
-                                      self.wakeup_recognizer,
-                                      self.mycroft_recognizer)
+
+        if self.config.get("producer", None) == "pocketsphinx":
+            self.consumer = PocketsphinxAudioConsumer(
+                self.config, self.lang, self.state,
+                self, self.microphone)
+
+        else:
+            self.mycroft_recognizer = self.create_mycroft_recognizer(
+                                                self.rate, self.lang)
+            # TODO - localization
+            self.wakeup_recognizer = self.create_wakeup_recognizer(
+                                                self.rate, self.lang)
+            self.remote_recognizer = ResponsiveRecognizer(
+                                                self.mycroft_recognizer)
+
+
+            self.producer = AudioProducer(self.state, queue, self.microphone,
+                          self.remote_recognizer, self)\
+            self.producer.start()
+
+            self.consumer = AudioConsumer(self.state, queue, self,
+                                    STTFactory.create(),
+                          self.wakeup_recognizer,
+                          self.mycroft_recognizer)\
         self.consumer.start()
 
     def stop(self):

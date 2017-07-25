@@ -129,7 +129,7 @@ class AchievementsSkill(MycroftSkill):
 
         # allow achievements to specify a handler to determine if it was meet
         condition = True
-        if self.handlers[name]:
+        if self.handlers.get(name):
             condition = self.handlers[name]()
         if not condition:
             return
