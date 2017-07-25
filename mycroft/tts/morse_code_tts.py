@@ -51,7 +51,7 @@ class MorseCode(TTS):
             if char == ' ':
                 time.sleep(5 * self.time_step)
             else:
-                morse_sound_path = self.morse_sound_path + char.upper() + '_morse_code.ogg'
+                morse_sound_path = self.morse_sound_path + "/" + char.upper() + '_morse_code.ogg'
                 self.process = play_wav(morse_sound_path)
                 time.sleep(2 * self.time_step) # ~sound duration
 

@@ -68,13 +68,14 @@ class PocketsphinxAudioConsumer(Thread):
 
         self.metrics = MetricsAggregator()
 
-        model_lang_dir = join(BASEDIR, 'model', str(self.lang))
+        model_lang_dir = join(BASEDIR, 'recognizer/model', str(self.lang))
         self.decoder = Decoder(self.create_decoder_config(model_lang_dir))
+        self.wake_word = "computer"
         self.decoder.set_keyphrase('wake_word', self.wake_word)
-        jsgf = join(model_lang_dir, 'es.jsgf')
+        jsgf = join(model_lang_dir, 'en.jsgf')
         if exists(jsgf):
             self.decoder.set_jsgf_file('jsgf', jsgf)
-        lm = join(model_lang_dir, 'es.lm')
+        lm = join(model_lang_dir, 'en.lm')
         if exists(lm):
             self.decoder.set_lm_file('lm', lm)
 
@@ -170,10 +171,10 @@ class PocketsphinxAudioConsumer(Thread):
     def create_decoder_config(self, model_lang_dir):
         decoder_config = Decoder.default_config()
         hmm_dir = join(model_lang_dir, 'hmm')
-        decoder_config.set_string('-hmm', join(model_lang_dir, hmm_dir))
-        decoder_config.set_string('-dict', join(model_lang_dir, 'es.dict'))
+        decoder_config.set_string('-hmm', hmm_dir)
+        decoder_config.set_string('-dict', join(hmm_dir, 'cmudict.dict'))
         decoder_config.set_float('-samprate', self.source.SAMPLE_RATE)
-        decoder_config.set_string('-logfn', 'scripts/logs/decoder.log')
+        #decoder_config.set_string('-logfn', 'scripts/logs/decoder.log')
         return decoder_config
 
     def record_sound_chunk(self):
