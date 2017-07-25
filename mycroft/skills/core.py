@@ -19,7 +19,7 @@
 import abc
 import imp
 import time
-
+import operator
 import os.path
 import re
 import time
@@ -305,7 +305,7 @@ class MycroftSkill(object):
                 else:
                     handler(message)
             except Exception as e:
-                self.emitter.emit(Message("executing.intent.start",
+                self.emitter.emit(Message("intent.execution.start",
                                           {"status": "start", "intent": name}))
                 handler(message)
                 # TODO: Localize
@@ -315,9 +315,11 @@ class MycroftSkill(object):
                 logger.error(
                     "An error occurred while processing a request in " +
                     self.name, exc_info=True)
-                self.emitter.emit(Message("executing.intent.error", {"status": "failed", "intent": name, "exception": str(e)}))
+                self.emitter.emit(Message("intent.execution.error",
+                                          {"status": "failed", "intent": name, "exception": str(e)}))
                 return
-            self.emitter.emit(Message("executing.intent.end", {"status": "executed", "intent": name}))
+            self.emitter.emit(Message("intent.execution.end",
+                                      {"status": "executed", "intent": name}))
 
         if handler:
             self.emitter.on(intent_parser.name, self.handle_update_context)
@@ -455,3 +457,50 @@ class MycroftSkill(object):
         self.emitter.emit(
             Message("detach_skill", {"skill_id": str(self.skill_id) + ":"}))
         self.stop()
+
+
+class FallbackSkill(MycroftSkill):
+    fallback_handlers = {}
+
+    def __init__(self, name, emitter=None):
+        MycroftSkill.__init__(self, name, emitter)
+
+    @classmethod
+    def make_intent_failure_handler(cls, ws):
+        """Goes through all fallback handlers until one returns true"""
+
+        def handler(message):
+            for _, handler in sorted(cls.fallback_handlers.items(),
+                                     key=operator.itemgetter(0)):
+                try:
+                    if handler(message):
+                        return
+                except Exception as e:
+                    logger.info('Exception in fallback: ' + str(e))
+            ws.emit(Message('complete_intent_failure'))
+            logger.warn('No fallback could handle intent.')
+
+        return handler
+
+    @classmethod
+    def register_fallback(cls, handler, priority):
+        """
+        Register a function to be called as a general info fallback
+        Fallback should receive message and return
+        a boolean (True if succeeded or False if failed)
+
+        Lower priority gets run first
+        0 for high priority 100 for low priority
+        """
+        while priority in cls.fallback_handlers:
+            priority += 1
+
+        cls.fallback_handlers[priority] = handler
+
+    @classmethod
+    def remove_fallback(cls, handler_to_del):
+        for priority, handler in cls.fallback_handlers.items():
+            if handler == handler_to_del:
+                del cls.fallback_handlers[priority]
+                return
+        logger.warn('Could not remove fallback!')

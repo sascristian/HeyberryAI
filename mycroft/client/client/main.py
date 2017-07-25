@@ -36,12 +36,15 @@ class MyClientProtocol(WebSocketClientProtocol):
 
     def onConnect(self, response):
         logger.info("Server connected: {0}".format(response.peer))
+        self.factory.emitter.emit(Message("server.connected"))
 
     def onOpen(self):
         logger.info("WebSocket connection open. Waiting server pgp key")
+        self.factory.emitter.emit(Message("server.websocket.open"))
 
     def onMessage(self, payload, isBinary):
         logger.info("status: " + self.factory.status)
+        self.factory.emitter.emit(Message("server.message.received"))
         if isBinary:
             # all encrypted data is Binary AES
             logger.info("Binary message received: {0} bytes".format(len(payload)))
@@ -113,6 +116,7 @@ class MyClientProtocol(WebSocketClientProtocol):
 
     def onClose(self, wasClean, code, reason):
         logger.info("WebSocket connection closed: {0}".format(reason))
+        self.factory.emitter.emit(Message("server.connection.closed"))
 
     def Message_to_raw_data(self, message):
         if hasattr(message, 'serialize'):
@@ -186,9 +190,10 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
     def register_internal_messages(self):
         self.emitter.on('speak', self.handle_speak)
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
-        self.emitter.on('intent_failure', self.handle_intent_failure)
+        self.emitter.on('server.intent_failure', self.handle_intent_failure)
         self.emitter.on("server_request", self.handle_server_request)
         self.emitter.on('message', self.end_wait)
+        self.emitter.on('intent.execution.start', self.end_wait)
 
     # websocket handlers
     def clientConnectionFailed(self, connector, reason):
@@ -280,6 +285,7 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
         cipher = AES.new(self.aes_key, AES.MODE_CFB, self.aes_iv)
         msg = self.aes_iv + cipher.encrypt(msg)
         self.client.sendMessage(msg, isBinary=True)
+        self.emitter.emit(Message("server.message.sent"))
 
     def handle_intent_failure(self, event):
         if self.waiting:
@@ -304,11 +310,12 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
     def end_wait(self, message):
         try:
             _message = json.loads(message)
-            if "intent" in _message.get("type").lower() and _message.get("type") != "intent_failure" and self.waiting:
-                logger.debug("intent handled internally")
-                self.ask = False
-                self.waiting = False
-                self.detected = True
+            if self.waiting:
+                if "intent" in _message.get("type").lower() and "failure" not in _message.get("type"):
+                    logger.debug("intent handled internally")
+                    self.ask = False
+                    self.waiting = False
+                    self.detected = True
         except:
             pass
 
@@ -316,7 +323,7 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
 if __name__ == '__main__':
 
     log.startLogging(sys.stdout)
-    host = "192.168.15.19"
+    host = "174.59.239.227"
     port = 5678
     adress = u"ws://" + host + u":" + str(port)
     factory = MyClientFactory(adress)

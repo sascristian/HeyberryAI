@@ -30,7 +30,7 @@ from mycroft.lock import Lock  # Creates PID file for single instance
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import load_skill, create_skill_descriptor, \
-    MainModule, SKILLS_DIR
+    MainModule, SKILLS_DIR, FallbackSkill
 from mycroft.skills.intent_service import IntentService
 from mycroft.util import connected
 from mycroft.util.log import getLogger
@@ -403,8 +403,7 @@ def main():
         logger.debug(message)
 
     ws.on('message', _echo)
-
-    # Kick off loading of skills
+    ws.on('intent_failure', FallbackSkill.make_intent_failure_handler(ws))
     ws.once('open', _load_skills)
     ws.on('converse_status_request', handle_conversation_request)
     ws.on('reload_skill_request', handle_reload_skill_request)

@@ -182,14 +182,9 @@ class IntentService(object):
             skill_id = int(best_intent['intent_type'].split(":")[0])
             self.add_active_skill(skill_id)
 
-        elif len(utterances) == 1:
+        else:
             self.emitter.emit(Message("intent_failure", {
                 "utterance": utterances[0],
-                "lang": lang
-            }, context))
-        else:
-            self.emitter.emit(Message("multi_utterance_intent_failure", {
-                "utterances": utterances,
                 "lang": lang
             }, context))
 
