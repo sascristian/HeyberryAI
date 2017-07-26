@@ -121,7 +121,7 @@ class LILACSUserSkill(MycroftSkill):
             self.log.error("unknown user")
             self.speak("I dont know who you are")
             return
-        bads = [ " ", "/", "(",")",".","_","-", "?", "!",",",";"]
+        bads = ["/", "(",")",".","_","-", "?", "!",",",";"]
         key = message.data.get("Key")
         for w in bads:
             key = key.replace(w, "")
