@@ -89,7 +89,7 @@ class LILACSUserSkill(MycroftSkill):
         if not self.connector.load_concept(user):
             self.connector.create_concept(new_concept_name=user, type="user")
         # update user concept
-        data_dict = self.connector.get_data(user, key)
+        data_dict = self.connector.get_data(user).get(key, {})
         if qtype not in data_dict:
             data_dict[qtype] = []
 
@@ -112,7 +112,7 @@ class LILACSUserSkill(MycroftSkill):
         # load user concept
         if self.connector.load_concept(user):
             # get user data
-            data_dict = self.connector.get_data(user, key)
+            data_dict = self.connector.get_data(user).get(key, {})
             data_list = ["unknown"]
             # check all relation types what/who/when
             for qtype in data_dict.keys():
