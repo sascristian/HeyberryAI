@@ -53,7 +53,8 @@ class LILACSUserSkill(MycroftSkill):
         ## use key, check for cousin /father etc. keywords
         family = ["parent", "child", "cousin", "mom", "dad",
                   "mother", "sibling", "aunt", "uncle", "father", "friend",
-                  "husband", "fiance", "wife", "daughter", "lover"]
+                  "husband", "fiance", "wife", "daughter", "lover", "maker",
+                  "builder", "creator"]
         for word in family:
             if word in key:
                 return True
