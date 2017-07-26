@@ -53,7 +53,8 @@ class LILACSUserSkill(MycroftSkill):
         key = message.data.get("New_Key")
         data_string = message.data.get("Data_String")
         # load user concept
-        self.connector.load_concept(user)
+        if not self.connector.load_concept(user):
+            self.connector.create_concept(new_concept_name=user, type="user")
         # update user concept
         self.connector.add_data(user, key, data_string)
         # save
@@ -74,6 +75,7 @@ class LILACSUserSkill(MycroftSkill):
             data_string = user_data.get(key, "unknown")
             self.speak("Your " + key + " is " + data_string)
         else:
+            self.connector.create_concept(new_concept_name=user, type="user")
             self.speak("I don't know what your " + key + " is")
 
     def stop(self):
