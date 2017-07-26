@@ -20,6 +20,7 @@ from mycroft.util.log import getLogger
 from adapt.intent import IntentBuilder
 from os.path import dirname
 import sys
+import random
 sys.path.append(dirname(dirname(__file__)))
 from LILACS_core.concept import ConceptConnector
 from mycroft.util.parse import normalize
@@ -88,8 +89,9 @@ class LILACSUserSkill(MycroftSkill):
         if not self.connector.load_concept(user):
             self.connector.create_concept(new_concept_name=user, type="user")
         # update user concept
-        data_dict = self.connector.get_data(qtype)
-        data_dict[key] = data_string
+        data_dict = self.connector.get_data(qtype, {key: []})
+        if data_string not in data_dict[key]:
+            data_dict[key].append(data_string)
         self.connector.add_data(user, key, data_dict)
         self.connector.add_cousin(user, key)
         # save
@@ -107,15 +109,15 @@ class LILACSUserSkill(MycroftSkill):
         if self.connector.load_concept(user):
             # get user data
             user_data = self.connector.get_data(user)
+            data_list = ["unknown"]
             for qtype in user_data.keys():
-                data_string = user_data[qtype].get(key)
-                if data_string:
-                    break
-                else:
-                    data_string = "unknown"
-            self.speak("Your " + key + " is " + data_string)
+                ndata_list = user_data[qtype].get(key)
+                if len(ndata_list) > 0:
+                    data_list = ndata_list
+            self.speak("Your " + key + " is " + random.choice(data_list))
         else:
             self.connector.create_concept(new_concept_name=user, type="user")
+            self.connector.save_concept(user, "user")
             self.speak("I don't know what your " + key + " is")
 
     def stop(self):
