@@ -64,7 +64,7 @@ class EnglishQuestionParser():
             match = regex.match(utterance)
             if match:
                 return self._normalize(match.groupdict())
-        return None
+        return {'Query': utterance}
 
 
 class LILACSQuestionParser():
@@ -190,7 +190,7 @@ class LILACSQuestionParser():
         return self.parser.parse(text)
 
     def tag_from_dbpedia(self, text, spotter='Default'):
-        text = text.lower()
+        text = str(text).lower()
         subjects = {}
         parents = {}
         synonims = {}
@@ -255,5 +255,3 @@ def test_qp(questions = None):
         print "relevant_nodes: " + str(midle)
         print "synonims: " + str(synonims)
         print "parse: " + str(parse)
-
-#test_qp()

@@ -22,7 +22,7 @@ from os.path import dirname
 import sys
 sys.path.append(dirname(dirname(__file__)))
 from LILACS_core.concept import ConceptConnector
-
+from mycroft.util.parse import normalize
 __author__ = 'jarbas'
 
 LOGGER = getLogger(__name__)
@@ -47,8 +47,29 @@ class LILACSUserSkill(MycroftSkill):
             "New_Key").require("Data_String").build()
         self.register_intent(set_intent, self.handle_set_user_data)
 
+    def isname(self, string):
+        # TODO think of a way to see if this is a name?
+        return False
+
+    def classify(self, text, key, data):
+        # a date
+        data = data.lower().replace("/", "")
+        data = normalize(data)
+        months = ["january", "jan", "feb", "february", "mar", "march", "apr",
+                  "april", "may", "jun", "june", "jul", "july", "august",
+                  "aug", "sep", "september", "oct", "october", "nov",
+                  "november", "dec", "december"]
+        for month in months:
+            data = data.replace(month, "")
+        if data.isdigit():
+            return "when"
+        # a person
+        if self.isname(data):
+            return "who"
+        # a thing
+        return "what"
+
     def handle_set_user_data(self, message):
-        # TODO process question type and seperate inside node by question type?
         # cousin: name : who
         # cousin : bday : when
         # cousin : favorite animal : what
@@ -62,11 +83,7 @@ class LILACSUserSkill(MycroftSkill):
         key = message.data.get("New_Key")
         data_string = message.data.get("Data_String")
         # categorize # TODO change this lazy mechanism
-        qtype = "what"
-        if "who" in utterance:
-            qtype = "who"
-        if "when" in utterance:
-            qtype = "when"
+        qtype = self.classify(utterance, key, data_string)
         # load user concept
         if not self.connector.load_concept(user):
             self.connector.create_concept(new_concept_name=user, type="user")
