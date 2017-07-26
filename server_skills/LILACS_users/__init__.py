@@ -101,6 +101,7 @@ class LILACSUserSkill(MycroftSkill):
         # save
         self.connector.save_concept(user, "user")
         self.speak("Your " + key + " is " + data_string)
+        self.connector.reset_connector()
 
     def handle_get_user_data(self, message):
         user = message.context.get("user")
@@ -127,6 +128,7 @@ class LILACSUserSkill(MycroftSkill):
             self.connector.create_concept(new_concept_name=user, type="user")
             self.connector.save_concept(user, "user")
             self.speak("I don't know what your " + key + " is")
+        self.connector.reset_connector()
 
     def stop(self):
         pass

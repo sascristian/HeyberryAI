@@ -633,3 +633,8 @@ class ConceptConnector():
             return False
         self.logger.info("loaded node_data: " + str(node_dict))
         return True
+
+    def reset_connector(self):
+        self.concepts = {}
+        self.user_concepts = {}
+        self.saved = []
