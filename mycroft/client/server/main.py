@@ -410,7 +410,7 @@ class MyServerFactory(WebSocketServerFactory):
     def validate_user_utterance(self, utterance, user_data, context, client):
         # check if skill/intent that will trigger is authorized for this user
         intent, skill = self.parser.determine_intent(utterance)
-        if intent in user_data["forbidden_intents"]:
+        if intent in user_data.get("forbidden_intents", []):
             logger.warning("Intent " + intent + " is not allowed for " +
                            user_data.get("nicknames", [client.peer])[0])
             self.send_message(client, "speak", {

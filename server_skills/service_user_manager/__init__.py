@@ -30,21 +30,16 @@ from mycroft.skills.settings import SkillSettings
 from os.path import dirname
 import time, os
 
-
-class User():
-    def __init__(self, id, name, emitter, reset=False):
-        self.user_id = id
-        self.name = name
-        self.emitter = emitter
-        self.default_forbidden_messages = ["incoming_file",
+default_forbidden_messages = ["incoming_file",
                                             "image.classification.request",
                                             "style.transfer.request",
                                             "deep.dream.request",
                                             "class.visualization.request",
                                             "face.recognition.request",
                                             "object.recognition.request"]
-        self.default_forbidden_skills = ["control_center_skill"]  # TODO get parser skills names, not ids
-        self.default_forbidden_intents = ["StyleTransferIntent",
+default_forbidden_skills = ["control_center_skill", "LILACS_teach",
+                            "LILACS_feedback"]
+default_forbidden_intents = ["StyleTransferIntent",
                                           "DreamIntent",
                                           "DeepDrawIntent",
                                           "ImageClassfyStatusIntent",
@@ -60,6 +55,17 @@ class User():
                                           "FbChatPersonIntent",
                                           "FbLikePhotosofPersonIntent"
                                           ]
+
+
+class User():
+    def __init__(self, id, name, emitter, reset=False):
+        self.user_id = id
+        self.name = name
+        self.emitter = emitter
+        self.default_forbidden_messages = default_forbidden_messages
+        self.default_forbidden_skills = default_forbidden_skills
+        # TODO get parser skills names, not ids
+        self.default_forbidden_intents = default_forbidden_intents
         self.init_user_settings()
         if reset:
             self.reset()
