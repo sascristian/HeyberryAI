@@ -370,7 +370,7 @@ class MyServerFactory(WebSocketServerFactory):
                 return
             user = user_data.get("id", sock_num)
             context["user"] = user
-
+            context["user_name"] = user_data.get("nicknames", ["unknown name"])[0]
             # check if message also sent files
             # TODO file formats
             if self.clients[client.peer].get("file_path"):

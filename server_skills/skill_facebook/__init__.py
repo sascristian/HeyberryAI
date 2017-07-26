@@ -154,18 +154,22 @@ class FaceChat(fbchat.Client):
                 # send that utterance to skills
                 self.log.debug("Processing utterance " + chat[1] + " for user " + str(chat[0]))
                 chatmsg = chat[1]
+                user_data = user_manager.user_from_facebook_id(chat[0])
                 # NOTE user id skill checks for photo param
-                context = {'source': 'fbchat_' + chat[0], "mute": True, "user": chat[2], "photo": chat[3]}
+                name = chat[2]
+                context = {'source': 'fbchat_' + chat[0], "mute": True,
+                           "user": chat[0], "user_name": name, "photo":
+                               chat[3]}
                 # check if skill/intent that will trigger is authorized for this user
                 intent, skill = parser.determine_intent(chatmsg)
-                user_data = user_manager.user_from_facebook_id(chat[0])
                 forbidden = False
                 if intent in user_data["forbidden_intents"]:
-                    self.log.warning("Intent " + intent + " is not allowed for " + user_data["nicknames"][0])
+                    self.log.warning("Intent " + intent + " is not allowed "
+                                                          "for " + name)
                     forbidden = True
 
                 if skill in user_data["forbidden_skills"]:
-                    self.log.warning("Skill " + skill + " is not allowed for " + user_data["nicknames"][0])
+                    self.log.warning("Skill " + skill + " is not allowed for "+ name)
                     forbidden = True
 
                 if not forbidden:
