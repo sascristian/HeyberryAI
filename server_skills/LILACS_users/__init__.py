@@ -70,18 +70,15 @@ class LILACSUserSkill(MycroftSkill):
             data = data.replace(month, "")
         print data
         if data.isdigit():
-            return "when"
+            return "date"
         # a person
         if self.is_person(data, key):
 
-            return "who"
+            return "person"
         # a thing
-        return "what"
+        return "description"
 
     def handle_set_user_data(self, message):
-        # cousin: name : who
-        # cousin : bday : when
-        # cousin : favorite animal : what
         # TODO check synonims?
         utterance = message.data.get("utterance", "")
         user = message.context.get("user")
@@ -99,10 +96,10 @@ class LILACSUserSkill(MycroftSkill):
         # update user concept
         data_dict = self.connector.get_data(user).get(key, {})
         if qtype not in data_dict:
-            data_dict[qtype] = []
+            data_dict[qtype] = {}
 
         if data_string not in data_dict[qtype]:
-            data_dict[qtype].append(data_string)
+            data_dict[qtype][data_string] = 5
 
         self.connector.add_data(user, key, data_dict)
         self.connector.add_cousin(user, key)
@@ -122,16 +119,16 @@ class LILACSUserSkill(MycroftSkill):
         if self.connector.load_concept(user):
             # get user data
             data_dict = self.connector.get_data(user).get(key, {})
-            data_list = ["unknown"]
+            data_list = {"unknown" : 5}
             # check all relation types what/who/when
             for qtype in data_dict.keys():
                 # get data for that relation
-                ndata_list = data_dict.get(qtype, [])
+                ndata_list = data_dict.get(qtype, {})
                 if len(ndata_list) > 0:
                     # if data found use it
                     data_list = ndata_list
                     break
-            self.speak("Your " + key + " is " + random.choice(data_list))
+            self.speak("Your " + key + " is " + random.choice(data_list.keys()))
         else:
             self.connector.create_concept(new_concept_name=user, type="user")
             self.connector.save_concept(user, "user")
