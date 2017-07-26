@@ -611,12 +611,12 @@ class ConceptConnector():
 
         if name is None or name == "" or name == " ":
             self.logger.info("no node to load")
-            return
+            return False
 
         loaded = self.storage.load(name)
         if not loaded["sucess"]:
             self.logger.info("no node to load")
-            return
+            return False
         node_dict = loaded["node"]
         type = node_dict.get("type", "info")
         self.logger.info("creating concept in memory: " + name)
@@ -630,5 +630,6 @@ class ConceptConnector():
 
         else:
             self.logger.error("invalid node type: " + str(type))
+            return False
         self.logger.info("loaded node_data: " + str(node_dict))
-        return
+        return True

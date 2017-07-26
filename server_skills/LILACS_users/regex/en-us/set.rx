@@ -1,0 +1,1 @@
+my (?P<New_Key>.*) is (?P<Data_String>.*)
