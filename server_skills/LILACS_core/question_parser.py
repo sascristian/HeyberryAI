@@ -256,4 +256,4 @@ def test_qp(questions = None):
         print "synonims: " + str(synonims)
         print "parse: " + str(parse)
 
-test_qp()
+#test_qp()
