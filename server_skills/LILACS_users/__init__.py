@@ -89,9 +89,13 @@ class LILACSUserSkill(MycroftSkill):
         if not self.connector.load_concept(user):
             self.connector.create_concept(new_concept_name=user, type="user")
         # update user concept
-        data_dict = self.connector.get_data(qtype, {key: []})
-        if data_string not in data_dict[key]:
-            data_dict[key].append(data_string)
+        data_dict = self.connector.get_data(user, key)
+        if qtype not in data_dict:
+            data_dict[qtype] = []
+
+        if data_string not in data_dict[qtype]:
+            data_dict[qtype].append(data_string)
+
         self.connector.add_data(user, key, data_dict)
         self.connector.add_cousin(user, key)
         # save
@@ -108,12 +112,16 @@ class LILACSUserSkill(MycroftSkill):
         # load user concept
         if self.connector.load_concept(user):
             # get user data
-            user_data = self.connector.get_data(user)
+            data_dict = self.connector.get_data(user, key)
             data_list = ["unknown"]
-            for qtype in user_data.keys():
-                ndata_list = user_data[qtype].get(key)
+            # check all relation types what/who/when
+            for qtype in data_dict.keys():
+                # get data for that relation
+                ndata_list = data_dict.get(qtype, [])
                 if len(ndata_list) > 0:
+                    # if data found use it
                     data_list = ndata_list
+                    break
             self.speak("Your " + key + " is " + random.choice(data_list))
         else:
             self.connector.create_concept(new_concept_name=user, type="user")
