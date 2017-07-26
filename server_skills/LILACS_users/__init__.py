@@ -66,7 +66,7 @@ class LILACSUserSkill(MycroftSkill):
         months = ["january",  "february",  "march", "april", "may",  "june",  "july", "august",
                    "september", "october", "november", "december",
                   "jan", "feb","mar","apr","jun","jul","aug", "sep", "oct",
-                  "nov", "dec", " ", "/", "(",")",".","_","-"]
+                  "nov", "dec", " ", "/", "(",")",".","_","-", "?", "!",",",";"]
         for month in months:
             data = data.replace(month, "")
         print data
@@ -89,6 +89,12 @@ class LILACSUserSkill(MycroftSkill):
             return
         key = message.data.get("New_Key")
         data_string = message.data.get("Data_String")
+        bads = [" ", "/", "(", ")", ".", "_", "-", "?", "!", ",", ";", "[",
+                "]"]
+        for w in bads:
+            key = key.replace(w, "")
+            data_string = data_string.replace(w, "")
+
         # categorize # TODO change this lazy mechanism
         qtype = self.classify(utterance, key, data_string)
         # load user concept
@@ -115,7 +121,10 @@ class LILACSUserSkill(MycroftSkill):
             self.log.error("unknown user")
             self.speak("I dont know who you are")
             return
+        bads = [ " ", "/", "(",")",".","_","-", "?", "!",",",";"]
         key = message.data.get("Key")
+        for w in bads:
+            key = key.replace(w, "")
         # load user concept
         if self.connector.load_concept(user):
             # get user data
