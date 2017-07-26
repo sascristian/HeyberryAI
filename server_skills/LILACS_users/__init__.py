@@ -34,7 +34,7 @@ class LILACSUserSkill(MycroftSkill):
         self.reload_skill = False
 
     def initialize(self):
-        self.connector = ConceptConnector(self.emitter)
+        self.connector = ConceptConnector(emitter=self.emitter)
         # what is my "X" intent
         get_intent = IntentBuilder("GetUserPreferenceIntent").require(
             "Key").build()
