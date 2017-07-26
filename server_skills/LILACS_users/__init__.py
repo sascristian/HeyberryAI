@@ -48,24 +48,32 @@ class LILACSUserSkill(MycroftSkill):
             "New_Key").require("Data_String").build()
         self.register_intent(set_intent, self.handle_set_user_data)
 
-    def isname(self, string):
-        # TODO think of a way to see if this is a name?
+    def is_person(self, data, key):
+        # TODO think of a way to see if data is a name?
+        ## use key, check for cousin /father etc. keywords
+        family = ["parent", "child", "cousin", "mom", "dad",
+                  "mother", "sibling", "aunt", "uncle", "father", "friend",
+                  "husband", "fiance", "wife", "daughter", "lover"]
+        for word in family:
+            if word in key:
+                return True
         return False
 
     def classify(self, text, key, data):
         # a date
-        data = data.lower().replace("/", "")
         data = normalize(data)
-        months = ["january", "jan", "feb", "february", "mar", "march", "apr",
-                  "april", "may", "jun", "june", "jul", "july", "august",
-                  "aug", "sep", "september", "oct", "october", "nov",
-                  "november", "dec", "december"]
+        months = ["january",  "february",  "march", "april", "may",  "june",  "july", "august",
+                   "september", "october", "november", "december",
+                  "jan", "feb","mar","apr","jun","jul","aug", "sep", "oct",
+                  "nov", "dec", " ", "/", "(",")",".","_","-"]
         for month in months:
             data = data.replace(month, "")
+        print data
         if data.isdigit():
             return "when"
         # a person
-        if self.isname(data):
+        if self.is_person(data, key):
+
             return "who"
         # a thing
         return "what"
