@@ -66,7 +66,7 @@ class LILACSUserSkill(MycroftSkill):
         months = ["january",  "february",  "march", "april", "may",  "june",  "july", "august",
                    "september", "october", "november", "december",
                   "jan", "feb","mar","apr","jun","jul","aug", "sep", "oct",
-                  "nov", "dec", " ", "/", "(",")",".","_","-", "?", "!",",",";"]
+                  "nov", "dec", " "]
         for month in months:
             data = data.replace(month, "")
         print data
@@ -89,7 +89,7 @@ class LILACSUserSkill(MycroftSkill):
             return
         key = message.data.get("New_Key")
         data_string = message.data.get("Data_String")
-        bads = [" ", "/", "(", ")", ".", "_", "-", "?", "!", ",", ";", "[",
+        bads = ["/", "(", ")", ".", "_", "-", "?", "!", ",", ";", "[",
                 "]"]
         for w in bads:
             key = key.replace(w, "")
