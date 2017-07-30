@@ -1,20 +1,21 @@
-import cv2
-import numpy as np
-import time
-import random
-from PIL import Image
-import imutils
-import sys
-import os
-from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
-from mycroft.messagebus.message import Message
-from mycroft.configuration import ConfigurationManager
-from imgurpython import ImgurClient
-import urllib2
-import random
 import json
+import random
+import sys
+import time
+import urllib2
+
+import cv2
+import imutils
+import numpy as np
+import os
+from PIL import Image
+from adapt.intent import IntentBuilder
 from bs4 import BeautifulSoup
+from imgurpython import ImgurClient
+
+from mycroft.configuration import ConfigurationManager
+from mycroft.messagebus.message import Message
+from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 
 try:
@@ -30,7 +31,7 @@ except:
     logger = getLogger(__name__)
     logger.warning("Could not import bat-country, this is ok if skill is asking to server")
 
-from mycroft.util.jarbas_services import DreamService as DD
+from jarbas_utils.jarbas_services import DreamService as DD
 
 __author__ = 'jarbas'
 

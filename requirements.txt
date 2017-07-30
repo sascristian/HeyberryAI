@@ -61,3 +61,8 @@ autobahn
 twisted
 python-gnupg
 pycrypto
+wptools
+wordnik
+scikit-learn==0.17.1
+enum34==1.1.6
+colorama

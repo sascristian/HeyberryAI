@@ -16,9 +16,9 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from jarbas_utils.jarbas_services import ServiceBackend
 from mycroft.skills.core import FallbackSkill
 from mycroft.util.log import getLogger
-from mycroft.util.jarbas_services import ServiceBackend
 
 __author__ = 'jarbas'
 
@@ -45,7 +45,7 @@ class ServerFallback(FallbackSkill):
         self.server = None
 
     def initialize(self):
-        self.register_fallback(self.handle_fallback, 0)
+        self.register_fallback(self.handle_fallback, 50)
         self.server = ServerFallbackService(self.emitter)
 
     def handle_fallback(self, message):

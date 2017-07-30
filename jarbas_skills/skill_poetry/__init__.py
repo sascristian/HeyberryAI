@@ -15,13 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from os.path import dirname, realpath
 import random
-from mycroft.util.markov import MarkovChain
+
+import os
 from adapt.intent import IntentBuilder
+from os.path import dirname, realpath
+
+from jarbas_utils.markov import MarkovChain
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-import os
+from mycroft import MYCROFT_ROOT_PATH
 
 __author__ = 'jarbas'
 
@@ -32,10 +35,15 @@ class PoetrySkill(MycroftSkill):
 
     def __init__(self):
         super(PoetrySkill, self).__init__(name="PoetrySkill")
-        self.styles = ["blackmetal", "deathmetal","scifi","viking", "shakespeare", "camoes", "family", "friends", "inspirational", "love", "life"]
+        self.styles = ["blackmetal", "deathmetal","scifi","viking",
+                       "shakespeare", "mc_3_w", "mc_5_w", "family", "friends",
+                       "inspirational", "love", "life"]
         self.path = dirname(realpath(__file__))
         if not os.path.exists(self.path+"/results"):
             os.mkdir(self.path+"/results")
+        self.chain_path = MYCROFT_ROOT_PATH + "/jarbas_models/Markov_Chains/"
+        if not os.path.exists(self.chain_path+"/poetry_styles"):
+            os.mkdir(self.chain_path+"/poetry_styles")
 
     def initialize(self):
         # TODO regex style into single intent
@@ -101,8 +109,19 @@ class PoetrySkill(MycroftSkill):
         self.speak(poem)
 
     def poetry(self, style):
-        path = self.path + "/styles/" + style + ".json"
-        chain = MarkovChain(1, pad=False).load(path)
+        path = self.chain_path + "/poetry_styles/" + style + ".json"
+        i = 2
+        # _13_ in name, means order 13
+        order = style.find("_")
+        if order != -1:
+            style = style[order+1:]
+            order = style.find("_")
+            if order != -1:
+                style = style[:order]
+        if style.isdigit():
+            i = int(style)
+
+        chain = MarkovChain(i, pad=False).load(path)
         generated = chain.generate_sequence()
         poem = ""
         for word in generated:

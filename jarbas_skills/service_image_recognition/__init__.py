@@ -1,16 +1,20 @@
+import os
+import random
+import sys
+
+import PIL.Image
 import numpy as np
 import scipy.ndimage as nd
-import PIL.Image
-import sys, time, random, os
-from os.path import dirname
-from imgurpython import ImgurClient
 from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
-from mycroft.messagebus.message import Message
-from mycroft.util.log import getLogger
-from mycroft.configuration import ConfigurationManager
 from fuzzywuzzy import fuzz
-from mycroft.util.jarbas_services import ImageRecogService
+from imgurpython import ImgurClient
+from os.path import dirname
+
+from jarbas_utils.jarbas_services import ImageRecogService
+from mycroft.configuration import ConfigurationManager
+from mycroft.messagebus.message import Message
+from mycroft.skills.core import MycroftSkill
+from mycroft.util.log import getLogger
 
 try:
     path = ConfigurationManager().get("caffe_path")

@@ -15,19 +15,19 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from adapt.intent import IntentBuilder
-
-from mycroft.skills.core import MycroftSkill
-from mycroft.util.jarbas_services import ObjectRecogService
-from mycroft.util.log import getLogger
-from mycroft.messagebus.message import Message
-
-import os
 import sys
+
 import cv2
 import numpy as np
+import os
 import tensorflow as tf
+from adapt.intent import IntentBuilder
 from os.path import dirname
+
+from jarbas_utils.jarbas_services import ObjectRecogService
+from mycroft.messagebus.message import Message
+from mycroft.skills.core import MycroftSkill
+from mycroft.util.log import getLogger
 
 sys.path.append(dirname(__file__))
 

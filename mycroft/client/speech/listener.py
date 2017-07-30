@@ -120,9 +120,9 @@ class AudioConsumer(Thread):
     # TODO: Localization
     def wake_up(self, audio):
         try:
-            flag = self.wakeup_recognizer.is_recognized(audio.frame_data,
+            flag = self.wakeup_recognizer.is_recognized(audio.frame_data)
         except:
-            flag = self.wakeup_recognizer.found_wake_word(audio.frame_data):
+            flag = self.wakeup_recognizer.found_wake_word(audio.frame_data)
         if flag:
             SessionManager.touch()
             self.state.sleeping = False
@@ -244,7 +244,7 @@ class RecognizerLoop(EventEmitter):
         if self.config.get("producer", None) == "pocketsphinx":
             self.consumer = PocketsphinxAudioConsumer(
                 self.config, self.lang, self.state,
-                self, self.microphone)
+                self)
 
         else:
             self.mycroft_recognizer = self.create_mycroft_recognizer(
@@ -255,15 +255,14 @@ class RecognizerLoop(EventEmitter):
             self.remote_recognizer = ResponsiveRecognizer(
                                                 self.mycroft_recognizer)
 
-
             self.producer = AudioProducer(self.state, queue, self.microphone,
-                          self.remote_recognizer, self)\
+                          self.remote_recognizer, self)
             self.producer.start()
 
             self.consumer = AudioConsumer(self.state, queue, self,
                                     STTFactory.create(),
                           self.wakeup_recognizer,
-                          self.mycroft_recognizer)\
+                          self.mycroft_recognizer)
         self.consumer.start()
 
     def stop(self):

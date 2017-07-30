@@ -15,23 +15,27 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-import ssl, socket, select, json
-from os.path import dirname
+import base64
+import json
+import logging
+import select
+import socket
+import ssl
+import sys
 from threading import Thread
 
+from Crypto import Random
+from Crypto.Cipher import AES
+from os.path import dirname
+
+from jarbas_utils.jarbas_services import ServiceBackend
+from jarbas_utils.jarbas_services import UserManagerService
+from mycroft.client.server.pgp import get_own_keys, encrypt_string, \
+    decrypt_string, generate_server_key, export_key, import_key_from_ascii
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
-from mycroft.util.log import getLogger
-from mycroft.util.jarbas_services import UserManagerService
-from mycroft.util.jarbas_services import ServiceBackend
-
 from mycroft.skills.intent_service import IntentParser
-from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key, export_key, import_key_from_ascii
-from Crypto.Cipher import AES
-from Crypto import Random
-import logging
-import sys
-import base64
+from mycroft.util.log import getLogger
 
 ws = None
 parser = None

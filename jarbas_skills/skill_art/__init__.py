@@ -1,10 +1,11 @@
 import os
-from os.path import dirname
-from imgurpython import ImgurClient
-from mycroft.util.art import psy_art
 from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
+from imgurpython import ImgurClient
+from os.path import dirname
+
+from jarbas_utils.art import psy_art
 from mycroft.messagebus.message import Message
+from mycroft.skills.core import MycroftSkill
 
 __author__ = 'jarbas'
 

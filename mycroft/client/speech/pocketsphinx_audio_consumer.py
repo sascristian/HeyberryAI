@@ -17,7 +17,10 @@
 
 from threading import Thread
 import wave
+import subprocess
 from os.path import join, dirname, abspath, exists
+import pyaudio
+import time
 
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.message import Message
@@ -44,69 +47,128 @@ class PocketsphinxAudioConsumer(Thread):
     # In seconds, the minimum audio size to be sent to remote STT
     MIN_AUDIO_SIZE = 0.5
 
-    def __init__(self, config_listener, lang, state, emitter, source):
+    def __init__(self, config_listener, lang, state, emitter):
         super(PocketsphinxAudioConsumer, self).__init__()
-        self.config_listener = config_listener
+        self.SAMPLE_RATE = 16000
+        self.SAMPLE_WIDTH = 2
+        self.CHUNK = 1024
+        self.config = config_listener
         self.lang = lang
         self.state = state
         self.emitter = emitter
-        self.source = source
+
+        self.audio = pyaudio.PyAudio()
 
         self.forced_wake = False
         self.record_file = None
-        self.wake_word = str(self.config_listener.get(
-             'wake_word', "Hey Mycroft")).lower()
-        self.standup_word = str(self.config_listener.get(
-             'standup_word', "wake up")).lower()
+        self.wake_word = str(self.config.get(
+            'wake_word', "Hey Mycroft")).lower()
+        self.standup_word = str(self.config.get(
+            'standup_word', "wake up")).lower()
         self.default_grammar = str(
-             self.config_listener.get('grammar', "lm"))
+            self.config.get('grammar', "lm"))
         self.grammar = self.default_grammar
 
-        self.msg_awake = self.config_listener.get('msg_awake', "I'm awake")
-        self.msg_not_catch = self.config_listener.get(
-             'msg_not_catch', "Sorry, I didn't catch that")
+        self.msg_awake = self.config.get('msg_awake', "I'm awake")
+        self.msg_not_catch = self.config.get(
+            'msg_not_catch', "Sorry, I didn't catch that")
+        self.wake_word_ack_cmnd = None
+        s = self.config.get('wake_word_ack_cmnd')
+        if s:
+            self.wake_word_ack_cmnd = s.split(' ')
 
         self.metrics = MetricsAggregator()
 
-        model_lang_dir = join(BASEDIR, 'model', str(self.lang))
+        model_lang_dir = join(BASEDIR, 'recognizer/model', str(self.lang))
         self.decoder = Decoder(self.create_decoder_config(model_lang_dir))
         self.decoder.set_keyphrase('wake_word', self.wake_word)
-        jsgf = join(model_lang_dir, 'es.jsgf')
+        self.wake_word = "computer"
+        jsgf = join(model_lang_dir, self.lang, '.jsgf')
         if exists(jsgf):
             self.decoder.set_jsgf_file('jsgf', jsgf)
-        lm = join(model_lang_dir, 'es.lm')
+        lm = join(model_lang_dir, self.lang, '.lm')
         if exists(lm):
             self.decoder.set_lm_file('lm', lm)
 
+    def create_decoder_config(self, model_lang_dir):
+        decoder_config = Decoder.default_config()
+        hmm_dir = join(model_lang_dir, 'hmm')
+        decoder_config.set_string('-hmm', hmm_dir)
+        decoder_config.set_string('-dict',
+                                  join(hmm_dir, 'cmudict.dict'))
+        decoder_config.set_float('-samprate', self.SAMPLE_RATE)
+        decoder_config.set_float('-kws_threshold',
+                                 self.config.get('threshold', 1))
+        decoder_config.set_string('-cmninit', '40,3,-1')
+        decoder_config.set_string('-logfn', '/tmp/pocketsphinx.log')
+        return decoder_config
+
+    def wake_word_ack(self):
+        if self.wake_word_ack_cmnd:
+            subprocess.call(self.wake_word_ack_cmnd)
+
+    def device_name_to_index(self, device_name):
+        numdevices = self.audio.get_device_count()
+        for device_index in range(0, numdevices):
+            device = self.audio.get_device_info_by_index(device_index)
+            if device_name == device.get('name'):
+                return device_index
+        return None
+
     def run(self):
-        with self.source:  # open audio
-            while self.state.running:
-                # start new session
-                SessionManager.touch()
-                self.session = SessionManager.get().session_id
+        device_name = self.config.get("device_name")
+        if device_name:
+            device_index = self.device_name_to_index(device_name)
+        else:
+            device_index = self.config.get("device_index")
+        logger.debug("device_index=%s", device_index)
 
-                wake_word_found = self.wait_until_wake_word()
-                if wake_word_found:
-                    logger.debug("wake_word detected.")
+        self.stream = self.audio.open(
+            input_device_index=device_index,
+            channels=1,
+            format=pyaudio.get_format_from_width(self.SAMPLE_WIDTH),
+            rate=self.SAMPLE_RATE,
+            frames_per_buffer=self.CHUNK,
+            input=True,  # stream is an input stream
+        )
 
-                    payload = {
-                        'utterance': self.wake_word,
-                        'session': self.session
-                    }
-                    context = {'session': self.session}
-                    self.emitter.emit("recognizer_loop:wakeword",
-                                      payload, context)
+        while self.state.running:
+            # start new session
+            SessionManager.touch()
+            self.session = SessionManager.get().session_id
 
+            wake_word_found = self.wait_until_wake_word()
+            if wake_word_found:
+                logger.debug("wake_word detected.")
+                self.wake_word_ack()
+
+                payload = {
+                    'utterance': self.wake_word,
+                    'session': self.session
+                }
                 context = {'session': self.session}
-                self.emitter.emit("recognizer_loop:record_begin", context)
-                audio, text = self.record_phrase()
-                self.emitter.emit("recognizer_loop:record_end", context)
-                logger.debug("recorded.")
+                self.emitter.emit("recognizer_loop:wakeword",
+                                  payload, context)
 
-                if self.state.sleeping:
-                    self.standup(text)
-                else:
-                    self.process(audio, text)
+            context = {'session': self.session}
+            self.emitter.emit("recognizer_loop:record_begin", context)
+            audio, text = self.record_phrase()
+            self.emitter.emit("recognizer_loop:record_end", context)
+            logger.debug("recorded.")
+
+            if self.state.sleeping:
+                self.standup(text)
+            else:
+                self.process(audio, text)
+
+    def save_record(self, wav_name, audio):
+        # TODO: use "with"
+        waveFile = wave.open(wav_name, 'wb')
+        waveFile.setnchannels(1)
+        waveFile.setsampwidth(self.SAMPLE_WIDTH)
+        waveFile.setframerate(self.SAMPLE_RATE)
+        waveFile.writeframes(audio)
+        waveFile.close()
 
     def standup(self, text):
         if text and self.standup_word in text:
@@ -119,14 +181,8 @@ class PocketsphinxAudioConsumer(Thread):
 
         # save this record in file if requested
         if self.record_file:
-            wav_name = self.record_file
-            waveFile = wave.open(self.record_file, 'wb')
+            self.save_record(self.record_file, audio)
             self.record_file = None
-            waveFile.setnchannels(1)
-            waveFile.setsampwidth(self.source.SAMPLE_WIDTH)
-            waveFile.setframerate(self.source.SAMPLE_RATE)
-            waveFile.writeframes(audio)
-            waveFile.close()
 
         if not self.grammar:
             # do not translate if only record is requested
@@ -143,7 +199,8 @@ class PocketsphinxAudioConsumer(Thread):
             self.metrics.attr('utterances', [text])
         else:
             logger.error("Speech Recognition could not understand audio")
-            self.__speak(self.msg_not_catch)
+            if self.msg_not_catch:
+                self.__speak(self.msg_not_catch)
 
     def __speak(self, utterance):
         payload = {
@@ -167,25 +224,15 @@ class PocketsphinxAudioConsumer(Thread):
     # Time between pocketsphinx checks for the wake word
     SEC_BETWEEN_WW_CHECKS = 0.2
 
-    def create_decoder_config(self, model_lang_dir):
-        decoder_config = Decoder.default_config()
-        hmm_dir = join(model_lang_dir, 'hmm')
-        decoder_config.set_string('-hmm', join(model_lang_dir, hmm_dir))
-        decoder_config.set_string('-dict', join(model_lang_dir, 'es.dict'))
-        decoder_config.set_float('-samprate', self.source.SAMPLE_RATE)
-        decoder_config.set_string('-logfn', 'scripts/logs/decoder.log')
-        return decoder_config
-
     def record_sound_chunk(self):
-        # return self.source.stream.read(self.source.CHUNK)
         # TODO: if muted
-        return self.source.stream.wrapped_stream.read(self.source.CHUNK)
+        return self.stream.read(self.CHUNK)
 
     def record_phrase(self):
-        logger.debug("Waiting for command[%s]...", self.grammar)
-        sec_per_buffer = float(self.source.CHUNK) / self.source.SAMPLE_RATE
+        logger.debug("Waiting for command: grammar=%s ...", self.grammar)
 
         # Maximum number of chunks to record before timing out
+        sec_per_buffer = float(self.CHUNK) / self.SAMPLE_RATE
         max_chunks = int(self.RECORDING_TIMEOUT / sec_per_buffer)
 
         # bytearray to store audio in
@@ -198,7 +245,7 @@ class PocketsphinxAudioConsumer(Thread):
             self.decoder.set_search(self.grammar)
         utt_running = False
 
-        self.source.stream.wrapped_stream.start_stream()
+        self.stream.start_stream()
 
         while num_chunks < max_chunks:
             chunk = self.record_sound_chunk()
@@ -217,9 +264,10 @@ class PocketsphinxAudioConsumer(Thread):
 
             if self.decoder.get_in_speech():
                 # voice
-                in_speech = True
+                if not in_speech:
+                    logger.debug("silence->voice")
+                    in_speech = True
             elif in_speech:
-                # silence
                 # voice->silence
                 logger.debug("voice->silence")
                 in_speech = False
@@ -238,72 +286,57 @@ class PocketsphinxAudioConsumer(Thread):
             self.decoder.end_utt()
             utt_running = False
 
-        self.source.stream.wrapped_stream.stop_stream()
+        self.stream.stop_stream()
 
         return (byte_data, hypstr)
 
     def wait_until_wake_word(self):
-        # bytearray to store audio in
+
+        utt_running = False
         byte_data = ""
-
-        sec_per_buffer = float(self.source.CHUNK) / self.source.SAMPLE_RATE
-        buffers_per_check = self.SEC_BETWEEN_WW_CHECKS / sec_per_buffer
-        buffers_since_check = 0.0
-
-        # Max bytes for byte_data before audio is removed from the front
-        max_size = self.SAVED_WW_SEC * self.source.SAMPLE_RATE
+        wake_word_found = False
+        num_chunks = 0
 
         self.decoder.set_search('wake_word')
 
-        in_speech = False
-        utt_running = False
-        self.source.stream.wrapped_stream.start_stream()
+        self.stream.start_stream()
 
         logger.debug("Waiting for wake word...")
-        wake_word_found = False
         while not wake_word_found:
+            debug = self.config.get("debug", False)
+
             if self.forced_wake or check_for_signal('buttonPress'):
                 logger.debug("Forced wake word...")
                 self.forced_wake = False
                 break
 
             chunk = self.record_sound_chunk()
+            num_chunks += 1
 
-            if len(byte_data) < max_size:
-                byte_data += chunk
-            else:  # Remove beginning of audio and add new chunk to end
-                byte_data = byte_data[len(chunk):] + chunk
+            if debug:
+                if num_chunks % 256 == 255:
+                    filename = "/tmp/mycroft.wake.%f" % time.time()
+                    logger.debug("record saved %s", filename)
+                    self.save_record(filename, byte_data)
+                    byte_data = ""
+                else:
+                    byte_data += chunk
 
-            buffers_since_check += 1.0
-            if buffers_since_check > buffers_per_check:
-                buffers_since_check -= buffers_per_check
+            if not utt_running:
+                self.decoder.start_utt()
+                utt_running = True
 
-                if not utt_running:
-                    self.decoder.start_utt()
-                    utt_running = True
+            self.decoder.process_raw(chunk, False, False)
 
-                self.decoder.process_raw(byte_data, False, False)
-
-                if self.decoder.get_in_speech():
-                    # voice
-                    in_speech = True
-                elif in_speech:
-                    # voice->silence
-                    logger.debug("silence->speech")
-                    in_speech = False
-
-                    self.decoder.end_utt()
-                    utt_running = False
-
-                    hyp = self.decoder.hyp()
-                    if hyp:
-                        logger.debug("hypstr=%s", hyp.hypstr)
-                        wake_word_found = (self.wake_word in hyp.hypstr)
+            hyp = self.decoder.hyp()
+            if hyp and hyp.hypstr:
+                logger.debug("hypstr=%s", hyp.hypstr)
+                wake_word_found = (self.wake_word in hyp.hypstr)
 
         if utt_running:
             self.decoder.end_utt()
 
-        self.source.stream.wrapped_stream.stop_stream()
+        self.stream.stop_stream()
 
         return wake_word_found
 

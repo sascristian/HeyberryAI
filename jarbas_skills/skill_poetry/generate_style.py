@@ -137,24 +137,16 @@ class MarkovChain:
 
         return mc
 
-style = "viking"
-chain = MarkovChain(3, pad=False)#.load("styles/"+style + ".json")
 
-with open("styles/" + style + ".txt", "r") as file:
-    lines = file.readlines()
+i = 0
+style = "mc_14_gra"
+order = style.find("_")
+if order != -1:
+    style = style[order+1:]
+    order = style.find("_")
+    if order != -1:
+        style = style[:order]
+if style.isdigit():
+    i = int(style)
 
-for line in lines:
-    words = line.split(" ")
-    chain.add_tokens(words)
-
-generated = chain.generate_sequence()
-text = ""
-for word in generated:
-    text += word
-    if "." in word:
-        text += "\n"
-    elif "\n" not in word:
-        text += " "
-print text
-chain.save("styles/" + style + ".json")
-
+print i, style
