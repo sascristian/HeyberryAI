@@ -36,7 +36,7 @@ Personal assistants today are glorified voice activated script runners, with the
 Stick some hardware and they are glorified alarm clocks than run scripts instead
 
 Jarbas fork intends to show that mycroft is much more than this by harnessing the power of open source,
-an AI assistant should do AI stuff on demand, where is the AI in mycroft/jarbas?
+an AI assistant should do "AI stuff" on demand, where is the AI in mycroft/jarbas?
 
 # TODO links in each one
 
@@ -52,19 +52,19 @@ The "AI stuff" it can already do for you
         - Object recognition
         - Face recognition
         - Voice recognition (wip)
-        - deep dreaming
-        - Generate names
-        - Generate Poetry
-        - Copy the style of any artist
+        - Deep Dreaming
+        - Generate names with Restricted Boltzman Machines
+        - Generate Poetry with MarkovChains
+        - Copy the style of any artist using Style Transfer
         - Colorize Black and White photos
-        - Chatbot
-        - Auto complete your stories
-        - Learn and build a database of what it learns
+        - Chatbot using AIML
+        - Auto complete your stories with a Char-RNN
+        - Learn and build a database of what it learns with LILACS
 
 And dont forget the "not really AI" stuff
 
         - post to facebook / twitter / instagram
-        - control a browser and do any kind of stuff
+        - control a browser like a real human and do any kind of stuff with it
         - generate psychedelic images using mathematics
         - search the internet for answers
         - Search and play music from youtube (or spotify or more places!)
@@ -72,6 +72,7 @@ And dont forget the "not really AI" stuff
         the weather, which asteroids are near earth, how many sunspots currently
         visible, show you the latest image of earth from orbit..
 
+In practice it can act as a vocal search engine, a helper for disabled people, a desktop automation/OS framework, an artificial pet, a Art assistant, a Writers Assistant, an educational toy for children, A work of art by its own merit...
 
 ![](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/jarbas.png?raw=true)
 ![](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/client/server/ssl.jpeg?raw=true)
