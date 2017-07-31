@@ -31,6 +31,48 @@ Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to
 
 # The idea
 
+Personal assistants today are glorified voice activated script runners, with the bonus of mining your data for some company
+
+Stick some hardware and they are glorified alarm clocks than run scripts instead
+
+Jarbas fork intends to show that mycroft is much more than this by harnessing the power of open source,
+an AI assistant should do AI stuff on demand, where is the AI in mycroft/jarbas?
+
+# TODO links in each one
+
+The essential parts that make it work, many options available for each
+
+        - speech to text
+        - text to speech
+        - intent from text (text to action)
+
+The "AI stuff" it can already do for you
+
+        - Image classification
+        - Object recognition
+        - Face recognition
+        - Voice recognition (wip)
+        - deep dreaming
+        - Generate names
+        - Generate Poetry
+        - Copy the style of any artist
+        - Colorize Black and White photos
+        - Chatbot
+        - Auto complete your stories
+        - Learn and build a database of what it learns
+
+And dont forget the "not really AI" stuff
+
+        - post to facebook / twitter / instagram
+        - control a browser and do any kind of stuff
+        - generate psychedelic images using mathematics
+        - search the internet for answers
+        - Search and play music from youtube (or spotify or more places!)
+        - Stuff not worth mentioning like parrot back, dictation, tell jokes, hows
+        the weather, which asteroids are near earth, how many sunspots currently
+        visible, show you the latest image of earth from orbit..
+
+
 ![](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/jarbas.png?raw=true)
 ![](https://github.com/JarbasAI/JarbasAI/blob/patch-15/mycroft/client/server/ssl.jpeg?raw=true)
 ![](https://github.com/JarbasAI/client_server_idea/raw/master/Untitled%20Diagram.jpg)
@@ -161,3 +203,55 @@ Lots of skills pre-packaged
 [Objectives Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/objectives.md)
 
 TODO finish this
+
+
+# Blacklisted skills by default
+
+some skills are blacklisted because they are either not common, heavy, or because i run them in server
+
+- browser service
+- server fallback
+- LILACS_core
+- LILACS_storage
+- LILACS_teach
+- LILACS_users
+- LILACS_curiosity
+- deep dream
+- image recognition
+- object recognition
+- colorize
+- vision
+- facebook
+- twitter
+- instagram
+
+# Skills that fallback to server
+
+these skills have a flag in their init method to ask server or run locally
+
+consider them broken, get them from server branch if you really want them
+
+- image recognition
+- face recognition
+- object recognition
+- deep dream
+- style transfer
+- colorize
+
+these skills have a flag to ask client
+
+- vision service # wip
+
+# Currently working on
+
+not updated often
+
+- webchat client
+- black and white photo colorize
+- instagram skill
+- snowboy wakeword
+- pocket sphinx offline stt
+- kaldi install scripts
+- update skills using caffe for tensorflow version (already in server)
+- class vizualization/deep draw in tensorflow
+- models download script (they auto download on first skill run which takes...long)
