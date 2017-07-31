@@ -1,5 +1,6 @@
-# NPR News Skill
+# News Skill
 
 ## Usage:
-* `news`
-* `tell me news`
+* news on cbc
+* tell me news from npr
+* get news off fox
