@@ -46,18 +46,24 @@ class DictationSkill(MycroftSkill):
 
     def initialize(self):
 
-        start_parrot_intent = IntentBuilder("StartDictationIntent")\
+        start_dict_intent = IntentBuilder("StartDictationIntent")\
             .require("StartKeyword").require(
             "DictationKeyword").optionally("DictationFileName").build()
 
-        self.register_intent(start_parrot_intent,
+        self.register_intent(start_dict_intent,
                              self.handle_start_dictation_intent)
 
-        stop_parrot_intent = IntentBuilder("StopDictationIntent") \
+        stop_dict_intent = IntentBuilder("StopDictationIntent") \
             .require("StopKeyword").require("DictationKeyword").build()
 
-        self.register_intent(stop_parrot_intent,
+        self.register_intent(stop_dict_intent,
                              self.handle_stop_dictation_intent)
+
+        read_dict_intent = IntentBuilder("StopDictationIntent") \
+            .require("ReadKeyword").require("DictationKeyword").build()
+
+        self.register_intent(read_dict_intent,
+                             self.handle_read_last_dictation_intent)
 
         self.parser = IntentParser(self.emitter)
 
@@ -67,13 +73,21 @@ class DictationSkill(MycroftSkill):
             self.dictation_name = time.asctime()
         else:
             self.dictation_name = name
-        self.dictating = True
-        self.speak("Dictation Mode Started", expect_response=True)
+
+        if not self.dictating:
+            self.words = ""
+            self.dictating = True
+            self.speak("Dictation Mode Started", expect_response=True)
+        else:
+            self.speak("Dictation is already enabled")
 
     def handle_stop_dictation_intent(self, message):
-        self.dictating = False
-        self.speak("Dictation Mode Stopped")
-        self.save()
+        if self.dictating:
+            self.dictating = False
+            self.speak("Dictation Mode Stopped")
+            self.save()
+        else:
+            self.speak("I am not dictating at this moment")
 
     def handle_read_last_dictation_intent(self, message):
         self.speak_dialog("dictation")
@@ -84,6 +98,8 @@ class DictationSkill(MycroftSkill):
         path = self.path + "/" + self.dictation_name + ".txt"
         with open(path, "w") as f:
             f.write(self.words)
+        self.log.info("Dictation saved: " + path)
+        self.speak("Dictation saved with name " + self.dictation_name)
 
     def stop(self):
         if self.dictating:
@@ -99,6 +115,7 @@ class DictationSkill(MycroftSkill):
             else:
                 self.words += (utterances[0]) + "\n"
                 self.speak("", expect_response=True)
+                self.log.info("Dictating: " + utterances[0])
                 return True
         else:
             return False
