@@ -31,6 +31,13 @@ def unset_speak_flag(event):
     disable_speak_flag = False
 
 
+def _trigger_expect_response(message):
+    """
+        Makes mycroft start listening on 'recognizer_loop:audio_output_end'
+    """
+    create_signal('startListening')
+
+
 def handle_speak(event):
     """
         Handle "speak" message
@@ -45,6 +52,13 @@ def handle_speak(event):
     target = event.data.get("target", "all")
     if target != "speech" and target != "all":
         return
+    # Mild abuse of the signal system to allow other processes to detect
+    # when TTS is happening.  See mycroft.util.is_speaking()
+    create_signal("isSpeaking")
+
+    utterance = event.data['utterance']
+    if event.data.get('expect_response', False):
+        ws.once('recognizer_loop:audio_output_end', _trigger_expect_response)
 
     # This is a bit of a hack for Picroft.  The analog audio on a Pi blocks
     # for 30 seconds fairly often, so we don't want to break on periods
@@ -65,6 +79,8 @@ def handle_speak(event):
             for chunk in chunks:
                 try:
                     mute_and_speak(chunk)
+                except KeyboardInterrupt:
+                    raise
                 except:
                     logger.error('Error in mute_and_speak', exc_info=True)
                 if _last_stop_signal > start or check_for_signal('buttonPress'):
@@ -74,9 +90,6 @@ def handle_speak(event):
 
     # This check will clear the "signal"
     check_for_signal("isSpeaking")
-
-    if expect_response:
-        create_signal('startListening')
 
 
 def mute_and_speak(utterance):

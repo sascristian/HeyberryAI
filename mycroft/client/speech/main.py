@@ -94,6 +94,7 @@ def handle_stop(event):
     _last_stop_signal = time.time()
 
 
+
 def handle_paired(event):
     IdentityManager.update(event.data)
 
