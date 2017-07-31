@@ -222,7 +222,7 @@ class LilacsCoreSkill(FallbackSkill):
 
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
-            self.speak("i am not sure what the question is about")
+            #self.speak("i am not sure what the question is about")
 
             self.answered = self.handle_learning(utterance)
             return self.answered
@@ -389,14 +389,15 @@ class LilacsCoreSkill(FallbackSkill):
 
     def handle_learning(self, utterance):
         self.log.info("learning correct answer")
-        self.speak("learning correct answer")
+        #self.speak("learning correct answer")
         if self.debug:
             self.speak("Searching wolfram alpha")
         # this is placeholder, always call wolfram, when question type is fully implemented wolfram maybe wont be called
         learned = self.handle_unknown_intent(utterance)
 
         if not learned:
-            self.speak("i dont know the answer")
+            pass
+            #self.speak("i dont know the answer")
         return learned
         # TODO ask user questions about unknown nodes, teach skill handles response
 
@@ -668,7 +669,7 @@ class LilacsCoreSkill(FallbackSkill):
         self.crawler.update_connector(self.connector)
         examples = examples_of_this(node, self.crawler)
         if not examples:
-            self.speak("i dont know any examples of " + node)
+            #self.speak("i dont know any examples of " + node)
             return False
 
         c = 0

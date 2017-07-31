@@ -21,7 +21,7 @@ import os
 from adapt.intent import IntentBuilder
 from os.path import dirname, realpath
 
-from jarbas_utils.markov import MarkovChain
+from jarbas_utils.MarkovChains import MarkovChain
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from mycroft import MYCROFT_ROOT_PATH
