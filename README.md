@@ -7,12 +7,21 @@ This branch is a work in progress, all jarbas changes are being merged one by on
 
 Check the jarbas_docs folder for more info on each change as it is added
 
-This should install in a virtual env same as mycroft, not everything will work out of the box
+This should install in a virtual env just like mycroft, only debian scripts were updated
 
-- no google stt
+virtual env is named jarbas , it should be possible to have both mycroft and jarbas at same time, each one running in a different virtual env
+
+whenever official mycroft documentation mentions "workon mycroft" use "workon jarbas"
+
+not everything will work out of the box, expect bumps
+
+- no online config, must edit files
+- STT is currently broken (trying to get pocket sphinx stt option broke wake
+word)
+- no mycroft stt, must configure Kaldi or other online service
 - no shared api keys (twitter/facebook/weather/wolfram...)
-- No intent_failure handling unless connected to a [server](https://github.com/JarbasAI/JarbasAI/tree/patch-13)
-- some skills not fully functional  / added yet
+- some skills not fully functional  / added yet / configured for server
+
 
 # Want to help me work on mycroft full time?
 
