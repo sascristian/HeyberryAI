@@ -44,9 +44,9 @@ class AIMLChatbotFallback(FallbackSkill):
         self.parser = IntentParser(self.emitter)
         self.register_fallback(self.handle_fallback, 20)
         off_intent = IntentBuilder("AIMLOffIntent"). \
-            require("chatbotOFF").build()
+            require("StopKeyword").require("chatbotKeyword").build()
         on_intent = IntentBuilder("AIMLONIntent"). \
-            require("chatbotON").build()
+            require("StartKeyword").require("chatbotKeyword").build()
         ask_intent = IntentBuilder("askAIMLIntent"). \
             require("chatbotQuery").build()
         # register intents
@@ -91,7 +91,7 @@ class AIMLChatbotFallback(FallbackSkill):
             if id == self.skill_id:
                 # some intent from this skill will trigger
                 return False
-            self.speak(self.ask_brain(utterances[0]))
+            self.speak(self.ask_brain(utterances[0]), expect_response=True)
             return True
         return False
 
