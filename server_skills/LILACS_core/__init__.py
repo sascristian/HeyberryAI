@@ -860,7 +860,7 @@ class LilacsCoreSkill(FallbackSkill):
                 return True
             except:
                 try:
-                    definition = data["wolfram_answer"]
+                    definition = data["wolfram_description"]
                     self.speak(definition)
                     return True
                 except:
