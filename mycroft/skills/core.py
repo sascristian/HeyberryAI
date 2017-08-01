@@ -19,7 +19,7 @@
 import abc
 import imp
 import time
-
+import operator
 import os.path
 import re
 import time
@@ -42,7 +42,7 @@ __author__ = 'seanfitz'
 SKILLS_DIR = join(dirname(dirname(dirname(__file__))) ,"server_skills")
 
 skills_config = ConfigurationManager.instance().get("skills")
-BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
+BLACKLISTED_SKILLS = skills_config.get("blacklisted_skills", {})
 
 
 MainModule = '__init__'
@@ -190,15 +190,16 @@ class MycroftSkill(object):
     Skills implementation.
     """
 
-    def __init__(self, name, emitter=None):
-        self.name = name
+    def __init__(self, name=None, emitter=None):
+        self.name = name or self.__class__.__name__
+
         self.bind(emitter)
         self.config_core = ConfigurationManager.get()
-        self.config = self.config_core.get(name)
+        self.config = self.config_core.get(self.name)
         self.dialog_renderer = None
-        self.file_system = FileSystemAccess(join('skills', name))
+        self.file_system = FileSystemAccess(join('skills', self.name))
         self.registered_intents = []
-        self.log = getLogger(name)
+        self.log = getLogger(self.name)
         self.reload_skill = True
         self.external_reload = True
         self.external_shutdown = True
@@ -248,7 +249,7 @@ class MycroftSkill(object):
     def bind(self, emitter):
         if emitter:
             self.emitter = emitter
-            self.enclosure = EnclosureAPI(emitter)
+            self.enclosure = EnclosureAPI(emitter, self.name)
             self.__register_stop()
             self.emitter.on('enable_intent', self.handle_enable_intent)
             self.emitter.on('disable_intent', self.handle_disable_intent)
@@ -272,6 +273,14 @@ class MycroftSkill(object):
         """
         logger.debug("No initialize function implemented")
 
+    def converse(self, utterances, lang="en-us"):
+        return False
+
+    def make_active(self):
+        # bump skill to active_skill list in intent_service
+        # this ensures converse method is called
+        self.emitter.emit(Message('active_skill_request', {"skill_id":self.skill_id}))
+
     def _register_decorated(self):
         """
         Register all intent handlers that has been decorated with an intent.
@@ -281,14 +290,6 @@ class MycroftSkill(object):
             self.register_intent(intent_parser, handler, need_self=True)
         _intent_list = []
 
-    def converse(self, transcript, lang="en-us"):
-        return False
-
-    def make_active(self):
-        # bump skill to active_skill list in intent_service
-        # this ensures converse method is called
-        self.emitter.emit(Message('active_skill_request', {"skill_id":self.skill_id}))
-
     def register_intent(self, intent_parser, handler, need_self=False):
         name = intent_parser.name
         intent_parser.name = str(self.skill_id) + ':' + intent_parser.name
@@ -297,13 +298,17 @@ class MycroftSkill(object):
 
         def receive_handler(message):
             try:
-                self.emitter.emit(Message("executing.intent.start", {"status": "start", "intent": name}))
+                self.emitter.emit(Message("intent.execution.start", {"status":
+                                                                "start", "intent": name}))
                 if need_self:
                     # When registring from decorator self is required
                     handler(self, message)
                 else:
                     handler(message)
             except Exception as e:
+                self.emitter.emit(Message("intent.execution.start",
+                                          {"status": "start", "intent": name}))
+                handler(message)
                 # TODO: Localize
                 self.speak(
                     "An error occurred while processing a request in " +
@@ -311,10 +316,11 @@ class MycroftSkill(object):
                 logger.error(
                     "An error occurred while processing a request in " +
                     self.name, exc_info=True)
-                self.emitter.emit(
-                    Message("executing.intent.error", {"status": "failed", "intent": name, "exception": str(e)}))
+                self.emitter.emit(Message("intent.execution.error",
+                                          {"status": "failed", "intent": name, "exception": str(e)}))
                 return
-            self.emitter.emit(Message("executing.intent.end", {"status": "executed", "intent": name}))
+            self.emitter.emit(Message("intent.execution.end",
+                                      {"status": "executed", "intent": name}))
 
         if handler:
             self.emitter.on(intent_parser.name, self.handle_update_context)
@@ -364,13 +370,13 @@ class MycroftSkill(object):
         if context is None:
             context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False, "target": "all"}
         else:
-            if not context.get("destinatary"):
+            if "destinatary" not in context.keys():
                 context["destinatary"] = self.context.get("destinatary", "all")
-            if not context.get("target"):
+            if "target" not in context.keys():
                 context["target"] = self.context.get("destinatary", "all")
-            if not context.get("mute"):
+            if "mute" not in context.keys():
                 context["mute"] = self.context.get("mute", False)
-            if not context.get("more_speech"):
+            if "more_speech" not in context.keys():
                 context["more_speech"] = self.context.get("more_speech", False)
         if context.get("source", "skills") == "skills":
             context["source"] = self.name
@@ -382,6 +388,8 @@ class MycroftSkill(object):
             context = self.context
         if metadata is None:
             metadata = {}
+        # registers the skill as being active
+        self.enclosure.register(self.name)
         data = {'utterance': utterance,
                 'expect_response': expect_response,
                 "metadata": metadata}
@@ -450,3 +458,50 @@ class MycroftSkill(object):
         self.emitter.emit(
             Message("detach_skill", {"skill_id": str(self.skill_id) + ":"}))
         self.stop()
+
+
+class FallbackSkill(MycroftSkill):
+    fallback_handlers = {}
+
+    def __init__(self, name, emitter=None):
+        MycroftSkill.__init__(self, name, emitter)
+
+    @classmethod
+    def make_intent_failure_handler(cls, ws):
+        """Goes through all fallback handlers until one returns true"""
+
+        def handler(message):
+            for _, handler in sorted(cls.fallback_handlers.items(),
+                                     key=operator.itemgetter(0)):
+                try:
+                    if handler(message):
+                        return
+                except Exception as e:
+                    logger.info('Exception in fallback: ' + str(e))
+            ws.emit(Message('complete_intent_failure'))
+            logger.warn('No fallback could handle intent.')
+
+        return handler
+
+    @classmethod
+    def register_fallback(cls, handler, priority):
+        """
+        Register a function to be called as a general info fallback
+        Fallback should receive message and return
+        a boolean (True if succeeded or False if failed)
+
+        Lower priority gets run first
+        0 for high priority 100 for low priority
+        """
+        while priority in cls.fallback_handlers:
+            priority += 1
+
+        cls.fallback_handlers[priority] = handler
+
+    @classmethod
+    def remove_fallback(cls, handler_to_del):
+        for priority, handler in cls.fallback_handlers.items():
+            if handler == handler_to_del:
+                del cls.fallback_handlers[priority]
+                return
+        logger.warn('Could not remove fallback!')

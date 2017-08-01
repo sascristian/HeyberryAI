@@ -27,4 +27,11 @@ sudo apt-get install -y \
     automake \
     gnupg \
     unzip
+    xvfb \
+    firefox \
+    vlc \
+    libopencv-dev \
+    python-opencv \
+    libxml2-dev \
+    libxslt1-dev \
 

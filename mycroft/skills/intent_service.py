@@ -130,13 +130,14 @@ class IntentService(object):
             context = {}
         # by default set destinatary of reply to source of this message
         context["destinatary"] = context.get("source", "all")
-        context["target"] = context.get("target", context["destinatary"])
         context["mute"] = context.get("mute", False)
         context["source"] = source_name
         return context
 
     def handle_utterance(self, message):
         # Check if this message is for us
+        if message.context is None:
+            message.context = {}
         destinatary = message.context.get("destinatary", "skills")
         if destinatary != "skills" and destinatary != "all":
             return
@@ -147,7 +148,6 @@ class IntentService(object):
 
         utterances = message.data.get('utterances', '')
         context = self.get_context(message.context)
-
         # check for conversation time-out
         self.active_skills = [skill for skill in self.active_skills
                               if time.time() - skill[1] <= self.converse_timeout * 60]
@@ -159,10 +159,9 @@ class IntentService(object):
                 # intent stops conversing whether its being used or not
                 self.add_active_skill(skill[0])
                 return
-                # no skill wants to handle utterance, proceed
 
+        # no skill wants to handle utterance, proceed
         best_intent = None
-        logger.debug(context)
         for utterance in utterances:
             try:
                 # normalize() changes "it's a boy" to "it is boy", etc.
@@ -183,14 +182,9 @@ class IntentService(object):
             skill_id = int(best_intent['intent_type'].split(":")[0])
             self.add_active_skill(skill_id)
 
-        elif len(utterances) == 1:
+        else:
             self.emitter.emit(Message("intent_failure", {
                 "utterance": utterances[0],
-                "lang": lang
-            }, context))
-        else:
-            self.emitter.emit(Message("multi_utterance_intent_failure", {
-                "utterances": utterances,
                 "lang": lang
             }, context))
 

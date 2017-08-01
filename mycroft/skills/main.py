@@ -32,17 +32,22 @@ from mycroft.lock import Lock  # Creates PID file for single instance
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import load_skill, create_skill_descriptor, \
-    MainModule, SKILLS_DIR
+    MainModule, SKILLS_DIR, FallbackSkill
 from mycroft.skills.intent_service import IntentService
 from mycroft.util import connected
 from mycroft.util.log import getLogger
 
 import logging
 logging.getLogger("urllib3.connectionpool").setLevel("WARNING")
+from mycroft.api import is_paired
+import mycroft.dialog
 
 logger = getLogger("Skills")
 
 __author__ = 'seanfitz'
+
+pairing = False
+msm = False
 
 ws = None
 loaded_skills = {}
@@ -56,7 +61,7 @@ MSM_BIN = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm', 'msm'))
 
 skills_config = ConfigurationManager.instance().get("skills")
 PRIORITY_SKILLS = skills_config["priority_skills"]
-
+BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
 
 def connect():
     global ws
@@ -71,22 +76,19 @@ def install_default_skills(speak=True):
             speak (optional): Enable response for success. Default True
     """
     if exists(MSM_BIN):
-        p = subprocess.Popen(MSM_BIN + " default", stderr=subprocess.STDOUT,
-                             stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        res = p.returncode
+        res = subprocess.call(MSM_BIN + " default", stderr=subprocess.STDOUT,
+                              stdout=subprocess.PIPE, shell=True)
         if res == 0 and speak:
-            ws.emit(Message("speak", {
-                'utterance': mycroft.dialog.get("skills updated")}))
+            # ws.emit(Message("speak", {
+            #     'utterance': mycroft.dialog.get("skills updated")}))
+            pass
         elif not connected():
-            logger.error('msm failed, network connection is not available')
             ws.emit(Message("speak", {
                 'utterance': mycroft.dialog.get("no network connection")}))
         elif res != 0:
-            logger.error('msm failed with error {}: {}'.format(res, output))
             ws.emit(Message("speak", {
                 'utterance': mycroft.dialog.get(
-                    "sorry I couldn't install default skills")}))
+                             "sorry I couldn't install default skills")}))
 
     else:
         logger.error("Unable to invoke Mycroft Skill Manager: " + MSM_BIN)
@@ -95,16 +97,16 @@ def install_default_skills(speak=True):
 def skills_manager(message):
     global skills_manager_timer, ws
 
-    if connected():
-        if skills_manager_timer is None:
-            pass
-            # ws.emit(
-            #     Message("speak", {'utterance':
-            #             mycroft.dialog.get("checking for updates")}))
+    if msm:
+        if connected():
+            if skills_manager_timer is None:
+                 ws.emit(
+                     Message("speak", {'utterance':
+                             mycroft.dialog.get("checking for updates")}))
 
-        # Install default skills and look for updates via Github
-        logger.debug("==== Invoking Mycroft Skill Manager: " + MSM_BIN)
-        install_default_skills(False)
+            # Install default skills and look for updates via Github
+            logger.debug("==== Invoking Mycroft Skill Manager: " + MSM_BIN)
+            install_default_skills(False)
 
     # Perform check again once and hour
     skills_manager_timer = Timer(3600, _skills_manager_dispatch)
@@ -123,9 +125,10 @@ def _load_skills():
     check_connection()
 
     # Create skill_manager listener and invoke the first time
-    # ws.on('skill_manager', skills_manager)
-    # ws.on('mycroft.internet.connected', install_default_skills)
-    # ws.emit(Message('skill_manager', {}))
+    if msm:
+        ws.on('skill_manager', skills_manager)
+        ws.on('mycroft.internet.connected', install_default_skills)
+        ws.emit(Message('skill_manager', {}))
 
     # Create the Intent manager, which converts utterances to intents
     # This is the heart of the voice invoked skill system
@@ -140,6 +143,16 @@ def _load_skills():
 def check_connection():
     if connected():
         ws.emit(Message('mycroft.internet.connected'))
+        # check for pairing, if not automatically start pairing
+        if pairing:
+            if not is_paired():
+                # begin the process
+                payload = {
+                    'utterances': ["pair my device"],
+                    'lang': "en-us"
+                }
+                ws.emit(Message("recognizer_loop:utterance", payload,
+                                {"source": "skills"}))
     else:
         thread = Timer(1, check_connection)
         thread.daemon = True
@@ -212,6 +225,9 @@ def _watch_skills():
                 os.path.join(SKILLS_DIR, x)), os.listdir(SKILLS_DIR))
 
             for skill_folder in list:
+                if skill_folder in BLACKLISTED_SKILLS:
+                    continue
+
                 if skill_folder not in loaded_skills:
                     # check if its a new skill just added to skills_folder
                     id_counter += 1
@@ -223,17 +239,18 @@ def _watch_skills():
                     logger.debug("Skill " + skill_folder + " shutdown was requested")
                     skill["shutdown"] = False
                     if skill.get("loaded"):
-                        if skill["instance"].external_shutdown:
-                            skill["instance"].shutdown()
-                            del skill["instance"]
-                            skill["loaded"] = False
-                            ws.emit(Message("shutdown_skill_response", {"status": "shutdown", "skill_id": skill["id"]}))
-                            continue
-                        else:
-                            ws.emit(
-                                Message("shutdown_skill_response", {"status": "forbidden", "skill_id": skill["id"]}))
-                            logger.debug("External shutdown for " + skill_folder + " is forbidden")
-                            continue
+                        if skill.get("instance"):
+                            if skill["instance"].external_shutdown:
+                                skill["instance"].shutdown()
+                                del skill["instance"]
+                                skill["loaded"] = False
+                                ws.emit(Message("shutdown_skill_response", {"status": "shutdown", "skill_id": skill["id"]}))
+                                continue
+                            else:
+                                ws.emit(
+                                    Message("shutdown_skill_response", {"status": "forbidden", "skill_id": skill["id"]}))
+                                logger.debug("External shutdown for " + skill_folder + " is forbidden")
+                                continue
                     else:
                         ws.emit(Message("shutdown_skill_response", {"status": "shutdown", "skill_id": skill["id"]}))
                         logger.debug(skill_folder + " already shutdown")
@@ -276,11 +293,11 @@ def _watch_skills():
                     if not skill["do_not_reload"]:
                         logger.debug("Reloading Skill: " + skill_folder)
                         # removing listeners and stopping threads
-                        try:
+                        if skill.get("instance") is not None:
                             logger.debug("Shutting down Skill: " + skill_folder)
                             skill["instance"].shutdown()
                             del skill["instance"]
-                        except:
+                        else:
                             logger.debug("Skill " + skill_folder + " is already shutdown")
 
                 # load skill
@@ -406,8 +423,7 @@ def main():
         logger.debug(message)
 
     ws.on('message', _echo)
-
-    # Kick off loading of skills
+    ws.on('intent_failure', FallbackSkill.make_intent_failure_handler(ws))
     ws.once('open', _load_skills)
     ws.on('converse_status_request', handle_conversation_request)
     ws.on('reload_skill_request', handle_reload_skill_request)
