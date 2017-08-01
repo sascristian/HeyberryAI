@@ -1,7 +1,0 @@
-{
-  "utterance": "what are you wearing",
-  "intent_type": "WhatAreYouWearingIntent",
-  "intent": {
-    "WhatAreYouWearingKeyphrase": "what are you wearing"
-  }
-}

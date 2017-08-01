@@ -1,7 +1,0 @@
-{
-  "utterance": "im lonely",
-  "intent_type": "ImLonelyIntent",
-  "intent": {
-    "ImLonelyKeyphrase": "im loney"
-  }
-}

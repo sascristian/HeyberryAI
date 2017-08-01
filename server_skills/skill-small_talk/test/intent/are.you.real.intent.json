@@ -1,7 +1,0 @@
-{
-  "utterance": "are you real",
-  "intent_type": "AreYouRealIntent",
-  "intent": {
-    "AreYouRealKeyphrase": "are you real"
-  }
-}

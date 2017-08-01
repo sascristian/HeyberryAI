@@ -1,7 +1,0 @@
-{
-  "utterance": "do you sleep",
-  "intent_type": "DoYouSleepIntent",
-  "intent": {
-    "DoYouSleepKeyphrase": "do you sleep"
-  }
-}

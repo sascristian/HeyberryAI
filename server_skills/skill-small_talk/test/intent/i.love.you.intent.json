@@ -1,7 +1,0 @@
-{
-  "utterance": "i love you",
-  "intent_type": "ILoveYouIntent",
-  "intent": {
-    "ILoveYouKeyphrase": "i love you"
-  }
-}

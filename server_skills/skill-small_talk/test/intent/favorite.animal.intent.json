@@ -1,7 +1,0 @@
-{
-  "utterance": "what is your favorite animal",
-  "intent_type": "FavoriteAnimalIntent",
-  "intent": {
-    "FavoriteAnimalKeyphrase": "favorite animal"
-  }
-}

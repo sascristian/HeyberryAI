@@ -1,7 +1,0 @@
-{
-  "utterance": "where do babies come from",
-  "intent_type": "WhereDoBabiesComeFromIntent",
-  "intent": {
-    "WhereDoBabiesComeFromKeyphrase": "where do babies come from"
-  }
-}

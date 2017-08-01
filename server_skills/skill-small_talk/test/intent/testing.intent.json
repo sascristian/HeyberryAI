@@ -1,7 +1,0 @@
-{
-  "utterance": "testing",
-  "intent_type": "TestingIntent",
-  "intent": {
-    "TestingKeyphrase": "testing"
-  }
-}

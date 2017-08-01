@@ -1,7 +1,0 @@
-{
-  "utterance": "do you have a baby",
-  "intent_type": "DoYouHaveABabyIntent",
-  "intent": {
-    "DoYouHaveABabyKeyphrase": "do you have a baby"
-  }
-}

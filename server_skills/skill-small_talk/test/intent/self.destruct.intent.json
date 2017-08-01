@@ -1,7 +1,0 @@
-{
-  "utterance": "self destruct",
-  "intent_type": "SelfDestructIntent",
-  "intent": {
-    "SelfDestructKeyphrase": "self destruct"
-  }
-}

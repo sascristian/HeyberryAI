@@ -1,7 +1,0 @@
-{
-  "utterance": "what are you doing",
-  "intent_type": "WhatAreYouDoingIntent",
-  "intent": {
-    "WhatAreYouDoingKeyphrase": "what are you doing"
-  }
-}

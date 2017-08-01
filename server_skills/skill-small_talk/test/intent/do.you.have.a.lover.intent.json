@@ -1,7 +1,0 @@
-{
-  "utterance": "do you have a lover",
-  "intent_type": "DoYouHaveALoverIntent",
-  "intent": {
-    "DoYouHaveALoverKeyphrase": "do you have a lover"
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "utterance": "do you know cortana",
-  "intent_type": "DoYouKnowAiIntent",
-  "intent": {
-    "DoYouKnowAiKeyphrase": "cortana"
-  }
-}
