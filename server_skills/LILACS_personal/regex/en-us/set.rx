@@ -1,0 +1,2 @@
+(your) (?P<Self_New_Key>.*) (is|are|also is|is also|also are|are also) (?P<Self_Data_String>.*)
+(your|you) (were|is|are|also is|is also|also|are|are also) (?P<Self_New_Key>.*) (in|at|on|for) (?P<Self_Data_String>.*)

@@ -16,29 +16,30 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-import webbrowser
-from time import sleep
-from adapt.intent import IntentBuilder
-import os
 import sys
+from time import sleep
+
+import os
+from adapt.intent import IntentBuilder
 from os.path import dirname
+
 sys.path.append(dirname(dirname(__file__)))
 from LILACS_core.concept import ConceptConnector
 from LILACS_core.crawler import ConceptCrawler
-from LILACS_core.question_parser import LILACSQuestionParser
+from jarbas_utils.question_parser import LILACSQuestionParser
 # import helper questions functions
 from LILACS_core.questions import *
 
-from mycroft.util.jarbas_services import KnowledgeService, LILACSstorageService
-from mycroft.skills.core import MycroftSkill
+from jarbas_utils.jarbas_services import KnowledgeService
 from mycroft.util.log import getLogger
+from mycroft.skills.core import FallbackSkill
 
 logger = getLogger("Skills")
 
 __authors__ = ["jarbas", "heinzschmidt"]
 
 
-class LilacsCoreSkill(MycroftSkill):
+class LilacsCoreSkill(FallbackSkill):
     # https://github.com/ElliotTheRobot/LILACS-mycroft-core/issues/28
     # https://github.com/ElliotTheRobot/LILACS-mycroft-core/blob/dev/lilacs-core.png
     def __init__(self):
@@ -73,9 +74,8 @@ class LilacsCoreSkill(MycroftSkill):
         self.last_data = {}
 
     def initialize(self):
-
-        self.emitter.on("intent_failure", self.handle_fallback)
-        self.emitter.on("multi_utterance_intent_failure", self.handle_multiple_fallback)
+        self.register_fallback(self.handle_fallback, 0)
+        #self.emitter.on("intent_failure", self.handle_fallback)
         self.emitter.on("LILACS_feedback", self.feedback)
 
         self.parser = LILACSQuestionParser()
@@ -188,7 +188,10 @@ class LilacsCoreSkill(MycroftSkill):
             nodes = self.connector.get_concept_names()
         for node in nodes:
             self.log.info("saving node: " + node)
-            self.connector.save_concept(node)
+            if node == "self" or node == "current_user":
+                self.connector.save_concept(node, "user")
+            else:
+                self.connector.save_concept(node)
 
     def parse_utterance(self, utterance):
         # get question type from utterance
@@ -222,10 +225,10 @@ class LilacsCoreSkill(MycroftSkill):
 
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
-            self.speak("i am not sure what the question is about")
+            #self.speak("i am not sure what the question is about")
 
             self.answered = self.handle_learning(utterance)
-            return
+            return self.answered
 
         # update data for feedback
         self.last_center = center_node
@@ -255,8 +258,8 @@ class LilacsCoreSkill(MycroftSkill):
             total_nodes.append(synonims[node])
 
         for node in total_nodes:
-            if node not in self.connector.get_concept_names():
-                self.connector.load_concept(node)
+            #if node not in self.connector.get_concept_names():
+            self.connector.load_concept(node)
 
         #nodes += midle
         childs = {}
@@ -277,7 +280,7 @@ class LilacsCoreSkill(MycroftSkill):
             self.answered = self.handle_how_intent(utterance)
         elif question == "who":
             # TODO find a good backend for persons only!
-            self.answered = self.handle_what_intent(center_node)
+            self.answered = self.handle_who_intent(center_node)
         elif question == "when":
             pass
         elif question == "where":
@@ -313,7 +316,7 @@ class LilacsCoreSkill(MycroftSkill):
         if self.debug:
             self.speak("answered: " + str(self.answered))
         self.save_nodes(total_nodes)
-
+        return self.answered
 
     def handle_update_connector(self, nodes=None, parents=None, childs=None, synonims=None, antonims=None, data=None):
         # nodes = [ node_names ]
@@ -389,28 +392,23 @@ class LilacsCoreSkill(MycroftSkill):
 
     def handle_learning(self, utterance):
         self.log.info("learning correct answer")
-        self.speak("learning correct answer")
+        #self.speak("learning correct answer")
         if self.debug:
             self.speak("Searching wolfram alpha")
         # this is placeholder, always call wolfram, when question type is fully implemented wolfram maybe wont be called
         learned = self.handle_unknown_intent(utterance)
 
         if not learned:
-            self.speak("i dont know the answer")
+            pass
+            #self.speak("i dont know the answer")
         return learned
         # TODO ask user questions about unknown nodes, teach skill handles response
 
     def handle_fallback(self, message):
-        # on single utterance intent failure ask user for correct answer
+        # try to deduce and learn an answer
         utterance = message.data["utterance"]
         self.context = self.get_context(message.context)
-        self.deduce_answer(utterance)
-
-    def handle_multiple_fallback(self, message):
-        # on multiple utterance intent failure ask user for correct answer
-        utterances = message.data["utterances"]
-        for utterance in utterances:
-            self.deduce_answer(utterance)
+        return self.deduce_answer(utterance)
 
     # questions methods
 
@@ -612,6 +610,7 @@ class LilacsCoreSkill(MycroftSkill):
 
     def handle_why(self, center_node, target_node):
         # is this that
+        # is this that
         self.crawler.update_connector(self.connector)
         flag = is_this_that(center_node, target_node, self.crawler)
         self.speak("answer to is " + center_node + " a " + target_node + " is " + str(flag))
@@ -674,7 +673,7 @@ class LilacsCoreSkill(MycroftSkill):
         self.crawler.update_connector(self.connector)
         examples = examples_of_this(node, self.crawler)
         if not examples:
-            self.speak("i dont know any examples of " + node)
+            #self.speak("i dont know any examples of " + node)
             return False
 
         c = 0
@@ -712,8 +711,16 @@ class LilacsCoreSkill(MycroftSkill):
             self.speak("node name:" + node)
             self.speak("node data: " + str(data))
 
+        if node == "self":
+            list = data.get("description", [])
+            if len(list) == 0:
+                return False
+            else:
+                self.speak(random.choice(list))
+                return True
+
         # get data from web
-        if data == {}:
+        elif data == {}:
             self.log.info("no node data available")
             if self.debug:
                 self.speak("seaching dbpedia")
@@ -816,12 +823,13 @@ class LilacsCoreSkill(MycroftSkill):
         #self.save_nodes([node])
         # read node data
         try:
-            self.log.info("showing pic in browser")
+            #self.log.info("showing pic in browser")
             pic = data["pic"][0]
             self.log.info(pic)
             #webbrowser.open(pic)
         except:
-            self.log.info("could not show pic in browser")
+            pass
+            #self.log.info("could not show pic in browser")
 
         try:
             abstract = data["abstract"]
@@ -858,22 +866,40 @@ class LilacsCoreSkill(MycroftSkill):
 
     def handle_who_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
+            list = data.get("name", {}).get("info", {}).keys()
+            if len(list) == 0:
+                return False
+            else:
+                self.speak("I am " + random.choice(list))
+                return True
+        else:
+            return self.handle_what_intent(node)
         return False
 
     def handle_when_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
         return False
 
     def handle_where_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
         return False
 
     def handle_which_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
         return False
 
     def handle_whose_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
         return False
 
     # feedback
