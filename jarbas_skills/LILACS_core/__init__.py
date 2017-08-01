@@ -188,7 +188,10 @@ class LilacsCoreSkill(FallbackSkill):
             nodes = self.connector.get_concept_names()
         for node in nodes:
             self.log.info("saving node: " + node)
-            self.connector.save_concept(node)
+            if node == "self" or node == "current_user":
+                self.connector.save_concept(node, "user")
+            else:
+                self.connector.save_concept(node)
 
     def parse_utterance(self, utterance):
         # get question type from utterance
@@ -255,8 +258,8 @@ class LilacsCoreSkill(FallbackSkill):
             total_nodes.append(synonims[node])
 
         for node in total_nodes:
-            if node not in self.connector.get_concept_names():
-                self.connector.load_concept(node)
+            #if node not in self.connector.get_concept_names():
+            self.connector.load_concept(node)
 
         #nodes += midle
         childs = {}
@@ -277,7 +280,7 @@ class LilacsCoreSkill(FallbackSkill):
             self.answered = self.handle_how_intent(utterance)
         elif question == "who":
             # TODO find a good backend for persons only!
-            self.answered = self.handle_what_intent(center_node)
+            self.answered = self.handle_who_intent(center_node)
         elif question == "when":
             pass
         elif question == "where":
@@ -607,6 +610,7 @@ class LilacsCoreSkill(FallbackSkill):
 
     def handle_why(self, center_node, target_node):
         # is this that
+        # is this that
         self.crawler.update_connector(self.connector)
         flag = is_this_that(center_node, target_node, self.crawler)
         self.speak("answer to is " + center_node + " a " + target_node + " is " + str(flag))
@@ -707,8 +711,16 @@ class LilacsCoreSkill(FallbackSkill):
             self.speak("node name:" + node)
             self.speak("node data: " + str(data))
 
+        if node == "self":
+            list = data.get("description", [])
+            if len(list) == 0:
+                return False
+            else:
+                self.speak(random.choice(list))
+                return True
+
         # get data from web
-        if data == {}:
+        elif data == {}:
             self.log.info("no node data available")
             if self.debug:
                 self.speak("seaching dbpedia")
@@ -811,12 +823,13 @@ class LilacsCoreSkill(FallbackSkill):
         #self.save_nodes([node])
         # read node data
         try:
-            self.log.info("showing pic in browser")
+            #self.log.info("showing pic in browser")
             pic = data["pic"][0]
             self.log.info(pic)
             #webbrowser.open(pic)
         except:
-            self.log.info("could not show pic in browser")
+            pass
+            #self.log.info("could not show pic in browser")
 
         try:
             abstract = data["abstract"]
@@ -853,22 +866,40 @@ class LilacsCoreSkill(FallbackSkill):
 
     def handle_who_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
+            list = data.get("name", {}).get("info", {}).keys()
+            if len(list) == 0:
+                return False
+            else:
+                self.speak("I am " + random.choice(list))
+                return True
+        else:
+            return self.handle_what_intent(node)
         return False
 
     def handle_when_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
         return False
 
     def handle_where_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
         return False
 
     def handle_which_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
         return False
 
     def handle_whose_intent(self, node):
         self.crawler.update_connector(self.connector)
+        if node == "self":
+            data = self.connector.get_data("self")
         return False
 
     # feedback

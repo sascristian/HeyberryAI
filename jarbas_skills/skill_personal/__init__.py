@@ -49,13 +49,13 @@ class PersonalSkill(MycroftSkill):
 
         who_are_you_intent = IntentBuilder("WhoAreYouIntent")\
             .require("WhoAreYouKeyword").build()
-        self.register_intent(who_are_you_intent,
-                             self.handle_who_are_you_intent)
+        #self.register_intent(who_are_you_intent,
+        #                     self.handle_who_are_you_intent)
 
         what_are_you_intent = IntentBuilder("WhatAreYouIntent")\
             .require("WhatAreYouKeyword").build()
-        self.register_intent(what_are_you_intent,
-                             self.handle_what_are_you_intent)
+        #self.register_intent(what_are_you_intent,
+        #                     self.handle_what_are_you_intent)
 
     def handle_when_were_you_born_intent(self, message):
         self.speak_dialog("when.was.i.born")
