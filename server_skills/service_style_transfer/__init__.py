@@ -33,7 +33,7 @@ EPSILON = 1e-08
 STYLE_SCALE = 1.0
 ITERATIONS = 1000
 VGG_PATH = MYCROFT_ROOT_PATH + \
-           '/mycroft/models/vgg19/imagenet-vgg-verydeep-19.mat'
+           '/jarbas_models/tf_vgg19/imagenet-vgg-verydeep-19.mat'
 POOLING = 'max'
 
 

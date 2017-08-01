@@ -53,7 +53,7 @@ class ImageRecognitionSkill(MycroftSkill):
         # Path to classify_image_graph_def.pb,
         # imagenet_synset_to_human_label_map.txt, and
         # imagenet_2012_challenge_label_map_proto.pbtxt
-        self.model_dir = root_path + "/mycroft/models/inception"
+        self.model_dir = root_path + "jarbas_models/tf_inception"
         # where to download
         self.DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
         # number of predictions to return
