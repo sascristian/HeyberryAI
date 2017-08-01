@@ -1,6 +1,6 @@
 # Copyright (c) 2015-2017 Anish Athalye. Released under GPLv3.
 
-from mycroft.models.vgg19 import vgg19
+from jarbas_models.tf_vgg19 import vgg19
 
 import tensorflow as tf
 import numpy as np
