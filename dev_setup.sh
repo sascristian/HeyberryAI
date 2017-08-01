@@ -69,7 +69,13 @@ pip install --upgrade virtualenv
 
 # install requirements (except pocketsphinx)
 # removing the pip2 explicit usage here for consistency with the above use.
-pip install -r requirements.txt 
+if ! pip install -r requirements.txt; then
+    echo "Warning: Failed to install all requirements. Continue? y/N"
+    read -n1 continue
+    if [[ "$continue" != "y" ]] ; then
+        exit 1
+    fi
+fi
 
 if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
   CORES=1
