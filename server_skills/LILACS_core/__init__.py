@@ -327,10 +327,9 @@ class LilacsCoreSkill(FallbackSkill):
         # if no answer ask user
         if not self.answered:
             self.answered = self.handle_learning(utterance, center_node, True)
-
-        self.log.info("learned: " + str(self.answered))
-        if self.debug:
-            self.speak("learned: " + str(self.answered))
+            self.log.info("learned: " + str(self.answered))
+            if self.debug:
+                self.speak("learned: " + str(self.answered))
 
         self.save_nodes(total_nodes)
         return self.answered
