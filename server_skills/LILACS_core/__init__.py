@@ -311,7 +311,7 @@ class LilacsCoreSkill(FallbackSkill):
             pass
         elif question == "talk" or question == "rant":
             self.answered = self.handle_talk_about(center_node, target_node, utterance)
-        elif question == "think":
+        elif question == "think" or question == "wonder":
             self.answered = self.handle_think_about(center_node)
         elif question == "in common":
             self.answered = self.handle_relation(center_node, target_node)

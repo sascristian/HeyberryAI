@@ -22,6 +22,11 @@ class EnglishQuestionParser():
                 "(?P<Query1>.*) (?P<QuestionVerb>is|are|was|were) "
                 "(?P<Query2>.*)"),
             re.compile(
+                ".*(?P<QuestionWord>think|wonder|talk|rant) "
+                " (?P<QuestionVerb>about|off|in|of) "
+                ""
+                "(?P<Query>.*)"),
+            re.compile(
                 ".*(?P<QuestionWord>are|is) "
                 "(?P<Query1>.*) (?P<QuestionVerb>an|a|an example off|an instance off) "
                 "(?P<Query2>.*)"),
