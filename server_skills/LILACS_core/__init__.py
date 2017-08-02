@@ -505,15 +505,24 @@ class LilacsCoreSkill(FallbackSkill):
 
         # get related nodes
         rel = self.connector.get_cousins(node)
+        if self.debug:
+            self.speak("focus level: " + str(self.focus))
+            self.speak("related nodes: " + str(rel))
         self.log.info("focus level: " + str(self.focus))
         self.log.info("related nodes: " + str(rel))
         if self.focus > 15:
             # previous
+            if self.debug:
+                self.speak("focusing only in nodes related to previous node")
+                self.speak("thinking about: " + str(related))
             self.log.info("focusing only in nodes related to previous node")
             self.log.info("thinking about: " + str(related))
 
         if self.focus < 10:
             # previous
+            if self.debug:
+                self.speak("forgetting previous nodes, focusing on node: " + node)
+                self.speak("thinking about:" + str(related))
             self.log.info("forgetting previous nodes, focusing on node: " + node)
             # only related to this node
             related = rel
@@ -522,9 +531,13 @@ class LilacsCoreSkill(FallbackSkill):
         if self.focus == 0 or related == {}:
             if related == {}:
                 self.log.info("no related nodes available")
+            if self.debug:
+                self.speak("adquiring new nodes")
             self.log.info("adquiring new nodes")
             # keep both
             related.update(rel)
+            if self.debug:
+                self.speak("thinking about:" + str(related))
             self.log.info("thinking about:" + str(related))
 
         try:
@@ -532,6 +545,8 @@ class LilacsCoreSkill(FallbackSkill):
             if self.focus < 15 or related == {}:
                 if related == {}:
                     self.log.info("no related nodes available")
+                if self.debug:
+                    self.speak("Getting parents and childs of this node")
                 self.log.info("Getting parents and childs of this node")
                 for c in self.connector.get_parents(node):
                     if c not in related:
@@ -542,6 +557,8 @@ class LilacsCoreSkill(FallbackSkill):
             if self.focus < 10 or related == {}:
                 if related == {}:
                     self.log.info("no related nodes available")
+                if self.debug:
+                    self.speak("Getting synonims and antonims of this node")
                 self.log.info("Getting synonims and antonims of this node")
                 for c in self.connector.get_synonims(node):
                     if c not in related:
