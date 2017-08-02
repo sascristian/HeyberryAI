@@ -487,7 +487,7 @@ class LilacsCoreSkill(FallbackSkill):
 
     def handle_think_about(self, node, related=None):
         if related is None:
-            related = []
+            related = {}
         # talk until no more related subjects
         # say what
         talked = self.handle_what_intent(node)
