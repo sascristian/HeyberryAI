@@ -519,43 +519,41 @@ class LilacsCoreSkill(FallbackSkill):
             related = rel
             self.log.info("thinking about:" + str(related))
 
-        if self.focus == 0 or related == []:
-            if related == []:
+        if self.focus == 0 or related == {}:
+            if related == {}:
                 self.log.info("no related nodes available")
             self.log.info("adquiring new nodes")
             # keep both
-            related += rel
+            related.update(rel)
             self.log.info("thinking about:" + str(related))
 
         try:
             # add parents and childs ot possible choice
-            if self.focus < 15 or related == []:
-                if related == []:
+            if self.focus < 15 or related == {}:
+                if related == {}:
                     self.log.info("no related nodes available")
                 self.log.info("Getting parents and childs of this node")
                 for c in self.connector.get_parents(node):
                     if c not in related:
-                        related.append(c)
+                        related[c] = 5
                 for c in self.connector.get_childs(node):
                     if c not in related:
-                        related.append(c)
-            if self.focus < 10 or related == []:
-                if related == []:
+                        related[c] = 5
+            if self.focus < 10 or related == {}:
+                if related == {}:
                     self.log.info("no related nodes available")
                 self.log.info("Getting synonims and antonims of this node")
                 for c in self.connector.get_synonims(node):
                     if c not in related:
-                        related.append(c)
+                        related[c] = 5
                 for c in self.connector.get_antonims(node):
                     if c not in related:
-                        related.append(c)
+                        related[c] = 5
 
-            # remove self from list
-            i = 0
+            # remove self from dict
             for c in related:
                 if c.lower() == node.lower():
-                    related.pop(i)
-                i += 1
+                    related.pop(c)
 
             if self.debug:
                 self.speak("related subjects: " + str(related))
