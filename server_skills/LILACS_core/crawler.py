@@ -212,7 +212,7 @@ class ConceptCrawler():
             # turn all values into a value between 0 and 1
             # multiply by 100
             # smaller values are more important
-            new_weights[node] = int(100 - sigmoid(nodes[node]) * 100)
+            new_weights[node] = int(102 - sigmoid(nodes[node]) * 100)
         self.logger.info("next node weights are: " + str(new_weights))
 
         list = [k for k in new_weights for dummy in range(new_weights[k])]
