@@ -34,7 +34,6 @@ __author__ = 'jarbas'
 logger = getLogger(__name__)
 
 
-
 class LILACSWikipediaSkill(MycroftSkill):
     def __init__(self):
         super(LILACSWikipediaSkill, self).__init__(
@@ -53,6 +52,7 @@ class LILACSWikipediaSkill(MycroftSkill):
         intent = IntentBuilder("WikipediaIntent").require(
             "WikipediaKeyword").require("ArticleTitle").build()
         self.register_intent(intent, self.handle_intent)
+
         self.emitter.on("wikipedia.request", self.handle_ask_wikipedia)
         test_intent = IntentBuilder("TestWikipediaIntent") \
             .require("testp").require("Subject").build()
