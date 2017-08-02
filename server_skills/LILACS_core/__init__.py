@@ -667,7 +667,7 @@ class LilacsCoreSkill(FallbackSkill):
         childs = {}
         antonims = {}
         if self.debug:
-            self.speak("new nodes from wolfram alpha answer: " + answer)
+            self.speak("new nodes from wolfram alpha answer: " + str(answer))
             self.speak("parents: " + str(parents))
             self.speak("synonims: " + str(synonims))
             self.speak("relevant: " + str(relevant))
@@ -685,6 +685,8 @@ class LilacsCoreSkill(FallbackSkill):
             self.speak("searching examples of: " + node)
         self.crawler.update_connector(self.connector)
         examples = examples_of_this(node, self.crawler)
+        if self.debug:
+            self.speak("examples: " + str(examples))
         if not examples:
             #self.speak("i dont know any examples of " + node)
             return False
@@ -701,7 +703,7 @@ class LilacsCoreSkill(FallbackSkill):
                     i += 1
 
             if example != node:
-                self.speak(example + " is an example of " + node)
+                self.speak(str(example) + " is an example of " + str(node))
             i = 0
             for e in examples:
                 if example == e:

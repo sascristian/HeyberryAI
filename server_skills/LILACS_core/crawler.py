@@ -241,8 +241,8 @@ class ConceptCrawler():
         # count visits to each node
         self.visits = {}
         # start at center node
-        self.logger.info("start node: " + center_node)
-        self.logger.info("target node: " + target_node)
+        self.logger.info("start node: " + str(center_node))
+        self.logger.info("target node: " + str(target_node))
 
         next_node = self.choose_next_node(center_node, direction)
 
@@ -269,11 +269,11 @@ class ConceptCrawler():
                 #    # do not crawl further
                 #    self.logger.info("Maximum crawl depth reached: " + str(crawl_depth))
                 #    return False
-            self.logger.info( "next: " + next_node)
+            self.logger.info( "next: " + str(next_node))
             self.logger.info( "depth: " + str(crawl_depth))
             # see if we already crawled this
             if next_node in self.crawled:
-                self.logger.info("crawling this node again: " + next_node)
+                self.logger.info("crawling this node again: " + str(next_node))
                 # increase visit counter
                 self.visits[next_node] += 1
                 self.logger.info("number of visits: " + str(self.visits[next_node]))
@@ -283,7 +283,8 @@ class ConceptCrawler():
                 i = 0
                 for node in self.uncrawled:
                     if node == next_node:
-                        self.logger.info("removing node from uncrawled node list: " + node)
+                        self.logger.info("removing node from uncrawled node "
+                                         "list: " + str(node))
                         self.uncrawled.pop(i)
                     i += 1
                 # chose another to crawl
