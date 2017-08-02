@@ -568,14 +568,13 @@ class LilacsCoreSkill(FallbackSkill):
                         related[c] = 5
 
             # remove self from dict
-            for c in related:
-                if c.lower() == node.lower():
-                    related.pop(c)
+            if node in related.keys():
+                related.pop(node)
 
             if self.debug:
                 self.speak("related subjects: " + str(related))
             # pick one at random
-            choice = random.choice(related).lower()
+            choice = random.choice(related.keys()).lower()
             self.log.info("current tought: " + choice)
             if self.debug:
                 self.speak("chosing related topic: " + choice)
@@ -583,10 +582,12 @@ class LilacsCoreSkill(FallbackSkill):
             more = self.handle_think_about(choice, related)
             if not more:
                 f, ans = self.handle_unknown_intent(choice)
-        except:
+        except Exception as e:
             if self.debug:
                 self.speak("could not find related info")
+                self.speak(str(e))
             self.log.info("could not find related info")
+            self.log.error(str(e))
         return talked
 
     def handle_talk_about(self, node, node2, utterance=""):
