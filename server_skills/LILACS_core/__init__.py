@@ -227,23 +227,28 @@ class LilacsCoreSkill(FallbackSkill):
 
         except Exception as e:
             logger.error(e)
-            center_node = None
+            center_node = ""
+            target_node = ""
+            question = "unknown"
+            parents = {}
+            synonims = {}
+            midle = []
 
-            # update data for feedback
-            self.last_center = center_node
-            self.last_target = target_node
-            self.last_question = utterance
-            self.last_question_type = question
-            # TODO maybe add question verb to parser, may be needed for disambiguation between types
-            # TODO add more question types
-            if self.debug:
-                self.speak("Pre-processing of utterance : " + utterance)
-                self.speak("question type: " + str(question))
-                self.speak("center_node: " + str(center_node))
-                self.speak("target_node: " + str(target_node))
-                self.speak("parents: " + str(parents))
-                self.speak("synonims: " + str(synonims))
-                self.speak("related: " + str(midle))
+        # update data for feedback
+        self.last_center = center_node
+        self.last_target = target_node
+        self.last_question = utterance
+        self.last_question_type = question
+        # TODO maybe add question verb to parser, may be needed for disambiguation between types
+        # TODO add more question types
+        if self.debug:
+            self.speak("Pre-processing of utterance : " + utterance)
+            self.speak("question type: " + str(question))
+            self.speak("center_node: " + str(center_node))
+            self.speak("target_node: " + str(target_node))
+            self.speak("parents: " + str(parents))
+            self.speak("synonims: " + str(synonims))
+            self.speak("related: " + str(midle))
 
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
