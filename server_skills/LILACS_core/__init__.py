@@ -186,14 +186,18 @@ class LilacsCoreSkill(FallbackSkill):
     def save_nodes(self, nodes=None):
         if nodes is None:
             nodes = self.connector.get_concept_names()
+        saved = []
         for node in nodes:
+            if node is None or node in saved or node == "" or node == " ":
+                continue
             self.log.info("saving node: " + node)
             if node == "self" or node == "current_user":
                 self.connector.save_concept(node, "user")
             else:
                 self.connector.save_concept(node)
+            saved.append(node)
         if self.debug:
-            self.speak("saved nodes: " + str(nodes))
+            self.speak("saved nodes: " + str(saved))
 
     def parse_utterance(self, utterance):
         # get question type from utterance
@@ -259,7 +263,11 @@ class LilacsCoreSkill(FallbackSkill):
         for node in synonims:
             total_nodes.append(synonims[node])
 
+        loaded = []
         for node in total_nodes:
+            if node is None or node in loaded or node == "" or node == " ":
+                continue
+            loaded.append(node)
             #if node not in self.connector.get_concept_names():
             self.connector.load_concept(node)
 
