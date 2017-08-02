@@ -187,7 +187,8 @@ class ConceptCrawler():
             self.logger.error(e)
         # if no connections found return
         if len(nodes) == 0:
-            self.logger.info(node + " doesn't have any " + direction + " connection")
+            self.logger.info(str(node) + " doesn't have any " + str(direction)
+                             + " connection")
             return None
 
         # add these nodes to "nodes to crawl"
@@ -220,6 +221,7 @@ class ConceptCrawler():
         else:
             # choose a node to crawl next
             next_node = random.choice(list)
+        self.logger.info("Next node: " + str(next_node))
         return next_node
 
     def reset_visit_counter(self):
