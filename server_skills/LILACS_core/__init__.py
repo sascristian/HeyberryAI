@@ -192,6 +192,8 @@ class LilacsCoreSkill(FallbackSkill):
                 self.connector.save_concept(node, "user")
             else:
                 self.connector.save_concept(node)
+        if self.debug:
+            self.speak("saved nodes: " + str(nodes))
 
     def parse_utterance(self, utterance):
         # get question type from utterance
@@ -310,13 +312,18 @@ class LilacsCoreSkill(FallbackSkill):
         else:# question == "unknown":
             self.answered, answer = self.handle_unknown_intent(utterance)
 
+        self.log.info("answered: " + str(self.answered))
+        if self.debug:
+            self.speak("answered: " + str(self.answered))
+
         # if no answer ask user
         if not self.answered:
             self.answered = self.handle_learning(utterance, center_node, True)
 
-        self.log.info("answered: " + str(self.answered))
+        self.log.info("learned: " + str(self.answered))
         if self.debug:
-            self.speak("answered: " + str(self.answered))
+            self.speak("learned: " + str(self.answered))
+
         self.save_nodes(total_nodes)
         return self.answered
 
@@ -673,6 +680,9 @@ class LilacsCoreSkill(FallbackSkill):
         return False, answer
 
     def handle_examples_intent(self, node):
+        self.log.info("searching examples of: " + node)
+        if self.debug:
+            self.speak("searching examples of: " + node)
         self.crawler.update_connector(self.connector)
         examples = examples_of_this(node, self.crawler)
         if not examples:
