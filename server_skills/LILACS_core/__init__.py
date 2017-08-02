@@ -229,28 +229,30 @@ class LilacsCoreSkill(FallbackSkill):
             logger.error(e)
             center_node = None
 
+            # update data for feedback
+            self.last_center = center_node
+            self.last_target = target_node
+            self.last_question = utterance
+            self.last_question_type = question
+            # TODO maybe add question verb to parser, may be needed for disambiguation between types
+            # TODO add more question types
+            if self.debug:
+                self.speak("Pre-processing of utterance : " + utterance)
+                self.speak("question type: " + str(question))
+                self.speak("center_node: " + str(center_node))
+                self.speak("target_node: " + str(target_node))
+                self.speak("parents: " + str(parents))
+                self.speak("synonims: " + str(synonims))
+                self.speak("related: " + str(midle))
+
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
-            #self.speak("i am not sure what the question is about")
+            if self.debug:
+                self.speak("i am not sure what the question is about")
 
             self.answered = self.handle_learning(utterance)
             return self.answered
 
-        # update data for feedback
-        self.last_center = center_node
-        self.last_target = target_node
-        self.last_question = utterance
-        self.last_question_type = question
-        # TODO maybe add question verb to parser, may be needed for disambiguation between types
-        # TODO add more question types
-        if self.debug:
-            self.speak("Pre-processing of utterance : " + utterance)
-            self.speak("question type: " + question)
-            self.speak("center_node: " + center_node)
-            self.speak("target_node: " + target_node)
-            self.speak("parents: " + str(parents))
-            self.speak("synonims: " + str(synonims))
-            self.speak("related: " + str(midle))
 
         # update nodes in connector
         nodes = [center_node, target_node]
