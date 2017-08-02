@@ -127,10 +127,11 @@ class LILACSWikipediaSkill(MycroftSkill):
                 # id info source
                 dict["wikipedia"] = node_data
             except Exception as e:
+                logger.error(str(e))
                 try:
                     self.__feedback_search(subject)
                     results = wiki.search(subject, self.max_results)
-                    node_data["summay"] = re.sub(
+                    node_data["summary"] = re.sub(
                         r'\([^)]*\)|/[^/]*/', '',
                         wiki.summary(results[0], self.max_phrases))
                     # id info source

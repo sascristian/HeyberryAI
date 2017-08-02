@@ -576,8 +576,7 @@ class LilacsCoreSkill(FallbackSkill):
             # pick one at random
             choice = random.choice(related.keys()).lower()
             self.log.info("current tought: " + choice)
-            if self.debug:
-                self.speak("chosing related topic: " + choice)
+            self.speak(choice)
             # talk about it
             more = self.handle_think_about(choice, related)
             if not more:
