@@ -19,34 +19,31 @@ class EnglishQuestionParser():
 
             re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which|whose) "
-                "(?P<Query1>.*) (?P<QuestionVerb>is|are|was|were) "
+                "(?P<Query1>.*) "
+                "(?P<QuestionVerb>is|are|was|were|about|of|off|in|on|at|to) "
                 "(?P<Query2>.*)"),
             re.compile(
                 ".*(?P<QuestionWord>think|wonder|talk|rant) "
-                " (?P<QuestionVerb>about|off|in|of) "
-                ""
+                "(?P<QuestionVerb>\w+)"
                 "(?P<Query>.*)"),
             re.compile(
                 ".*(?P<QuestionWord>are|is) "
-                "(?P<Query1>.*) (?P<QuestionVerb>an|a|an example off|an instance off) "
+                "(?P<Query1>.*) (?P<QuestionVerb>an|a|an example off|an instance off|a example off|a instance off|an example of|an instance of|a example of|a instance of) "
                 "(?P<Query2>.*)"),
             re.compile(
                 "(?P<Query1>.*) (?P<QuestionVerb>and) "
                 "(?P<Query2>.*) (?P<QuestionWord>in common)"),
 
             re.compile(
-                ".*(?P<QuestionWord>who|what|when|where|why|which|how "
-                "to|how|talk"
-                "|rant|think) "
-                ""
+                ".*(?P<QuestionWord>who|what|when|where|why|which|how)" 
                 "(?P<QuestionVerb>\w+)"
                 "(?P<Query1>.*) (?P<QuestionTarget>of|from|at) "
                 "(?P<Query2>.*)"),
             re.compile(
-                ".*(?P<QuestionWord>who|what|when|where|why|which|how to|ho"
-                "w|example|examples) "
-                ""
-                "(?P<QuestionVerb>\w+) (?P<Query>.*)")
+                ".*(?P<QuestionWord>who|what|when|where|why|which|how|example|examples|think|wonder|talk|rant) "
+                "(?P<QuestionVerb>\w+) (?P<Query>.*)"),
+            re.compile(
+                ".*(?P<QuestionWord>how to|how do i) (?P<Query>.*)")
 
         ]
 
