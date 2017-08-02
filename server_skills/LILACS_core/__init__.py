@@ -203,7 +203,7 @@ class LilacsCoreSkill(FallbackSkill):
         # get question type from utterance
         center_node, target_node, parents, synonims, midle, \
         parse = self.parser.process_entitys(utterance)
-        question = parse["QuestionWord"]
+        question = parse.get("QuestionWord", "")
         # differenciate what is {x} from what is {x} of {y}
         target = parse.get("QuestionTarget")
         if target:
