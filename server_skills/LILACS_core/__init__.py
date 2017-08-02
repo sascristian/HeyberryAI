@@ -249,6 +249,13 @@ class LilacsCoreSkill(FallbackSkill):
             self.speak("parents: " + str(parents))
             self.speak("synonims: " + str(synonims))
             self.speak("related: " + str(midle))
+        self.log.info("utterance : " + utterance)
+        self.log.info("question type: " + question)
+        self.log.info("center_node: " + center_node)
+        self.log.info("target_node: " + target_node)
+        self.log.info("parents: " + str(parents))
+        self.log.info("synonims: " + str(synonims))
+        self.log.info("related: " + str(midle))
 
         if center_node is None or center_node == "":
             self.log.warning("No center node detected, possible parser malfunction")
@@ -281,14 +288,8 @@ class LilacsCoreSkill(FallbackSkill):
         #nodes += midle
         childs = {}
         antonims = {}
-        self.log.info("utterance : " + utterance)
-        self.log.info("question type: " + question)
-        self.log.info("center_node: " + center_node)
-        self.log.info("target_node: " + target_node)
-        self.log.info("parents: " + str(parents))
-        self.log.info("synonims: " + str(synonims))
-        self.log.info("related: " + str(midle))
         self.handle_update_connector(nodes, parents, childs, synonims, antonims)
+
         # try to answer what user asks depending on question type
         self.answered = False
         if question == "what":
