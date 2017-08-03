@@ -205,7 +205,7 @@ class LilacsCoreSkill(FallbackSkill):
         parse = self.parser.process_entitys(utterance)
         question = parse.get("QuestionWord", "")
         # differenciate what is {x} from what is {x} of {y}
-        target = parse.get("QuestionTarget")
+        target = parse.get("QuestionTargetWord")
         if target:
             # question += "_"+target
             question += "_of"

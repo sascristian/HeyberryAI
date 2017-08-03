@@ -19,17 +19,22 @@ class EnglishQuestionParser():
         self.regexes = [
             re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which|how)"
-                "(?P<Query1>.*) (?P<QuestionTarget>of|from|at) "
+                "(?P<Query1>.*) (?P<QuestionTargetWord>of|from|at|on|in|off) "
                 "(?P<Query2>.*)"),
             re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which|whose) "
                 "(?P<Query1>.*) "
-                "(?P<QuestionVerb>is|are|was|were|in|on|at|to)"
+                "(?P<QuestionVerb>is|are|was|were)"
                 "(?P<Query2>.*)"),
             re.compile(
                 ".*(?P<QuestionWord>think|wonder|talk|rant) "
-                "(?P<QuestionVerb>about|off|of)"
-                "(?P<Query>.*)"),
+                "(?P<QuestionTargetWord>about|off|of)"
+                "(?!of|from|at|on|in|off)(<Query>.*)"),
+            re.compile(
+                ".*(?P<QuestionWord>think|wonder|talk|rant) "
+                "(?P<QuestionTargetWord>about |off |of )"
+                "(?P<Query1>.*) (?P<QuestionTargetWord2>of |from |at |on |in |off )"
+                "(?P<Query2>.*)"),
             re.compile(
                 "^(?P<QuestionWord>are|is|am) "
                 "(?P<Query1>.*) (?P<QuestionVerb>an|a|an example off|an "
@@ -37,7 +42,7 @@ class EnglishQuestionParser():
                 "(?P<Query2>.*)"),
             re.compile(
                 "^(?P<QuestionWord>are|is|am) "
-                "(?P<Query1>.*) (?P<QuestionTarget>with)"
+                "(?P<Query1>.*) (?P<QuestionTargetWord>with)"
                 "(?P<Query2>.*)"),
             re.compile(
                 "^(?P<QuestionWord>is|am|are|can) "
@@ -48,7 +53,7 @@ class EnglishQuestionParser():
                 "(?P<Query2>.*) (?P<QuestionWord>in common)"),
             re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which|how|example|examples|think|wonder|talk|rant) "
-                "(?P<QuestionVerb>\w+) (?P<Query>.*)"),
+                "(?P<QuestionVerb>\w+)(?P<Query>.*)"),
         ]
 
     def _normalize(self, groupdict):
@@ -60,7 +65,7 @@ class EnglishQuestionParser():
             return {
                 'QuestionWord': groupdict.get('QuestionWord'),
                 'QuestionVerb': groupdict.get('QuestionVerb'),
-                'QuestionTarget': groupdict.get('QuestionTarget'),
+                'QuestionTargetWord': groupdict.get('QuestionTargetWord'),
                 'Query1': groupdict.get('Query1'),
                 'Query2': groupdict.get('Query2'),
                 'Query': ' '.join([groupdict.get('Query1'), groupdict.get(
@@ -91,7 +96,7 @@ class LILACSQuestionParser():
                                                       target_node, query)
         if center_node == "" or target_node == "":
             center_node, target_node = self.select_from_regex(parse)
-        center_node, target_node = self.check_nodes(center_node, target_node)
+        center_node, target_node = self.fix_nodes(center_node, target_node)
         middle = [node for node in subjects if
                   node != center_node and node != target_node]
         return center_node, target_node, parents, synonims, middle, parse
@@ -142,8 +147,17 @@ class LILACSQuestionParser():
                         target_node += w + " "
         return center_node, target_node
 
-    def check_nodes(self, center_node, target_node):
-        mes = ["i", "me", "my"]
+    def fix_nodes(self, center_node, target_node):
+        # removing symbols
+        symbols = [",", ";", ".", ":", "-", "_", "?", "!", "+", "*","/", "(",
+                   ")", "[", "]", "{", "}", '"', "'"]
+        for s in symbols:
+            if s in center_node:
+                center_node = center_node.replace(s, " ")
+            if s in target_node:
+                target_node = target_node.replace(s, " ")
+        # distinguishing self and user
+        mes = ["i", "me", "my", "mine"]
         jarbas = ["you", "your", "you'r", "yourself"]
         if center_node in mes:
             center_node = "current_user"
@@ -153,13 +167,31 @@ class LILACSQuestionParser():
             center_node = "self"
         if target_node in jarbas:
             target_node = "self"
+        # remove bad words
+        bads = ["the", "in", "a", "an", "on", "at", "of", "off", "and"]
+        for word in bads:
+            if word in target_node.split(" "):
+                target_node = target_node.replace(word+" ", "")
+            if word in center_node.split(" "):
+                center_node = center_node.replace(word+" ", "")
+        # check empty strings at start or end
+        if center_node:
+            while center_node[0] == " ":
+                center_node = center_node[1:]
+            while center_node[-1] == " ":
+                center_node = center_node[:-1]
+        if target_node:
+            while target_node[0] == " ":
+                target_node = target_node[1:]
+            while target_node[-1] == " ":
+                target_node = target_node[:-1]
         return center_node, target_node
 
     def process_nodes(self, center_node, target_node, query):
         stuff = ["favorite", "favourite"]
         # check if my | i | mine |you |your
         user = ["my", "mine", "me", "i"]
-        jarbas = ["you", "your", "you'r"]
+        jarbas = ["you", "your", "you'r", "yourself"]
         flag = False
         # try to guess if talking about current user
         for word in user:
@@ -249,7 +281,8 @@ class LILACSQuestionParser():
 def test_qp(questions = None):
     parser = LILACSQuestionParser()
     if questions is None:
-        questions = ["what is the speed of light","who are you", "who am i",
+        questions = ["think about the meaning of life", "what is the speed of "
+                     "light","who are you", "who am i",
                      "what is my favorite song",
                      "what is your favorite book", "who is my cousin",
                      "what is war", "how to kill animals ( a cow ) and make meat",
