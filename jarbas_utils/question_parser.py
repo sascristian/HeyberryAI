@@ -66,6 +66,7 @@ class EnglishQuestionParser():
                 'QuestionWord': groupdict.get('QuestionWord'),
                 'QuestionVerb': groupdict.get('QuestionVerb'),
                 'QuestionTargetWord': groupdict.get('QuestionTargetWord'),
+                'QuestionTargetWord2': groupdict.get('QuestionTargetWord2'),
                 'Query1': groupdict.get('Query1'),
                 'Query2': groupdict.get('Query2'),
                 'Query': ' '.join([groupdict.get('Query1'), groupdict.get(
@@ -96,7 +97,8 @@ class LILACSQuestionParser():
                                                       target_node, query)
         if center_node == "" or target_node == "":
             center_node, target_node = self.select_from_regex(parse)
-        center_node, target_node = self.fix_nodes(center_node, target_node)
+        center_node = self.fix_node(center_node)
+        target_node = self.fix_node(target_node)
         middle = [node for node in subjects if
                   node != center_node and node != target_node]
         return center_node, target_node, parents, synonims, middle, parse
@@ -147,45 +149,34 @@ class LILACSQuestionParser():
                         target_node += w + " "
         return center_node, target_node
 
-    def fix_nodes(self, center_node, target_node):
+    def fix_node(self, node):
+        if node is None:
+            return ""
         # removing symbols
         symbols = [",", ";", ".", ":", "-", "_", "?", "!", "+", "*","/", "(",
                    ")", "[", "]", "{", "}", '"', "'"]
         for s in symbols:
-            if s in center_node:
-                center_node = center_node.replace(s, " ")
-            if s in target_node:
-                target_node = target_node.replace(s, " ")
+            if s in node:
+                node = node.replace(s, " ")
         # distinguishing self and user
         mes = ["i", "me", "my", "mine"]
         jarbas = ["you", "your", "you'r", "yourself"]
-        if center_node in mes:
-            center_node = "current_user"
-        if target_node in mes:
-            target_node = "current_user"
-        if center_node in jarbas:
-            center_node = "self"
-        if target_node in jarbas:
-            target_node = "self"
+        if node in mes:
+            node = "current_user"
+        if node in jarbas:
+            node = "self"
         # remove bad words
         bads = ["the", "in", "a", "an", "on", "at", "of", "off", "and"]
         for word in bads:
-            if word in target_node.split(" "):
-                target_node = target_node.replace(word+" ", "")
-            if word in center_node.split(" "):
-                center_node = center_node.replace(word+" ", "")
+            if word in node.split(" "):
+                node = node.replace(word+" ", "")
         # check empty strings at start or end
-        if center_node:
-            while center_node[0] == " ":
-                center_node = center_node[1:]
-            while center_node[-1] == " ":
-                center_node = center_node[:-1]
-        if target_node:
-            while target_node[0] == " ":
-                target_node = target_node[1:]
-            while target_node[-1] == " ":
-                target_node = target_node[:-1]
-        return center_node, target_node
+        if node:
+            while node[0] == " ":
+                node = node[1:]
+            while node[-1] == " ":
+                node = node[:-1]
+        return node
 
     def process_nodes(self, center_node, target_node, query):
         stuff = ["favorite", "favourite"]
