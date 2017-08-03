@@ -46,7 +46,7 @@ class AgainSkill(MycroftSkill):
         message = Message.deserialize(message)
         if ":" in message.type:
             skill, intent = message.type.split(":")
-            if skill == str(self.skill_id) or skill == self.name:
+            if skill == str(self.skill_id) or skill == self.name or skill == "recognizer_loop":
                 return
             self.log.info("Tracking last executed intent: " + message.type)
             self.context = self.get_context(message.context)
@@ -59,9 +59,9 @@ class AgainSkill(MycroftSkill):
         if self.last_skill == 0 or self.last_intent is None:
             self.speak_dialog("again.fail")
             return
-        msg = Message(str(self.last_skill)+":"+self.last_intent,
+        msg = Message(self.last_skill+":"+self.last_intent,
                       self.last_intent_data, self.last_intent_context)
-        self.speak_dialog("again", {"intent":self.last_intent})
+        self.speak_dialog("again", {"intent": self.last_intent})
         self.emitter.emit(msg)
 
     def stop(self):
