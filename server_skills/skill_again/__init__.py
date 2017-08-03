@@ -61,7 +61,8 @@ class AgainSkill(MycroftSkill):
             return
         msg = Message(self.last_skill+":"+self.last_intent,
                       self.last_intent_data, self.last_intent_context)
-        self.speak_dialog("again", {"intent": self.last_intent})
+        #self.speak_dialog("again", {"intent": self.last_intent})
+        self.log.info("Repeating last executed intent")
         self.emitter.emit(msg)
 
     def stop(self):
