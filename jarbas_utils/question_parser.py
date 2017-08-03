@@ -1,8 +1,9 @@
 
 import re
-
+from mycroft.util.parse import normalize
 import spotlight
 from requests import ConnectionError, HTTPError
+
 
 class EnglishQuestionParser():
     """
@@ -16,39 +17,44 @@ class EnglishQuestionParser():
 
     def __init__(self):
         self.regexes = [
-
             re.compile(
-                ".*(?P<QuestionWord>who|what|when|where|why|which|whose) "
-                "(?P<Query1>.*) "
-                "(?P<QuestionVerb>is|are|was|were|about|of|off|in|on|at|to) "
-                "(?P<Query2>.*)"),
-            re.compile(
-                ".*(?P<QuestionWord>think|wonder|talk|rant) "
-                "(?P<QuestionVerb>\w+)"
-                "(?P<Query>.*)"),
-            re.compile(
-                ".*(?P<QuestionWord>are|is) "
-                "(?P<Query1>.*) (?P<QuestionVerb>an|a|an example off|an instance off|a example off|a instance off|an example of|an instance of|a example of|a instance of) "
-                "(?P<Query2>.*)"),
-            re.compile(
-                "(?P<Query1>.*) (?P<QuestionVerb>and) "
-                "(?P<Query2>.*) (?P<QuestionWord>in common)"),
-
-            re.compile(
-                ".*(?P<QuestionWord>who|what|when|where|why|which|how)" 
-                "(?P<QuestionVerb>\w+)"
+                ".*(?P<QuestionWord>who|what|when|where|why|which|how)"
                 "(?P<Query1>.*) (?P<QuestionTarget>of|from|at) "
                 "(?P<Query2>.*)"),
             re.compile(
+                ".*(?P<QuestionWord>who|what|when|where|why|which|whose) "
+                "(?P<Query1>.*) "
+                "(?P<QuestionVerb>is|are|was|were|in|on|at|to)"
+                "(?P<Query2>.*)"),
+            re.compile(
+                ".*(?P<QuestionWord>think|wonder|talk|rant) "
+                "(?P<QuestionVerb>about|off|of)"
+                "(?P<Query>.*)"),
+            re.compile(
+                "^(?P<QuestionWord>are|is|am) "
+                "(?P<Query1>.*) (?P<QuestionVerb>an|a|an example off|an "
+                "instance off|a example off|a instance off|an example of|an instance of|a example of|a instance of) "
+                "(?P<Query2>.*)"),
+            re.compile(
+                "^(?P<QuestionWord>are|is|am) "
+                "(?P<Query1>.*) (?P<QuestionTarget>with)"
+                "(?P<Query2>.*)"),
+            re.compile(
+                "^(?P<QuestionWord>is|am|are|can) "
+                "(?P<QuestionPerson>i|him|it|she|we|he|they|you|your|my|me|we|you'r) "
+                "(?P<Query>.*)"),
+            re.compile(
+                "(?P<Query1>.*) (?P<QuestionVerb>and) "
+                "(?P<Query2>.*) (?P<QuestionWord>in common)"),
+            re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which|how|example|examples|think|wonder|talk|rant) "
                 "(?P<QuestionVerb>\w+) (?P<Query>.*)"),
-            re.compile(
-                ".*(?P<QuestionWord>how to|how do i) (?P<Query>.*)")
-
         ]
 
     def _normalize(self, groupdict):
         if 'Query' in groupdict:
+            groupdict["Query"] = normalize(groupdict["Query"],
+                                           remove_articles=True)
             return groupdict
         elif 'Query1' and 'Query2' in groupdict:
             return {
@@ -66,7 +72,7 @@ class EnglishQuestionParser():
             match = regex.match(utterance)
             if match:
                 return self._normalize(match.groupdict())
-        return {'Query': utterance}
+        return {'Query': normalize(utterance, remove_articles=True)}
 
 
 class LILACSQuestionParser():
@@ -83,7 +89,7 @@ class LILACSQuestionParser():
         center_node, target_node = self.select_from_dbpedia(subjects)
         center_node, target_node = self.process_nodes(center_node,
                                                       target_node, query)
-        if center_node == "":
+        if center_node == "" or target_node == "":
             center_node, target_node = self.select_from_regex(parse)
         center_node, target_node = self.check_nodes(center_node, target_node)
         middle = [node for node in subjects if
@@ -110,60 +116,65 @@ class LILACSQuestionParser():
         return center_node, target_node
 
     def select_from_regex(self, parse):
-        center_node = ""
-        target_node = ""
         # aproximate guess from regex
-        if target_node == "":
-            verb = parse.get("QuestionVerb", "")
-            verbs = ["is", "are", "was", "were", "of", "will", "the", "am"]
-            if verb in verbs:
-                verb = ""
+
+        verb = parse.get("QuestionVerb", "")
+        verbs = ["is", "are", "was", "were", "of", "will", "the", "am",
+                 "favorite", "favourite"]
+        if verb in verbs:
+            verb = ""
+        center_node = parse.get("QuestionPerson")
+        if not center_node:
             target_node = parse.get("Query2", verb)
-        if center_node == "":
             center_node = parse.get("Query1", parse.get("Query", ""))
-            center_node = center_node.replace(" is the ", "")
-            center_node = center_node.replace("is the ", "")
-            center_node = center_node.replace("is ", "")
-            center_node = center_node.replace("the ", "")
-            center_node = center_node.replace(" is ", "")
-            center_node = center_node.replace(" the ", "")
-            center_node = center_node.replace(" a ", "")
-            center_node = center_node.replace(" an ", "")
-            center_node = center_node.replace("a ", "")
-            center_node = center_node.replace("an ", "")
+        else:
+            target_node = parse.get("Query1", parse.get("Query", verb))
             words = center_node.split(" ")
+            bads = ["the", "is", "a", "an", "of", "off",parse.get(
+                "QuestionWord", "gsaetjhtsvreh")]
+            for w in bads:
+                if w in words:
+                    words = words.remove(w)
             if len(words) > 1:
-                i = 0
                 center_node = words[0]
                 if target_node == "":
-                    target_node = words[1]
+                    for w in words[1:]:
+                        target_node += w + " "
         return center_node, target_node
 
     def check_nodes(self, center_node, target_node):
-        if center_node == "i":
+        mes = ["i", "me", "my"]
+        jarbas = ["you", "your", "you'r", "yourself"]
+        if center_node in mes:
             center_node = "current_user"
-        if target_node == "i":
+        if target_node in mes:
             target_node = "current_user"
+        if center_node in jarbas:
+            center_node = "self"
+        if target_node in jarbas:
+            target_node = "self"
         return center_node, target_node
 
     def process_nodes(self, center_node, target_node, query):
         stuff = ["favorite", "favourite"]
         # check if my | i | mine |you |your
-        user = ["my", "mine"]
-        jarbas = ["you", "your"]
+        user = ["my", "mine", "me", "i"]
+        jarbas = ["you", "your", "you'r"]
         flag = False
         # try to guess if talking about current user
         for word in user:
-            if word in query:
-                # check if it is allowed ( i vs is)
-                target_node = center_node
-                center_node = "current_user"
+            if word in query.split(" "):
+                if target_node != "":
+                    target_node = center_node
+                    center_node = "current_user"
+                else:
+                    target_node = "current_user"
                 flag = True
                 break
         # if not, guess if talking about self
         if not flag:
             for word in jarbas:
-                if word in query:
+                if word in query.split(" "):
                     target_node = center_node
                     center_node = "self"
                     break
@@ -171,21 +182,20 @@ class LILACSQuestionParser():
         # check if "favorite" (or other meaningful adjective) is not the
         # first single node
         if center_node in stuff:
-            candidate = query[query.find(center_node):]
+            candidate = query.split(" ")
             # if the word after favorite is target node
             if target_node in candidate:
                 # make center node "favorite" target_node
-                candidate = candidate[:candidate.find(target_node)]
+                candidate = candidate.remove(target_node)
                 # make target empty
                 target_node = ""
-            # update center node
-            center_node = candidate
-
-        elif target_node in stuff:
-            # make target node everything after "favorite"
-            candidate = query[query.find(target_node):]
-            target_node = candidate
-
+                # update center node
+                for word in candidate[:2]:
+                    center_node += word + " "
+                for word in candidate[2:]:
+                    target_node += word + " "
+        if target_node in stuff:
+            target_node = query[query.find(target_node):]
         return center_node, target_node
 
     def poor_parse(self, text):
@@ -244,7 +254,9 @@ def test_qp(questions = None):
                      "what is your favorite book", "who is my cousin",
                      "what is war", "how to kill animals ( a cow ) and make meat",
                      "what is a living being", "why are humans living beings",
-                     "give examples of animals"]
+                     "give examples of animals","how do i make money with "
+                                                "bitcoin", "how can i win "
+                                                           "bitcoin","are the prophets with me", "is your god evil"]
     for text in questions:
         center_node, target_node, parents, synonims, midle, \
         parse = parser.process_entitys(text)
@@ -257,3 +269,5 @@ def test_qp(questions = None):
         print "relevant_nodes: " + str(midle)
         print "synonims: " + str(synonims)
         print "parse: " + str(parse)
+
+test_qp()

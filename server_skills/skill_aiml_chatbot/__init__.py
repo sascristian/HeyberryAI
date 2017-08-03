@@ -82,8 +82,11 @@ class AIMLChatbotFallback(FallbackSkill):
     def handle_fallback(self, message):
         utterance = message.data.get("utterance")
         self.context = self.get_context(message.context)
-        self.speak(self.ask_brain(utterance))
-        return True
+        answer = self.ask_brain(utterance)
+        if answer != "":
+            self.speak(answer)
+            return True
+        return False
 
     def converse(self, utterances, lang="en-us"):
         # chat flag over-rides all skills

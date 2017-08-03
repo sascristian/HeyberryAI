@@ -493,6 +493,7 @@ class FallbackSkill(MycroftSkill):
         Lower priority gets run first
         0 for high priority 100 for low priority
         """
+
         while priority in cls.fallback_handlers:
             priority += 1
 

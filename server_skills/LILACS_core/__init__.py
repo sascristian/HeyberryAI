@@ -209,6 +209,9 @@ class LilacsCoreSkill(FallbackSkill):
         if target:
             # question += "_"+target
             question += "_of"
+        tos = ["do", "to", "can"]
+        if question == "how" and parse.get("QuestionVerb","") in tos:
+            question += "_to"
         if self.debug:
             self.speak(str(parse))
         self.log.info(parse)
@@ -323,7 +326,7 @@ class LilacsCoreSkill(FallbackSkill):
             # TODO finish this, use new crawl strategy
             center_node = center_node + " of " + target_node
             target_node = ""
-            #self.answered = self.handle_what_of_intent(center_node,
+            #self.answered = self.handle_what_of_intent(center_node)
         # target_node)
         else:# question == "unknown":
             self.answered, answer = self.handle_unknown_intent(utterance)
