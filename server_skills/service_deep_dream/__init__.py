@@ -522,7 +522,7 @@ class DreamService(MycroftSkill):
         name = message.data.get("dream_name")
         iter = message.data.get("iter_num", self.iter)
         categorie = message.data.get("categorie")
-        channel = None
+        channel = int(message.data.get("channel", 888))
         layer = None
         if categorie:
             # TODO fuzzy match
@@ -531,6 +531,8 @@ class DreamService(MycroftSkill):
         result = None
         link = None
         start = time.time()
+        if channel == 888:
+            channel = random.randint(1, 500)
         if source is None:
             self.log.error("No dream source")
         elif guide is not None:
