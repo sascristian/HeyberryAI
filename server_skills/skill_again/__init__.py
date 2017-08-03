@@ -43,6 +43,7 @@ class AgainSkill(MycroftSkill):
         self.emitter.on("message", self.track_intent)
 
     def track_intent(self, message):
+        message = Message.deserialize(message)
         if ":" in message.type:
             skill, intent = message.type.split(":")
             if skill == self.skill_id or skill == 0:
