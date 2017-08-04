@@ -367,6 +367,29 @@ class MycroftSkill(object):
         intent_name = message.data["intent_name"]
         self.disable_intent(intent_name)
 
+    def set_context(self, context, word=''):
+        """
+            Add context to intent service
+
+            Args:
+                context:    Keyword
+                word:       word connected to keyword
+        """
+        if not isinstance(context, basestring):
+            raise ValueError('context should be a string')
+        if not isinstance(word, basestring):
+            raise ValueError('word should be a string')
+        self.emitter.emit(Message('add_context', {'context': context, 'word':
+                          word}))
+
+    def remove_context(self, context):
+        """
+            remove_context removes a keyword from from the context manager.
+        """
+        if not isinstance(context, basestring):
+            raise ValueError('context should be a string')
+        self.emitter.emit(Message('remove_context', {'context': context}))
+
     def register_vocabulary(self, entity, entity_type):
         self.emitter.emit(Message('register_vocab', {
             'start': entity, 'end': entity_type
