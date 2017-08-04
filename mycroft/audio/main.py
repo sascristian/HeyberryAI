@@ -267,7 +267,7 @@ def _lower_volume(message):
         if pulse:
             pulse_mute()
     except Exception as e:
-        print e
+        logger.error(e)
 
 
 muted_sinks = []
@@ -275,7 +275,6 @@ muted_sinks = []
 
 def pulse_mute():
     global muted_sinks
-    print "MUTING PULSE AUDIO INPUT SINKS!"
     for sink in pulse.sink_input_list():
         if sink.name != 'mycroft-voice':
             pulse.sink_input_mute(sink.index, 1)
@@ -283,10 +282,8 @@ def pulse_mute():
 
 
 def pulse_unmute():
-    print muted_sinks
     global muted_sinks
     for sink in pulse.sink_input_list():
-        print "checking " + str(sink.index)
         if sink.index in muted_sinks:
             pulse.sink_input_mute(sink.index, 0)
     muted_sinks = []
