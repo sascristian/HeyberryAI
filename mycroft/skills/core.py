@@ -506,7 +506,7 @@ class MycroftSkill(object):
 class FallbackSkill(MycroftSkill):
     fallback_handlers = {}
 
-    def __init__(self, name, emitter=None):
+    def __init__(self, name=None, emitter=None):
         MycroftSkill.__init__(self, name, emitter)
 
     @classmethod
@@ -520,7 +520,8 @@ class FallbackSkill(MycroftSkill):
                     if handler(message):
                         return
                 except Exception as e:
-                    logger.info('Exception in fallback: ' + self.name + " " + str(e))
+                    logger.info('Exception in fallback: ' + cls.name + " " +
+                                str(e))
             ws.emit(Message('complete_intent_failure'))
             logger.warn('No fallback could handle intent.')
 
