@@ -349,8 +349,6 @@ class TTSFactory(object):
         from mycroft.tts.remote_tts import RemoteTTS
         config = ConfigurationManager.get().get('tts', {})
         module = config.get('module', 'mimic')
-        print module
-        module = "mimic"
         lang = config.get(module).get('lang')
         voice = config.get(module).get('voice')
         clazz = TTSFactory.CLASSES.get(module)
