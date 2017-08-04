@@ -293,15 +293,14 @@ class MycroftSkill(object):
     def add_event(self, name, handler, need_self=False):
         def wrapper(message):
             try:
+                self.emitter.emit(Message("intent.execution.start",
+                                          {"status": "start", "intent": name}))
                 if need_self:
                     # When registring from decorator self is required
                     handler(self, message)
                 else:
                     handler(message)
             except Exception as e:
-                self.emitter.emit(Message("intent.execution.start",
-                                          {"status": "start", "intent": name}))
-                handler(message)
                 # TODO: Localize
                 self.speak(
                     "An error occurred while processing a request in " +
@@ -317,8 +316,6 @@ class MycroftSkill(object):
 
         if handler:
             self.emitter.on(name, self.handle_update_context)
-            self.emitter.on(name, wrapper)
-            self.events.append((name, wrapper))
             self.emitter.on(name, wrapper)
             self.events.append((name, wrapper))
 
