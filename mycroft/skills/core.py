@@ -520,7 +520,7 @@ class FallbackSkill(MycroftSkill):
                     if handler(message):
                         return
                 except Exception as e:
-                    logger.info('Exception in fallback: ' + str(e))
+                    logger.info('Exception in fallback: ' + self.name + " " + str(e))
             ws.emit(Message('complete_intent_failure'))
             logger.warn('No fallback could handle intent.')
 
