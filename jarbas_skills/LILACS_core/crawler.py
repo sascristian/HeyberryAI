@@ -187,7 +187,8 @@ class ConceptCrawler():
             self.logger.error(e)
         # if no connections found return
         if len(nodes) == 0:
-            self.logger.info(node + " doesn't have any " + direction + " connection")
+            self.logger.info(str(node) + " doesn't have any " + str(direction)
+                             + " connection")
             return None
 
         # add these nodes to "nodes to crawl"
@@ -211,7 +212,7 @@ class ConceptCrawler():
             # turn all values into a value between 0 and 1
             # multiply by 100
             # smaller values are more important
-            new_weights[node] = int(100 - sigmoid(nodes[node]) * 100)
+            new_weights[node] = int(102 - sigmoid(nodes[node]) * 100)
         self.logger.info("next node weights are: " + str(new_weights))
 
         list = [k for k in new_weights for dummy in range(new_weights[k])]
@@ -220,6 +221,7 @@ class ConceptCrawler():
         else:
             # choose a node to crawl next
             next_node = random.choice(list)
+        self.logger.info("Next node: " + str(next_node))
         return next_node
 
     def reset_visit_counter(self):
@@ -241,8 +243,8 @@ class ConceptCrawler():
         # count visits to each node
         self.visits = {}
         # start at center node
-        self.logger.info("start node: " + center_node)
-        self.logger.info("target node: " + target_node)
+        self.logger.info("start node: " + str(center_node))
+        self.logger.info("target node: " + str(target_node))
 
         next_node = self.choose_next_node(center_node, direction)
 
@@ -269,11 +271,11 @@ class ConceptCrawler():
                 #    # do not crawl further
                 #    self.logger.info("Maximum crawl depth reached: " + str(crawl_depth))
                 #    return False
-            self.logger.info( "next: " + next_node)
+            self.logger.info( "next: " + str(next_node))
             self.logger.info( "depth: " + str(crawl_depth))
             # see if we already crawled this
             if next_node in self.crawled:
-                self.logger.info("crawling this node again: " + next_node)
+                self.logger.info("crawling this node again: " + str(next_node))
                 # increase visit counter
                 self.visits[next_node] += 1
                 self.logger.info("number of visits: " + str(self.visits[next_node]))
@@ -283,7 +285,8 @@ class ConceptCrawler():
                 i = 0
                 for node in self.uncrawled:
                     if node == next_node:
-                        self.logger.info("removing node from uncrawled node list: " + node)
+                        self.logger.info("removing node from uncrawled node "
+                                         "list: " + str(node))
                         self.uncrawled.pop(i)
                     i += 1
                 # chose another to crawl

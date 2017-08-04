@@ -14,11 +14,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
-
-
 import abc
 import imp
 import time
+
 import operator
 import os.path
 import re
@@ -193,11 +192,11 @@ class MycroftSkill(object):
 
     def __init__(self, name=None, emitter=None):
         self.name = name or self.__class__.__name__
-
         self.bind(emitter)
         self.config_core = ConfigurationManager.get()
         self.config = self.config_core.get(self.name)
         self.dialog_renderer = None
+        self.vocab_dir = None
         self.file_system = FileSystemAccess(join('skills', self.name))
         self.registered_intents = []
         self.log = getLogger(self.name)
@@ -291,23 +290,17 @@ class MycroftSkill(object):
             self.register_intent(intent_parser, handler, need_self=True)
         _intent_list = []
 
-    def register_intent(self, intent_parser, handler, need_self=False):
-        name = intent_parser.name
-        intent_parser.name = str(self.skill_id) + ':' + intent_parser.name
-        self.emitter.emit(Message("register_intent", intent_parser.__dict__))
-        self.registered_intents.append((name, intent_parser))
-
-        def receive_handler(message):
+    def add_event(self, name, handler, need_self=False):
+        def wrapper(message):
             try:
+                self.emitter.emit(Message("intent.execution.start",
+                                          {"status": "start", "intent": name}))
                 if need_self:
                     # When registring from decorator self is required
                     handler(self, message)
                 else:
                     handler(message)
             except Exception as e:
-                self.emitter.emit(Message("intent.execution.start",
-                                          {"status": "start", "intent": name}))
-                handler(message)
                 # TODO: Localize
                 self.speak(
                     "An error occurred while processing a request in " +
@@ -322,9 +315,24 @@ class MycroftSkill(object):
                                       {"status": "executed", "intent": name}))
 
         if handler:
-            self.emitter.on(intent_parser.name, self.handle_update_context)
-            self.emitter.on(intent_parser.name, receive_handler)
-            self.events.append((intent_parser.name, receive_handler))
+            self.emitter.on(name, self.handle_update_context)
+            self.emitter.on(name, wrapper)
+            self.events.append((name, wrapper))
+
+    def register_intent(self, intent_parser, handler, need_self=False):
+        name = intent_parser.name
+        intent_parser.name = str(self.skill_id) + ':' + intent_parser.name
+        self.emitter.emit(Message("register_intent", intent_parser.__dict__))
+        self.registered_intents.append((name, intent_parser))
+        self.add_event(intent_parser.name, handler)
+
+    def register_intent_file(self, intent_file, handler):
+        intent_name = str(self.skill_id) + ':' + intent_file
+        self.emitter.emit(Message("padatious:register_intent", {
+            "file_name": join(self.vocab_dir, intent_file),
+            "intent_name": intent_name
+        }))
+        self.add_event(intent_name, handler)
 
     def handle_update_context(self, message):
         self.context = self.get_context(message.context)
@@ -355,6 +363,29 @@ class MycroftSkill(object):
     def handle_disable_intent(self, message):
         intent_name = message.data["intent_name"]
         self.disable_intent(intent_name)
+
+    def set_context(self, context, word=''):
+        """
+            Add context to intent service
+
+            Args:
+                context:    Keyword
+                word:       word connected to keyword
+        """
+        if not isinstance(context, basestring):
+            raise ValueError('context should be a string')
+        if not isinstance(word, basestring):
+            raise ValueError('word should be a string')
+        self.emitter.emit(Message('add_context', {'context': context, 'word':
+                          word}))
+
+    def remove_context(self, context):
+        """
+            remove_context removes a keyword from from the context manager.
+        """
+        if not isinstance(context, basestring):
+            raise ValueError('context should be a string')
+        self.emitter.emit(Message('remove_context', {'context': context}))
 
     def register_vocabulary(self, entity, entity_type):
         self.emitter.emit(Message('register_vocab', {
@@ -421,6 +452,7 @@ class MycroftSkill(object):
             self.load_regex_files(regex_path)
 
     def load_vocab_files(self, vocab_dir):
+        self.vocab_dir = vocab_dir
         if os.path.exists(vocab_dir):
             load_vocabulary(vocab_dir, self.emitter)
         else:
@@ -430,8 +462,16 @@ class MycroftSkill(object):
         load_regex(regex_dir, self.emitter)
 
     def __handle_stop(self, event):
+        """
+            Handler for the "mycroft.stop" signal. Runs the user defined
+            `stop()` method.
+        """
         self.stop_time = time.time()
-        self.stop()
+        try:
+            self.stop()
+        except:
+            logger.error("Failed to stop skill: {}".format(self.name),
+                         exc_info=True)
 
     @abc.abstractmethod
     def stop(self):
@@ -456,7 +496,11 @@ class MycroftSkill(object):
 
         self.emitter.emit(
             Message("detach_skill", {"skill_id": str(self.skill_id) + ":"}))
-        self.stop()
+        try:
+            self.stop()
+        except:
+            logger.error("Failed to stop skill: {}".format(self.name),
+                         exc_info=True)
 
 
 class FallbackSkill(MycroftSkill):

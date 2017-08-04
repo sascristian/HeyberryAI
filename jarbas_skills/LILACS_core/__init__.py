@@ -186,12 +186,18 @@ class LilacsCoreSkill(FallbackSkill):
     def save_nodes(self, nodes=None):
         if nodes is None:
             nodes = self.connector.get_concept_names()
+        saved = []
         for node in nodes:
+            if node is None or node in saved or node == "" or node == " ":
+                continue
             self.log.info("saving node: " + node)
             if node == "self" or node == "current_user":
                 self.connector.save_concept(node, "user")
             else:
                 self.connector.save_concept(node)
+            saved.append(node)
+        if self.debug:
+            self.speak("saved nodes: " + str(saved))
 
     def parse_utterance(self, utterance):
         # get question type from utterance
@@ -257,7 +263,11 @@ class LilacsCoreSkill(FallbackSkill):
         for node in synonims:
             total_nodes.append(synonims[node])
 
+        loaded = []
         for node in total_nodes:
+            if node is None or node in loaded or node == "" or node == " ":
+                continue
+            loaded.append(node)
             #if node not in self.connector.get_concept_names():
             self.connector.load_concept(node)
 
@@ -302,19 +312,25 @@ class LilacsCoreSkill(FallbackSkill):
         elif question == "examples":
             self.answered = self.handle_examples_intent(center_node)
         elif question == "what_of":
-            pass
+            # TODO finish this, use new crawl strategy
+            center_node = center_node + " of " + target_node
+            target_node = ""
             #self.answered = self.handle_what_of_intent(center_node,
         # target_node)
         else:# question == "unknown":
-            self.answered = self.handle_unknown_intent(utterance)
-
-        # if no answer ask user
-        if not self.answered:
-            self.answered = self.handle_learning(utterance)
+            self.answered, answer = self.handle_unknown_intent(utterance)
 
         self.log.info("answered: " + str(self.answered))
         if self.debug:
             self.speak("answered: " + str(self.answered))
+
+        # if no answer ask user
+        if not self.answered:
+            self.answered = self.handle_learning(utterance, center_node, True)
+            self.log.info("learned: " + str(self.answered))
+            if self.debug:
+                self.speak("learned: " + str(self.answered))
+
         self.save_nodes(total_nodes)
         return self.answered
 
@@ -386,21 +402,23 @@ class LilacsCoreSkill(FallbackSkill):
                 self.connector.create_concept(node, data=data[node])
 
         # update crawler
-        self.save_nodes(total_nodes)
+        #self.save_nodes(total_nodes)
         self.crawler.update_connector(self.connector)
         self.connector.saved = []
 
-    def handle_learning(self, utterance):
+    def handle_learning(self, utterance, center_node=None, save=False):
         self.log.info("learning correct answer")
         #self.speak("learning correct answer")
         if self.debug:
             self.speak("Searching wolfram alpha")
         # this is placeholder, always call wolfram, when question type is fully implemented wolfram maybe wont be called
-        learned = self.handle_unknown_intent(utterance)
+        learned, answer = self.handle_unknown_intent(utterance)
 
         if not learned:
             pass
             #self.speak("i dont know the answer")
+        elif save and center_node is not None:
+            self.connector.add_data(center_node, "wolfram_description", answer)
         return learned
         # TODO ask user questions about unknown nodes, teach skill handles response
 
@@ -467,7 +485,7 @@ class LilacsCoreSkill(FallbackSkill):
         talked = self.handle_what_intent(node)
         if not talked:
             # no what ask wolfram
-            talked = self.handle_unknown_intent(node)
+            talked , ans = self.handle_unknown_intent(node)
         else:
             # save updated data, only start node will be saved otherwise
             self.connector.save_concept(node)
@@ -541,7 +559,7 @@ class LilacsCoreSkill(FallbackSkill):
             # talk about it
             more = self.handle_think_about(choice, related)
             if not more:
-                self.handle_unknown_intent(choice)
+                f, ans = self.handle_unknown_intent(choice)
         except:
             if self.debug:
                 self.speak("could not find related info")
@@ -558,7 +576,7 @@ class LilacsCoreSkill(FallbackSkill):
         talked = self.handle_what_intent(node)
         if not talked:
             # no what ask wolfram
-            talked = self.handle_unknown_intent(utterance)
+            talked, ans = self.handle_unknown_intent(utterance)
 
         # get related nodes
         related = self.connector.get_cousins(node)
@@ -586,7 +604,7 @@ class LilacsCoreSkill(FallbackSkill):
             # talk about it
             more = self.handle_what_intent(choice)
             if not more:
-                self.handle_unknown_intent(choice)
+                f, ans = self.handle_unknown_intent(choice)
         except:
             if self.debug:
                 self.speak("could not find related info")
@@ -646,7 +664,6 @@ class LilacsCoreSkill(FallbackSkill):
 
     def handle_unknown_intent(self, utterance):
         # get answer from wolfram alpha
-        result = None
         result = self.service.adquire(utterance, "wolfram alpha")
 
         result = result["wolfram alpha"]
@@ -657,7 +674,7 @@ class LilacsCoreSkill(FallbackSkill):
         childs = {}
         antonims = {}
         if self.debug:
-            self.speak("new nodes from wolfram alpha answer: " + answer)
+            self.speak("new nodes from wolfram alpha answer: " + str(answer))
             self.speak("parents: " + str(parents))
             self.speak("synonims: " + str(synonims))
             self.speak("relevant: " + str(relevant))
@@ -666,12 +683,17 @@ class LilacsCoreSkill(FallbackSkill):
         # say answer to user
         if answer != "no answer":
             self.speak(answer)
-            return True
-        return False
+            return True, answer
+        return False, answer
 
     def handle_examples_intent(self, node):
+        self.log.info("searching examples of: " + node)
+        if self.debug:
+            self.speak("searching examples of: " + node)
         self.crawler.update_connector(self.connector)
         examples = examples_of_this(node, self.crawler)
+        if self.debug:
+            self.speak("examples: " + str(examples))
         if not examples:
             #self.speak("i dont know any examples of " + node)
             return False
@@ -688,7 +710,7 @@ class LilacsCoreSkill(FallbackSkill):
                     i += 1
 
             if example != node:
-                self.speak(example + " is an example of " + node)
+                self.speak(str(example) + " is an example of " + str(node))
             i = 0
             for e in examples:
                 if example == e:
@@ -856,7 +878,13 @@ class LilacsCoreSkill(FallbackSkill):
                 self.speak(definition)
                 return True
             except:
-                pass
+                try:
+                    definition = data["wolfram_description"]
+                    self.speak(definition)
+                    return True
+                except:
+                    pass
+
 
         # TODO use intent tree to give interactive dialog suggesting more info
         # self.speak("Do you want examples of " + node)
@@ -922,8 +950,7 @@ class LilacsCoreSkill(FallbackSkill):
             self.speak_dialog("wrong_answer_confused")
 
     def stop(self):
-        #self.save_nodes()
-        pass
+        self.save_nodes()
 
 
 def create_skill():
