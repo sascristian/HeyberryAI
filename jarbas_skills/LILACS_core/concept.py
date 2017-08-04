@@ -505,7 +505,7 @@ class ConceptConnector():
         if new_concept_name not in self.concepts:
             self.logger.info("Trying to load concept json " + new_concept_name)
             loaded_concept = self.storage.load(new_concept_name)
-            if loaded_concept["sucess"]:
+            if loaded_concept.get("sucess", False):
                 self.logger.info("loading concept data " + new_concept_name)
                 node_dict = loaded_concept["node"]
                 concept.load_from_dict(node_dict)

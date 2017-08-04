@@ -241,9 +241,9 @@ class MycroftSkill(object):
             return self._settings
         except:
             try:
-                self._settings = SkillSettings(self._dir)
+                self._settings = SkillSettings(join(self._dir, 'settings.json'))
             except:
-                self._settings = SkillSettings(dirname(__file__))
+                self._settings = SkillSettings(join(dirname(__file__), 'settings.json'))
             return self._settings
 
     def bind(self, emitter):

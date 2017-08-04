@@ -70,3 +70,4 @@ colorama
 pyspotlight
 aiml
 padatious==0.1.4
+urlfetch

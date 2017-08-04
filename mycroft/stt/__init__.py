@@ -87,6 +87,8 @@ class WITSTT(TokenSTT):
 
     def execute(self, audio, language=None):
         LOG.warn("WITSTT language should be configured at wit.ai settings.")
+        print self.credential
+        print self.token
         return self.recognizer.recognize_wit(audio, self.token)
 
 
@@ -140,5 +142,6 @@ class STTFactory(object):
     def create():
         config = ConfigurationManager.get().get("stt", {})
         module = config.get("module", "mycroft")
+        print module
         clazz = STTFactory.CLASSES.get(module)
         return clazz()
