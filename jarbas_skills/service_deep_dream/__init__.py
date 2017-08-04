@@ -1,37 +1,26 @@
-import json
-import random
-import sys
-import time
-import urllib2
+# Adapted from https://github.com/ProGamerGov/Protobuf-Dreamer
 
-import cv2
-import imutils
+import time
+from adapt.intent import IntentBuilder
+from mycroft.skills.core import MycroftSkill
+from mycroft.messagebus.message import Message
+from mycroft import MYCROFT_ROOT_PATH as root_path
+from imgurpython import ImgurClient
+import urllib2
+import random
+import json
+from bs4 import BeautifulSoup
+import urllib
+
+import scipy.ndimage as spi
+from skimage.io import imread, imsave
 import numpy as np
 import os
+from os.path import dirname
+import tensorflow as tf
 from PIL import Image
-from adapt.intent import IntentBuilder
-from bs4 import BeautifulSoup
-from imgurpython import ImgurClient
 
-from mycroft.configuration import ConfigurationManager
-from mycroft.messagebus.message import Message
-from mycroft.skills.core import MycroftSkill
-from mycroft.util.log import getLogger
-
-try:
-    path = ConfigurationManager.get("caffe_path")
-except:
-    path = "../caffe"
-
-sys.path.insert(0, path + '/python')
-
-try:
-    from batcountry import BatCountry
-except:
-    logger = getLogger(__name__)
-    logger.warning("Could not import bat-country, this is ok if skill is asking to server")
-
-from jarbas_utils.jarbas_services import DreamService as DD
+from mycroft.util.jarbas_services import DreamService as DD
 
 __author__ = 'jarbas'
 
@@ -55,62 +44,416 @@ class DreamService(MycroftSkill):
                 client_id = 'xx'
                 client_secret = 'yyyyyyyyy'
 
-        try:
-            self.client = ImgurClient(client_id, client_secret)
-        except:
-            self.client = None
+        self.client = ImgurClient(client_id, client_secret)
 
-        try:
-            self.path = self.config_core["caffe_path"]
-        except:
-            self.path = "../caffe"
+        self.channel_value = 139
+        # TODO test all layers, not sure they all can be dreamed on
+        self.layers = ['conv2d0_w',
+                       'conv2d0_b',
+                       'conv2d1_w',
+                       'conv2d1_b',
+                       'conv2d2_w',
+                       'conv2d2_b',
+                       'mixed3a_1x1_w',
+                       'mixed3a_1x1_b',
+                       'mixed3a_3x3_bottleneck_w',
+                       'mixed3a_3x3_bottleneck_b',
+                       'mixed3a_3x3_w',
+                       'mixed3a_3x3_b',
+                       'mixed3a_5x5_bottleneck_w',
+                       'mixed3a_5x5_bottleneck_b',
+                       'mixed3a_5x5_w',
+                       'mixed3a_5x5_b',
+                       'mixed3a_pool_reduce_w',
+                       'mixed3a_pool_reduce_b',
+                       'mixed3b_1x1_w',
+                       'mixed3b_1x1_b',
+                       'mixed3b_3x3_bottleneck_w',
+                       'mixed3b_3x3_bottleneck_b',
+                       'mixed3b_3x3_w',
+                       'mixed3b_3x3_b',
+                       'mixed3b_5x5_bottleneck_w',
+                       'mixed3b_5x5_bottleneck_b',
+                       'mixed3b_5x5_w',
+                       'mixed3b_5x5_b',
+                       'mixed3b_pool_reduce_w',
+                       'mixed3b_pool_reduce_b',
+                       'mixed4a_1x1_w',
+                       'mixed4a_1x1_b',
+                       'mixed4a_3x3_bottleneck_w',
+                       'mixed4a_3x3_bottleneck_b',
+                       'mixed4a_3x3_w',
+                       'mixed4a_3x3_b',
+                       'mixed4a_5x5_bottleneck_w',
+                       'mixed4a_5x5_bottleneck_b',
+                       'mixed4a_5x5_w',
+                       'mixed4a_5x5_b',
+                       'mixed4a_pool_reduce_w',
+                       'mixed4a_pool_reduce_b',
+                       'mixed4b_1x1_w',
+                       'mixed4b_1x1_b',
+                       'mixed4b_3x3_bottleneck_w',
+                       'mixed4b_3x3_bottleneck_b',
+                       'mixed4b_3x3_w',
+                       'mixed4b_3x3_b',
+                       'mixed4b_5x5_bottleneck_w',
+                       'mixed4b_5x5_bottleneck_b',
+                       'mixed4b_5x5_w',
+                       'mixed4b_5x5_b',
+                       'mixed4b_pool_reduce_w',
+                       'mixed4b_pool_reduce_b',
+                       'mixed4c_1x1_w',
+                       'mixed4c_1x1_b',
+                       'mixed4c_3x3_bottleneck_w',
+                       'mixed4c_3x3_bottleneck_b',
+                       'mixed4c_3x3_w',
+                       'mixed4c_3x3_b',
+                       'mixed4c_5x5_bottleneck_w',
+                       'mixed4c_5x5_bottleneck_b',
+                       'mixed4c_5x5_w',
+                       'mixed4c_5x5_b',
+                       'mixed4c_pool_reduce_w',
+                       'mixed4c_pool_reduce_b',
+                       'mixed4d_1x1_w',
+                       'mixed4d_1x1_b',
+                       'mixed4d_3x3_bottleneck_w',
+                       'mixed4d_3x3_bottleneck_b',
+                       'mixed4d_3x3_w',
+                       'mixed4d_3x3_b',
+                       'mixed4d_5x5_bottleneck_w',
+                       'mixed4d_5x5_bottleneck_b',
+                       'mixed4d_5x5_w',
+                       'mixed4d_5x5_b',
+                       'mixed4d_pool_reduce_w',
+                       'mixed4d_pool_reduce_b',
+                       'mixed4e_1x1_w',
+                       'mixed4e_1x1_b',
+                       'mixed4e_3x3_bottleneck_w',
+                       'mixed4e_3x3_bottleneck_b',
+                       'mixed4e_3x3_w',
+                       'mixed4e_3x3_b',
+                       'mixed4e_5x5_bottleneck_w',
+                       'mixed4e_5x5_bottleneck_b',
+                       'mixed4e_5x5_w',
+                       'mixed4e_5x5_b',
+                       'mixed4e_pool_reduce_w',
+                       'mixed4e_pool_reduce_b',
+                       'mixed5a_1x1_w',
+                       'mixed5a_1x1_b',
+                       'mixed5a_3x3_bottleneck_w',
+                       'mixed5a_3x3_bottleneck_b',
+                       'mixed5a_3x3_w',
+                       'mixed5a_3x3_b',
+                       'mixed5a_5x5_bottleneck_w',
+                       'mixed5a_5x5_bottleneck_b',
+                       'mixed5a_5x5_w',
+                       'mixed5a_5x5_b',
+                       'mixed5a_pool_reduce_w',
+                       'mixed5a_pool_reduce_b',
+                       'mixed5b_1x1_w',
+                       'mixed5b_1x1_b',
+                       'mixed5b_3x3_bottleneck_w',
+                       'mixed5b_3x3_bottleneck_b',
+                       'mixed5b_3x3_w',
+                       'mixed5b_3x3_b',
+                       'mixed5b_5x5_bottleneck_w',
+                       'mixed5b_5x5_bottleneck_b',
+                       'mixed5b_5x5_w',
+                       'mixed5b_5x5_b',
+                       'mixed5b_pool_reduce_w',
+                       'mixed5b_pool_reduce_b',
+                       'head0_bottleneck_w',
+                       'head0_bottleneck_b',
+                       'nn0_w',
+                       'nn0_b',
+                       'softmax0_w',
+                       'softmax0_b',
+                       'head1_bottleneck_w',
+                       'head1_bottleneck_b',
+                       'nn1_w',
+                       'nn1_b',
+                       'softmax1_w',
+                       'softmax1_b',
+                       'softmax2_w',
+                       'softmax2_b',
+                       'conv2d0_pre_relu/conv',
+                       'conv2d0_pre_relu',
+                       'conv2d0',
+                       'maxpool0',
+                       'localresponsenorm0',
+                       'conv2d1_pre_relu/conv',
+                       'conv2d1_pre_relu',
+                       'conv2d1',
+                       'conv2d2_pre_relu/conv',
+                       'conv2d2_pre_relu',
+                       'conv2d2',
+                       'localresponsenorm1',
+                       'maxpool1',
+                       'mixed3a_1x1_pre_relu/conv',
+                       'mixed3a_1x1_pre_relu',
+                       'mixed3a_1x1',
+                       'mixed3a_3x3_bottleneck_pre_relu/conv',
+                       'mixed3a_3x3_bottleneck_pre_relu',
+                       'mixed3a_3x3_bottleneck',
+                       'mixed3a_3x3_pre_relu/conv',
+                       'mixed3a_3x3_pre_relu',
+                       'mixed3a_3x3',
+                       'mixed3a_5x5_bottleneck_pre_relu/conv',
+                       'mixed3a_5x5_bottleneck_pre_relu',
+                       'mixed3a_5x5_bottleneck',
+                       'mixed3a_5x5_pre_relu/conv',
+                       'mixed3a_5x5_pre_relu',
+                       'mixed3a_5x5',
+                       'mixed3a_pool',
+                       'mixed3a_pool_reduce_pre_relu/conv',
+                       'mixed3a_pool_reduce_pre_relu',
+                       'mixed3a_pool_reduce',
+                       'mixed3a/concat_dim',
+                       'mixed3a',
+                       'mixed3b_1x1_pre_relu/conv',
+                       'mixed3b_1x1_pre_relu',
+                       'mixed3b_1x1',
+                       'mixed3b_3x3_bottleneck_pre_relu/conv',
+                       'mixed3b_3x3_bottleneck_pre_relu',
+                       'mixed3b_3x3_bottleneck',
+                       'mixed3b_3x3_pre_relu/conv',
+                       'mixed3b_3x3_pre_relu',
+                       'mixed3b_3x3',
+                       'mixed3b_5x5_bottleneck_pre_relu/conv',
+                       'mixed3b_5x5_bottleneck_pre_relu',
+                       'mixed3b_5x5_bottleneck',
+                       'mixed3b_5x5_pre_relu/conv',
+                       'mixed3b_5x5_pre_relu',
+                       'mixed3b_5x5',
+                       'mixed3b_pool',
+                       'mixed3b_pool_reduce_pre_relu/conv',
+                       'mixed3b_pool_reduce_pre_relu',
+                       'mixed3b_pool_reduce',
+                       'mixed3b/concat_dim',
+                       'mixed3b',
+                       'maxpool4',
+                       'mixed4a_1x1_pre_relu/conv',
+                       'mixed4a_1x1_pre_relu',
+                       'mixed4a_1x1',
+                       'mixed4a_3x3_bottleneck_pre_relu/conv',
+                       'mixed4a_3x3_bottleneck_pre_relu',
+                       'mixed4a_3x3_bottleneck',
+                       'mixed4a_3x3_pre_relu/conv',
+                       'mixed4a_3x3_pre_relu',
+                       'mixed4a_3x3',
+                       'mixed4a_5x5_bottleneck_pre_relu/conv',
+                       'mixed4a_5x5_bottleneck_pre_relu',
+                       'mixed4a_5x5_bottleneck',
+                       'mixed4a_5x5_pre_relu/conv',
+                       'mixed4a_5x5_pre_relu',
+                       'mixed4a_5x5',
+                       'mixed4a_pool',
+                       'mixed4a_pool_reduce_pre_relu/conv',
+                       'mixed4a_pool_reduce_pre_relu',
+                       'mixed4a_pool_reduce',
+                       'mixed4a/concat_dim',
+                       'mixed4a',
+                       'mixed4b_1x1_pre_relu/conv',
+                       'mixed4b_1x1_pre_relu',
+                       'mixed4b_1x1',
+                       'mixed4b_3x3_bottleneck_pre_relu/conv',
+                       'mixed4b_3x3_bottleneck_pre_relu',
+                       'mixed4b_3x3_bottleneck',
+                       'mixed4b_3x3_pre_relu/conv',
+                       'mixed4b_3x3_pre_relu',
+                       'mixed4b_3x3',
+                       'mixed4b_5x5_bottleneck_pre_relu/conv',
+                       'mixed4b_5x5_bottleneck_pre_relu',
+                       'mixed4b_5x5_bottleneck',
+                       'mixed4b_5x5_pre_relu/conv',
+                       'mixed4b_5x5_pre_relu',
+                       'mixed4b_5x5',
+                       'mixed4b_pool',
+                       'mixed4b_pool_reduce_pre_relu/conv',
+                       'mixed4b_pool_reduce_pre_relu',
+                       'mixed4b_pool_reduce',
+                       'mixed4b/concat_dim',
+                       'mixed4b',
+                       'mixed4c_1x1_pre_relu/conv',
+                       'mixed4c_1x1_pre_relu',
+                       'mixed4c_1x1',
+                       'mixed4c_3x3_bottleneck_pre_relu/conv',
+                       'mixed4c_3x3_bottleneck_pre_relu',
+                       'mixed4c_3x3_bottleneck',
+                       'mixed4c_3x3_pre_relu/conv',
+                       'mixed4c_3x3_pre_relu',
+                       'mixed4c_3x3',
+                       'mixed4c_5x5_bottleneck_pre_relu/conv',
+                       'mixed4c_5x5_bottleneck_pre_relu',
+                       'mixed4c_5x5_bottleneck',
+                       'mixed4c_5x5_pre_relu/conv',
+                       'mixed4c_5x5_pre_relu',
+                       'mixed4c_5x5',
+                       'mixed4c_pool',
+                       'mixed4c_pool_reduce_pre_relu/conv',
+                       'mixed4c_pool_reduce_pre_relu',
+                       'mixed4c_pool_reduce',
+                       'mixed4c/concat_dim',
+                       'mixed4c',
+                       'mixed4d_1x1_pre_relu/conv',
+                       'mixed4d_1x1_pre_relu',
+                       'mixed4d_1x1',
+                       'mixed4d_3x3_bottleneck_pre_relu/conv',
+                       'mixed4d_3x3_bottleneck_pre_relu',
+                       'mixed4d_3x3_bottleneck',
+                       'mixed4d_3x3_pre_relu/conv',
+                       'mixed4d_3x3_pre_relu',
+                       'mixed4d_3x3',
+                       'mixed4d_5x5_bottleneck_pre_relu/conv',
+                       'mixed4d_5x5_bottleneck_pre_relu',
+                       'mixed4d_5x5_bottleneck',
+                       'mixed4d_5x5_pre_relu/conv',
+                       'mixed4d_5x5_pre_relu',
+                       'mixed4d_5x5',
+                       'mixed4d_pool',
+                       'mixed4d_pool_reduce_pre_relu/conv',
+                       'mixed4d_pool_reduce_pre_relu',
+                       'mixed4d_pool_reduce',
+                       'mixed4d/concat_dim',
+                       'mixed4d',
+                       'mixed4e_1x1_pre_relu/conv',
+                       'mixed4e_1x1_pre_relu',
+                       'mixed4e_1x1',
+                       'mixed4e_3x3_bottleneck_pre_relu/conv',
+                       'mixed4e_3x3_bottleneck_pre_relu',
+                       'mixed4e_3x3_bottleneck',
+                       'mixed4e_3x3_pre_relu/conv',
+                       'mixed4e_3x3_pre_relu',
+                       'mixed4e_3x3',
+                       'mixed4e_5x5_bottleneck_pre_relu/conv',
+                       'mixed4e_5x5_bottleneck_pre_relu',
+                       'mixed4e_5x5_bottleneck',
+                       'mixed4e_5x5_pre_relu/conv',
+                       'mixed4e_5x5_pre_relu',
+                       'mixed4e_5x5',
+                       'mixed4e_pool',
+                       'mixed4e_pool_reduce_pre_relu/conv',
+                       'mixed4e_pool_reduce',
+                       'mixed4e/concat_dim',
+                       'mixed4e',
+                       'maxpool10',
+                       'mixed5a_1x1_pre_relu/conv',
+                       'mixed5a_1x1_pre_relu',
+                       'mixed5a_1x1',
+                       'mixed5a_3x3_bottleneck_pre_relu/conv',
+                       'mixed5a_3x3_bottleneck_pre_relu',
+                       'mixed5a_3x3_bottleneck',
+                       'mixed5a_3x3_pre_relu/conv',
+                       'mixed5a_3x3_pre_relu',
+                       'mixed5a_3x3',
+                       'mixed5a_5x5_bottleneck_pre_relu/conv',
+                       'mixed5a_5x5_bottleneck_pre_relu',
+                       'mixed5a_5x5_bottleneck',
+                       'mixed5a_5x5_pre_relu/conv',
+                       'mixed5a_5x5_pre_relu',
+                       'mixed5a_5x5',
+                       'mixed5a_pool',
+                       'mixed5a_pool_reduce_pre_relu/conv',
+                       'mixed5a_pool_reduce_pre_relu',
+                       'mixed5a_pool_reduce',
+                       'mixed5a/concat_dim',
+                       'mixed5a',
+                       'mixed5b_1x1_pre_relu/conv',
+                       'mixed5b_1x1_pre_relu',
+                       'mixed5b_1x1',
+                       'mixed5b_3x3_bottleneck_pre_relu/conv',
+                       'mixed5b_3x3_bottleneck_pre_relu',
+                       'mixed5b_3x3_bottleneck',
+                       'mixed5b_3x3_pre_relu/conv',
+                       'mixed5b_3x3_pre_relu',
+                       'mixed5b_3x3',
+                       'mixed5b_5x5_bottleneck_pre_relu/conv',
+                       'mixed5b_5x5_bottleneck_pre_relu',
+                       'mixed5b_5x5_bottleneck',
+                       'mixed5b_5x5_pre_relu/conv',
+                       'mixed5b_5x5_pre_relu',
+                       'mixed5b_5x5',
+                       'mixed5b_pool',
+                       'mixed5b_pool_reduce_pre_relu/conv',
+                       'mixed5b_pool_reduce_pre_relu',
+                       'mixed5b_pool_reduce',
+                       'mixed5b/concat_dim',
+                       'mixed5b',
+                       'avgpool0',
+                       'head0_pool',
+                       'head0_bottleneck_pre_relu/conv',
+                       'head0_bottleneck_pre_relu',
+                       'head0_bottleneck',
+                       'head0_bottleneck/reshape/shape',
+                       'head0_bottleneck/reshape',
+                       'nn0_pre_relu/matmul',
+                       'nn0_pre_relu',
+                       'nn0',
+                       'nn0/reshape/shape',
+                       'nn0/reshape',
+                       'softmax0_pre_activation/matmul',
+                       'softmax0_pre_activation',
+                       'softmax0',
+                       'head1_pool',
+                       'head1_bottleneck_pre_relu/conv',
+                       'head1_bottleneck_pre_relu',
+                       'head1_bottleneck',
+                       'head1_bottleneck/reshape/shape',
+                       'head1_bottleneck/reshape',
+                       'nn1_pre_relu/matmul',
+                       'nn1_pre_relu',
+                       'nn1',
+                       'nn1/reshape/shape',
+                       'nn1/reshape',
+                       'softmax1_pre_activation/matmul',
+                       'softmax1_pre_activation',
+                       'softmax1',
+                       'avgpool0/reshape/shape',
+                       'avgpool0/reshape',
+                       'softmax2_pre_activation/matmul',
+                       'softmax2_pre_activation',
+                       'softmax2']
+        self.layer_nicknames = {"plants": ["mixed4a_3x3_bottleneck_pre_relu", 84],
+                                "fractals": ["mixed4a_3x3_bottleneck_pre_relu", 83],
+                                "snakes and lizards": ["mixed4c_pool_reduce", 7],
+                                "feathers": ["mixed4c_pool_reduce", 14],
+                                "rodents": ["mixed4c_pool_reduce", 23],
+                                "spirals": ["mixed4c_pool_reduce", 53],
+                                "3d": ["mixed4c_pool_reduce", 54],
+                                "shiny": ["mixed4c_pool_reduce", 56],
+                                "houses": ["mixed4c_pool_reduce", 61],
+                                "fish": ["mixed5a_1x1", 158],
+                                "balls": ["mixed5a_1x1", 9],
+                                "bark": ["mixed5a_1x1", 107],
+                                "clocks": ["mixed5a_1x1", 134],
+                                "flowers on metal": ["mixed5a_1x1", 198],
+                                "quadrilaterals": ["mixed4c", 56],
+                                "letters": ["mixed4c", 87],
+                                "squares":["mixed4a_3x3_bottleneck_pre_relu", 51],
+                                "wool": ["mixed4e", 62],
+                                "arches": ["mixed4c", 477],
+                                "fluffy dogs": ["mixed4c", 111],
+                                "flowers": ["mixed4c_3x3_bottleneck", 30],
+                                }
 
-        if self.config:
-            self.iter = self.config.get("iter_num", 25) #dreaming iterations
-        else:
-            self.iter = 25
-        self.layers = [ "inception_5b/output", "inception_5b/pool_proj",
-                        "inception_5b/pool", "inception_5b/5x5",
-                        "inception_5b/5x5_reduce", "inception_5b/3x3",
-                        "inception_5b/3x3_reduce", "inception_5b/1x1",
-                        "inception_5a/output", "inception_5a/pool_proj",
-                        "inception_5a/pool", "inception_5a/5x5",
-                        "inception_5a/5x5_reduce", "inception_5a/3x3",
-                        "inception_5a/3x3_reduce", "inception_5a/1x1",
-                        "pool4/3x3_s2", "inception_4e/output", "inception_4e/pool_proj",
-                        "inception_4e/pool", "inception_4e/5x5",
-                        "inception_4e/5x5_reduce", "inception_4e/3x3",
-                        "inception_4e/3x3_reduce", "inception_4e/1x1",
-                        "inception_4d/output", "inception_4d/pool_proj",
-                        "inception_4d/pool", "inception_4d/5x5",
-                        "inception_4d/5x5_reduce", "inception_4d/3x3",
-                        "inception_4d/3x3_reduce", "inception_4d/1x1",
-                        "inception_4c/output", "inception_4c/pool_proj",
-                        "inception_4c/pool", "inception_4c/5x5",
-                        "inception_4c/5x5_reduce", "inception_4c/3x3",
-                        "inception_4c/3x3_reduce", "inception_4c/1x1",
-                        "inception_4b/output", "inception_4b/pool_proj",
-                        "inception_4b/pool", "inception_4b/5x5",
-                        "inception_4b/5x5_reduce", "inception_4b/3x3",
-                        "inception_4b/3x3_reduce", "inception_4b/1x1",
-                        "inception_4a/output", "inception_4a/pool_proj",
-                        "inception_4a/pool", "inception_4a/5x5",
-                        "inception_4a/5x5_reduce", "inception_4a/3x3",
-                        "inception_4a/3x3_reduce", "inception_4a/1x1",
-                        "inception_3b/output", "inception_3b/pool_proj",
-                        "inception_3b/pool", "inception_3b/5x5",
-                        "inception_3b/5x5_reduce", "inception_3b/3x3",
-                        "inception_3b/3x3_reduce", "inception_3b/1x1",
-                        "inception_3a/output", "inception_3a/pool_proj",
-                        "inception_3a/pool", "inception_3a/5x5",
-                        "inception_3a/5x5_reduce", "inception_3a/3x3",
-                        "inception_3a/3x3_reduce", "inception_3a/1x1",
-                        "pool2/3x3_s2","conv2/norm2","conv2/3x3",
-                        "conv2/3x3_reduce", "pool1/norm1"] #"pool1/3x3_s2" , "conv17x7_s2"
+        self.iter_value = 10
+        self.octave_value = 4
+        self.octave_scale_value = 1.4
+        self.step_size = 1.5
+        self.tile_size = 512
 
-        # image dimensions
-        self.w = 640
-        self.h = 480
+        self.model_path = root_path + \
+                          '/jarbas_models/tf_inception/tensorflow_inception_graph.pb'
+        self.model_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.model_path)
+        self.print_model = True
+        self.verbose = True
+        self.last_layer = None
+        self.last_grad = None
+        self.last_channel = None
+        self.graph = None
+        self.sess = None
+        self.t_input = None
+        self.iter = self.config.get("iter_num", 40) #dreaming iterations
 
         self.outputdir = self.config_core["database_path"] + "/dreams/"
 
@@ -118,16 +461,44 @@ class DreamService(MycroftSkill):
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
 
+        # check if model exists, if not download!
+        self.maybe_download_and_extract()
+        # helper resize function using TF
+        self.resize = tffunc(self.sess, np.float32, np.int32)(resize)
+
+    def maybe_download_and_extract(self):
+        # """Download and extract model zip file."""
+        # TODO extract, maybe use a thread so this doesnt hang here on load?
+        return
+        ## wget https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
+        # unzip -d model inception5h.zip
+        url = "https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip"
+        dest_directory = dirname(__file__) + '/model'
+        if not os.path.exists(dest_directory):
+            os.makedirs(dest_directory)
+        filename = url.split('/')[-1]
+        filepath = os.path.join(dest_directory, filename)
+        if not os.path.exists(filepath):
+            self.log.info("Model is not in folder, downloading")
+            urllib.urlretrieve(url, filepath)
+            statinfo = os.stat(filepath)
+            self.log.info('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
+
     def initialize(self):
         self.emitter.on("deep.dream.request", self.handle_dream)
 
         dream_intent = IntentBuilder("DreamIntent") \
-            .require("dream").optionally("Subject").build()
+            .require("dream").optionally("Subject").optionally("Nickname").build()
         self.register_intent(dream_intent,
                              self.handle_dream_intent)
 
+
+
     def handle_dream_intent(self, message):
         search = message.data.get("Subject")
+        cat = message.data.get("Nickname")
+        if cat:
+            search = search.replace(cat, "").replace(" in ","")
         if search:
             # collect dream entropy
             self.speak("dreaming about " + search)
@@ -135,36 +506,47 @@ class DreamService(MycroftSkill):
             url = random.choice(pics)
         else:
             url = "https://unsplash.it/640/480/?random"
+
+        filepath = dirname(__file__)+"/dream_seed.jpg"
+        urllib.urlretrieve(url, filepath)
+
         dreamer = DD(self.emitter)
-        dreamer.dream_from_url(url, context=message.context, server=True)
+        dreamer.dream_from_file(filepath, categorie=cat, context=message.context, server=False)
 
     def handle_dream(self, message):
-        # TODO dreaming queue
+        # TODO dreaming queue, all params from message
         self.log.info("Dream request received")
         self.context = message.context
         source = message.data.get("dream_source")
         guide = message.data.get("dream_guide")
         name = message.data.get("dream_name")
         iter = message.data.get("iter_num", self.iter)
-
+        categorie = message.data.get("categorie")
+        channel = int(message.data.get("channel", 888))
+        layer = None
+        if categorie:
+            # TODO fuzzy match
+            if categorie in self.layer_nicknames.keys():
+                layer, channel = self.layer_nicknames[categorie]
         result = None
         link = None
         start = time.time()
+        if channel == 888:
+            channel = random.randint(1, 500)
         if source is None:
             self.log.error("No dream source")
         elif guide is not None:
             result = self.guided_dream(source, guide, name, iter)
         else:
             try:
-                result = self.dream(source, name, iter)
+                result = self.dream(source, name, iter, layer, channel)
             except Exception as e:
                 self.log.error(str(e))
         elapsed_time = time.time() - start
         layer = random.choice(self.layers)
         if result is not None:
-            if self.client is not None:
-                data = self.client.upload_from_path(result)
-                link = data["link"]
+            data = self.client.upload_from_path(result)
+            link = data["link"]
             self.speak("Here is what i dreamed", metadata={"url": link, "file": result, "elapsed_time": elapsed_time})
         else:
             self.speak("I could not dream this time")
@@ -179,39 +561,126 @@ class DreamService(MycroftSkill):
                                   message.context))
 
     #### dreaming functions
-    def dream(self, imagepah, name=None, iter=25, layer=None):
+    def dream(self, imagepah, name=None, iter=25, layer=None, channel=None):
         self.speak("please wait while the dream is processed, this can take up to 15 minutes")
         if layer is None:
             layer = random.choice(self.layers)
-        # start batcountry instance (self, base_path, deploy_path=None, model_path=None,
-        # TODO any model
-        self.log.info(layer)
-        self.model = "bvlc_googlenet"
-        self.path += '/models/' + self.model
-        self.log.info(self.path)
-        try:
-            bc = BatCountry(self.path)  # path,model_path=path)
-        except Exception as e:
-            self.log.error(e)
-        img = cv2.imread(imagepah)
-        dreampic = imutils.resize(img, self.w, self.h)  # cv2.resize(img, (640, 480))
+
+        dreampic = spi.imread(imagepah, mode="RGB")
         if dreampic is None:
             self.log.error("Could not load seed dream pic " + imagepah)
             self.speak("I can't dream without a seed.. retry later")
             return
-        image = bc.dream(np.float32(dreampic), end=layer, iter_n=iter)
+        else:
+            self.log.info("Loaded dream seed " + imagepah)
+        # creating TensorFlow session and loading the model
+        self.graph = tf.Graph()
+        self.sess = tf.InteractiveSession(graph=self.graph)
+        # update resize function using TF session
+        self.resize = tffunc(self.sess, np.float32, np.int32)(resize)
+        with tf.gfile.FastGFile(self.model_fn, 'rb') as f:
+            graph_def = tf.GraphDef()
+            graph_def.ParseFromString(f.read())
+        self.t_input = tf.placeholder(np.float32, name='input')  # define the input tensor
+        imagenet_mean = 117.0
+        t_preprocessed = tf.expand_dims(self.t_input - imagenet_mean, 0)
+        tf.import_graph_def(graph_def, {'input': t_preprocessed})
+
+        # Optionally print the inputs and layers of the specified graph.
+        if not self.print_model:
+            self.log.debug(self.graph.get_operations())
+        # TODO get all paramsfrom message
+        image = None
+        if not channel:
+            channel = self.channel_value
+        self.speak("Using layer: " + layer + " and channel: " + str(channel), metadata={"channel":channel, "layer":layer})
+        while image is None:
+            try:
+                image = self.render(dreampic, layer=layer, channel=channel, iter_n=iter, step=self.step_size,
+                        octave_n=self.octave_value, octave_scale=self.octave_scale_value)
+            except:
+                # bad layer, cant dream # TODO make list accurate
+                self.layers.remove(layer)
+                layer = random.choice(self.layers)
+
         # write the output image to file
-        result = Image.fromarray(np.uint8(image))
         if name is None:
             name = time.asctime().replace(" ", "_") + ".jpg"
+        if ".jpg" not in name:
+            name += ".jpg"
         outpath = self.outputdir + name
-        result.save(outpath)
-        bc.cleanup()
+        self.log.info("Saving dream: " + outpath)
+        imsave(outpath, image)
         return outpath
 
     def guided_dream(self, sourcepath, guidepath, name=None, iter=25):
         self.log.error("Guided dream not implemented")
         return None
+
+    ## dream internals
+    def T(self, layer):
+        '''Helper for getting layer output tensor'''
+        return self.graph.get_tensor_by_name("import/%s:0" % layer)
+
+    def calc_grad_tiled(self, img, t_grad, tile_size=512):
+        '''Compute the value of tensor t_grad over the image in a tiled way.
+        Random shifts are applied to the image to blur tile boundaries over
+        multiple iterations.'''
+        sz = tile_size
+        h, w = img.shape[:2]
+        sx, sy = np.random.randint(sz, size=2)
+        img_shift = np.roll(np.roll(img, sx, 1), sy, 0)
+        grad = np.zeros_like(img)
+        for y in range(0, max(h - sz // 2, sz), sz):
+            for x in range(0, max(w - sz // 2, sz), sz):
+                sub = img_shift[y:y + sz, x:x + sz]
+                g = self.sess.run(t_grad, {self.t_input: sub})
+                grad[y:y + sz, x:x + sz] = g
+        return np.roll(np.roll(grad, -sx, 1), -sy, 0)
+
+    def render_deepdream(self, t_grad, img0, iter_n=10, step=1.5, octave_n=4, octave_scale=1.4):
+        # split the image into a number of octaves
+        img = img0
+        octaves = []
+        for i in range(octave_n - 1):
+            hw = img.shape[:2]
+            lo = self.resize(img, np.int32(np.float32(hw) / octave_scale))
+            hi = img - self.resize(lo, hw)
+            img = lo
+            octaves.append(hi)
+
+        # generate details octave by octave
+        for octave in range(octave_n):
+            if octave > 0:
+                hi = octaves[-octave]
+                img = self.resize(img, hi.shape[:2]) + hi
+            for i in range(iter_n):
+                # g = calc_grad_tiled(img, t_grad)
+                g = self.calc_grad_tiled(img, t_grad, self.tile_size)
+                img += g * (step / (np.abs(g).mean() + 1e-7))
+                if self.verbose:
+                    self.log.info("Iteration Number: %d" % i)
+            if self.verbose:
+                self.log.info("Octave Number: %d" % octave)
+
+        return Image.fromarray(np.uint8(np.clip(img / 255.0, 0, 1) * 255))
+
+    def render(self, img, layer='mixed4d_3x3_bottleneck_pre_relu', channel=139, iter_n=10, step=1.5, octave_n=4,
+               octave_scale=1.4):
+        if self.last_layer == layer and self.last_channel == channel:
+            t_grad = self.last_grad
+        else:
+            if channel == 4242:
+                t_obj = tf.square(self.T(layer))
+            else:
+                t_obj = self.T(layer)[:, :, :, channel]
+            t_score = tf.reduce_mean(t_obj)  # defining the optimization objective
+            t_grad = tf.gradients(t_score, self.t_input)[0]  # behold the power of automatic differentiation!
+            self.last_layer = layer
+            self.last_grad = t_grad
+            self.last_channel = channel
+        img0 = np.float32(img)
+        return self.render_deepdream(t_grad, img0, iter_n, step, octave_n, octave_scale)
 
     ## pic search
     def get_soup(self, url, header):
@@ -242,3 +711,26 @@ class DreamService(MycroftSkill):
 
 def create_skill():
     return DreamService()
+
+
+def tffunc(session, *argtypes):
+    '''Helper that transforms TF-graph generating function into a regular one.
+    See "resize" function below.
+    '''
+    placeholders = list(map(tf.placeholder, argtypes))
+
+    def wrap(f):
+        out = f(*placeholders)
+
+        def wrapper(*args, **kw):
+            return out.eval(dict(zip(placeholders, args)), session=session)
+
+        return wrapper
+
+    return wrap
+
+
+# Helper function that uses TF to resize an image
+def resize(img, size):
+    img = tf.expand_dims(img, 0)
+    return tf.image.resize_bilinear(img, size)[0, :, :, :]

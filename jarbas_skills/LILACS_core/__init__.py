@@ -203,12 +203,15 @@ class LilacsCoreSkill(FallbackSkill):
         # get question type from utterance
         center_node, target_node, parents, synonims, midle, \
         parse = self.parser.process_entitys(utterance)
-        question = parse["QuestionWord"]
+        question = parse.get("QuestionWord", "")
         # differenciate what is {x} from what is {x} of {y}
-        target = parse.get("QuestionTarget")
+        target = parse.get("QuestionTargetWord")
         if target:
             # question += "_"+target
             question += "_of"
+        tos = ["do", "to", "can"]
+        if question == "how" and parse.get("QuestionVerb","") in tos:
+            question += "_to"
         if self.debug:
             self.speak(str(parse))
         self.log.info(parse)
@@ -227,14 +230,12 @@ class LilacsCoreSkill(FallbackSkill):
 
         except Exception as e:
             logger.error(e)
-            center_node = None
-
-        if center_node is None or center_node == "":
-            self.log.warning("No center node detected, possible parser malfunction")
-            #self.speak("i am not sure what the question is about")
-
-            self.answered = self.handle_learning(utterance)
-            return self.answered
+            center_node = ""
+            target_node = ""
+            question = "unknown"
+            parents = {}
+            synonims = {}
+            midle = []
 
         # update data for feedback
         self.last_center = center_node
@@ -245,12 +246,28 @@ class LilacsCoreSkill(FallbackSkill):
         # TODO add more question types
         if self.debug:
             self.speak("Pre-processing of utterance : " + utterance)
-            self.speak("question type: " + question)
-            self.speak("center_node: " + center_node)
-            self.speak("target_node: " + target_node)
+            self.speak("question type: " + str(question))
+            self.speak("center_node: " + str(center_node))
+            self.speak("target_node: " + str(target_node))
             self.speak("parents: " + str(parents))
             self.speak("synonims: " + str(synonims))
             self.speak("related: " + str(midle))
+        self.log.info("utterance : " + utterance)
+        self.log.info("question type: " + question)
+        self.log.info("center_node: " + center_node)
+        self.log.info("target_node: " + target_node)
+        self.log.info("parents: " + str(parents))
+        self.log.info("synonims: " + str(synonims))
+        self.log.info("related: " + str(midle))
+
+        if center_node is None or center_node == "":
+            self.log.warning("No center node detected, possible parser malfunction")
+            if self.debug:
+                self.speak("i am not sure what the question is about")
+
+            self.answered = self.handle_learning(utterance)
+            return self.answered
+
 
         # update nodes in connector
         nodes = [center_node, target_node]
@@ -274,19 +291,13 @@ class LilacsCoreSkill(FallbackSkill):
         #nodes += midle
         childs = {}
         antonims = {}
-        self.log.info("utterance : " + utterance)
-        self.log.info("question type: " + question)
-        self.log.info("center_node: " + center_node)
-        self.log.info("target_node: " + target_node)
-        self.log.info("parents: " + str(parents))
-        self.log.info("synonims: " + str(synonims))
-        self.log.info("related: " + str(midle))
         self.handle_update_connector(nodes, parents, childs, synonims, antonims)
+
         # try to answer what user asks depending on question type
         self.answered = False
         if question == "what":
             self.answered = self.handle_what_intent(center_node)
-        elif question == "how to":
+        elif question == "how to" or question == "how do i":
             self.answered = self.handle_how_intent(utterance)
         elif question == "who":
             # TODO find a good backend for persons only!
@@ -303,7 +314,7 @@ class LilacsCoreSkill(FallbackSkill):
             pass
         elif question == "talk" or question == "rant":
             self.answered = self.handle_talk_about(center_node, target_node, utterance)
-        elif question == "think":
+        elif question == "think" or question == "wonder":
             self.answered = self.handle_think_about(center_node)
         elif question == "in common":
             self.answered = self.handle_relation(center_node, target_node)
@@ -315,7 +326,7 @@ class LilacsCoreSkill(FallbackSkill):
             # TODO finish this, use new crawl strategy
             center_node = center_node + " of " + target_node
             target_node = ""
-            #self.answered = self.handle_what_of_intent(center_node,
+            #self.answered = self.handle_what_of_intent(center_node)
         # target_node)
         else:# question == "unknown":
             self.answered, answer = self.handle_unknown_intent(utterance)
@@ -479,7 +490,7 @@ class LilacsCoreSkill(FallbackSkill):
 
     def handle_think_about(self, node, related=None):
         if related is None:
-            related = []
+            related = {}
         # talk until no more related subjects
         # say what
         talked = self.handle_what_intent(node)
@@ -497,73 +508,88 @@ class LilacsCoreSkill(FallbackSkill):
 
         # get related nodes
         rel = self.connector.get_cousins(node)
+        if self.debug:
+            self.speak("focus level: " + str(self.focus))
+            self.speak("related nodes: " + str(rel))
         self.log.info("focus level: " + str(self.focus))
         self.log.info("related nodes: " + str(rel))
         if self.focus > 15:
             # previous
+            if self.debug:
+                self.speak("focusing only in nodes related to previous node")
+                self.speak("thinking about: " + str(related))
             self.log.info("focusing only in nodes related to previous node")
             self.log.info("thinking about: " + str(related))
 
         if self.focus < 10:
             # previous
+            if self.debug:
+                self.speak("forgetting previous nodes, focusing on node: " + node)
+                self.speak("thinking about:" + str(related))
             self.log.info("forgetting previous nodes, focusing on node: " + node)
             # only related to this node
             related = rel
             self.log.info("thinking about:" + str(related))
 
-        if self.focus == 0 or related == []:
-            if related == []:
+        if self.focus == 0 or related == {}:
+            if related == {}:
                 self.log.info("no related nodes available")
+            if self.debug:
+                self.speak("adquiring new nodes")
             self.log.info("adquiring new nodes")
             # keep both
-            related += rel
+            related.update(rel)
+            if self.debug:
+                self.speak("thinking about:" + str(related))
             self.log.info("thinking about:" + str(related))
 
         try:
             # add parents and childs ot possible choice
-            if self.focus < 15 or related == []:
-                if related == []:
+            if self.focus < 15 or related == {}:
+                if related == {}:
                     self.log.info("no related nodes available")
+                if self.debug:
+                    self.speak("Getting parents and childs of this node")
                 self.log.info("Getting parents and childs of this node")
                 for c in self.connector.get_parents(node):
                     if c not in related:
-                        related.append(c)
+                        related[c] = 5
                 for c in self.connector.get_childs(node):
                     if c not in related:
-                        related.append(c)
-            if self.focus < 10 or related == []:
-                if related == []:
+                        related[c] = 5
+            if self.focus < 10 or related == {}:
+                if related == {}:
                     self.log.info("no related nodes available")
+                if self.debug:
+                    self.speak("Getting synonims and antonims of this node")
                 self.log.info("Getting synonims and antonims of this node")
                 for c in self.connector.get_synonims(node):
                     if c not in related:
-                        related.append(c)
+                        related[c] = 5
                 for c in self.connector.get_antonims(node):
                     if c not in related:
-                        related.append(c)
+                        related[c] = 5
 
-            # remove self from list
-            i = 0
-            for c in related:
-                if c.lower() == node.lower():
-                    related.pop(i)
-                i += 1
+            # remove self from dict
+            if node in related.keys():
+                related.pop(node)
 
             if self.debug:
                 self.speak("related subjects: " + str(related))
             # pick one at random
-            choice = random.choice(related).lower()
+            choice = random.choice(related.keys()).lower()
             self.log.info("current tought: " + choice)
-            if self.debug:
-                self.speak("chosing related topic: " + choice)
+            self.speak(choice)
             # talk about it
             more = self.handle_think_about(choice, related)
             if not more:
                 f, ans = self.handle_unknown_intent(choice)
-        except:
+        except Exception as e:
             if self.debug:
                 self.speak("could not find related info")
+                self.speak(str(e))
             self.log.info("could not find related info")
+            self.log.error(str(e))
         return talked
 
     def handle_talk_about(self, node, node2, utterance=""):

@@ -189,7 +189,7 @@ class ConceptCrawler():
         if len(nodes) == 0:
             self.logger.info(str(node) + " doesn't have any " + str(direction)
                              + " connection")
-            return None
+            return ""
 
         # add these nodes to "nodes to crawl"
         for node in dict(nodes):
@@ -217,7 +217,7 @@ class ConceptCrawler():
 
         list = [k for k in new_weights for dummy in range(new_weights[k])]
         if list == []:
-            next_node = None
+            next_node = ""
         else:
             # choose a node to crawl next
             next_node = random.choice(list)
@@ -248,7 +248,10 @@ class ConceptCrawler():
 
         next_node = self.choose_next_node(center_node, direction)
 
-        if next_node not in self.concept_db.get_concept_names():
+        if next_node == " " or next_node == "":
+            next_node = None
+
+        if next_node is not None and next_node not in self.concept_db.get_concept_names():
             self.concept_db.load_concept(next_node)
 
         crawl_depth = 1

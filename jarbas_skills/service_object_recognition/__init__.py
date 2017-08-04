@@ -15,43 +15,43 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+from adapt.intent import IntentBuilder
 
+from mycroft.skills.core import MycroftSkill
+from mycroft.util.jarbas_services import ObjectRecogService
+from mycroft.util.log import getLogger
+from mycroft.messagebus.message import Message
+from mycroft import MYCROFT_ROOT_PATH as root_path
+import os
+import sys
 import cv2
 import numpy as np
-import os
 import tensorflow as tf
-from adapt.intent import IntentBuilder
 from os.path import dirname
-
-from jarbas_utils.jarbas_services import ObjectRecogService
-from mycroft.messagebus.message import Message
-from mycroft.skills.core import MycroftSkill
-from mycroft.util.log import getLogger
 
 sys.path.append(dirname(__file__))
 
-from object_detection.utils import label_map_util
-from object_detection.utils import visualization_utils as vis_util
+import label_map_util
 
-__author__ = 'eClarity' , 'jarbas'
+__author__ = 'eClarity', 'jarbas'
 
 LOGGER = getLogger(__name__)
 
-CWD_PATH = os.path.dirname(__file__)
-
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 MODEL_NAME = 'ssd_mobilenet_v1_coco_11_06_2017'
-PATH_TO_CKPT = os.path.join(CWD_PATH, 'object_detection', MODEL_NAME, 'frozen_inference_graph.pb')
+PATH_TO_CKPT = os.path.join(root_path, "jarbas_models", "tf_"+MODEL_NAME,
+                            'frozen_inference_graph.pb')
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = os.path.join(CWD_PATH, 'object_detection', 'data', 'mscoco_label_map.pbtxt')
+PATH_TO_LABELS = os.path.join(root_path, "jarbas_models", "tf_"+MODEL_NAME,
+                              'mscoco_label_map.pbtxt')
 
 NUM_CLASSES = 90
 
 # Loading label map
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
-categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES,
+categories = label_map_util.convert_label_map_to_categories(label_map,
+                                                            max_num_classes=NUM_CLASSES,
                                                             use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
 
@@ -76,7 +76,7 @@ def detect_objects(image_np, sess, detection_graph):
         feed_dict={image_tensor: image_np_expanded})
 
     # Visualization of the results of a detection.
-    #vis_util.visualize_boxes_and_labels_on_image_array(
+    # vis_util.visualize_boxes_and_labels_on_image_array(
     #    image_np,
     #    np.squeeze(boxes),
     #    np.squeeze(classes).astype(np.int32),
@@ -94,14 +94,17 @@ class ObjectRecogSkill(MycroftSkill):
     def initialize(self):
         view_objects_intent = IntentBuilder("TestObjectRecogIntent"). \
             require("ViewObjectsKeyword").build()
-        self.register_intent(view_objects_intent, self.handle_view_objects_intent)
+        self.register_intent(view_objects_intent,
+                             self.handle_view_objects_intent)
 
-        self.emitter.on("object.recognition.request", self.handle_recognition_request)
+        self.emitter.on("object.recognition.request",
+                        self.handle_recognition_request)
 
     def handle_view_objects_intent(self, message):
         self.speak('Testing object recognition')
-        objrecog = ObjectRecogService(self.emitter)
-        result = objrecog.recognize_objects(dirname(__file__) + "/test.jpg", server=True)
+        objrecog = ObjectRecogService(self.emitter, timeout=30)
+        result = objrecog.recognize_objects(dirname(__file__) + "/test.jpg",
+                                            server=False)
         labels = result.get("labels", {})
         ut = ""
         for object in labels:
@@ -126,7 +129,9 @@ class ObjectRecogSkill(MycroftSkill):
         self.log.info("Loading image")
         frame = cv2.imread(file)
         self.log.info("Detecting objects")
-        image_np, boxes, scores, classes, num_detections = detect_objects(frame, sess, detection_graph)
+        image_np, boxes, scores, classes, num_detections = detect_objects(frame,
+                                                                          sess,
+                                                                          detection_graph)
         objects = []
         self.log.info("Processing labels")
         for i in classes:
@@ -153,7 +158,7 @@ class ObjectRecogSkill(MycroftSkill):
             o = 0
             for c in i:
                 # TODO process into x,y coords rects
-                #objects[o]["box"] = c
+                # objects[o]["box"] = c
                 o += 1
 
         self.log.info("Counting objects and removing low scores")
@@ -168,13 +173,18 @@ class ObjectRecogSkill(MycroftSkill):
                 labels[obj["label"]] += 1
 
         self.log.info("detected : " + str(objects))
-        self.emitter.emit(Message("object.recognition.result", {"labels": labels, "objects": objects}, self.context))
+        self.emitter.emit(Message("object.recognition.result",
+                                  {"labels": labels, "objects": objects},
+                                  self.context))
         # to source socket
         if ":" in self.context.get("source", ""):
-            if self.context["destinatary"].split(":")[1].isdigit():
+            if self.context["source"].split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"context": self.context, "data": {"labels": labels, "objects": objects},
-                                           "type": "object.recognition.result"}, self.context))
+                                          {"context": self.context,
+                                           "data": {"labels": labels,
+                                                    "objects": objects},
+                                           "type": "object.recognition.result"},
+                                          self.context))
 
     def stop(self):
         pass
@@ -182,5 +192,3 @@ class ObjectRecogSkill(MycroftSkill):
 
 def create_skill():
     return ObjectRecogSkill()
-
-
