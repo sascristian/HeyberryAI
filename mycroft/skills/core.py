@@ -324,13 +324,13 @@ class MycroftSkill(object):
 
     def register_intent(self, intent_parser, handler, need_self=False):
         name = intent_parser.name
-        intent_parser.name = self.skill_id + ':' + intent_parser.name
+        intent_parser.name = str(self.skill_id) + ':' + intent_parser.name
         self.emitter.emit(Message("register_intent", intent_parser.__dict__))
         self.registered_intents.append((name, intent_parser))
         self.add_event(intent_parser.name, handler)
 
     def register_intent_file(self, intent_file, handler):
-        intent_name = self.skill_id + ':' + intent_file
+        intent_name = str(self.skill_id) + ':' + intent_file
         self.emitter.emit(Message("padatious:register_intent", {
             "file_name": join(self.vocab_dir, intent_file),
             "intent_name": intent_name
