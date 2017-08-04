@@ -37,7 +37,9 @@ sudo apt-get install -y \
     gfortran \
     libatlas-base-dev \
     gnupg \
-    libcurl4-openssl-dev
+    libcurl4-openssl-dev \
+    libjpeg-dev \
+    libfann-dev
 
 # get geckodriver to usr/bin for browser service
 wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz

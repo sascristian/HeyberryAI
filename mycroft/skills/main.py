@@ -32,6 +32,7 @@ from mycroft.messagebus.message import Message
 from mycroft.skills.core import load_skill, create_skill_descriptor, \
     MainModule, SKILLS_DIR, FallbackSkill
 from mycroft.skills.intent_service import IntentService
+from mycroft.skills.padatious_service import PadatiousService
 from mycroft.util import connected
 from mycroft.util.log import getLogger
 from mycroft.api import is_paired
@@ -119,6 +120,8 @@ def _load_skills():
 
     check_connection()
 
+    ws.on('intent_failure', FallbackSkill.make_intent_failure_handler(ws))
+
     # Create skill_manager listener and invoke the first time
     if msm:
         ws.on('skill_manager', skills_manager)
@@ -127,6 +130,8 @@ def _load_skills():
 
     # Create the Intent manager, which converts utterances to intents
     # This is the heart of the voice invoked skill system
+
+    PadatiousService(ws)
     IntentService(ws)
 
     # Create a thread that monitors the loaded skills, looking for updates

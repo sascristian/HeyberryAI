@@ -32,6 +32,10 @@ if [ $(id -u) -eq 0 ]; then
   exit 1
 fi
 
+# Configure to use the standard commit template for
+# this repo only.
+git config commit.template .gitmessage
+
 TOP=$(cd $(dirname $0) && pwd -L)
 
 if [ -z "$WORKON_HOME" ]; then
@@ -72,7 +76,13 @@ sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site
 pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
 
 # install other requirements
-pip install -r requirements.txt
+if ! pip install -r requirements.txt; then
+    echo "Warning: Failed to install all requirements. Continue? y/N"
+    read -n1 continue
+    if [[ "$continue" != "y" ]] ; then
+        exit 1
+    fi
+fi
 
 
 if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
