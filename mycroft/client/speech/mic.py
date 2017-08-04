@@ -23,10 +23,11 @@ from time import sleep
 import audioop
 
 import pyaudio
-import snowboydecoder
+
 snowboy = False
 if snowboy:
     try:
+        import snowboydecoder
         detection =  snowboydecoder.HotwordDetector('/home/hersche/.laptop.pmdl',sensitivity=0.5)
         snowboy = True
     except:
