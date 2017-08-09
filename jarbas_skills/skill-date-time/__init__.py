@@ -30,7 +30,8 @@ from threading import Timer
 from tzwhere import tzwhere
 from geopy.geocoders import Nominatim
 
-__author__ = 'ryanleesipes', 'jdorleans', 'connorpenrod', 'michaelnguyen'
+__author__ = 'ryanleesipes', 'jdorleans', 'connorpenrod', 'michaelnguyen', \
+             'jarbas'
 
 LOGGER = getLogger(__name__)
 
@@ -83,8 +84,8 @@ class TimeSkill(MycroftSkill):
                 return timezone(locale)
             except:
                 try:
-                    # get time from coordinates of OpenStreetMap Nominatim for
-                    # this location
+                    # get timezone from coordinates of OpenStreetMap Nominatim
+                    #  for this location
                     geolocator = Nominatim()
                     location = geolocator.geocode(locale)
                     lat = float(location.latitude)
