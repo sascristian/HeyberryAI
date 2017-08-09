@@ -48,7 +48,7 @@ class ArtSkill(MycroftSkill):
         self.emitter.on("art.request", self.handle_psy_pic)
 
     def handle_psy_pic_intent(self, message):
-        self.emitter.emit(Message("art.request", {}, self.context))
+        self.emitter.emit(Message("art.request", {}, self.message_context))
 
     def handle_psy_pic(self, message):
         try:
@@ -62,7 +62,7 @@ class ArtSkill(MycroftSkill):
                 else:
                     link = None
                 self.speak("Here is what i created", metadata={"url": link, "file": pic})
-            self.emitter.emit(Message("art.result", {"file": pic, "url": link}, self.context))
+            self.emitter.emit(Message("art.result", {"file": pic, "url": link}, self.message_context))
         except Exception as e:
             self.speak(str(e))
 

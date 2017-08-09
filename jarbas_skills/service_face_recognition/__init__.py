@@ -31,7 +31,7 @@ class FaceRecService(MycroftSkill):
 
     def handle_recog(self, message):
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         face = message.data.get("file")
         if face is None:
             self.log.error("no file!")
@@ -67,13 +67,13 @@ class FaceRecService(MycroftSkill):
         except:
             self.log.error("no face detected in provided image")
 
-        self.context["destinatary"] = user_id
+        self.message_context["destinatary"] = user_id
         self.emitter.emit(Message("face.recognition.result",
-                                  {"result": result}, self.context))
+                                  {"result": result}, self.message_context))
         if ":" in user_id:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"context": self.context, "data": {"result": result}, "type": "face.recognition.result"}, self.context))
+                                          {"context": self.message_context, "data": {"result": result}, "type": "face.recognition.result"}, self.message_context))
 
 
     def stop(self):

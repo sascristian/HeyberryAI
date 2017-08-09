@@ -42,7 +42,7 @@ class LILACSConceptNetSkill(MycroftSkill):
         node = message.data.get("Subject", "life")
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("conceptnet.result", result, self.context))
+        self.emitter.emit(Message("conceptnet.result", result, self.message_context))
 
     def adquire(self, subject):
         logger.info('ConceptNetKnowledge_Adquire')

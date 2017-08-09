@@ -205,7 +205,7 @@ class MycroftSkill(object):
         self.external_shutdown = True
         self.events = []
         self.skill_id = 0
-        self.context = self.get_context()
+        self.message_context = self.get_context()
 
     @property
     def location(self):
@@ -335,7 +335,7 @@ class MycroftSkill(object):
         self.add_event(intent_name, handler)
 
     def handle_update_context(self, message):
-        self.context = self.get_context(message.context)
+        self.message_context = self.get_context(message.context)
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
@@ -396,26 +396,26 @@ class MycroftSkill(object):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
-    def get_context(self, context=None):
-        if context is None:
-            context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False, "target": "all"}
+    def get_context(self, message_context=None):
+        if message_context is None:
+            message_context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False, "target": "all"}
         else:
-            if "destinatary" not in context.keys():
-                context["destinatary"] = self.context.get("destinatary", "all")
-            if "target" not in context.keys():
-                context["target"] = self.context.get("destinatary", "all")
-            if "mute" not in context.keys():
-                context["mute"] = self.context.get("mute", False)
-            if "more_speech" not in context.keys():
-                context["more_speech"] = self.context.get("more_speech", False)
-        if context.get("source", "skills") == "skills":
-            context["source"] = self.name
-        return context
+            if "destinatary" not in message_context.keys():
+                message_context["destinatary"] = self.message_context.get("destinatary", "all")
+            if "target" not in message_context.keys():
+                message_context["target"] = self.message_context.get("destinatary", "all")
+            if "mute" not in message_context.keys():
+                message_context["mute"] = self.message_context.get("mute", False)
+            if "more_speech" not in message_context.keys():
+                message_context["more_speech"] = self.message_context.get("more_speech", False)
+        if message_context.get("source", "skills") == "skills":
+            message_context["source"] = self.name
+        return message_context
 
-    def speak(self, utterance, expect_response=False, metadata=None, context=None):
-        if context is None:
+    def speak(self, utterance, expect_response=False, metadata=None, message_context=None):
+        if message_context is None:
             # use current context
-            context = self.context
+            message_context = self.message_context
         if metadata is None:
             metadata = {}
         # registers the skill as being active
@@ -423,19 +423,19 @@ class MycroftSkill(object):
         data = {'utterance': utterance,
                 'expect_response': expect_response,
                 "metadata": metadata}
-        self.emitter.emit(Message("speak", data, self.get_context(context)))
+        self.emitter.emit(Message("speak", data, self.get_context(message_context)))
 
-    def speak_dialog(self, key, data=None, expect_response=False, metadata=None, context=None):
-        if context is None:
+    def speak_dialog(self, key, data=None, expect_response=False, metadata=None, message_context=None):
+        if message_context is None:
             # use current context
-            context = self.context
+            message_context = self.message_context
         if metadata is None:
             metadata = {}
         if data is None:
             data = {}
         data['expect_response'] = expect_response
         data["metadata"] = metadata
-        self.speak(self.dialog_renderer.render(key, data), context=self.get_context(context))
+        self.speak(self.dialog_renderer.render(key, data), message_context=self.get_context(message_context))
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)

@@ -42,7 +42,7 @@ class LILACSWikipediaSkill(MycroftSkill):
         node = message.data.get("Subject")
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("wikipedia.result", result, self.context))
+        self.emitter.emit(Message("wikipedia.result", result, self.message_context))
 
     def adquire(self, subject):
         logger.info('WikipediaKnowledge_Adquire')

@@ -51,11 +51,11 @@ class UserIdSkill(MycroftSkill):
         face_recog = FaceRecognitionService(self.emitter)
         if "fbchat" in user_id:
             url = message.context.get("photo")
-            vision_user = face_recog.face_recognition_from_url(url, self.context, server=True)
+            vision_user = face_recog.face_recognition_from_url(url, self.message_context, server=True)
         else:
             vision = VisionService(self.emitter)
-            feed = vision.get_feed(self.context)
-            vision_user = face_recog.face_recognition_from_file(feed, self.context, server=True)
+            feed = vision.get_feed(self.message_context)
+            vision_user = face_recog.face_recognition_from_file(feed, self.message_context, server=True)
 
         if vision_user is None:
             vision_user = "unknown"

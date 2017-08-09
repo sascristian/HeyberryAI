@@ -133,12 +133,12 @@ class ImageRecognitionSkill(MycroftSkill):
             return
         self.log.info(results)
         label, score = results[0]
-        self.context["destinatary"] = dest
+        self.message_context["destinatary"] = dest
         self.speak("test image classification is " + label + " with a score of " + score + " per cent")
 
     def handle_classify(self, message):
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         pic = message.data.get("file", None)
         if pic is None:
             self.log.error("Could not read file to classify")
@@ -159,14 +159,14 @@ class ImageRecognitionSkill(MycroftSkill):
         msg_data = {"classification": result}
         # to bus
         self.emitter.emit(Message(msg_type,
-                                  msg_data, self.context))
+                                  msg_data, self.message_context))
         # to source socket
         if ":" in user_id:
-            self.context["destinatary"] = user_id
+            self.message_context["destinatary"] = user_id
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
                                           {"data": msg_data,
-                                           "type": msg_type, "context": self.context}, self.context))
+                                           "type": msg_type, "context": self.message_context}, self.message_context))
     def stop(self):
         pass
 

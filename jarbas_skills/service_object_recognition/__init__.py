@@ -114,7 +114,7 @@ class ObjectRecogSkill(MycroftSkill):
 
     def handle_recognition_request(self, message):
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         file = message.data.get("file", dirname(__file__) + "/test.jpg")
         self.log.info("Loading tensorflow model into memory")
         detection_graph = tf.Graph()
@@ -175,16 +175,16 @@ class ObjectRecogSkill(MycroftSkill):
         self.log.info("detected : " + str(objects))
         self.emitter.emit(Message("object.recognition.result",
                                   {"labels": labels, "objects": objects},
-                                  self.context))
+                                  self.message_context))
         # to source socket
-        if ":" in self.context.get("source", ""):
-            if self.context["source"].split(":")[1].isdigit():
+        if ":" in self.message_context.get("source", ""):
+            if self.message_context["source"].split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"context": self.context,
+                                          {"context": self.message_context,
                                            "data": {"labels": labels,
                                                     "objects": objects},
                                            "type": "object.recognition.result"},
-                                          self.context))
+                                          self.message_context))
 
     def stop(self):
         pass

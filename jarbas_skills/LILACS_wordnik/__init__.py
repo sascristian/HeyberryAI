@@ -50,7 +50,7 @@ class LILACSWordnikSkill(MycroftSkill):
         node = message.data.get("Subject")
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("wordnik.result", result, self.context))
+        self.emitter.emit(Message("wordnik.result", result, self.message_context))
 
     def adquire(self, subject):
         logger.info('WordnikKnowledge_Adquire')
