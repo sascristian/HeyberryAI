@@ -89,11 +89,9 @@ class TimeSkill(MycroftSkill):
                     location = geolocator.geocode(locale)
                     lat = float(location.latitude)
                     lon = float(location.longitude)
-                    print lat, lon
-                    print tzwhere.tzwhere().tzNameAt(lat, lon)
-                    return tzwhere.tzwhere().tzNameAt(lat, lon)
+                    tz = tzwhere.tzwhere().tzNameAt(lat, lon)
+                    return timezone(tz)
                 except Exception as e:
-                    print e
                     return None
 
     def get_time(self):
