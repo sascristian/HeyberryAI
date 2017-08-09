@@ -46,7 +46,7 @@ class PadatiusFallback(FallbackSkill):
         self.padatius = None
 
     def initialize(self):
-        self.register_fallback(self.handle_fallback, 5)
+        self.register_fallback(self.handle_fallback, 99)
         self.padatius = PadatiusFallbackService(self.emitter)
 
     def handle_fallback(self, message):

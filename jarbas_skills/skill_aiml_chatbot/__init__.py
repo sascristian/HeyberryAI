@@ -32,6 +32,7 @@ LOGGER = getLogger(__name__)
 class AIMLChatbotFallback(FallbackSkill):
     def __init__(self):
         super(AIMLChatbotFallback, self).__init__(name="AIMLFallbackSkill")
+        self.reload_skill = False
         self.kernel = aiml.Kernel()
         # TODO read from config maybe?
         self.aiml_path = dirname(__file__) + "/aiml"
