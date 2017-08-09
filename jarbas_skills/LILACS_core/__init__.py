@@ -342,7 +342,12 @@ class LilacsCoreSkill(FallbackSkill):
             if self.debug:
                 self.speak("learned: " + str(self.answered))
 
-        self.save_nodes(total_nodes)
+        try:
+            self.save_nodes(total_nodes)
+        except Exception as e:
+            self.log.error(e)
+            if self.debug:
+                self.speak(str(e))
         return self.answered
 
     def handle_update_connector(self, nodes=None, parents=None, childs=None, synonims=None, antonims=None, data=None):
