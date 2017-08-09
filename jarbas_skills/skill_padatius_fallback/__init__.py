@@ -27,8 +27,9 @@ LOGGER = getLogger(__name__)
 
 class PadatiusFallbackService(ServiceBackend):
     def __init__(self, emitter=None, timeout=5, waiting_messages=["padatius:fallback.response"],logger=None):
-        super(PadatiusFallbackService, self).__init__(emitter=emitter, timeout=timeout,
-                                                    waiting_messages=waiting_messages, logger=logger)
+        super(PadatiusFallbackService, self).__init__(
+            name="PadatiusFallbackService", emitter=emitter, timeout=timeout,
+            waiting_messages=waiting_messages, logger=logger)
 
     def wait_server_response(self, data = None):
         if data is None:
@@ -39,9 +40,9 @@ class PadatiusFallbackService(ServiceBackend):
         return self.result.get("success", False)
 
 
-class ServerFallback(FallbackSkill):
+class PadatiusFallback(FallbackSkill):
     def __init__(self):
-        super(ServerFallback, self).__init__(name="ServerFallbackSkill")
+        super(PadatiusFallback, self).__init__()
         self.padatius = None
 
     def initialize(self):
@@ -56,4 +57,4 @@ class ServerFallback(FallbackSkill):
 
 
 def create_skill():
-    return ServerFallback()
+    return PadatiusFallback()
