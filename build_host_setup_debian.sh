@@ -25,7 +25,6 @@ sudo apt-get install -y \
     libicu-dev \
     pkg-config \
     automake \
-    libjpeg-dev
     xvfb \
     firefox \
     vlc \
