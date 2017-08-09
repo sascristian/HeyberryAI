@@ -66,7 +66,7 @@ class TimeSkill(MycroftSkill):
     def __build_time_intent(self):
         intent = IntentBuilder("TimeIntent").require("QueryKeyword") \
             .require("TimeKeyword").optionally("Location").build()
-        self.register_intent(intent, self.handle_speak_intent)
+        self.register_intent(intent, self.handle_time_intent)
 
     def __build_display_intent(self):
         intent = IntentBuilder("DisplayIntent").require("DisplayKeyword") \
@@ -87,10 +87,13 @@ class TimeSkill(MycroftSkill):
                     # this location
                     geolocator = Nominatim()
                     location = geolocator.geocode(locale)
-                    lat = location.latitude
-                    lon = location.longitude
+                    lat = float(location.latitude)
+                    lon = float(location.longitude)
+                    print lat, lon
+                    print tzwhere.tzwhere().tzNameAt(lat, lon)
                     return tzwhere.tzwhere().tzNameAt(lat, lon)
-                except:
+                except Exception as e:
+                    print e
                     return None
 
     def get_time(self):
@@ -123,7 +126,8 @@ class TimeSkill(MycroftSkill):
             '8': 'EIMHEFMHAA',
             '9': 'EIMBEBMHAA',
         }
-
+        if current_time is None:
+            return
         value_list = [val for val in current_time]
         code_list = []
 
@@ -163,10 +167,13 @@ class TimeSkill(MycroftSkill):
                 self.display(current_time)
             self.timer.start()
 
-    def handle_speak_intent(self, message):
+    def handle_time_intent(self, message):
         self.message = message  # optional parameter
         self.isClockRunning = True
-        self.speak_dialog("time.current", {"time": self.get_time()})
+        ti = self.get_time()
+        if ti is None:
+            return
+        self.speak_dialog("time.current", {"time": ti})
         if sum_of_core >= compatible_core_version_sum:
             self._update_time()
 
