@@ -27,6 +27,8 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 import time
 from threading import Timer
+from tzwhere import tzwhere
+from geopy.geocoders import Nominatim
 
 __author__ = 'ryanleesipes', 'jdorleans', 'connorpenrod', 'michaelnguyen'
 
@@ -58,11 +60,11 @@ class TimeSkill(MycroftSkill):
             return "%I:%M, %p"
 
     def initialize(self):
-        self.__build_speak_intent()
+        self.__build_time_intent()
         self.__build_display_intent()
 
-    def __build_speak_intent(self):
-        intent = IntentBuilder("SpeakIntent").require("QueryKeyword") \
+    def __build_time_intent(self):
+        intent = IntentBuilder("TimeIntent").require("QueryKeyword") \
             .require("TimeKeyword").optionally("Location").build()
         self.register_intent(intent, self.handle_speak_intent)
 
@@ -80,7 +82,16 @@ class TimeSkill(MycroftSkill):
                 # This handles codes like "America/Los_Angeles"
                 return timezone(locale)
             except:
-                return None
+                try:
+                    # get time from coordinates of OpenStreetMap Nominatim for
+                    # this location
+                    geolocator = Nominatim()
+                    location = geolocator.geocode(locale)
+                    lat = location.latitude
+                    lon = location.longitude
+                    return tzwhere.tzwhere().tzNameAt(lat, lon)
+                except:
+                    return None
 
     def get_time(self):
         location = self.message.data.get("Location")  # optional parameter
