@@ -18,30 +18,46 @@ class DisplayBackend():
         pass
 
     @abstractmethod
-    def display(self):
+    def display(self, pictures):
         """
-            Start playback.
+           Display First Picture in Pictures List of paths
         """
         pass
 
-    @abstractmethod
     def reset(self):
         """
-            Start playback.
+            Reset Display.
         """
         pass
 
-    @abstractmethod
     def clear(self):
         """
-            Start playback.
+            Clear Display.
+        """
+        pass
+
+    def next(self):
+        """
+            Skip to next pic in playlist.
+        """
+        pass
+
+    def previous(self):
+        """
+            Skip to previous pic in playlist.
         """
         pass
 
     def lock(self):
+        """
+           Set Lock Flag so nothing else can display
+        """
         pass
 
     def unlock(self):
+        """
+           Unset Lock Flag so nothing else can display
+        """
         pass
 
     def stop(self):
