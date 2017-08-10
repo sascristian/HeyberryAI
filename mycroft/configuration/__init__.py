@@ -310,8 +310,13 @@ class ConfigurationManager(object):
 class _ConfigurationListener(object):
     """ Utility to synchronize remote configuration changes locally
 
-    This listens to the messagebus for 'configuration.updated', and
-    refreshes the cached configuration when this is encountered.
+    This listens to the messagebus for
+    'configuration.updated', and refreshes the cached configuration when this
+    is encountered.
+     'configuration.update', and updates the cached configuration when this
+    is encountered. optionally saves as new user_config
+
+
     """
 
     def __init__(self, ws):
@@ -322,7 +327,7 @@ class _ConfigurationListener(object):
     @staticmethod
     def updated(message):
         """
-            Event handler for configuration update events. Forces a reload
+            Event handler for configuration updated events. Forces a reload
             of all configuration sources.
 
             Args:
