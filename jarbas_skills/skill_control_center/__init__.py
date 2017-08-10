@@ -47,10 +47,6 @@ class ControlCenterSkill(MycroftSkill):
         self.default_level = self.config_core["skills"]["default_run_level"]
         if self.default_level not in self.run_levels.keys():
             self.default_level = "full"
-        # TODO get from subprocess mimic -lv
-        self.mimic_voices = ["ap", "slt", "kal", "awb", "kal16", "rms", "awb_time"]
-        self.espeak_langs = ["en", "en-us", "en-sc", "en-n", "en-rp", "en-wm"]
-        self.espeak_voices = ["m1", "m2", "m3", "m4", "m5", "m6", "croak", "whisper", "f1", "f2", "f3", "f4", "f5"]
 
     def initialize(self):
         self.build_intents()
