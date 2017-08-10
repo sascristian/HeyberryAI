@@ -160,8 +160,7 @@ class TTSSkill(MycroftSkill):
         if module not in self.available_modules:
             self.speak(module + " was not configured to be changed at runtime")
             return
-        module_dict = self.get_module_settings(module)
-        config = {"tts":{module:module_dict}}
+        config = {"tts":{"module":module}}
         self.update_configs(config)
 
     def handle_change_voice_intent(self, message):
