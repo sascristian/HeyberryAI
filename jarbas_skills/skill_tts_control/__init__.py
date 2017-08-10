@@ -54,15 +54,6 @@ class TTSSkill(MycroftSkill):
         self.available_modules = self.get_available_modules()
         # build intents
         self.build_intents()
-        self.emitter.on("recognizer_loop:audio_output_end", self.end_wait)
-
-    def end_wait(self):
-        self.waiting = False
-
-    def wait(self):
-        self.waiting = True
-        while self.waiting:
-            sleep(0.1)
 
     def build_intents(self):
         intent = IntentBuilder("CurrentTTSIntent") \
@@ -242,7 +233,6 @@ class TTSSkill(MycroftSkill):
             self.update_configs(config)
             sleep(0.5)
             self.speak("This is voice " + voice)
-            #self.wait()
             sleep(5)
             for lang in langs:
                 self.log.info("Changing lang to " + lang)
@@ -251,7 +241,6 @@ class TTSSkill(MycroftSkill):
                 self.update_configs(config)
                 sleep(0.5)
                 self.speak("Using language " + lang)
-                #self.wait()
                 sleep(5)
         self.log.info("Reverting to original tts module")
         config = {"tts": {"module":self.current_module, self.current_module: original_dict}}
