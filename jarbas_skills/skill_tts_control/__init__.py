@@ -67,7 +67,7 @@ class TTSSkill(MycroftSkill):
         elapsed = 0
         while self.waiting and elapsed < timeout:
             sleep(0.1)
-            elapsed = time.time - start
+            elapsed = time.time() - start
 
     def build_intents(self):
         intent = IntentBuilder("CurrentTTSIntent") \
