@@ -63,7 +63,7 @@ class LILACSPersonalSkill(MycroftSkill):
             name = self.config_core.get("listener", {}).get("wake_word",
                                                             "jarbas").replace("hey ", "")
             maker = ["The wonderful Mycroft A.I. community and team.", "Everyone in the Mycroft A.I. community and team."]
-            description = ["I am an open source artificial intelligence.", "I'm an intelligent piece of software for communicating with machines"]
+            description = ["an open source artificial intelligence.", "an intelligent piece of software for communicating with machines"]
             birthday = "2015"
             born = "2015"
             birth = "2015"

@@ -301,10 +301,19 @@ class ConfigurationManager(object):
         """
         ConfigurationManager.update(config)
         location = SYSTEM_CONFIG if is_system else USER_CONFIG
-        loc_config = load_commented_json(location)
-        with open(location, 'w') as f:
-            config = loc_config.update(config)
-            json.dump(config, f)
+        LOG.info("Saving configuration")
+        try:
+            loc_config = load_commented_json(location)
+        except:
+            loc_config = {}
+
+        try:
+            with open(location, 'w') as f:
+                config = loc_config.update(config)
+                json.dump(config, f)
+            LOG.info("Configuration saved at " + location)
+        except Exception as e:
+            LOG.error(e)
 
 
 class _ConfigurationListener(object):
@@ -347,7 +356,8 @@ class _ConfigurationListener(object):
         config = message.data.get("config", {})
         ConfigurationManager.load_internal(config)
         save = message.data.get("save", False)
+        system = message.data.get("system", True)
         if save:
-            ConfigurationManager.save(config)
+            ConfigurationManager.save(config, system)
 
 

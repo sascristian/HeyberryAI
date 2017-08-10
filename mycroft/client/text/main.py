@@ -47,7 +47,7 @@ logger = getLogger("CLIClient")
 
 utterances = []
 chat = []   # chat history, oldest at the lowest index
-line = "What time is it"
+line = "hello world"
 bSimple = '--simple' in sys.argv
 scr = None
 log_line_offset = 0  # num lines back in logs to show

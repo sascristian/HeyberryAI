@@ -118,7 +118,15 @@ class TTSSkill(MycroftSkill):
             .build()
         self.register_intent(intent, self.handle_demo_tts_intent)
 
+        intent = IntentBuilder("PermanentTTSIntent") \
+            .require("PermanentKeyword").require("TTSKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_permanent_tts_intent)
+
     # intents
+    def handle_permanent_tts_intent(self, message):
+        self.emitter.emit(Message("configuration.update", {"config":{}, "save":True}))
+        self.speak("Making cached configuration permanent")
 
     def handle_current_module_intent(self, message):
         if self.current_module:
