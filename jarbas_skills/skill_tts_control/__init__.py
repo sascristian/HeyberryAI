@@ -164,6 +164,8 @@ class TTSSkill(MycroftSkill):
         config["module"] = module
         config = {"tts":config}
         self.update_configs(config)
+        sleep(2)
+        self.speak("Module changed to " + module)
 
     def handle_change_voice_intent(self, message):
         voice = message.data.get("TargetKeyword")
