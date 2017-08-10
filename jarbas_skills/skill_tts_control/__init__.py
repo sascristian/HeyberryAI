@@ -54,11 +54,20 @@ class TTSSkill(MycroftSkill):
         self.available_modules = self.get_available_modules()
         # build intents
         self.build_intents()
+        self.emitter.on("recognizer_loop:audio_output_end", self.end_wait)
+
+    def end_wait(self):
+        self.waiting = False
+
+    def wait(self):
+        self.waiting = True
+        while self.waiting:
+            sleep(0.1)
 
     def build_intents(self):
         intent = IntentBuilder("CurrentTTSIntent") \
-            .require("CurrentTTSKeyword") \
-            .build()
+               .require("CurrentKeyword").require("TTSKeyword") \
+               .build()
         self.register_intent(intent, self.handle_current_module_intent)
 
         intent = IntentBuilder("AvailableVoicesIntent") \
@@ -70,10 +79,10 @@ class TTSSkill(MycroftSkill):
         intent = IntentBuilder("AvailableTTSIntent") \
             .require("AvailableKeyword").require("TTSKeyword") \
             .build()
-        self.register_intent(intent, self.handle_available_voices_intent)
+        self.register_intent(intent, self.handle_available_modules_intent)
 
         intent = IntentBuilder("AvailableTTSLangsIntent") \
-            .require("CurrentKeyword").require("LangKeyword") \
+            .require("AvailableKeyword").require("LangKeyword") \
             .optionally("TargetKeyword") \
             .build()
         self.register_intent(intent, self.handle_available_langs_intent)
@@ -160,7 +169,9 @@ class TTSSkill(MycroftSkill):
         if module not in self.available_modules:
             self.speak(module + " was not configured to be changed at runtime")
             return
-        config = {"tts":{"module":module}}
+        config = self.config_core.get("tts")
+        config["module"] = module
+        config = {"tts":config}
         self.update_configs(config)
 
     def handle_change_voice_intent(self, message):
@@ -184,7 +195,7 @@ class TTSSkill(MycroftSkill):
         else:
             module_dict = self.get_module_settings(self.current_module)
             module_dict["voice"] = voice
-            config = {"tts":{self.current_module:module_dict}}
+            config = {"tts":{"module":self.current_module, self.current_module:module_dict}}
             self.update_configs(config)
 
     def handle_change_lang_intent(self, message):
@@ -205,7 +216,7 @@ class TTSSkill(MycroftSkill):
         else:
             module_dict = self.get_module_settings(self.current_module)
             module_dict["lang"] = lang
-            config = {"tts": {self.current_module: module_dict}}
+            config = {"tts": {"module":self.current_module, self.current_module: module_dict}}
             self.update_configs(config)
 
     def handle_demo_tts_intent(self, message):
@@ -227,33 +238,40 @@ class TTSSkill(MycroftSkill):
             self.log.info("Changing voice to " + voice)
             module_dict = self.get_module_settings(self.current_module)
             module_dict["voice"] = voice
-            config = {"tts": {self.current_module: module_dict}}
+            config = {"tts": {"module":self.current_module, self.current_module: module_dict}}
             self.update_configs(config)
             sleep(0.5)
             self.speak("This is voice " + voice)
+            #self.wait()
+            sleep(5)
             for lang in langs:
                 self.log.info("Changing lang to " + lang)
                 module_dict["lang"] = lang
-                config = {"tts": {self.current_module: module_dict}}
+                config = {"tts": {"module":self.current_module, self.current_module: module_dict}}
                 self.update_configs(config)
                 sleep(0.5)
                 self.speak("Using language " + lang)
+                #self.wait()
+                sleep(5)
         self.log.info("Reverting to original tts module")
-        config = {"tts": {self.current_module: original_dict}}
+        config = {"tts": {"module":self.current_module, self.current_module: original_dict}}
         self.update_configs(config)
 
 
     # dicts with possible choices for each stt engine
     def build_mimic_dict(self):
+        self.mimic["name"] = "mimic"
         self.mimic["voices"] = ["ap", "slt", "kal", "awb", "kal16", "rms",
                              "awb_time"]
 
     def build_espeak_dict(self):
+        self.espeak["name"] = "espeak"
         self.espeak["voices"] = ["m1", "m2", "m3", "m4", "m5", "m6", "croak",
                               "whisper", "f1", "f2", "f3", "f4", "f5"]
         self.espeak["langs"] = ["en", "en-us", "en-sc", "en-n", "en-rp", "en-wm"]
 
     def build_morse_dict(self):
+        self.morse["name"] = "morse"
         self.morse["voices"] = ["recording"]
 
     def build_google_dict(self):
@@ -301,14 +319,13 @@ class TTSSkill(MycroftSkill):
         modules = []
         for module in dicts:
             if len(module.keys()):
-                modules.append(module)
+                modules.append(module["name"])
         return modules
 
     # send bus message to update all configs
     def update_configs(self, config):
-        self.config_core.update(config)
         # change config message
-        self.emitter.emit(Message("configuration.updated", self.config_core))
+        self.emitter.emit(Message("configuration.update", {"config":config}))
         return True
 
     def stop(self):

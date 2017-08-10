@@ -257,6 +257,11 @@ class ConfigurationManager(object):
                                         keep_user_config)
 
     @staticmethod
+    def load_internal(config):
+        LOG.info("Updating config internally")
+        ConfigurationManager.update(config)
+
+    @staticmethod
     def load_remote():
         if not ConfigurationManager.__config:
             ConfigurationManager.__config = ConfigurationLoader.load()
@@ -312,6 +317,7 @@ class _ConfigurationListener(object):
     def __init__(self, ws):
         super(_ConfigurationListener, self).__init__()
         ws.on("configuration.updated", self.updated)
+        ws.on("configuration.update", self.update)
 
     @staticmethod
     def updated(message):
@@ -323,3 +329,15 @@ class _ConfigurationListener(object):
                 message:    message bus message structure
         """
         ConfigurationManager.load_defaults()
+
+    @staticmethod
+    def update(message):
+        """
+            Event handler for configuration update events. update with provided config
+
+            Args:
+                message:    message bus message structure
+        """
+        config = message.data.get("config", {})
+        ConfigurationManager.load_internal(config)
+
