@@ -20,6 +20,7 @@ from adapt.intent import IntentBuilder
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from time import sleep
+import time
 
 __author__ = 'jarbas'
 
@@ -54,6 +55,19 @@ class TTSSkill(MycroftSkill):
         self.available_modules = self.get_available_modules()
         # build intents
         self.build_intents()
+        self.emitter.on("recognizer_loop:audio_output_end", self.end_wait)
+
+    def end_wait(self):
+        self.waiting = False
+
+    def wait(self):
+        self.waiting = True
+        start = time.time()
+        timeout = 10
+        elapsed = 0
+        while self.waiting and elapsed < timeout:
+            sleep(0.1)
+            elapsed = time.time - start
 
     def build_intents(self):
         intent = IntentBuilder("CurrentTTSIntent") \
@@ -235,7 +249,7 @@ class TTSSkill(MycroftSkill):
             self.update_configs(config)
             sleep(0.5)
             self.speak("This is voice " + voice)
-            sleep(5)
+            self.wait()
             for lang in langs:
                 self.log.info("Changing lang to " + lang)
                 module_dict["lang"] = lang
@@ -243,7 +257,7 @@ class TTSSkill(MycroftSkill):
                 self.update_configs(config)
                 sleep(0.5)
                 self.speak("Using language " + lang)
-                sleep(5)
+                self.wait()
         self.log.info("Reverting to original tts module")
         config = {"tts": {"module":self.current_module, self.current_module: original_dict}}
         self.update_configs(config)
