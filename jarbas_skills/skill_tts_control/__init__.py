@@ -27,6 +27,7 @@ __author__ = 'jarbas'
 class TTSSkill(MycroftSkill):
     def __init__(self):
         super(TTSSkill, self).__init__()
+        self.reload_skill = False
         self.current_module = None
         self.current_module_settings = {}
         self.mimic = {}
@@ -104,7 +105,6 @@ class TTSSkill(MycroftSkill):
         self.register_intent(intent, self.handle_demo_tts_intent)
 
     # intents
-    # TODO change voice, change language, nicknames
 
     def handle_current_module_intent(self, message):
         if self.current_module:
