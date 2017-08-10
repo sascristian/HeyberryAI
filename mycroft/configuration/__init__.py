@@ -333,11 +333,15 @@ class _ConfigurationListener(object):
     @staticmethod
     def update(message):
         """
-            Event handler for configuration update events. update with provided config
-
+            Event handler for configuration update events.
+            Update config with provided data
+            Save config as user_config if requested
             Args:
                 message:    message bus message structure
         """
         config = message.data.get("config", {})
         ConfigurationManager.load_internal(config)
+        save = message.data.get("save", False)
+        if save:
+            ConfigurationManager.save(config)
 
