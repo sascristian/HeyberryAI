@@ -105,6 +105,7 @@ def mute_and_speak(utterance):
     lock.acquire()
     # update TTS object if configuration has changed
     if tts_hash != hash(str(config.get('tts', ''))):
+        logger.info("updating tts")
         global tts
         # Stop tts playback thread
         tts.playback.stop()
