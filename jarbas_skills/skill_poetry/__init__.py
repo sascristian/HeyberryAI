@@ -15,16 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-import random
-
-import os
-from adapt.intent import IntentBuilder
 from os.path import dirname, realpath
-
-from jarbas_utils.MarkovChains import MarkovChain
+import random
+import json
+import time
+from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from mycroft import MYCROFT_ROOT_PATH
+import os
 
 __author__ = 'jarbas'
 
@@ -35,15 +33,10 @@ class PoetrySkill(MycroftSkill):
 
     def __init__(self):
         super(PoetrySkill, self).__init__(name="PoetrySkill")
-        self.styles = ["blackmetal", "deathmetal","scifi","viking",
-                       "shakespeare", "mc_3_w", "mc_5_w", "family", "friends",
-                       "inspirational", "love", "life"]
+        self.styles = ["blackmetal", "deathmetal","scifi","viking", "shakespeare", "camoes", "family", "friends", "inspirational", "love", "life"]
         self.path = dirname(realpath(__file__))
         if not os.path.exists(self.path+"/results"):
             os.mkdir(self.path+"/results")
-        self.chain_path = MYCROFT_ROOT_PATH + "/jarbas_models/Markov_Chains/"
-        if not os.path.exists(self.chain_path+"/poetry_styles"):
-            os.mkdir(self.chain_path+"/poetry_styles")
 
     def initialize(self):
         # TODO regex style into single intent
@@ -109,19 +102,8 @@ class PoetrySkill(MycroftSkill):
         self.speak(poem)
 
     def poetry(self, style):
-        path = self.chain_path + "/poetry_styles/" + style + ".json"
-        i = 2
-        # _13_ in name, means order 13
-        order = style.find("_")
-        if order != -1:
-            style = style[order+1:]
-            order = style.find("_")
-            if order != -1:
-                style = style[:order]
-        if style.isdigit():
-            i = int(style)
-
-        chain = MarkovChain(i, pad=False).load(path)
+        path = self.path + "/styles/" + style + ".json"
+        chain = MarkovChain(1, pad=False).load(path)
         generated = chain.generate_sequence()
         poem = ""
         for word in generated:
@@ -146,3 +128,140 @@ class PoetrySkill(MycroftSkill):
 
 def create_skill():
     return PoetrySkill()
+
+
+START_OF_SEQ = "~"
+END_OF_SEQ = "[END]"
+
+
+class MarkovChain:
+    """
+    Simple Markov Chain Class
+    """
+
+    def __init__(self, order=1, pad=True, records=None):
+        """
+        Initialise Markov chain
+        :param order: int - number of tokens to consider a state
+        :param pad: bool - whether to pad training strings with start/end tokens
+        """
+        self.order = order
+        self.pad = pad
+        self.records = {} if records is None else records
+
+    def add_tokens(self, tokens):
+        """
+        Adds a list of tokens to the markov chain
+
+        :param tokens: list of tokens
+        :return: None
+        """
+        if self.pad:
+            tokens = [START_OF_SEQ] * self.order + tokens + [END_OF_SEQ]
+
+        for i in range(len(tokens) - self.order):
+            current_state = tuple(tokens[i:i + self.order])
+            next_state = tokens[i + self.order]
+            self.add_state(current_state, next_state)
+
+    def add_state(self, current_state, next_state):
+        """
+        Updates the weight of the transition from current_state to next_state
+        with a single observation.
+
+        :param current_state: tuple - current state
+        :param next_state: token - the next observed token
+        :return: None
+        """
+        if current_state not in self.records.keys():
+            self.records[current_state] = dict()
+
+        if next_state not in self.records[current_state].keys():
+            self.records[current_state][next_state] = 0
+
+        self.records[current_state][next_state] += 1
+
+    def generate_sequence(self, n=100, initial_state=None):
+        """
+        Generates a sequence of tokens from the markov chain, starting from
+        initial_state. If initial state is empty, and pad is false it chooses an
+        initial state at random. If pad is true,
+
+        :param n: int - The number of tokens to generate
+        :param initial_state: starting state of the generator
+        :return: list of generated tokens
+        """
+
+        if initial_state is None:
+            if self.pad:
+                sequence = [START_OF_SEQ] * self.order
+            else:
+                sequence = list(random.choice(self.records.keys()))
+        else:
+            sequence = initial_state[:]
+
+        for i in range(n):
+            current_state = tuple(sequence[-self.order:])
+            next_token = self.sample(current_state)
+            sequence.append(next_token)
+
+            if next_token == END_OF_SEQ:
+                return sequence
+
+        return sequence
+
+    def sample(self, current_state):
+        """
+        Generates a random next token, given current_state
+        :param current_state: tuple - current_state
+        :return: token
+        """
+        if current_state not in self.records.keys():
+            current_state = random.choice(self.records.keys())
+
+        possible_next = self.records[current_state]
+        n = sum(possible_next.values())
+
+        m = random.randint(0, n)
+        count = 0
+        for k, v in possible_next.items():
+            count += v
+            if m <= count:
+                return k
+
+    def save(self, filename):
+        """
+        Saves Markov chain to filename
+
+        :param filename: string - where to save chain
+        :return: None
+        """
+        with open(filename, "w") as f:
+            m = {
+                "order": self.order,
+                "pad": self.pad,
+                "records": {str(k): v for k, v in self.records.items()}
+            }
+            json.dump(m, f)
+
+    @staticmethod
+    def load(filename):
+        """
+        Loads Markov chain from json file
+
+        DUE TO USE OF EVAL
+        DO NOT RUN THIS ON UNTRUSTED FILES
+
+        :param filename:
+        :return: MarkovChain
+        """
+        with open(filename, "r") as f:
+            raw = json.load(f)
+
+        mc = MarkovChain(
+            raw["order"],
+            raw["pad"],
+            {eval(k): v for k, v in raw["records"].items()}
+        )
+
+        return mc

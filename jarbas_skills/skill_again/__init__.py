@@ -46,7 +46,7 @@ class AgainSkill(MycroftSkill):
         message = Message.deserialize(message)
         if ":" in message.type:
             skill, intent = message.type.split(":")
-            if skill == str(self.skill_id) or skill == self.name or skill == "recognizer_loop":
+            if skill == str(self.skill_id) or not skill.isdigit():
                 return
             self.log.info("Tracking last executed intent: " + message.type)
             self.context = self.get_context(message.context)

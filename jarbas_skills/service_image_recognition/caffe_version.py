@@ -109,7 +109,7 @@ class ImageRecognitionSkill(MycroftSkill):
             results[i] = result
             i += 1
         classifications = results
-        self.context["destinatary"] = dest
+        self.message_context["destinatary"] = dest
         self.speak("in test image i see " + results[0] + ", or maybe it is " + results[1])
 
     def handle_deep_draw_about_intent(self, message):
@@ -137,7 +137,7 @@ class ImageRecognitionSkill(MycroftSkill):
                 i += 1
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
-        file = imgrecog.get_deep_draw(class_num=imagenet_class, server=False, context=self.context)
+        file = imgrecog.get_deep_draw(class_num=imagenet_class, server=False, context=self.message_context)
         result = imgrecog.result
         if result is None:
             result = {}
@@ -148,7 +148,7 @@ class ImageRecognitionSkill(MycroftSkill):
 
     def handle_classify(self, message):
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         pic = message.data.get("file", None)
         if pic is None:
             self.log.error("Could not read file to classify")
@@ -196,20 +196,20 @@ class ImageRecognitionSkill(MycroftSkill):
         # send result
         msg_type = "image.classification.result"
         msg_data = {"classification": result}
-        self.context["destinatary"] = user_id
+        self.message_context["destinatary"] = user_id
         # to source socket
         if ":" in user_id:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
                                           {"data":msg_data,
-                                           "type": msg_type, "context": self.context}, self.context))
+                                           "type": msg_type, "context": self.message_context}, self.message_context))
         # to bus
         self.emitter.emit(Message(msg_type,
-                                  msg_data, self.context))
+                                  msg_data, self.message_context))
 
     def handle_deep_draw(self, message):
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         # deep draw, these octaves determine gradient ascent steps
         octaves = [
             {
@@ -298,18 +298,18 @@ class ImageRecognitionSkill(MycroftSkill):
         msg_type = "class.visualization.result"
         msg_data = {"file":path, "url": link, "class_label": imagenet_class, "class_name": name}
         # to source socket
-        self.context["destinatary"] = user_id
+        self.message_context["destinatary"] = user_id
         try:
             if user_id.split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
                                           {"data": msg_data,
-                                           "type": msg_type, "context": self.context}, self.context))
+                                           "type": msg_type, "context": self.message_context}, self.message_context))
         except:
             # if try fails it wasnt from a socket
             pass
         # to bus
         self.emitter.emit(Message(msg_type,
-                                  msg_data, self.context))
+                                  msg_data, self.message_context))
 
     def stop(self):
         pass

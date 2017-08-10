@@ -86,7 +86,7 @@ class StyleTransferSkill(MycroftSkill):
 
     def handle_style_transfer_intent(self, message):
         if message.context is None:
-            message.context = self.context
+            message.context = self.message_context
         style_img = [dirname(__file__) + "/styles/HRGiger/alien.jpg", dirname(
             __file__) + "/styles/HRGiger/giger.jpg"]
         target_img = dirname(__file__) + "/test.jpg"
@@ -94,7 +94,7 @@ class StyleTransferSkill(MycroftSkill):
         self.speak("testing style transfer")
         transfer = StyleTransferService(self.emitter)
         file = transfer.transfer_from_file(target_img, style_img, iter=iter_num,
-                                           context=self.context, server=False)
+                                           context=self.message_context, server=False)
         url = transfer.get_result().get("url")
         time = transfer.get_result().get("elapsed_time")
         self.speak("Style transfer test complete in " + str(time) + " seconds",
@@ -103,7 +103,7 @@ class StyleTransferSkill(MycroftSkill):
     def handle_style_transfer(self, message):
         self.log.info("Style Transfer request")
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         name = message.data.get("name")
         # list of styles
         style_img = message.data.get("style_img", [
@@ -244,16 +244,16 @@ class StyleTransferSkill(MycroftSkill):
             msg_data["url"] = data["link"]
 
         # to source socket
-        if ":" in self.context["destinatary"]:
-            if self.context["destinatary"].split(":")[1].isdigit():
+        if ":" in self.message_context["destinatary"]:
+            if self.message_context["destinatary"].split(":")[1].isdigit():
                 self.emitter.emit(Message("message_request",
-                                          {"context": self.context,
+                                          {"context": self.message_context,
                                            "data": msg_data,
-                                           "type": msg_type}, self.context))
+                                           "type": msg_type}, self.message_context))
         # to bus
         msg_data["file"] = out_path
         self.emitter.emit(Message(msg_type,
-                                  msg_data, self.context))
+                                  msg_data, self.message_context))
         self.speak("style transfer result: " + out_path + " " + str(e_time),
                    metadata=msg_data)
 

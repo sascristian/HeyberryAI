@@ -156,12 +156,12 @@ class VisionSkill(MycroftSkill):
             stype = "file"
             self.emitter.emit(Message("server_request",
                                       {"server_msg_type": stype, "requester": requester, "message_type": message_type,
-                                       "message_data": message_data}, self.context))
-        self.emitter.emit(Message(message_type, message_data, self.context))
+                                       "message_data": message_data}, self.message_context))
+        self.emitter.emit(Message(message_type, message_data, self.message_context))
 
     def handle_vision_request(self, message):
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         feed = self.process_frame()
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
         source = message.context.get("source")
@@ -172,13 +172,13 @@ class VisionSkill(MycroftSkill):
 
     def handle_feed_request(self, message):
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
-        self.emitter.emit(Message("vision.feed.result", {"file": path}, self.context))
+        self.emitter.emit(Message("vision.feed.result", {"file": path}, self.message_context))
 
     def handle_face_request(self, message):
         if message.context is not None:
-            self.context.update(message.context)
+            self.message_context.update(message.context)
         path = message.data.get("file")
         if not path:
             path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
@@ -188,7 +188,7 @@ class VisionSkill(MycroftSkill):
 
         # detect faces
         faces = self.find_faces(gray)
-        self.emitter.emit(Message("vision.faces.result", {"file": path, "faces": faces}, self.context))
+        self.emitter.emit(Message("vision.faces.result", {"file": path, "faces": faces}, self.message_context))
 
     # intents
     def handle_webcam_intent(self, message):

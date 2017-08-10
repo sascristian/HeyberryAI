@@ -174,7 +174,7 @@ class RBM_Sampling_Service(MycroftSkill):
         samples = self.sample_models(models, n_samples, iters, start_temp,
                                      end_temp)
         self.emitter.emit(Message("RBM.sample.result", {"samples": samples},
-                                  self.context))
+                                  self.message_context))
 
     def handle_sample_intent(self, message):
         model = random.choice(self.scan_models())

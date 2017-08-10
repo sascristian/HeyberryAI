@@ -51,7 +51,8 @@ class PadatiousService(object):
 
         self.emitter = emitter
         self.emitter.on('padatious:register_intent', self.register_intent)
-        FallbackSkill.register_fallback(self.handle_fallback, 5)
+        self.emitter.on('padatious:fallback.request', self.handle_fallback)
+        #FallbackSkill.register_fallback(self.handle_fallback, 5)
         self.finished_training_event = Event()
 
         self.train_delay = self.config['train_delay']
@@ -98,7 +99,10 @@ class PadatiousService(object):
         data = self.container.calc_intent(utt)
 
         if data.conf < 0.5:
-            return False
+            success = False
+        else:
+            success = True
+            self.emitter.emit(Message(data.name, data=data.matches))
 
-        self.emitter.emit(Message(data.name, data=data.matches))
-        return True
+        self.emitter.emit(Message('padatious:fallback.response',
+                                  data={"success": success}))

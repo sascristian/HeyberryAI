@@ -205,7 +205,7 @@ class MycroftSkill(object):
         self.external_shutdown = True
         self.events = []
         self.skill_id = 0
-        self.context = self.get_context()
+        self.message_context = self.get_context()
 
     @property
     def location(self):
@@ -335,7 +335,7 @@ class MycroftSkill(object):
         self.add_event(intent_name, handler)
 
     def handle_update_context(self, message):
-        self.context = self.get_context(message.context)
+        self.message_context = self.get_context(message.context)
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
@@ -396,26 +396,26 @@ class MycroftSkill(object):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
-    def get_context(self, context=None):
-        if context is None:
-            context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False, "target": "all"}
+    def get_context(self, message_context=None):
+        if message_context is None:
+            message_context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False, "target": "all"}
         else:
-            if "destinatary" not in context.keys():
-                context["destinatary"] = self.context.get("destinatary", "all")
-            if "target" not in context.keys():
-                context["target"] = self.context.get("destinatary", "all")
-            if "mute" not in context.keys():
-                context["mute"] = self.context.get("mute", False)
-            if "more_speech" not in context.keys():
-                context["more_speech"] = self.context.get("more_speech", False)
-        if context.get("source", "skills") == "skills":
-            context["source"] = self.name
-        return context
+            if "destinatary" not in message_context.keys():
+                message_context["destinatary"] = self.message_context.get("destinatary", "all")
+            if "target" not in message_context.keys():
+                message_context["target"] = self.message_context.get("destinatary", "all")
+            if "mute" not in message_context.keys():
+                message_context["mute"] = self.message_context.get("mute", False)
+            if "more_speech" not in message_context.keys():
+                message_context["more_speech"] = self.message_context.get("more_speech", False)
+        if message_context.get("source", "skills") == "skills":
+            message_context["source"] = self.name
+        return message_context
 
-    def speak(self, utterance, expect_response=False, metadata=None, context=None):
-        if context is None:
+    def speak(self, utterance, expect_response=False, metadata=None, message_context=None):
+        if message_context is None:
             # use current context
-            context = self.context
+            message_context = self.message_context
         if metadata is None:
             metadata = {}
         # registers the skill as being active
@@ -423,19 +423,19 @@ class MycroftSkill(object):
         data = {'utterance': utterance,
                 'expect_response': expect_response,
                 "metadata": metadata}
-        self.emitter.emit(Message("speak", data, self.get_context(context)))
+        self.emitter.emit(Message("speak", data, self.get_context(message_context)))
 
-    def speak_dialog(self, key, data=None, expect_response=False, metadata=None, context=None):
-        if context is None:
+    def speak_dialog(self, key, data=None, expect_response=False, metadata=None, message_context=None):
+        if message_context is None:
             # use current context
-            context = self.context
+            message_context = self.message_context
         if metadata is None:
             metadata = {}
         if data is None:
             data = {}
         data['expect_response'] = expect_response
         data["metadata"] = metadata
-        self.speak(self.dialog_renderer.render(key, data), context=self.get_context(context))
+        self.speak(self.dialog_renderer.render(key, data), message_context=self.get_context(message_context))
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)
@@ -509,6 +509,9 @@ class FallbackSkill(MycroftSkill):
     def __init__(self, name=None, emitter=None):
         MycroftSkill.__init__(self, name, emitter)
 
+        #  list of fallback handlers registered by this instance
+        self.instance_fallback_handlers = []
+
     @classmethod
     def make_intent_failure_handler(cls, ws):
         """Goes through all fallback handlers until one returns true"""
@@ -528,7 +531,7 @@ class FallbackSkill(MycroftSkill):
         return handler
 
     @classmethod
-    def register_fallback(cls, handler, priority):
+    def _register_fallback(cls, handler, priority):
         """
         Register a function to be called as a general info fallback
         Fallback should receive message and return
@@ -542,10 +545,39 @@ class FallbackSkill(MycroftSkill):
 
         cls.fallback_handlers[priority] = handler
 
+    def register_fallback(self, handler, priority):
+        """
+            register a fallback with the list of fallback handlers
+            and with the list of handlers registered by this instance
+        """
+        self.instance_fallback_handlers.append(handler)
+        self._register_fallback(handler, priority)
+
     @classmethod
     def remove_fallback(cls, handler_to_del):
+        """
+            Remove a fallback handler
+
+            Args:
+                handler_to_del: reference to handler
+        """
         for priority, handler in cls.fallback_handlers.items():
             if handler == handler_to_del:
                 del cls.fallback_handlers[priority]
                 return
         logger.warn('Could not remove fallback!')
+
+    def remove_instance_handlers(self):
+        """
+            Remove all fallback handlers registered by the fallback skill.
+        """
+        while len(self.instance_fallback_handlers):
+            handler = self.instance_fallback_handlers.pop()
+            self.remove_fallback(handler)
+
+    def shutdown(self):
+        """
+            Remove all registered handlers and perform skill shutdown.
+        """
+        self.remove_instance_handlers()
+        super(FallbackSkill, self).shutdown()

@@ -43,7 +43,7 @@ class LILACSWikiHowSkill(MycroftSkill):
         node = message.data.get("Subject")
         result = self.adquire(node)
         #self.speak(str(result))
-        self.emitter.emit(Message("wikihow.result", result, self.context))
+        self.emitter.emit(Message("wikihow.result", result, self.message_context))
 
     def adquire(self, subject):
         logger.info('WikihowKnowledge_Adquire')
