@@ -84,6 +84,20 @@ class TTSSkill(MycroftSkill):
             .build()
         self.register_intent(intent, self.handle_change_module_intent)
 
+        intent = IntentBuilder("ChangeVoiceIntent") \
+            .require("ChangeKeyword") \
+            .require("VoiceKeyword") \
+            .optionally("TargetKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_change_voice_intent)
+
+        intent = IntentBuilder("ChangeVoiceIntent") \
+            .require("ChangeKeyword") \
+            .require("LangKeyword") \
+            .optionally("TargetKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_change_lang_intent)
+
         intent = IntentBuilder("DemoTTSIntent") \
             .require("DemoKeyword").require("TTSKeyword") \
             .build()
@@ -149,6 +163,51 @@ class TTSSkill(MycroftSkill):
         module_dict = self.get_module_settings(module)
         config = {"tts":{module:module_dict}}
         self.update_configs(config)
+
+    def handle_change_voice_intent(self, message):
+        voice = message.data.get("TargetKeyword")
+        if not voice:
+            self.speak("Change to what voice?")
+            return
+        if self.current_module == "mimic":
+            voices = self.mimic["voices"]
+        elif self.current_module == "espeak":
+            voices = self.espeak["voices"]
+        elif self.current_module == "morse":
+            voices = self.morse["voices"]
+        else:
+            self.speak(self.current_module + " does not support voice change "
+                                             "at runtime")
+            return
+        if voice not in voices:
+            # TODO fuzzymatch and nicknames
+            self.speak(voice + " is not available")
+        else:
+            module_dict = self.get_module_settings(self.current_module)
+            module_dict["voice"] = voice
+            config = {"tts":{self.current_module:module_dict}}
+            self.update_configs(config)
+
+    def handle_change_lang_intent(self, message):
+        lang = message.data.get("TargetKeyword")
+        if not lang:
+            self.speak("Change to what language?")
+            return
+        if self.current_module == "espeak":
+            langs = self.espeak["langs"]
+        else:
+            self.speak(self.current_module + " does not support language "
+                                             "change "
+                                             "at runtime")
+            return
+        if lang not in langs:
+            # TODO fuzzymatch and nicknames
+            self.speak(lang + " is not available")
+        else:
+            module_dict = self.get_module_settings(self.current_module)
+            module_dict["lang"] = lang
+            config = {"tts": {self.current_module: module_dict}}
+            self.update_configs(config)
 
     def handle_demo_tts_intent(self, message):
         if self.current_module == "mimic":
