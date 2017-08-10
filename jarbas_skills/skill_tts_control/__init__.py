@@ -67,7 +67,7 @@ class TTSSkill(MycroftSkill):
         elapsed = 0
         while self.waiting and elapsed < timeout:
             sleep(0.1)
-            elapsed = time.time - start
+            elapsed = time.time() - start
 
     def build_intents(self):
         intent = IntentBuilder("CurrentTTSIntent") \
@@ -106,7 +106,7 @@ class TTSSkill(MycroftSkill):
             .build()
         self.register_intent(intent, self.handle_change_voice_intent)
 
-        intent = IntentBuilder("ChangeVoiceIntent") \
+        intent = IntentBuilder("ChangeLangIntent") \
             .require("ChangeKeyword") \
             .require("LangKeyword") \
             .optionally("TargetKeyword") \
@@ -174,9 +174,10 @@ class TTSSkill(MycroftSkill):
         if module not in self.available_modules:
             self.speak(module + " was not configured to be changed at runtime")
             return
-        config = self.config_core.get("tts")
-        config["module"] = module
-        config = {"tts":config}
+        tts = self.get_current_tts()
+        tts["module"] = module
+        tts[module] = self.get_module_settings(module)
+        config = {"tts": tts}
         self.update_configs(config)
         sleep(2)
         self.speak("Module changed to " + module)
@@ -202,7 +203,9 @@ class TTSSkill(MycroftSkill):
         else:
             module_dict = self.get_module_settings(self.current_module)
             module_dict["voice"] = voice
-            config = {"tts":{"module":self.current_module, self.current_module:module_dict}}
+            tts = self.get_current_tts()
+            tts[self.current_module] = module_dict
+            config = {"tts": tts}
             self.update_configs(config)
 
     def handle_change_lang_intent(self, message):
@@ -223,8 +226,11 @@ class TTSSkill(MycroftSkill):
         else:
             module_dict = self.get_module_settings(self.current_module)
             module_dict["lang"] = lang
-            config = {"tts": {"module":self.current_module, self.current_module: module_dict}}
+            tts = self.get_current_tts()
+            tts[self.current_module] = module_dict
+            config = {"tts": tts}
             self.update_configs(config)
+
 
     def handle_demo_tts_intent(self, message):
         if self.current_module == "mimic":
@@ -245,21 +251,27 @@ class TTSSkill(MycroftSkill):
             self.log.info("Changing voice to " + voice)
             module_dict = self.get_module_settings(self.current_module)
             module_dict["voice"] = voice
-            config = {"tts": {"module":self.current_module, self.current_module: module_dict}}
+            tts = self.get_current_tts()
+            tts[self.current_module] = module_dict
+            config = {"tts": tts}
             self.update_configs(config)
-            sleep(0.5)
+            sleep(1)
             self.speak("This is voice " + voice)
             self.wait()
             for lang in langs:
                 self.log.info("Changing lang to " + lang)
                 module_dict["lang"] = lang
-                config = {"tts": {"module":self.current_module, self.current_module: module_dict}}
+                tts = self.get_current_tts()
+                tts[self.current_module] = module_dict
+                config = {"tts": tts}
                 self.update_configs(config)
-                sleep(0.5)
+                sleep(1)
                 self.speak("Using language " + lang)
                 self.wait()
         self.log.info("Reverting to original tts module")
-        config = {"tts": {"module":self.current_module, self.current_module: original_dict}}
+        tts = self.get_current_tts()
+        tts[self.current_module] = original_dict
+        config = {"tts": tts}
         self.update_configs(config)
 
 
@@ -309,6 +321,7 @@ class TTSSkill(MycroftSkill):
         tts = self.config_core.get("tts")
         if not tts:
             self.log.error("could not get tts settings")
+            tts = {}
         else:
             self.current_module = tts.get("module")
             if not self.current_module:
@@ -316,6 +329,7 @@ class TTSSkill(MycroftSkill):
             else:
                 self.current_module_settings = self.get_module_settings(
                     self.current_module)
+        return tts
 
     def get_available_modules(self):
         # available == configured in this skill
@@ -331,6 +345,8 @@ class TTSSkill(MycroftSkill):
     def update_configs(self, config):
         # change config message
         self.emitter.emit(Message("configuration.update", {"config":config}))
+        sleep(1)
+        self.get_current_tts()
         return True
 
     def stop(self):

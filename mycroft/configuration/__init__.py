@@ -350,3 +350,4 @@ class _ConfigurationListener(object):
         if save:
             ConfigurationManager.save(config)
 
+
