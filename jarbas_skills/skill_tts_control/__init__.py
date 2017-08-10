@@ -207,6 +207,7 @@ class TTSSkill(MycroftSkill):
             tts[self.current_module] = module_dict
             config = {"tts": tts}
             self.update_configs(config)
+        self.speak("voice changed to " + voice)
 
     def handle_change_lang_intent(self, message):
         lang = message.data.get("TargetKeyword")
@@ -230,6 +231,7 @@ class TTSSkill(MycroftSkill):
             tts[self.current_module] = module_dict
             config = {"tts": tts}
             self.update_configs(config)
+            self.speak("language changed to " + lang)
 
 
     def handle_demo_tts_intent(self, message):
