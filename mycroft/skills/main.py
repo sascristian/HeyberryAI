@@ -300,7 +300,14 @@ def _watch_skills():
                 if not skill["do_not_reload"]:
                     skill["loaded"] = True
                     skill["instance"] = load_skill(
-                        create_skill_descriptor(skill["path"]), ws, skill["id"])
+                    create_skill_descriptor(skill["path"]), ws, skill["id"])
+
+                    if skill["instance"]:
+                        ws.emit(Message("skill.loaded",
+                                    {"skill":skill["id"]}))
+                    else:
+                        ws.emit(Message("skill.loaded.fail",
+                                        {"skill": skill["id"]}))
 
         # get the last modified skill
         modified_dates = map(lambda x: x.get("last_modified"),
