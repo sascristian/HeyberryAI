@@ -477,6 +477,17 @@ class MycroftSkill(object):
     def stop(self):
         pass
 
+    def config_update(self, config=None, save=False, isSystem=False):
+        if config is None:
+            config = {}
+        if save:
+            ConfigurationManager.save(config, isSystem)
+            self.emitter.emit(
+                Message("configuration.patch", {"config": config}))
+        else:
+            self.emitter.emit(
+                Message("configuration.patch", {"config": config}))
+
     def is_stop(self):
         passed_time = time.time() - self.stop_time
         return passed_time < self.stop_threshold

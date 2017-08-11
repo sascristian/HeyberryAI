@@ -125,8 +125,8 @@ class TTSSkill(MycroftSkill):
 
     # intents
     def handle_permanent_tts_intent(self, message):
-        self.emitter.emit(Message("configuration.update", {"config":{}, "save":True}))
         self.speak("Making cached configuration permanent")
+        self.config_update(save=True)
 
     def handle_current_module_intent(self, message):
         if self.current_module:
@@ -354,7 +354,7 @@ class TTSSkill(MycroftSkill):
     # send bus message to update all configs
     def update_configs(self, config):
         # change config message
-        self.emitter.emit(Message("configuration.patch", {"config":config}))
+        self.config_update(config=config)
         sleep(1)
         self.get_current_tts()
         return True

@@ -75,7 +75,7 @@ class LocationTrackerSkill(MycroftSkill):
             location_data = {"city": city_data, "coordinate": coordinate_data,
                              "timezone": timezone_data}
             config = {"location": location_data}
-            self.emitter.emit(Message("configuration.patch", {"config": config}))
+            self.config_update(config)
         else:
             self.log.warning("No internet connection, could not update "
                              "location from ip adress")

@@ -93,6 +93,7 @@ class TimeSkill(MycroftSkill):
                     tz = tzwhere.tzwhere().tzNameAt(lat, lon)
                     return timezone(tz)
                 except Exception as e:
+                    self.log.error(e)
                     return None
 
     def get_time(self):
@@ -169,10 +170,11 @@ class TimeSkill(MycroftSkill):
     def handle_time_intent(self, message):
         self.message = message  # optional parameter
         self.isClockRunning = True
-        ti = self.get_time()
-        if ti is None:
+        time = self.get_time()
+        if time is None:
+            # Tz not found already spoken
             return
-        self.speak_dialog("time.current", {"time": ti})
+        self.speak_dialog("time.current", {"time": time})
         if sum_of_core >= compatible_core_version_sum:
             self._update_time()
 
