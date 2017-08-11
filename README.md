@@ -16,8 +16,6 @@ whenever official mycroft documentation mentions "workon mycroft" use "workon ja
 not everything will work out of the box, expect bumps
 
 - no online config, must edit files
-- STT is currently broken (trying to get pocket sphinx stt option broke wake
-word)
 - no mycroft stt, must configure Kaldi or other online service
 - no shared api keys (twitter/facebook/weather/wolfram...)
 - some skills not fully functional  / added yet / configured for server
@@ -88,11 +86,6 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
 
             # temporary changes
             - no msm
-
-
-# Forslund audio service
-
-Audio playback is now handled by forslund's [audio service](https://github.com/forslund/mycroft-core/tree/audio-service)
 
 # Intent Layers
 
@@ -175,6 +168,11 @@ control skills externally, allow run-levels, [external skill load and reload](ht
             - this flag is a global mute switch, if set no tts is ever made
             - skill to mute/unmute not yet merged
 
+# [PR#980](https://github.com/MycroftAI/mycroft-core/pull/980)
+
+            - allow internal config update at runtime
+
+
 # Server/Client
 
 [jarbas networking](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/Server_Client.md)
@@ -202,6 +200,30 @@ Lots of skills pre-packaged
 [Browser Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/browser_service.md)
 
 [Objectives Service](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/objectives.md)
+
+[TTS Control]() - change voice at runtime vocally
+
+[Control Center]() - shutdown/restart skills , enforce run levels
+
+[Vision Service]() - process webcam input
+
+[RBM Service]() - Generate new words
+
+[Object Recognition]()
+
+[Image Classification]()
+
+[Face Recognition]()
+
+[Dictation]() - Write to txt user speech
+
+[News]() - Plays news
+
+[Mute]() - Mute TTS
+
+[Again]() - Repeat last action
+
+[LILACS]() - Search wikipedia, wikidata, dbpedia, conceptnet, wordnik, wolframalpha and learn
 
 TODO finish this
 
@@ -247,6 +269,8 @@ these skills have a flag to ask client
 
 not updated often
 
+- Help Skill
+- R2D2 TTS
 - webchat client
 - black and white photo colorize
 - instagram skill
