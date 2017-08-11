@@ -16,10 +16,8 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import aiml
+from cleverwrap import CleverWrap
 import random
-from os import listdir
-from os.path import dirname, isfile
 from mycroft.skills.core import FallbackSkill
 from mycroft.util.log import getLogger
 from mycroft.skills.intent_service import IntentParser
@@ -30,45 +28,45 @@ __author__ = 'jarbas'
 LOGGER = getLogger(__name__)
 
 
-class AIMLChatbotFallback(FallbackSkill):
+class CleverbotFallback(FallbackSkill):
     def __init__(self):
-        super(AIMLChatbotFallback, self).__init__(name="AIMLFallbackSkill")
+        super(CleverbotFallback, self).__init__()
         self.reload_skill = False
-        self.kernel = aiml.Kernel()
-        # TODO read from config maybe?
-        self.aiml_path = dirname(__file__) + "/aiml"
-        self.brain_path = dirname(__file__) + "/bot_brain.brn"
         self.chat_mode = False
         self.parser = None
+        try:
+            api_key = self.config_core.get("APIS")["CleverbotApi"]
+        except:
+            api_key = self.config.get("CleverbotAPI")
+        self.cleverbot = CleverWrap(api_key)
 
     def initialize(self):
-        self.load_brain()
         self.parser = IntentParser(self.emitter)
-        self.register_fallback(self.handle_fallback, 20)
-        off_intent = IntentBuilder("AIMLOffIntent"). \
-            require("StopKeyword").require("chatbotKeyword").build()
-        on_intent = IntentBuilder("AIMLONIntent"). \
-            require("StartKeyword").require("chatbotKeyword").build()
-        ask_intent = IntentBuilder("askAIMLIntent"). \
+        self.register_fallback(self.handle_fallback, 50)
+        off_intent = IntentBuilder("CleverbotOffIntent"). \
+            require("StopKeyword").require("CleverbotKeyword").build()
+        on_intent = IntentBuilder("CleverbotOnIntent"). \
+            require("StartKeyword").require("CleverbotKeyword").build()
+        ask_intent = IntentBuilder("askCleverbotIntent"). \
             require("chatbotQuery").build()
-        demo_intent = IntentBuilder("chatbotdemoIntent"). \
-            require("ChatBotDemo").require("chatbotKeyword").build()
+        demo_intent = IntentBuilder("CleverbotdemoIntent"). \
+            require("ChatBotDemo").require("CleverbotKeyword").build()
         # register intents
         self.register_intent(off_intent, self.handle_chat_stop_intent)
         self.register_intent(on_intent, self.handle_chat_start_intent)
-        self.register_intent(ask_intent, self.handle_ask_aiml_intent)
-        self.register_intent(demo_intent, self.handle_talk_to_yourself_intent)
+        self.register_intent(ask_intent, self.handle_ask_Cleverbot_intent)
+        self.register_intent(demo_intent, self.handle_talk_to_Cleverbot_intent)
 
-    def handle_ask_aiml_intent(self, message):
+    def handle_ask_Cleverbot_intent(self, message):
         query = message.data.get("chatbotQuery")
-        self.speak(self.ask_brain(query))
+        self.speak(self.ask_cleverbot(query))
 
-    def handle_talk_to_yourself_intent(self, message):
+    def handle_talk_to_Cleverbot_intent(self, message):
         text = random.choice["Hello", "Do you believe in god", "lets chat",
                              "lets play a game", "are you a terminator",
                              "are you human", "are you alive", "do you love me", "are you evil"]
         for i in range(0, 100):
-            text = self.ask_brain(text)
+            text = self.ask_cleverbot(text)
             self.speak(text)
 
     def handle_chat_start_intent(self, message):
@@ -79,23 +77,14 @@ class AIMLChatbotFallback(FallbackSkill):
         self.chat_mode = False
         self.speak_dialog("chatbotOFF")
 
-    def load_brain(self):
-        if isfile(self.brain_path):
-            self.kernel.bootstrap(brainFile=self.brain_path)
-        else:
-            aimls = listdir(self.aiml_path)
-            for aiml in aimls:
-                self.kernel.bootstrap(learnFiles=self.aiml_path + "/" + aiml)
-            self.kernel.saveBrain(self.brain_path)
-
-    def ask_brain(self, utterance):
-        response = self.kernel.respond(utterance)
+    def ask_cleverbot(self, utterance):
+        response = self.cleverbot.say(utterance)
         return response
 
     def handle_fallback(self, message):
         utterance = message.data.get("utterance")
         self.context = self.get_context(message.context)
-        answer = self.ask_brain(utterance)
+        answer = self.ask_cleverbot(utterance)
         if answer != "":
             self.speak(answer)
             return True
@@ -108,15 +97,16 @@ class AIMLChatbotFallback(FallbackSkill):
             if id == self.skill_id:
                 # some intent from this skill will trigger
                 return False
-            self.speak(self.ask_brain(utterances[0]), expect_response=True)
+            self.speak(self.ask_cleverbot(utterances[0]), expect_response=True)
             return True
         return False
 
     def stop(self):
+        self.cleverbot.reset()
         if self.chat_mode:
             self.chat_mode = False
             self.speak_dialog("chatbotOFF")
 
 
 def create_skill():
-    return AIMLChatbotFallback()
+    return CleverbotFallback()

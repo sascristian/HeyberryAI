@@ -1,0 +1,2 @@
+(ask|query|test) (aiml|chatbot) (with|about|in|off|on) (?P<chatbotQuery>.*)
+(ask|query|test) (chatbot|aiml) (?P<chatbotQuery>.*)
