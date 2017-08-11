@@ -106,7 +106,7 @@ class TTSSkill(MycroftSkill):
             .build()
         self.register_intent(intent, self.handle_change_voice_intent)
 
-        intent = IntentBuilder("ChangeVoiceIntent") \
+        intent = IntentBuilder("ChangeLangIntent") \
             .require("ChangeKeyword") \
             .require("LangKeyword") \
             .optionally("TargetKeyword") \
@@ -118,7 +118,15 @@ class TTSSkill(MycroftSkill):
             .build()
         self.register_intent(intent, self.handle_demo_tts_intent)
 
+        intent = IntentBuilder("PermanentTTSIntent") \
+            .require("PermanentKeyword").require("TTSKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_permanent_tts_intent)
+
     # intents
+    def handle_permanent_tts_intent(self, message):
+        self.emitter.emit(Message("configuration.update", {"config":{}, "save":True}))
+        self.speak("Making cached configuration permanent")
 
     def handle_current_module_intent(self, message):
         if self.current_module:
@@ -207,6 +215,7 @@ class TTSSkill(MycroftSkill):
             tts[self.current_module] = module_dict
             config = {"tts": tts}
             self.update_configs(config)
+        self.speak("voice changed to " + voice)
 
     def handle_change_lang_intent(self, message):
         lang = message.data.get("TargetKeyword")
@@ -230,6 +239,7 @@ class TTSSkill(MycroftSkill):
             tts[self.current_module] = module_dict
             config = {"tts": tts}
             self.update_configs(config)
+            self.speak("language changed to " + lang)
 
 
     def handle_demo_tts_intent(self, message):
