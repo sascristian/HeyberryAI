@@ -1,0 +1,2 @@
+(ask|query|test) (cleverbot|clever bot) (with|about|in|off|on) (?P<chatbotQuery>.*)
+(ask|query|test) (cleverbot|clever bot) (?P<chatbotQuery>.*)
