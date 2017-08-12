@@ -84,6 +84,9 @@ if ! pip install -r requirements.txt; then
     fi
 fi
 
+# nltk wordnet
+
+python -m nltk.downloader wordnet
 
 if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
   CORES=1
