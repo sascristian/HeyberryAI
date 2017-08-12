@@ -119,9 +119,6 @@ def _load_skills():
         skill_reload_thread
 
     check_connection()
-
-    ws.on('intent_failure', FallbackSkill.make_intent_failure_handler(ws))
-
     # Create skill_manager listener and invoke the first time
     if msm:
         ws.on('skill_manager', skills_manager)
