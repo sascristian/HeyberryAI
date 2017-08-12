@@ -3,6 +3,7 @@ import re
 from mycroft.util.parse import normalize
 import spotlight
 from requests import ConnectionError, HTTPError
+from nltk.stem.wordnet import WordNetLemmatizer
 
 
 class EnglishQuestionParser():
@@ -87,6 +88,7 @@ class LILACSQuestionParser():
         #host = "http://spotlight.sztaki.hu:2222/rest/annotate"
         self.parser = EnglishQuestionParser()
         self.host = host
+        self.lmtzr = WordNetLemmatizer()
 
     def process_entitys(self, text):
         parse = self.poor_parse(text)
@@ -99,7 +101,7 @@ class LILACSQuestionParser():
             center_node, target_node = self.select_from_regex(parse)
         center_node = self.fix_node(center_node)
         target_node = self.fix_node(target_node)
-        middle = [node for node in subjects if
+        middle = [self.fix_node(node) for node in subjects if
                   node != center_node and node != target_node]
         return center_node, target_node, parents, synonims, middle, parse
 
@@ -170,6 +172,17 @@ class LILACSQuestionParser():
         for word in bads:
             if word in node.split(" "):
                 node = node.replace(word+" ", "")
+        # lenmatize
+        if node:
+            try:
+                n = ""
+                for word in node.split(" "):
+                    word = self.lmtzr.lemmatize(word)
+                    #word = self.lmtzr.lemmatize(word, "v")
+                    n += word + " "
+                node = n
+            except:
+                node = self.lmtzr.lemmatize(node)
         # check empty strings at start or end
         if node:
             while node[0] == " ":
@@ -237,7 +250,7 @@ class LILACSQuestionParser():
                 # how sure we are this is about this dbpedia entry
                 score = annotation["similarityScore"]
                 # entry we are talking about
-                subject = annotation["surfaceForm"].lower()
+                subject = self.lmtzr.lemmatize(annotation["surfaceForm"].lower())
                 # smaller is closer to be main topic of sentence
                 offset = annotation["offset"]
                 # TODO tweak this value and make configuable
@@ -252,13 +265,14 @@ class LILACSQuestionParser():
                         type = type.replace("DBpedia:", "").replace("Schema:", "").replace("Http://xmlns.com/foaf/0.1/", "").lower()
                         if type not in p:
                             p.append(type)
-                    parents.setdefault(subject, p)
+                    parents.setdefault(subject, self.lmtzr.lemmatize(p))
                 # dbpedia link
                 url = annotation["URI"]
                 #print "link: " + url
                 dbpedia_name = url.replace("http://dbpedia.org/resource/", "").replace("_", " ")
                 if dbpedia_name.lower() not in subject:
-                    synonims.setdefault(subject, dbpedia_name.lower())
+                    synonims.setdefault(subject,
+                                        self.lmtzr.lemmatize(dbpedia_name.lower()))
         except ConnectionError as e:
             # TODO use logger
             print e

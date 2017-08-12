@@ -74,3 +74,4 @@ padatious==0.1.4
 urlfetch
 geopy
 git+https://github.com/seahawk1986/pytzwhere.git@fix_install
+nltk
