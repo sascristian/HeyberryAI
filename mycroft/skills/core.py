@@ -401,6 +401,9 @@ class MycroftSkill(object):
 
 class FallbackSkill(MycroftSkill):
     fallback_handlers = {}
+    folders = {}
+    override = skills_config.get("fallback_override", False)
+    order = skills_config.get("fallback_priority", [])
 
     def __init__(self, name=None, emitter=None):
         MycroftSkill.__init__(self, name, emitter)
@@ -413,20 +416,58 @@ class FallbackSkill(MycroftSkill):
         """Goes through all fallback handlers until one returns true"""
 
         def handler(message):
-            for _, handler in sorted(cls.fallback_handlers.items(),
-                                     key=operator.itemgetter(0)):
+            if cls.override:
                 try:
-                    if handler(message):
-                        return
+                    # try fallbacks by pre defined order
+                    logger.info("Overriding fallback order")
+                    logger.info("Fallback order " + str(cls.order))
+                    missing_folders = cls.folders.keys()
+                    logger.info("Fallbacks " + str(missing_folders))
+                    for folder in cls.order:
+                        for f in cls.folders.keys():
+                            logger.info(folder + " " + f)
+                            if folder == f:
+                                if f in missing_folders:
+                                    missing_folders.remove(f)
+                                logger.info("Trying ordered fallback: " + folder)
+                                handler =cls.folders[f]
+                                try:
+                                    if handler(message):
+                                        return
+                                except Exception as e:
+                                    logger.info('Exception in fallback: ' + cls.name + " " +
+                                                str(e))
+                    logger.info("Missing fallbacks " + str(missing_folders))
+                    for folder in missing_folders:
+                        logger.info("fallback not in ordered list, trying it now: " +
+                                    folder)
+                        handler = cls.folders[folder]
+                        try:
+                            if handler(message):
+                                return
+                        except Exception as e:
+                            logger.info('Exception in fallback: ' + cls.name + " " +
+                                        str(e))
                 except Exception as e:
-                    logger.info('Exception in fallback: ' + str(e))
+                    logger.error(e)
+                    logger.warning("Fallback override is not working")
+            else:
+                # try fallbacks by priority
+                for _, handler in sorted(cls.fallback_handlers.items(),
+                                         key=operator.itemgetter(0)):
+                    try:
+                        if handler(message):
+                            return
+                    except Exception as e:
+                        logger.info('Exception in fallback: ' + cls.name + " " +
+                                    str(e))
             ws.emit(Message('complete_intent_failure'))
             logger.warn('No fallback could handle intent.')
 
         return handler
 
     @classmethod
-    def _register_fallback(cls, handler, priority):
+    def _register_fallback(cls, handler, priority, skill_folder=None):
         """
         Register a function to be called as a general info fallback
         Fallback should receive message and return
@@ -440,13 +481,25 @@ class FallbackSkill(MycroftSkill):
 
         cls.fallback_handlers[priority] = handler
 
+       # folder name
+        if skill_folder:
+            skill_folder = skill_folder.split("/")[-1]
+            cls.folders[skill_folder] = handler
+        else:
+            logger.warning("skill folder error registering fallback")
+
     def register_fallback(self, handler, priority):
         """
             register a fallback with the list of fallback handlers
             and with the list of handlers registered by this instance
         """
         self.instance_fallback_handlers.append(handler)
-        self._register_fallback(handler, priority)
+        # folder path
+        try:
+            skill_folder = self._dir
+        except:
+            skill_folder = dirname(__file__)  # skill
+        self._register_fallback(handler, priority, skill_folder)
 
     @classmethod
     def remove_fallback(cls, handler_to_del):
@@ -456,11 +509,23 @@ class FallbackSkill(MycroftSkill):
             Args:
                 handler_to_del: reference to handler
         """
+        flag1 = False
         for priority, handler in cls.fallback_handlers.items():
             if handler == handler_to_del:
                 del cls.fallback_handlers[priority]
-                return
-        logger.warn('Could not remove fallback!')
+                flag1 = True
+
+        flag2 = False
+        for folder in cls.folders.keys():
+            handler = cls.folders[folder]
+            if handler == handler_to_del:
+                del cls.folders[folder]
+                flag2 = True
+
+        if not flag1:
+            logger.warn('Could not remove fallback!')
+        if not flag2:
+            logger.warn('Could not remove ordered fallback!')
 
     def remove_instance_handlers(self):
         """
@@ -476,3 +541,4 @@ class FallbackSkill(MycroftSkill):
         """
         self.remove_instance_handlers()
         super(FallbackSkill, self).shutdown()
+
