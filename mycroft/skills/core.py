@@ -633,17 +633,23 @@ class FallbackSkill(MycroftSkill):
             Args:
                 handler_to_del: reference to handler
         """
-        flag = False
+        flag1 = False
         for priority, handler in cls.fallback_handlers.items():
             if handler == handler_to_del:
                 del cls.fallback_handlers[priority]
-                flag = True
-        for priority, handler in cls.fallback_handlers.items():
+                flag1 = True
+
+        flag2 = False
+        for folder in cls.folders.keys():
+            handler = cls.folders[folder]
             if handler == handler_to_del:
-                del cls.fallback_handlers[priority]
-                return
-        if not flag:
+                del cls.folders[folder]
+                flag2 = True
+
+        if not flag1:
             logger.warn('Could not remove fallback!')
+        if not flag2:
+            logger.warn('Could not remove ordered fallback!')
 
     def remove_instance_handlers(self):
         """
