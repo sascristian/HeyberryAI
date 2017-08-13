@@ -128,27 +128,31 @@ case "$1" in
 "start")
   $0 stop
   start-mycroft service
-  start-mycroft audio
   start-mycroft skills
 
   case "$2" in
   "")
     start-mycroft voice
+    start-mycroft audio
     start-mycroft cli --quiet --simple
     ;;
   "-v"|"--voice")
+  start-mycroft audio
     start-mycroft voice
     ;;
   "-c"|"--cli")
-    start-mycroft cli --simple
+    start-mycroft audio
+    start-mycroft cli
     ;;
   "-d"|"--debug")
+    start-mycroft audio
     start-mycroft-debug cli
     ;;
   "-s"|"--server")
     start-mycroft server
     ;;
   "-cl"|"--client")
+    start-mycroft audio
     start-mycroft client
     ;;
   *)
