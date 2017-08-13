@@ -29,6 +29,10 @@ from mycroft.util.jarbas_services import UserManagerService
 from mycroft.skills.intent_service import IntentParser
 from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key, export_key, \
     import_key_from_ascii
+from mycroft.configuration import ConfigurationManager
+
+config = ConfigurationManager.get()
+config = config.get("jarbas_server", {})
 
 # logs
 NAME = "Jarbas_Server"
@@ -537,11 +541,11 @@ if __name__ == '__main__':
     log.startLogging(sys.stdout)
 
     # server
-    host = "127.0.0.1"
-    port = 5678
+    host = config.get("host", "127.0.0.1")
+    port = config.get("port", 5678)
     adress = u"ws://" + host + u":" + str(port)
-    cert = dirname(__file__)+'/certs/myapp.crt'
-    key = dirname(__file__)+'/certs/myapp.key'
+    cert = config.get("cert_file", dirname(__file__)+'/certs/myapp.crt')
+    key = config.get("key_file", dirname(__file__)+'/certs/myapp.key')
 
     # SSL server context: load server key and certificate
     contextFactory = ssl.DefaultOpenSSLContextFactory(key, cert)
