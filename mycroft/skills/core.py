@@ -606,7 +606,7 @@ class FallbackSkill(MycroftSkill):
 
        # folder name
         if skill_folder:
-            skill_folder = skill_folder[:skill_folder.find("/", -1)]
+            skill_folder = skill_folder[skill_folder.find("/", -1)+1:]
             cls.folders[skill_folder] = handler
         else:
             logger.warning("skill folder error registering fallback")
