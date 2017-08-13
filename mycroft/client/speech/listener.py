@@ -228,7 +228,7 @@ class RecognizerLoop(EventEmitter):
             paths = []
             for model in models.keys():
                 paths.append(models[model])
-            return SnowboyRecognizer(wake_word, paths, sensitivity)
+            return SnowboyRecognizer(paths, sensitivity)
         elif module == "pocketsphinx":
             LOG.info("Using PocketSphinx wake word detector")
             return PocketsphinxRecognizer(wake_word, phonemes,
@@ -246,10 +246,11 @@ class RecognizerLoop(EventEmitter):
         if module == "snowboy":
             LOG.info("Using snowboy wake up detector")
             models = self.config.get("wake_up_models", {})
+            sensitivity = self.config.get("wake_up_sensitivity", 0.5)
             paths = []
             for model in models.keys():
                 paths.append(models[model])
-            return SnowboyRecognizer(wake_word, paths)
+            return SnowboyRecognizer(paths, sensitivity)
         elif module == "pocketsphinx":
             LOG.info("Using PocketSphinx wake up detector")
             return PocketsphinxRecognizer(wake_word, phonemes,

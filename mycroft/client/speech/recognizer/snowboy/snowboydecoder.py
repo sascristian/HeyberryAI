@@ -6,17 +6,17 @@ import pyaudio
 import time
 import wave
 import os
-import logging
 from mycroft.util.log import getLogger
-from mycroft.client.speech.recognizer import snowboydetect
+from mycroft.client.speech.recognizer.snowboy import snowboydetect
+from mycroft import MYCROFT_ROOT_PATH as root_path
 
 logger = getLogger("snowboy")
 
 TOP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 RESOURCE_FILE = os.path.join(TOP_DIR, "resources/common.res")
-DETECT_DING = os.path.join(TOP_DIR, "resources/ding.wav")
-DETECT_DONG = os.path.join(TOP_DIR, "resources/dong.wav")
+DETECT_DING = os.path.join(root_path, "mycroft/res/snd/start_listening.wav")
+DETECT_DONG = os.path.join(root_path, "mycroft/res/snd/start_listening.wav")
 
 
 class RingBuffer(object):

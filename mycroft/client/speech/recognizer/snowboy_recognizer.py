@@ -17,7 +17,7 @@
 
 
 from os.path import dirname, abspath
-from mycroft.client.speech.recognizer import snowboydecoder
+from mycroft.client.speech.recognizer.snowboy import snowboydecoder
 from mycroft.client.speech.recognizer.local_recognizer import LocalRecognizer
 
 __author__ = 'jarbas'
@@ -26,10 +26,9 @@ BASEDIR = dirname(abspath(__file__))
 
 
 class SnowboyRecognizer(LocalRecognizer):
-    def __init__(self, key_phrase, models_path_list, sensitivity = 0.5):
+    def __init__(self, models_path_list, sensitivity = 0.5):
         self.detection = snowboydecoder.HotwordDetector(models_path_list,
                                                         sensitivity=sensitivity)
-        self.key_phrase = str(key_phrase)
 
     def found_wake_word(self, frame_data):
         wake_word = self.detection.detector.RunDetection(frame_data)
