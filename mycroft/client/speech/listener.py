@@ -242,7 +242,7 @@ class RecognizerLoop(EventEmitter):
                                       threshold, rate, lang)
 
     def create_wakeup_recognizer(self, rate, lang):
-        module = self.config.get('module', "pocketsphinx")
+        module = self.config.get('wake_up_module', "pocketsphinx")
         if module == "snowboy":
             LOG.info("Using snowboy wake up detector")
             models = self.config.get("wake_up_models", {})
