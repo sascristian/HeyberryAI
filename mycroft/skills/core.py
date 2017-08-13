@@ -590,7 +590,7 @@ class FallbackSkill(MycroftSkill):
         return handler
 
     @classmethod
-    def _register_fallback(cls, handler, priority):
+    def _register_fallback(cls, handler, priority, skill_folder=None):
         """
         Register a function to be called as a general info fallback
         Fallback should receive message and return
@@ -603,14 +603,13 @@ class FallbackSkill(MycroftSkill):
             priority += 1
 
         cls.fallback_handlers[priority] = handler
-        # folder path
-        try:
-            skill_folder = cls._dir
-        except:
-            skill_folder = dirname(__file__) # skill
+
        # folder name
-        skill_folder = skill_folder[:skill_folder.find("/", -1)]
-        cls.folders[skill_folder] = handler
+        if skill_folder:
+            skill_folder = skill_folder[:skill_folder.find("/", -1)]
+            cls.folders[skill_folder] = handler
+        else:
+            logger.warning("skill folder error registering fallback")
 
     def register_fallback(self, handler, priority):
         """
@@ -618,7 +617,12 @@ class FallbackSkill(MycroftSkill):
             and with the list of handlers registered by this instance
         """
         self.instance_fallback_handlers.append(handler)
-        self._register_fallback(handler, priority)
+        # folder path
+        try:
+            skill_folder = self._dir
+        except:
+            skill_folder = dirname(__file__)  # skill
+        self._register_fallback(handler, priority, skill_folder)
 
     @classmethod
     def remove_fallback(cls, handler_to_del):
