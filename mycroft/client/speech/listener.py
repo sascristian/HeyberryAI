@@ -36,10 +36,15 @@ from mycroft.session import SessionManager
 from mycroft.stt import STTFactory
 from mycroft.util import connected
 from mycroft.util.log import getLogger
-from mycroft.client.speech.recognizer.snowboy_recognizer import SnowboyRecognizer
-from mycroft.client.speech.pocketsphinx_audio_consumer import PocketsphinxAudioConsumer
 
 LOG = getLogger(__name__)
+try:
+    from mycroft.client.speech.recognizer.snowboy_recognizer import \
+    SnowboyRecognizer
+except Exception as e:
+    LOG.error("Could not import snowboy: " + str(e))
+
+from mycroft.client.speech.pocketsphinx_audio_consumer import PocketsphinxAudioConsumer
 
 
 class AudioProducer(Thread):
@@ -304,8 +309,9 @@ class RecognizerLoop(EventEmitter):
         self.producer = AudioProducer(self.state, queue, self.microphone,
                                       self.remote_recognizer, self)
         self.producer.start()
-        stt = self.config_core.get("STT", {}).get("module", "")
-        if stt == "pocketsphinx:":
+        stt = self.config_core.get("stt", {}).get("module", "")
+        if stt == "pocketsphinx":
+            LOG.info("Local pocketsphinx STT activated, reusing microphone")
             self.consumer = PocketsphinxAudioConsumer(
                 self.config, self.lang, self.state, self, self.hot_word_engines)
         else:

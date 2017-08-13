@@ -62,7 +62,7 @@ class PocketsphinxAudioConsumer(Thread):
 
         self.forced_wake = False
         self.record_file = None
-        self.wake_words = [self.config.get("wake_word"), "hey computer"]
+        self.wake_words = [self.config.get("wake_word"), u"hey computer"]
         self.hot_word_engines = hot_word_engines
 
         self.standup_word = str(self.config.get(
@@ -82,6 +82,7 @@ class PocketsphinxAudioConsumer(Thread):
         self.metrics = MetricsAggregator()
         model_lang_dir = join(BASEDIR, 'recognizer/model', str(self.lang))
         self.decoder = Decoder(self.create_decoder_config(model_lang_dir))
+        print self.wake_words
         self.decoder.set_keyphrase('wake_word', self.wake_words[0])
         jsgf = join(model_lang_dir, self.lang, '.jsgf')
         if exists(jsgf):

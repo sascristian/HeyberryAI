@@ -142,6 +142,7 @@ class STTFactory(object):
     def create():
         config = ConfigurationManager.get().get("stt", {})
         module = config.get("module", "mycroft")
-        print module
+        if module == "pocketsphinx":
+            return None
         clazz = STTFactory.CLASSES.get(module)
         return clazz()
