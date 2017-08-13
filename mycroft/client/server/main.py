@@ -36,6 +36,10 @@ from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.skills.intent_service import IntentParser
 from mycroft.util.log import getLogger
+from mycroft.configuration import ConfigurationManager
+
+config = ConfigurationManager.get()
+config = config.get("jarbas_server", {})
 
 ws = None
 parser = None
@@ -51,8 +55,8 @@ gpglog.setLevel("WARNING")
 
 # List to keep track of socket descriptors
 CONNECTION_LIST = []
-RECV_BUFFER = 8192  # Advisable to keep it as an exponent of 2
-PORT = 5000
+RECV_BUFFER = config.get("recv_buffer", 8192)  # Advisable to keep it as an exponent of 2
+PORT = config.get("port", 5000)
 server_socket = None
 
 # TODO read from config

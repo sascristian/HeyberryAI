@@ -1,4 +1,3 @@
-# websocket
 from twisted.python import log
 from twisted.internet import reactor, ssl
 
@@ -22,6 +21,10 @@ from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 from mycroft.client.client.pgp import get_own_keys, encrypt_string, decrypt_string, generate_client_key, export_key, import_key_from_ascii
+from mycroft.configuration import ConfigurationManager
+
+config = ConfigurationManager.get()
+config = config.get("jarbas_client", {})
 
 # ask server if no intent start or failure detected in 20 seconds
 assume_failure = False
@@ -327,8 +330,8 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
 if __name__ == '__main__':
 
     log.startLogging(sys.stdout)
-    host = "174.59.239.227"
-    port = 5678
+    host = config.get("host", "174.59.239.227")
+    port = config.get("port", 5678)
     adress = u"ws://" + host + u":" + str(port)
     factory = MyClientFactory(adress)
     factory.protocol = MyClientProtocol
