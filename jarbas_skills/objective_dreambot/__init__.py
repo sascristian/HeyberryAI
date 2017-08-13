@@ -29,7 +29,7 @@ __author__ = 'jarbas'
 
 class DreamBotSkill(MycroftSkill):
     def __init__(self):
-        super(DreamBotSkill, self).__init__(name="WikiObjectiveSkill")
+        super(DreamBotSkill, self).__init__()
         self.time = 60 * 3 # minutes
         self.reload_skill = False
         self.dreamer = None
