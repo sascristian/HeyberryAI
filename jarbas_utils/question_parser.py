@@ -264,8 +264,10 @@ class LILACSQuestionParser():
                     for type in types:
                         type = type.replace("DBpedia:", "").replace("Schema:", "").replace("Http://xmlns.com/foaf/0.1/", "").lower()
                         if type not in p:
+                            type = self.lmtzr.lemmatize(type)
                             p.append(type)
-                    parents.setdefault(subject, self.lmtzr.lemmatize(p))
+
+                    parents.setdefault(subject, p)
                 # dbpedia link
                 url = annotation["URI"]
                 #print "link: " + url
