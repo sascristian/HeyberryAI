@@ -16,17 +16,17 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from mycroft.client.speech.recognizer.snowboy import snowboydecoder
+from mycroft.client.speech.recognizer.snowboy.snowboydecoder import HotwordDetector
 from mycroft.client.speech.recognizer.local_recognizer import LocalRecognizer
 
 __author__ = 'jarbas'
 
 
 class SnowboyRecognizer(LocalRecognizer):
-    def __init__(self, models_path_list, sensitivity = 0.5):
-        self.detection = snowboydecoder.HotwordDetector(models_path_list,
-                                                        sensitivity=sensitivity)
+    def __init__(self, models_path_list, sensitivity=0.5):
+        self.snowboy = HotwordDetector(models_path_list,
+                                       sensitivity=sensitivity)
 
     def found_wake_word(self, frame_data):
-        wake_word = self.detection.detector.RunDetection(frame_data)
+        wake_word = self.snowboy.detector.RunDetection(frame_data)
         return wake_word == 1
