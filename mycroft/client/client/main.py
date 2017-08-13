@@ -284,9 +284,11 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
     def sendMessage(self, type, data, context=None):
         if self.client is None:
             logger.error("Client is none")
-            sys.exit()
+            return
+
         if context is None:
             context = {}
+
         msg = self.client.Message_to_raw_data(Message(type, data, context))
         logger.debug("AES encrypting")
         cipher = AES.new(self.aes_key, AES.MODE_CFB, self.aes_iv)

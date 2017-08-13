@@ -55,6 +55,7 @@ class ServiceBackend(object):
         """
           send message
         """
+        file_fields = ["file", "path", "dream_source", "file_path", "pic_path"]
         if message_data is None:
             message_data = {}
         if message_context is None:
@@ -64,8 +65,10 @@ class ServiceBackend(object):
                 self.emitter.emit(Message(message_type, message_data, message_context))
             else:
                 type = "bus"
-                if "file" in message_data.keys():
-                    type = "file"
+                for field in file_fields:
+                    if field in message_data.keys():
+                        type = "file"
+                        break
                 self.emitter.emit(Message("message_request",
                                           {"request_type": type, "requester": self.name,
                                            "type": message_type,

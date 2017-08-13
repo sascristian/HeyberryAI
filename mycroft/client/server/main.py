@@ -552,6 +552,5 @@ if __name__ == '__main__':
     factory = MyServerFactory(adress)
     factory.protocol = MyServerProtocol
     # factory.setProtocolOptions(maxConnections=2)
-
     reactor.listenSSL(port, factory, contextFactory)
     reactor.run()
