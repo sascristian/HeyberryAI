@@ -2,15 +2,16 @@
 
 import collections
 import pyaudio
-import snowboydetect
+
 import time
 import wave
 import os
 import logging
+from mycroft.util.log import getLogger
+from mycroft.client.speech.recognizer import snowboydetect
 
-logging.basicConfig()
-logger = logging.getLogger("snowboy")
-logger.setLevel(logging.INFO)
+logger = getLogger("snowboy")
+
 TOP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 RESOURCE_FILE = os.path.join(TOP_DIR, "resources/common.res")

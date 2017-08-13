@@ -24,14 +24,7 @@ import audioop
 
 import pyaudio
 
-snowboy = False
-if snowboy:
-    try:
-        import snowboydecoder
-        detection =  snowboydecoder.HotwordDetector('/home/hersche/.laptop.pmdl',sensitivity=0.5)
-        snowboy = True
-    except:
-        snowboy = False
+
 import speech_recognition
 from speech_recognition import (
     Microphone,
