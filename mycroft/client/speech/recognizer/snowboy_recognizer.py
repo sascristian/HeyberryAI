@@ -16,13 +16,10 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from os.path import dirname, abspath
 from mycroft.client.speech.recognizer.snowboy import snowboydecoder
 from mycroft.client.speech.recognizer.local_recognizer import LocalRecognizer
 
 __author__ = 'jarbas'
-
-BASEDIR = dirname(abspath(__file__))
 
 
 class SnowboyRecognizer(LocalRecognizer):
