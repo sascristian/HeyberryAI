@@ -109,6 +109,9 @@ def load_skill(skill_descriptor, emitter, skill_id):
                 callable(skill_module.create_skill)):
             # v2 skills framework
             skill = skill_module.create_skill()
+            if not skill.is_current_language_supported():
+                logger.info("SKILL DOES NOT SUPPORT CURRENT LANGUAGE")
+                return None
             skill.bind(emitter)
             skill._dir = dirname(skill_descriptor['info'][1])
             skill.skill_id = skill_id
@@ -206,6 +209,12 @@ class MycroftSkill(object):
         self.events = []
         self.skill_id = 0
         self.message_context = self.get_context()
+
+    def is_current_language_supported(self):
+        # for backward compatibility, by default,
+        # en-US is the only language supported.
+        # return unconditionally True if all languages are supported.
+        return self.lang == "en-us"
 
     @property
     def location(self):
