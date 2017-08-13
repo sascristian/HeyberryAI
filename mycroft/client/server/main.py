@@ -24,7 +24,7 @@ from autobahn.twisted.websocket import WebSocketServerProtocol, \
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-from mycroft.util.jarbas_services import UserManagerService
+from jarbas_utils.jarbas_services import UserManagerService
 
 from mycroft.skills.intent_service import IntentParser
 from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key, export_key, \

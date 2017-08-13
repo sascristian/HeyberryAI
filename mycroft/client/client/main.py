@@ -14,7 +14,6 @@ from Crypto.Cipher import AES
 from Crypto import Random
 import logging
 import base64
-from time import sleep
 
 # mycroft
 from mycroft.messagebus.client.ws import WebsocketClient
