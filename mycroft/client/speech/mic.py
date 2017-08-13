@@ -396,7 +396,8 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
     def check_for_hotwords(self, audio_data, emitter):
         # check hot word
         for hotword in self.hot_word_engines:
-            engine, ding, utterance, listen = self.hot_word_engines[hotword]
+            engine, ding, utterance, listen, type = self.hot_word_engines[
+                hotword]
             found = engine.found_wake_word(audio_data)
             if found:
                 logger.debug("Hot Word: " + hotword)
@@ -410,7 +411,8 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 payload = {
                     'hotword': hotword,
                     'start_listening': listen,
-                    'sound': ding
+                    'sound': ding,
+                    "engine": type
                 }
                 emitter.emit("recognizer_loop:hotword", payload)
                 if utterance:

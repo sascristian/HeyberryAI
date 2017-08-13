@@ -28,7 +28,7 @@ from mycroft.metrics import MetricsAggregator
 from mycroft.session import SessionManager
 from mycroft.util import check_for_signal
 from mycroft.util.log import getLogger
-
+from mycroft.util import resolve_resource_file, play_wav
 from pocketsphinx import Decoder
 
 logger = getLogger(__name__)
@@ -47,7 +47,8 @@ class PocketsphinxAudioConsumer(Thread):
     # In seconds, the minimum audio size to be sent to remote STT
     MIN_AUDIO_SIZE = 0.5
 
-    def __init__(self, config_listener, lang, state, emitter):
+    def __init__(self, config_listener, lang, state, emitter,
+                 hot_word_engines={}):
         super(PocketsphinxAudioConsumer, self).__init__()
         self.SAMPLE_RATE = 16000
         self.SAMPLE_WIDTH = 2
@@ -61,8 +62,9 @@ class PocketsphinxAudioConsumer(Thread):
 
         self.forced_wake = False
         self.record_file = None
-        self.wake_word = str(self.config.get(
-            'wake_word', "Hey Mycroft")).lower()
+        self.wake_words = [self.config.get("wake_word"), "hey computer"]
+        self.hot_word_engines = hot_word_engines
+
         self.standup_word = str(self.config.get(
             'standup_word', "wake up")).lower()
         self.default_grammar = str(
@@ -78,17 +80,57 @@ class PocketsphinxAudioConsumer(Thread):
             self.wake_word_ack_cmnd = s.split(' ')
 
         self.metrics = MetricsAggregator()
-
         model_lang_dir = join(BASEDIR, 'recognizer/model', str(self.lang))
         self.decoder = Decoder(self.create_decoder_config(model_lang_dir))
-        self.decoder.set_keyphrase('wake_word', self.wake_word)
-        self.wake_word = "computer"
+        self.decoder.set_keyphrase('wake_word', self.wake_words[0])
         jsgf = join(model_lang_dir, self.lang, '.jsgf')
         if exists(jsgf):
             self.decoder.set_jsgf_file('jsgf', jsgf)
         lm = join(model_lang_dir, self.lang, '.lm')
         if exists(lm):
             self.decoder.set_lm_file('lm', lm)
+
+    def check_for_hotwords(self, audio_data, hypstr=""):
+        # check hot word
+        for hotword in self.hot_word_engines:
+            found = False
+            engine, ding, utterance, listen, type = self.hot_word_engines[
+                hotword]
+            if type == "pocketsphinx":
+                if hotword in hypstr:
+                    found = True
+                if not listen:
+                    continue
+                elif hotword not in self.wake_words:
+                    self.wake_words.append(hotword)
+            else:
+                found = engine.found_wake_word(audio_data)
+
+            if found:
+                logger.debug("Hot Word: " + hotword)
+                # If enabled, play a wave file with a short sound to audibly
+                # indicate hotword was detected.
+                if ding:
+                    file = resolve_resource_file(ding)
+                    if file:
+                        play_wav(file)
+                # Hot Word succeeded
+                payload = {
+                    'hotword': hotword,
+                    'start_listening': listen,
+                    'sound': ding
+                }
+                self.emitter.emit("recognizer_loop:hotword", payload)
+                if utterance:
+                    # send the transcribed word on for processing
+                    payload = {
+                        'utterances': [hotword]
+                    }
+                    self.emitter.emit("recognizer_loop:utterance", payload)
+                if listen:
+                    # start listening
+                    return True
+        return False
 
     def create_decoder_config(self, model_lang_dir):
         decoder_config = Decoder.default_config()
@@ -143,7 +185,7 @@ class PocketsphinxAudioConsumer(Thread):
                 self.wake_word_ack()
 
                 payload = {
-                    'utterance': self.wake_word,
+                    'utterance': self.wake_words[0],
                     'session': self.session
                 }
                 context = {'session': self.session}
@@ -331,8 +373,12 @@ class PocketsphinxAudioConsumer(Thread):
             hyp = self.decoder.hyp()
             if hyp and hyp.hypstr:
                 logger.debug("hypstr=%s", hyp.hypstr)
-                wake_word_found = (self.wake_word in hyp.hypstr)
-
+                if self.check_for_hotwords(byte_data, hyp.hypstr):
+                    break
+                for ww in self.wake_words:
+                    wake_word_found = (ww in hyp.hypstr)
+                    if wake_word_found:
+                        break
         if utt_running:
             self.decoder.end_utt()
 
