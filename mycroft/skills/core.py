@@ -541,31 +541,39 @@ class FallbackSkill(MycroftSkill):
 
         def handler(message):
             if cls.override:
-                # try fallbacks by pre defined order
-                logger.info("Overriding fallback order")
-                missing_folders = cls.folders.keys()
-                for folder in cls.order:
-                    for f in cls.folders.keys():
-                        missing_folders.remove(f)
-                        if folder == f:
-                            logger.info("Trying ordered fallback: " + folder)
-                            handler =cls.folders[f]
-                            try:
-                                if handler(message):
-                                    return
-                            except Exception as e:
-                                logger.info('Exception in fallback: ' + cls.name + " " +
-                                            str(e))
-                for folder in missing_folders:
-                    logger.info("fallback not in ordered list, trying it now: " +
-                                folder)
-                    handler = cls.folders[folder]
-                    try:
-                        if handler(message):
-                            return
-                    except Exception as e:
-                        logger.info('Exception in fallback: ' + cls.name + " " +
-                                    str(e))
+                try:
+                    # try fallbacks by pre defined order
+                    logger.info("Overriding fallback order")
+                    logger.info("Fallback order " + str(cls.order))
+                    missing_folders = cls.folders.keys()
+                    logger.info("Fallbacks " + str(missing_folders))
+                    for folder in cls.order:
+                        for f in cls.folders.keys():
+                            logger.info(folder + " " + f)
+                            missing_folders.remove(f)
+                            if folder == f:
+                                logger.info("Trying ordered fallback: " + folder)
+                                handler =cls.folders[f]
+                                try:
+                                    if handler(message):
+                                        return
+                                except Exception as e:
+                                    logger.info('Exception in fallback: ' + cls.name + " " +
+                                                str(e))
+                    logger.info("Missing fallbacks " + str(missing_folders))
+                    for folder in missing_folders:
+                        logger.info("fallback not in ordered list, trying it now: " +
+                                    folder)
+                        handler = cls.folders[folder]
+                        try:
+                            if handler(message):
+                                return
+                        except Exception as e:
+                            logger.info('Exception in fallback: ' + cls.name + " " +
+                                        str(e))
+                except Exception as e:
+                    logger.error(e)
+                    logger.warning("Fallback override is not working")
             else:
                 # try fallbacks by priority
                 for _, handler in sorted(cls.fallback_handlers.items(),
