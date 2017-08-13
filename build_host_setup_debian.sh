@@ -26,7 +26,7 @@ sudo apt-get install -y \
     pkg-config \
     automake \
     xvfb \
-    firefox \
+    firefox-esr \
     vlc \
     libopencv-dev \
     python-opencv \

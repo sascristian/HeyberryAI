@@ -154,6 +154,9 @@ case "$1" in
   "-cl"|"--client")
     start-mycroft audio
     start-mycroft client
+    start-mycroft cli
+    start-mycroft voice
+    start-mycroft audio
     ;;
   *)
     echo "Usage"
