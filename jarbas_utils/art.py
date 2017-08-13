@@ -1,6 +1,8 @@
 import random, math, time
 from PIL import Image
 random.seed()
+from os.path import dirname
+
 
 # psy art
 class X:
@@ -89,7 +91,7 @@ def psy_art(path="img", numPics=1, name=None):
     paths = []
     if name is None:
         name = time.asctime()
-    with open("eqns.txt", 'w') as eqnsFile:
+    with open(dirname(__file__)+"/eqns.txt", 'w') as eqnsFile:
         for i in range(numPics):
             redExp = buildExpr()
             greenExp = buildExpr()
