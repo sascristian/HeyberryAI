@@ -6,6 +6,8 @@ from os.path import abspath
 
 import imutils
 import cv2
+import numpy as np
+
 
 __author__ = 'jarbas'
 
@@ -81,6 +83,10 @@ class OpenCVService(DisplayBackend):
         """
             Clear Display.
         """
+        # Create a black image
+        image = np.zeros((512, 512, 3), np.uint8)
+        cv2.imshow("OpenCV Display", image)
+        cv2.waitKey(1)
         self._is_Displaying = False
 
     def stop(self):
