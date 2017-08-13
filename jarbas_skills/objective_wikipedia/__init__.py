@@ -21,13 +21,10 @@ from mycroft.skills.core import MycroftSkill
 import os
 import random
 
-# this is to add skills folder to import path, you need objectives service in there
-import sys
-from os.path import dirname
-sys.path.append(dirname(dirname(__file__)))
-from service_objectives import ObjectiveBuilder
+from jarbas_utils.objectives_builder import ObjectiveBuilder
 
 __author__ = 'jarbas'
+
 
 class WikiObjectiveSkill(MycroftSkill):
     def __init__(self):

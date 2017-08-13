@@ -40,9 +40,9 @@ random wiki objective randomizes what to search wikipedia for
                     self.load_word_bank()
 
                 def initialize(self):
-                    self.wiki_objective()
+                    self.dream_bot_objective()
 
-                def wiki_objective(self):
+                def dream_bot_objective(self):
                     objective_name = "wiki"
                     my_objective = ObjectiveBuilder(objective_name, self.emitter)
 
