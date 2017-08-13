@@ -176,19 +176,6 @@ class ObjectivesManager():
         self.last_way = None
         self.timers = []
 
-    def set_timer(self, message):
-        objective = message.data["Objective"]
-        time = message.data["time"]
-
-        def handler():
-            sleep(time)
-            client.emit(Message("execute_objective", {"Objective": objective}))
-
-        timer = Timer(time, handler)
-        timer.setDaemon(True)
-        self.timers.append(timer)
-        self.timers[-1].start()
-
     def register_objective(self, objective_name, goals, ways, goal_weights,
                            way_weights):
         objective = Objective(objective_name)
@@ -241,8 +228,20 @@ class ObjectivesManager():
         # register objectives skill as last active skill
         # so feedback is processed in this skill
         self.client.emit(Message("objective.executed", {}))
-        #self.client.emit(Message("recognizer_loop:utterance", {"source":"objectives_skill", "utterances":["bump objectives to active skill list"]}))
         return intent_name
+
+    def set_timer(self, message):
+        objective = message.data["Objective"]
+        time = message.data["time"]
+
+        def handler():
+            sleep(time)
+            client.emit(Message("execute_objective", {"Objective": objective}))
+
+        timer = Timer(time, handler)
+        timer.setDaemon(True)
+        self.timers.append(timer)
+        self.timers[-1].start()
 
     def select_goal_and_way(self, objective_name):
         for objective in self.objectives:
@@ -345,3 +344,6 @@ class ObjectivesManager():
         logger.error("could not find that objective/way")
         return False
 
+    def cancel_timers(self):
+        for timer in self.timers:
+            timer.cancel()
