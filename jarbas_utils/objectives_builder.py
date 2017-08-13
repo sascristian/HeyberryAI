@@ -117,7 +117,7 @@ class ObjectiveBuilder():
     def require(self, keyword):
         self.keyword = keyword
 
-    def build(self, timer=-1):
+    def build(self):
         self.objective = self.objective_name, self.instance
         objective_keyword = self.objective_name + "ObjectiveKeyword"
         objective_intent_name = self.objective_name + "ObjectiveIntent"
@@ -143,15 +143,16 @@ class ObjectiveBuilder():
 
         # get handler
         handler = self.execute_objective
-        # make timer to trigger objective if provided
-        if timer > 0:
-            timer_thread = Timer(timer, handler)
-            timer_thread.setDaemon(True)
-            self.timers.append(timer_thread)
-            self.timers[-1].start()
         self.reset()
         # return objective intent and handler
         return objective_intent, handler
+
+    def add_timer(self, time):
+        # make timer to trigger objective if provided
+        if time > 0:
+            client.emit(Message("objective.set.timer",
+                                {"Objective": self.objective_name,
+                                 "time": time}))
 
     def reset(self):
         self.instance = Objective(self.objective_name)
@@ -169,11 +170,27 @@ class ObjectivesManager():
         self.objectives = [] #objectives instance
         self.client = client
         self.client.on("intent_to_skill_response", self.receive_skill_id)
+        self.client.on("objective.set.timer", self.set_timer)
         self.last_objective = None
         self.last_goal = None
         self.last_way = None
+        self.timers = []
 
-    def register_objective(self, objective_name, goals, ways, goal_weights, way_weights):
+    def set_timer(self, message):
+        objective = message.data["Objective"]
+        time = message.data["time"]
+
+        def handler():
+            sleep(time)
+            client.emit(Message("execute_objective", {"Objective": objective}))
+
+        timer = Timer(time, handler)
+        timer.setDaemon(True)
+        self.timers.append(timer)
+        self.timers[-1].start()
+
+    def register_objective(self, objective_name, goals, ways, goal_weights,
+                           way_weights):
         objective = Objective(objective_name)
         objective.ways = ways
         objective.goals = goals
