@@ -89,7 +89,7 @@ class AudioConsumer(Thread):
     MIN_AUDIO_SIZE = 0.5
 
     def __init__(self, state, queue, emitter, stt,
-                 wakeup_recognizer, mycroft_recognizer, hot_word_engines={}):
+                 wakeup_recognizer, mycroft_recognizer):
         super(AudioConsumer, self).__init__()
         self.daemon = True
         self.queue = queue
@@ -100,7 +100,7 @@ class AudioConsumer(Thread):
         self.mycroft_recognizer = mycroft_recognizer
         self.metrics = MetricsAggregator()
         self.config = ConfigurationManager.get()
-        self.hot_word_engines = hot_word_engines
+
 
     def run(self):
         while self.state.running:
@@ -138,31 +138,10 @@ class AudioConsumer(Thread):
             'session': SessionManager.get().session_id,
         }
         self.emitter.emit("recognizer_loop:wakeword", payload)
-
-        # see if it is a hot word command
-        text = self.check_for_hotwords(audio)
-        if text:
-            LOG.debug("Hot Word: " + text)
-            # Hot Word succeeded, send the transcribed speech on for processing
-            payload = {
-                'utterances': [text],
-                'lang': self.stt.lang,
-                'session': SessionManager.get().session_id
-            }
-            self.emitter.emit("recognizer_loop:utterance", payload)
-            self.metrics.attr('utterances', [text])
+        if self._audio_length(audio) < self.MIN_AUDIO_SIZE:
+            LOG.warn("Audio too short to be processed")
         else:
-            if self._audio_length(audio) < self.MIN_AUDIO_SIZE:
-                LOG.warn("Audio too short to be processed")
-            else:
-                self.transcribe(audio)
-
-    def check_for_hotwords(self, audio):
-        for engine in self.hot_word_engines:
-            text = self.hot_word_engines[engine].found_wake_word(audio.frame_data)
-            if text:
-                return engine
-        return None
+            self.transcribe(audio)
 
     def transcribe(self, audio):
         text = None
@@ -236,31 +215,6 @@ class RecognizerLoop(EventEmitter):
         self.wakeup_recognizer = self.create_wakeup_recognizer(rate, lang)
         self.remote_recognizer = ResponsiveRecognizer(self.mycroft_recognizer)
         self.state = RecognizerLoopState()
-        self.hot_word_engines = self.create_hot_word_engines(rate, lang)
-
-    def create_hot_word_engines(self, rate, lang):
-        # TODO bus signals
-        hot_words = self.config.get("hot_words", {})
-        for word in hot_words:
-            data = hot_words[word]
-            engine = data["module"]
-            if engine == "pocket_sphinx":
-                hot_word = data.get("hot_word").lower()
-                phonemes = data.get('phonemes')
-                threshold = data.get('threshold')
-                engine = PocketsphinxRecognizer(hot_word, phonemes,
-                                              threshold, rate, lang)
-                self.hot_word_engines[word] = engine
-            elif engine == "snowboy":
-                models = data.get("models", {})
-                sensitivity = data.get("sensitivity", 0.5)
-                paths = []
-                for model in models.keys():
-                    paths.append(models[model])
-                engine = SnowboyRecognizer(paths, sensitivity)
-                self.hot_word_engines[word] = engine
-            else:
-                LOG.error("unknow hotword engine " + engine)
 
     def create_wake_word_recognizer(self, rate, lang):
         # Create a local recognizer to hear the wakeup word, e.g. 'Hey Mycroft'
@@ -325,8 +279,7 @@ class RecognizerLoop(EventEmitter):
         self.consumer = AudioConsumer(self.state, queue, self,
                                       STTFactory.create(),
                                       self.wakeup_recognizer,
-                                      self.mycroft_recognizer,
-                                      self.hot_word_engines)
+                                      self.mycroft_recognizer)
         self.consumer.start()
 
     def stop(self):
