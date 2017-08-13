@@ -181,6 +181,9 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         for word in hot_words:
             data = hot_words[word]
             engine = data["module"]
+            ding = data.get("sound")
+            utterance = data.get("utterance", False)
+            listen = data.get("listen", False)
             if engine == "pocket_sphinx":
                 lang = data.get("config", config.get("lang", "en-us"))
                 rate = data.get("rate", listener_config.get("rate"))
@@ -189,7 +192,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 threshold = data.get('threshold')
                 engine = PocketsphinxRecognizer(hot_word, phonemes,
                                                 threshold, rate, lang)
-                self.hot_word_engines[word] = engine
+                self.hot_word_engines[word] = [engine, ding, utterance, listen]
             elif engine == "snowboy":
                 models = data.get("models", {})
                 sensitivity = data.get("sensitivity", 0.5)
@@ -197,7 +200,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 for model in models.keys():
                     paths.append(models[model])
                 engine = SnowboyRecognizer(paths, sensitivity)
-                self.hot_word_engines[word] = engine
+                self.hot_word_engines[word] = [engine, ding, utterance, listen]
             else:
                 logger.error("unknown hotword engine " + engine)
 
@@ -424,29 +427,32 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
     def check_for_hotwords(self, audio_data, emitter):
         # check hot word
         for engine in self.hot_word_engines:
-            text = self.hot_word_engines[engine].found_wake_word(audio_data)
+            engine, ding, utterance, listen = self.hot_word_engines[engine]
+            text = engine.found_wake_word(audio_data)
             if text:
                 logger.debug("Hot Word: " + text)
                 # If enabled, play a wave file with a short sound to audibly
                 # indicate hotword was detected.
-                if config.get('confirm_hotword'):
-                    file = resolve_resource_file(
-                        config.get('sounds').get('hotword'))
+                if ding:
+                    file = resolve_resource_file(ding)
                     if file:
                         play_wav(file)
-                # Hot Word succeeded, send the transcribed word on for
-                # processing
+                # Hot Word succeeded
                 payload = {
-                    'hotword': text
+                    'hotword': text,
+                    'start_listening': listen,
+                    'sound': ding
                 }
                 emitter.emit("recognizer_loop:hotword", payload)
-                if config.get('listen_on_hotword', False):
-                    return True
-                elif config.get('utterance_on_hotword', False):
+                if utterance:
+                # send the transcribed word on for processing
                     payload = {
                         'utterances': [text]
                     }
                     emitter.emit("recognizer_loop:utterance", payload)
+                if listen:
+                # start listening
+                    return True
                 return False
 
     @staticmethod
