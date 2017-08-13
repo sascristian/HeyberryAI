@@ -408,9 +408,10 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
             if buffers_since_check > buffers_per_check:
                 buffers_since_check -= buffers_per_check
                 audio_data = byte_data + silence
-                self.check_for_hotwords(audio_data, emitter)
-                said_wake_word = \
-                    self.wake_word_recognizer.found_wake_word(audio_data)
+                if self.check_for_hotwords(audio_data, emitter):
+                    said_wake_word = True
+                else:
+                    said_wake_word = self.wake_word_recognizer.found_wake_word(audio_data)
                 # if a wake word is success full then record audio in temp
                 # file.
                 if self.save_wake_words and said_wake_word:
@@ -433,15 +434,20 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                         config.get('sounds').get('hotword'))
                     if file:
                         play_wav(file)
-                # Hot Word succeeded, send the transcribed speech on for processing
+                # Hot Word succeeded, send the transcribed word on for
+                # processing
                 payload = {
                     'hotword': text
                 }
                 emitter.emit("recognizer_loop:hotword", payload)
-                payload = {
-                    'utterances': [text]
-                }
-                emitter.emit("recognizer_loop:utterance", payload)
+                if config.get('listen_on_hotword', False):
+                    return True
+                elif config.get('utterance_on_hotword', False):
+                    payload = {
+                        'utterances': [text]
+                    }
+                    emitter.emit("recognizer_loop:utterance", payload)
+                return False
 
     @staticmethod
     def _create_audio_data(raw_data, source):
