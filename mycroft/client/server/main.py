@@ -378,13 +378,13 @@ class MyServerFactory(WebSocketServerFactory):
             # check if message also sent files
             # TODO file formats
             if self.clients[client.peer].get("file_path"):
-                if "file" in deserialized_message.data.keys():
-                    deserialized_message.data["file"] = self.clients[client.peer]["file_path"]
-                elif "feed_path" in deserialized_message.data.keys():
-                    deserialized_message.data["feed_path"] = self.clients[client.peer]["file_path"]
-                elif "path" in deserialized_message.data.keys():
-                    deserialized_message.data["path"] = self.clients[client.peer]["file_path"]
-
+                fields = ["file", "file_path", "picture", "picture_path",
+                          "pic_path", "feed", "feed_path", "dream_source",
+                          "dream_seed", "path"]
+                for field in fields:
+                    if field in deserialized_message.data.keys():
+                        deserialized_message.data[field] = self.clients[
+                            client.peer]["file_path"]
             # pre-process message type
             if deserialized_message.type == "recognizer_loop:utterance":
                 utterance = data["utterances"][0]
