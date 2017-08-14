@@ -211,7 +211,7 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
     # mycroft handlers
     def handle_server_request(self, message):
         # send server a message
-        stype = message.data.get("server_msg_type", "bus")
+        stype = message.data.get("request_type", "bus")
         requester = message.data.get("requester")
         message_type = message.data.get("message_type")
         message_data = message.data.get("message_data")

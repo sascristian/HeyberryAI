@@ -63,27 +63,23 @@ class ServiceBackend(object):
         data = {"requester": self.name,
                 "message_type": message_type,
                 "message_data": message_data, "cipher": cipher}
+
+        type = "bus"
+        for field in file_fields:
+            if field in message_data.keys():
+                type = "file"
+                data["file"] = message_data[field]
+                break
+        data["request_type"] = type
+
         if not server:
             if not client:
                 self.emitter.emit(Message(message_type, message_data, message_context))
             else:
-                type = "bus"
-                for field in file_fields:
-                    if field in message_data.keys():
-                        type = "file"
-                        data["file"] = message_data[field]
-                        break
-                data["request_type"] = type
+
                 self.emitter.emit(Message("message_request",
                                          data, message_context))
         else:
-            type = "bus"
-            for field in file_fields:
-                if field in message_data.keys():
-                    type = "file"
-                    data["file"] = message_data[field]
-                    break
-            data["request_type"] = type
             self.emitter.emit(Message("server_request",
                                       data, message_context))
 
