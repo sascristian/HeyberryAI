@@ -24,7 +24,7 @@ from autobahn.twisted.websocket import WebSocketServerProtocol, \
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-from mycroft.util.jarbas_services import UserManagerService
+from jarbas_utils.jarbas_services import UserManagerService
 
 from mycroft.skills.intent_service import IntentParser
 from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key, export_key, \
@@ -161,7 +161,7 @@ class MyServerFactory(WebSocketServerFactory):
 
     def register_internal_messages(self):
         self.emitter.on('speak', self.handle_speak)
-        self.emitter.on('intent_failure', self.handle_failure)
+        self.emitter.on('complete_intent_failure', self.handle_failure)
         self.emitter.on('message_request', self.handle_message_to_sock_request)
 
     def request_client_pgp(self, client, cipher="none"):
@@ -332,8 +332,8 @@ class MyServerFactory(WebSocketServerFactory):
                 self.clients[client.peer]["status"] = "connected"
                 logger.info("file received for " + client.peer)
                 self.clients[client.peer]["file"].close()
-                self.client[client.peer].pop("extension")
-                self.client[client.peer].pop("file")
+                self.clients[client.peer].pop("extension")
+                self.clients[client.peer].pop("file")
             # write file chunk
             else:
                 logger.info("file chunk received for " + client.peer)
@@ -552,6 +552,5 @@ if __name__ == '__main__':
     factory = MyServerFactory(adress)
     factory.protocol = MyServerProtocol
     # factory.setProtocolOptions(maxConnections=2)
-
     reactor.listenSSL(port, factory, contextFactory)
     reactor.run()
