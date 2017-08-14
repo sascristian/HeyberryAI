@@ -68,7 +68,7 @@ class ServiceBackend(object):
         for field in file_fields:
             if field in message_data.keys():
                 type = "file"
-                data["file"] = message_data[field]
+                message_data["file"] = message_data[field]
                 break
         data["request_type"] = type
 
