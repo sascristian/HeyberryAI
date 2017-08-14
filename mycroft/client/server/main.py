@@ -90,8 +90,8 @@ class MyServerFactory(WebSocketServerFactory):
         self.private = []
         self.key_id = None
         self.ascii_public = None
-        self.user = 'Jarbas@Jarbas.ai'
-        self.passwd = 'welcome to the mycroft collective'
+        self.user = config.get("pgp_user", 'Jarbas@Jarbas.ai')
+        self.passwd = config.get("pgp_passwd", 'welcome to the mycroft collective')
         self.load_server_keys()
         # mycroft_ws
         self.emitter = None
@@ -108,25 +108,29 @@ class MyServerFactory(WebSocketServerFactory):
         self.queue_thread.start()
 
         # allowed data
-        self.blacklisted_ips = []
-        self.whitelisted_ips = []
-        self.blacklist = True
-        self.allowed_bus_messages = ["recognizer_loop:utterance",
-                                     "names_response",
-                                     "id_update",
-                                     "incoming_file",
-                                     "vision_result",
-                                     "vision.faces.result",
-                                     "vision.feed.result",
-                                     "image.classification.request",
-                                     "style.transfer.request",
-                                     "class.visualization.request",
-                                     "face.recognition.request",
-                                     "object.recognition.request",
-                                     "client.pgp.public.request",
-                                     "client.pgp.public.response",
-                                     "client.aes.exchange_complete"
-                                     ]
+        self.ip_list = config.get("ip_list", [])
+        self.ip_blacklist = config.get("ip_policy", "blacklist") == "blacklist"
+
+        self.message_blacklist = config.get("message_policy", "blacklist") == "blacklist"
+        self.bus_message_list = ["recognizer_loop:utterance",
+                                 "names_response",
+                                 "id_update",
+                                 "incoming_file",
+                                 "vision_result",
+                                 "vision.faces.result",
+                                 "vision.feed.result",
+                                 "deep.dream.request",
+                                 "image.classification.request",
+                                 "style.transfer.request",
+                                 "class.visualization.request",
+                                 "face.recognition.request",
+                                 "object.recognition.request",
+                                 "client.pgp.public.request",
+                                 "client.pgp.public.response",
+                                 "client.aes.exchange_complete"
+                                 ]
+        self.bus_message_list = config.get("message_list", self.bus_message_list)
+
         self.file_socks = {}
 
     # initialize methods
@@ -190,11 +194,11 @@ class MyServerFactory(WebSocketServerFactory):
         logger.info("registering client: " + str(client.peer))
         t, ip, sock = client.peer.split(":")
         # see if blacklisted
-        if ip in self.blacklisted_ips and self.blacklist:
+        if ip in self.ip_list and self.ip_blacklist:
             logger.warning("Blacklisted ip tried to connect: " + ip)
             self.unregister_client(client, reason=u"Blacklisted ip")
             return
-        elif ip not in self.whitelisted_ips and not self.blacklist:
+        elif ip not in self.ip_list and not self.ip_blacklist:
             logger.warning("Unknown ip tried to connect: " + ip)
             #  if not whitelisted kick
             self.unregister_client(client, reason=u"Unknown ip")
@@ -345,7 +349,8 @@ class MyServerFactory(WebSocketServerFactory):
 
     def process_message_type(self, client, deserialized_message):
         logger.debug("Message type: " + deserialized_message.type)
-        if deserialized_message.type in self.allowed_bus_messages:
+        if (deserialized_message.type not in self.bus_message_list and self.message_blacklist) or \
+                (deserialized_message.type in self.bus_message_list and not self.message_blacklist):
             data = deserialized_message.data
             logger.debug("Message data: " + str(deserialized_message.data))
             ctype, ip, sock_num = client.peer.split(":")
@@ -378,13 +383,13 @@ class MyServerFactory(WebSocketServerFactory):
             # check if message also sent files
             # TODO file formats
             if self.clients[client.peer].get("file_path"):
-                if "file" in deserialized_message.data.keys():
-                    deserialized_message.data["file"] = self.clients[client.peer]["file_path"]
-                elif "feed_path" in deserialized_message.data.keys():
-                    deserialized_message.data["feed_path"] = self.clients[client.peer]["file_path"]
-                elif "path" in deserialized_message.data.keys():
-                    deserialized_message.data["path"] = self.clients[client.peer]["file_path"]
-
+                fields = ["file", "file_path", "picture", "picture_path",
+                          "pic_path", "feed", "feed_path", "dream_source",
+                          "dream_seed", "path"]
+                for field in fields:
+                    if field in deserialized_message.data.keys():
+                        deserialized_message.data[field] = self.clients[
+                            client.peer]["file_path"]
             # pre-process message type
             if deserialized_message.type == "recognizer_loop:utterance":
                 utterance = data["utterances"][0]
@@ -410,6 +415,9 @@ class MyServerFactory(WebSocketServerFactory):
                 Message("user.request",
                         {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
                         context))
+        else:
+            logger.warning("message type not allowed: " +
+                           deserialized_message.type)
 
     def validate_user_utterance(self, utterance, user_data, context, client):
         # check if skill/intent that will trigger is authorized for this user

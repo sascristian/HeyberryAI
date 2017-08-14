@@ -66,8 +66,12 @@ class MyClientProtocol(WebSocketClientProtocol):
                 # update iv for next message
                 self.factory.aes_iv = deserialized_message.context.get("aes_iv", self.factory.aes_iv)
                 self.factory.aes_iv = base64.b64decode(self.factory.aes_iv)
+                # TODO validate server message
                 # process message and emit to internal bus
-                self.factory.emitter.emit(deserialized_message)
+                if (self.factory.message_policy and deserialized_message.type not in self.factory.message_list) or (not self.factory.message_policy and deserialized_message.type in self.factory.message_list):
+                    self.factory.emitter.emit(deserialized_message)
+                else:
+                    logger.warning("server message not allowed " + deserialized_message.type)
         else:
             data = payload
             if self.factory.status == "waiting server pgp":
@@ -145,15 +149,16 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
         self.aes_key = None
         self.aes_iv = None
         self.my_id = None
-        self.names = ["jarbas_client"]
+        self.names = config.get("client_names", ["jarbas_client"])
 
         # client pgp
         self.ascii_public = None
         self.public = []
         self.private = []
         self.key_id = None
-        self.user = 'JarbasClient@Jarbas.ai'
-        self.passwd = 'welcome to the mycroft collective'
+        self.user = config.get("pgp_user", 'Jarbas@Jarbas.ai')
+        self.passwd = config.get("pgp_passwd",
+                                 'welcome to the mycroft collective')
         self.load_client_keys()
 
         # runtime flags
@@ -162,6 +167,8 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
         self.detected = False
 
         self.status = "waiting server pgp"
+        self.message_policy = config.get("message_policy", "blacklist") ==  "blacklist"
+        self.message_list = config.get("message_list", [])
 
     # initialize methods
     def load_client_keys(self):
