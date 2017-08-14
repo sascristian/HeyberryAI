@@ -34,17 +34,9 @@ from mycroft.messagebus.message import Message
 from mycroft.metrics import MetricsAggregator
 from mycroft.session import SessionManager
 from mycroft.stt import STTFactory
-from mycroft.util import connected
 from mycroft.util.log import getLogger
-
+from mycroft.client.speech.recognizer.snowboy_recognizer import SnowboyRecognizer
 LOG = getLogger(__name__)
-try:
-    from mycroft.client.speech.recognizer.snowboy_recognizer import \
-    SnowboyRecognizer
-except Exception as e:
-    LOG.error("Could not import snowboy: " + str(e))
-
-from mycroft.client.speech.pocketsphinx_audio_consumer import PocketsphinxAudioConsumer
 
 
 class AudioProducer(Thread):
@@ -64,6 +56,7 @@ class AudioProducer(Thread):
         self.emitter = emitter
 
     def run(self):
+        LOG.info("Microphone listening started")
         with self.mic as source:
             self.recognizer.adjust_for_ambient_noise(source)
             while self.state.running:
@@ -96,7 +89,7 @@ class AudioConsumer(Thread):
     MIN_AUDIO_SIZE = 0.5
 
     def __init__(self, state, queue, emitter, stt,
-                 wakeup_recognizer, mycroft_recognizer):
+                 wakeup_recognizer, wakeword_recognizer):
         super(AudioConsumer, self).__init__()
         self.daemon = True
         self.queue = queue
@@ -104,7 +97,7 @@ class AudioConsumer(Thread):
         self.emitter = emitter
         self.stt = stt
         self.wakeup_recognizer = wakeup_recognizer
-        self.mycroft_recognizer = mycroft_recognizer
+        self.wakeword_recognizer = wakeword_recognizer
         self.metrics = MetricsAggregator()
         self.config = ConfigurationManager.get()
 
@@ -140,7 +133,7 @@ class AudioConsumer(Thread):
     def process(self, audio):
         SessionManager.touch()
         payload = {
-            'utterance': self.mycroft_recognizer.key_phrase,
+            'utterance': self.wakeword_recognizer.key_phrase,
             'session': SessionManager.get().session_id,
         }
         self.emitter.emit("recognizer_loop:wakeword", payload)
@@ -217,13 +210,13 @@ class RecognizerLoop(EventEmitter):
         self.microphone = MutableMicrophone(device_index, rate)
         # FIXME - channels are not been used
         self.microphone.CHANNELS = self.config.get('channels')
-        self.mycroft_recognizer = self.create_wake_word_recognizer(rate,
-                                                                   self.lang)
+        self.wakeword_recognizer = self.create_wake_word_recognizer(rate,
+                                                                    self.lang)
         # TODO - localization
         self.hot_word_engines = {}
         self.create_hot_word_engines()
         self.wakeup_recognizer = self.create_wakeup_recognizer(rate, self.lang)
-        self.remote_recognizer = ResponsiveRecognizer(self.mycroft_recognizer, self.hot_word_engines)
+        self.responsive_recognizer = ResponsiveRecognizer(self.wakeword_recognizer, self.hot_word_engines)
         self.state = RecognizerLoopState()
 
     def create_hot_word_engines(self):
@@ -231,6 +224,7 @@ class RecognizerLoop(EventEmitter):
         for word in hot_words:
             data = hot_words[word]
             type = data["module"]
+            LOG.info("Creating hotword engine for " + word + " with type " + type)
             ding = data.get("sound")
             utterance = data.get("utterance", False)
             listen = data.get("listen", False)
@@ -254,7 +248,7 @@ class RecognizerLoop(EventEmitter):
                 self.hot_word_engines[word] = [engine, ding, utterance,
                                                listen, type]
             else:
-                LOG.error("unknown hotword engine " + engine)
+                LOG.error("unknown hotword engine " + type)
 
     def create_wake_word_recognizer(self, rate, lang):
         # Create a local recognizer to hear the wakeup word, e.g. 'Hey Mycroft'
@@ -307,18 +301,13 @@ class RecognizerLoop(EventEmitter):
         self.state.running = True
         queue = Queue()
         self.producer = AudioProducer(self.state, queue, self.microphone,
-                                      self.remote_recognizer, self)
+                                      self.responsive_recognizer, self)
         self.producer.start()
-        stt = self.config_core.get("stt", {}).get("module", "")
-        if stt == "pocketsphinx":
-            LOG.info("Local pocketsphinx STT activated, reusing microphone")
-            self.consumer = PocketsphinxAudioConsumer(
-                self.config, self.lang, self.state, self, self.hot_word_engines)
-        else:
-            self.consumer = AudioConsumer(self.state, queue, self,
+
+        self.consumer = AudioConsumer(self.state, queue, self,
                                       STTFactory.create(),
                                       self.wakeup_recognizer,
-                                      self.mycroft_recognizer)
+                                      self.wakeword_recognizer)
         self.consumer.start()
 
     def stop(self):

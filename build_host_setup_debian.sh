@@ -39,7 +39,8 @@ sudo apt-get install -y \
     libcurl4-openssl-dev \
     libjpeg-dev \
     libfann-dev \
-    libgeos-dev
+    libgeos-dev \
+    libatlas-base-dev
 
 # get geckodriver to usr/bin for browser service
 wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz

@@ -334,6 +334,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         counter = 0
 
         while not said_wake_word and not self._stop_signaled:
+
             if self._skip_wake_word():
                 break
             chunk = self.record_sound_chunk(source)
@@ -380,13 +381,13 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
             if buffers_since_check > buffers_per_check:
                 buffers_since_check -= buffers_per_check
                 audio_data = byte_data + silence
-                if self.check_for_hotwords(audio_data, emitter):
+                said_wake_word = self.wake_word_recognizer.found_wake_word(audio_data)
+                if not said_wake_word and self.check_for_hotwords(audio_data, emitter):
                     said_wake_word = True
-                else:
-                    said_wake_word = self.wake_word_recognizer.found_wake_word(audio_data)
                 # if a wake word is success full then record audio in temp
                 # file.
                 if self.save_wake_words and said_wake_word:
+                    logger.info("Recording wakeword")
                     audio = self._create_audio_data(audio_data, source)
                     stamp = str(datetime.datetime.now())
                     filename = "/tmp/mycroft_wake_success%s.wav" % stamp

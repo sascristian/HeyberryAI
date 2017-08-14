@@ -21,7 +21,7 @@ from speech_recognition import Recognizer
 from mycroft.api import STTApi
 from mycroft.configuration import ConfigurationManager
 from mycroft.util.log import getLogger
-
+from mycroft.client.speech.recognizer.pocketsphinx_recognizer import PocketsphinxRecognizer
 import re
 
 from requests import post
@@ -129,20 +129,35 @@ class KaldiSTT(STT):
             return None
 
 
+class PocketSphinxSTT(STT):
+    def __init__(self):
+        super(PocketSphinxSTT, self).__init__()
+        wake_word = "hey jarbas"
+        phonemes = "HH EY . JH AA R AH SH"
+        threshold = self.config.get('threshold', 1e-90)
+        lang = self.config.get('lang', self.lang)
+        rate = self.config.get('sample_rate', 16000)
+        self.recognizer = PocketsphinxRecognizer(wake_word, phonemes, threshold,
+                                     rate, lang, stt=True)
+
+    def execute(self, audio, language=None):
+        return self.recognizer.execute(audio)
+
+
 class STTFactory(object):
     CLASSES = {
         "mycroft": MycroftSTT,
         "google": GoogleSTT,
         "wit": WITSTT,
         "ibm": IBMSTT,
-        "kaldi": KaldiSTT
+        "kaldi": KaldiSTT,
+        "pocketsphinx": PocketSphinxSTT
     }
 
     @staticmethod
     def create():
         config = ConfigurationManager.get().get("stt", {})
         module = config.get("module", "mycroft")
-        if module == "pocketsphinx":
-            return None
+        LOG.info("STT engine: " + module)
         clazz = STTFactory.CLASSES.get(module)
         return clazz()

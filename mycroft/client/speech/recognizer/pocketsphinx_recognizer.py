@@ -20,26 +20,29 @@ import os
 import tempfile
 import time
 
-from os.path import join, dirname, abspath
+from os.path import join, dirname, abspath, exists
 from pocketsphinx import Decoder
 
 from mycroft.client.speech.recognizer.local_recognizer import LocalRecognizer
 
-__author__ = 'seanfitz, jdorleans'
+__author__ = 'seanfitz, jdorleans, jarbas'
 
 BASEDIR = dirname(abspath(__file__))
 
 
 class PocketsphinxRecognizer(LocalRecognizer):
     def __init__(self, key_phrase, phonemes, threshold, sample_rate=16000,
-                 lang="en-us"):
-        self.lang = str(lang)
+                 lang="en-us", stt=False):
+        self.lang = str(lang).lower()
         self.key_phrase = str(key_phrase)
         self.sample_rate = sample_rate
         self.threshold = threshold
         self.phonemes = phonemes
-        dict_name = self.create_dict(key_phrase, phonemes)
-        self.decoder = Decoder(self.create_config(dict_name))
+        if stt:
+            self.prepare_for_stt()
+        else:
+            dict_name = self.create_dict(key_phrase, phonemes)
+            self.decoder = Decoder(self.create_config(dict_name))
 
     def create_dict(self, key_phrase, phonemes):
         (fd, file_name) = tempfile.mkstemp()
@@ -61,6 +64,35 @@ class PocketsphinxRecognizer(LocalRecognizer):
         config.set_string('-logfn', '/dev/null')
         return config
 
+    def create_stt_config(self, dict_name):
+        decoder_config = Decoder.default_config()
+        decoder_config.set_string('-hmm', join(BASEDIR, 'model', self.lang, 'hmm'))
+        decoder_config.set_string('-dict', dict_name)
+        decoder_config.set_float('-samprate', self.sample_rate)
+        decoder_config.set_float('-kws_threshold', self.threshold)
+        decoder_config.set_string('-cmninit', '40,3,-1')
+        decoder_config.set_int('-nfft', 2048)
+        decoder_config.set_string('-logfn', '/tmp/pocketsphinx.log')
+        return decoder_config
+
+    def prepare_for_stt(self):
+        model_lang_dir = join(BASEDIR, 'model', str(self.lang))
+        language_dict = join(model_lang_dir, self.lang + '.dict')
+        self.decoder = Decoder(self.create_stt_config(language_dict))
+        jsgf = join(model_lang_dir, self.lang + '.jsgf')
+        if exists(jsgf):
+            self.decoder.set_jsgf_file('jsgf', jsgf)
+        lm = join(model_lang_dir, self.lang + '.lm')
+        if exists(lm):
+            self.decoder.set_lm_file('lm', lm)
+
+    def execute(self, byte_data, metrics=None):
+        hyp = self.transcribe(byte_data, metrics)
+        if hyp:
+            print hyp.hypstr
+            return hyp.hypstr
+        return None
+
     def transcribe(self, byte_data, metrics=None):
         start = time.time()
         self.decoder.start_utt()
@@ -72,6 +104,8 @@ class PocketsphinxRecognizer(LocalRecognizer):
 
     def found_wake_word(self, frame_data):
         hyp = self.transcribe(frame_data)
-        #if hyp:
-        #    print hyp.hypstr
-        return hyp and self.key_phrase in hyp.hypstr.lower()
+        if hyp is not None:
+            print hyp.hypstr.lower()
+        else:
+            return False
+        return self.key_phrase in hyp.hypstr.lower()
