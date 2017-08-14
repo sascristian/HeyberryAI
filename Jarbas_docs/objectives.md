@@ -13,69 +13,89 @@ Two important use cases:
 
 A way is simply an intent to be executed and it's parameters
 
+Objectives can execute on a timer
 
 # Objective Builder
 
 to use objectives in other skill an helper class has been coded, this hopefully makes building objectives as easy as making intents
 
-random wiki objective randomizes what to search wikipedia for
+dreambot objective example, dream every X time
 
             from mycroft.skills.core import MycroftSkill
 
             import os
             import random
 
-            # this is to add skills folder to import path, you need objectives service in there
-            import sys
-            from os.path import dirname
-            sys.path.append(dirname(dirname(__file__)))
-            from service_objectives import ObjectiveBuilder
+
+            from jarbas_utils.objectives_builder import ObjectiveBuilder
 
             __author__ = 'jarbas'
 
-            class WikiObjectiveSkill(MycroftSkill):
-                def __init__(self):
-                    super(WikiObjectiveSkill, self).__init__(name="WikiObjectiveSkill")
-                    self.word_bank = []
-                    self.load_word_bank()
+            class DreamBotSkill(MycroftSkill):
+            def __init__(self):
+                super(DreamBotSkill, self).__init__()
+                self.time = 60 * 3 # minutes
+                self.reload_skill = False
+                self.external_reload = False
+                self.external_shutdown = False
+                self.dreamer = None
 
-                def initialize(self):
-                    self.dream_bot_objective()
+            def initialize(self):
+                # start dreamer
+                self.dreamer = DreamService(self.emitter)
+                # register intents
+                intent = IntentBuilder("DreamBotIntent").require("DreamBotKeyword") \
+                    .optionally("url").build()
+                self.register_intent(intent, self.handle_dream_intent)
 
-                def dream_bot_objective(self):
-                    objective_name = "wiki"
-                    my_objective = ObjectiveBuilder(objective_name, self.emitter)
+                intent = IntentBuilder("RecursiveDreamBotIntent").require(
+                    "DreamBotKeyword").require("RecursiveKeyword") \
+                    .optionally("url").build()
+                self.register_intent(intent, self.handle_recursive_dream_intent)
 
-                    goal_name = "Search_Wikipedia"
-                    intent = "WikipediaIntent"
-                    i = 0
-                    while i < 1000:
-                        word = random.choice(self.word_bank)
-                        intent_params = {"ArticleTitle": word}
-                        my_objective.add_way(goal_name, intent, intent_params)
-                        i+=1
+                intent = IntentBuilder("PureDreamBotIntent").require(
+                    "DreamBotKeyword").require("PureKeyword")
+                self.register_intent(intent, self.handle_pure_dream_intent)
 
-                    keyword = "WikiObjectiveKeyword"
-                    my_objective.require(keyword)
-                    intent, self.handle_wiki_objective = my_objective.build()
-                    self.register_intent(intent, self.handle_wiki_objective)
+                # register objective
+                self.dream_bot_objective()
 
-                def load_word_bank(self):
-                    word_bank = []
-                    path = os.path.dirname(__file__) + '/wordbank.txt'
-                    with open(path) as f:
-                        words = f.readlines()
-                        for word in words:
-                            word_bank.append(word.replace("\n", ""))
+            def dream_bot_objective(self):
+                objective_name = "DreamBot"
+                my_objective = ObjectiveBuilder(objective_name, self.emitter)
 
-                    self.word_bank = word_bank
+                # dream. zoom and dream...
+                goal_name = "Recursive Dream"
+                intent = "RecursiveDreamBotIntent"
+                intent_params = {}
+                my_objective.add_way(goal_name, intent, intent_params)
+
+                # dream on random picture
+                goal_name = "Dream"
+                intent = "DreamBotIntent"
+                url = "https://unsplash.it/600/?random"
+                intent_params = {"url": url}
+                my_objective.add_way(goal_name, intent, intent_params)
+
+                # dream on self generated picture
+                goal_name = "PureDream"
+                intent = "PureDreamBotIntent"
+                intent_params = {}
+                my_objective.add_way(goal_name, intent, intent_params)
+
+                keyword = "DreamBotObjectiveKeyword"
+                my_objective.require(keyword)
+                intent, self.handle_dreambot_objective = my_objective.build()
+                self.register_intent(intent, self.handle_dreambot_objective)
+
+                my_objective.add_timer(self.time*60)
 
                 def stop(self):
                     pass
 
 
             def create_skill():
-                return WikiObjectiveSkill()
+                return DreamBotSkill()
 
 # Messagebus Output
 

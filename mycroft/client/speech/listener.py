@@ -224,6 +224,7 @@ class RecognizerLoop(EventEmitter):
         for word in hot_words:
             data = hot_words[word]
             type = data["module"]
+            data = data["data"]
             LOG.info("Creating hotword engine for " + word + " with type " + type)
             ding = data.get("sound")
             utterance = data.get("utterance", False)

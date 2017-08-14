@@ -83,7 +83,9 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - added "intent.start", "intent.end", "intent.failed" messages
             - in skills/core.py SKILLS_DIR is now jarbas_skills folder instead of opt
             - do not remove articles in normalize (too much normalization IMO)
-
+            - allow for many hot words
+            - offline stt (pocketpshinx)
+            - wakeword/hotword/standupword snowboy support
             # temporary changes
             - no msm
 
