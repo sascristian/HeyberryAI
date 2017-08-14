@@ -118,6 +118,7 @@ class MyServerFactory(WebSocketServerFactory):
                                      "vision_result",
                                      "vision.faces.result",
                                      "vision.feed.result",
+                                     "deep.dream.request",
                                      "image.classification.request",
                                      "style.transfer.request",
                                      "class.visualization.request",
@@ -410,7 +411,9 @@ class MyServerFactory(WebSocketServerFactory):
                 Message("user.request",
                         {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
                         context))
-
+        else:
+            logger.warning("message type not allowed: " +
+                           deserialized_message.type)
     def validate_user_utterance(self, utterance, user_data, context, client):
         # check if skill/intent that will trigger is authorized for this user
         intent, skill = self.parser.determine_intent(utterance)
