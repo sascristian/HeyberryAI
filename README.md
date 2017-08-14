@@ -86,6 +86,8 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - allow for many hot words
             - offline stt (pocketpshinx)
             - wakeword/hotword/standupword snowboy support
+            - fallback skill order override in config file
+
             # temporary changes
             - no msm
 
