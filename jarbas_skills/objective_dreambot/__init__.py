@@ -96,9 +96,9 @@ class DreamBotSkill(MycroftSkill):
     def handle_recursive_dream_intent(self, message):
         # TODO zoom
         result = self.handle_dream_intent(message)
-        message.data["url"] = result["url"]
+        message.data["url"] = result.get("dream_url")
         result = self.handle_dream_intent(message)
-        message.data["url"] = result["url"]
+        message.data["url"] = result.get("dream_url")
         result = self.handle_dream_intent(message)
 
     def handle_pure_dream_intent(self, message):

@@ -550,6 +550,7 @@ class DreamService(MycroftSkill):
             self.speak("Here is what i dreamed", metadata={"url": link, "file": result, "elapsed_time": elapsed_time})
         else:
             self.speak("I could not dream this time")
+
         if ":" in message.context["destinatary"]: #socket
             self.emitter.emit(Message("message_request",
                                       {"context": message.context,
