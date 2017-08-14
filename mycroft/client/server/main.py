@@ -332,8 +332,8 @@ class MyServerFactory(WebSocketServerFactory):
                 self.clients[client.peer]["status"] = "connected"
                 logger.info("file received for " + client.peer)
                 self.clients[client.peer]["file"].close()
-                self.client[client.peer].pop("extension")
-                self.client[client.peer].pop("file")
+                self.clients[client.peer].pop("extension")
+                self.clients[client.peer].pop("file")
             # write file chunk
             else:
                 logger.info("file chunk received for " + client.peer)
