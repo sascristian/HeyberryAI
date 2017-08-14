@@ -51,7 +51,9 @@ class ControlCenterSkill(MycroftSkill):
     def initialize(self):
         self.build_intents()
         if self.default_level != "full":
-            self.emitter.emit(Message(str(self.skill_id) + ":ChangeRunLevelIntent", {"Level": self.default_level}))
+            self.emitter.emit(Message(str(self.skill_id) +
+                                      ":ChangeRunLevelIntent", {"Level": self.default_level, "wait":False}))
+
         self.emitter.on("reload_skill_response", self.end_wait)
         self.emitter.on("shutdown_skill_response", self.end_wait)
         self.emitter.on("loaded_skills_response", self.handle_receive_loaded_skills)
@@ -155,6 +157,7 @@ class ControlCenterSkill(MycroftSkill):
     def handle_go_to_run_level_intent(self, message):
         self.get_loaded_skills()
         level = message.data["Level"]
+        wait = message.data.get("wait", True)
         if level not in self.run_levels.keys():
             self.speak_dialog("invalid_level")
             return
@@ -171,23 +174,27 @@ class ControlCenterSkill(MycroftSkill):
                     # shutdown
                     self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
                     self.emitter.emit(Message("shutdown_skill_request", {"skill_id": skill_id}))
-                    self.wait()
+                    if wait:
+                        self.wait()
                 else:
                     # reload
                     self.log.info("Requesting reload of " + str(skill_id) + " skill")
                     self.emitter.emit(Message("reload_skill_request", {"skill_id": skill_id}))
-                    self.wait()
+                    if wait:
+                        self.wait()
             elif skill_id != self.skill_id:#blacklist
                 if skill in self.run_levels[level]["skills"]:
                     # shutdown
                     self.log.info("Requesting shutdown of " + str(skill_id) + " skill")
                     self.emitter.emit(Message("shutdown_skill_request", {"skill_id": skill_id}))
-                    self.wait()
+                    if wait:
+                        self.wait()
                 else:
                     # reload
                     self.log.info("Requesting reload of " + str(skill_id) + " skill")
                     self.emitter.emit(Message("reload_skill_request", {"skill_id": skill_id}))
-                    self.wait()
+                    if wait:
+                        self.wait()
         self.current_level = level
         self.log.debug("Run level Changed")
         self.speak("Run level changed")

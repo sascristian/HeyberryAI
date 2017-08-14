@@ -32,6 +32,8 @@ class DreamBotSkill(MycroftSkill):
         super(DreamBotSkill, self).__init__()
         self.time = 60 * 3 # minutes
         self.reload_skill = False
+        self.external_reload = False
+        self.external_shutdown = False
         self.dreamer = None
 
     def initialize(self):
@@ -54,9 +56,6 @@ class DreamBotSkill(MycroftSkill):
         # register objective
         self.dream_bot_objective()
 
-    def bot_timer(self):
-        self.emitter.emit("execute_objective", {"Objective": "DreamBot"})
-
     def dream_bot_objective(self):
         objective_name = "DreamBot"
         my_objective = ObjectiveBuilder(objective_name, self.emitter)
@@ -70,7 +69,7 @@ class DreamBotSkill(MycroftSkill):
         # dream on random picture
         goal_name = "Dream"
         intent = "DreamBotIntent"
-        url = ""
+        url = "https://unsplash.it/600/?random"
         intent_params = {"url": url}
         my_objective.add_way(goal_name, intent, intent_params)
 
@@ -85,9 +84,10 @@ class DreamBotSkill(MycroftSkill):
         intent, self.handle_dreambot_objective = my_objective.build()
         self.register_intent(intent, self.handle_dreambot_objective)
 
-        my_objective.add_timer(self.time)
+        my_objective.add_timer(self.time*60)
 
     def handle_dream_intent(self, message):
+        self.speak("dreambot activated")
         url = message.data.get("url", "https://unsplash.it/600/?random")
         file = self.dreamer.dream_from_url(picture_url=url, server=True)
         result_dict = self.dreamer.result
@@ -96,12 +96,15 @@ class DreamBotSkill(MycroftSkill):
     def handle_recursive_dream_intent(self, message):
         # TODO zoom
         result = self.handle_dream_intent(message)
+        self.speak("dreaming on dream")
         message.data["url"] = result.get("dream_url")
         result = self.handle_dream_intent(message)
+        self.speak("dreaming on dream")
         message.data["url"] = result.get("dream_url")
         result = self.handle_dream_intent(message)
 
     def handle_pure_dream_intent(self, message):
+        self.speak("dreaming on my own art")
         pictures = psy_art(path=dirname(__file__), name="dream_seed", numPics=3)
         file = self.dreamer.dream_from_file(picture_path=random.choice(pictures), server=True)
         result_dict = self.dreamer.result

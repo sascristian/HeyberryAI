@@ -235,7 +235,7 @@ class ObjectivesManager():
         time = message.data["time"]
 
         def handler():
-            sleep(time)
+            logger.info("Firing Timer for objective " + objective)
             client.emit(Message("execute_objective", {"Objective": objective}))
 
         timer = Timer(time, handler)
