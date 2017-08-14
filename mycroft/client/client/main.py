@@ -66,8 +66,7 @@ class MyClientProtocol(WebSocketClientProtocol):
                 # update iv for next message
                 self.factory.aes_iv = deserialized_message.context.get("aes_iv", self.factory.aes_iv)
                 self.factory.aes_iv = base64.b64decode(self.factory.aes_iv)
-                # TODO validate server message
-                # process message and emit to internal bus
+                # validate server message and emit to internal bus
                 if (self.factory.message_policy and deserialized_message.type not in self.factory.message_list) or (not self.factory.message_policy and deserialized_message.type in self.factory.message_list):
                     self.factory.emitter.emit(deserialized_message)
                 else:

@@ -364,8 +364,8 @@ class MyServerFactory(WebSocketServerFactory):
                 except:
                     context["source"] = "unknown"
             if "mute" not in context.keys():
-                context["mute"] = True
-            context["source"] = str(context["source"]) + ":" + sock_num
+                context["mute"] = False
+            context["destinatary"] = str(context["source"]) + ":" + sock_num
             context["ip"] = ip
             logger.debug("Message context: " + str(context))
             # authorize user message_type
