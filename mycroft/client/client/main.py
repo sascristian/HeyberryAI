@@ -230,7 +230,9 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
                 chunk = bin_file.read(4096)
                 logger.info("sending chunk " + str(i))
                 if not chunk:
+                    logger.info("Sending end_of_file")
                     self.sendRaw("end_of_file")
+                    bin_file.close()
                     break  # EOF
                 self.sendRaw(chunk)
         message_data["source"] = requester
