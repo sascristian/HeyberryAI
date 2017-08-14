@@ -75,8 +75,10 @@ class ServiceBackend(object):
                                            "data": message_data, "cipher":cipher}, message_context))
         else:
             type = "bus"
-            if "file" in message_data.keys():
-                type = "file"
+            for field in file_fields:
+                if field in message_data.keys():
+                    type = "file"
+                    break
             self.emitter.emit(Message("server_request",
                                       {"server_msg_type": type, "requester": self.name,
                                        "message_type": message_type,
