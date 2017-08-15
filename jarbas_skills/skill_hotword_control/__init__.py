@@ -120,7 +120,7 @@ class HotwordSkill(MycroftSkill):
             .build()
         self.register_intent(intent, self.handle_permanent_wuw_intent)
 
-    # intentso
+    # intents
     def handle_new_hotword_intent(self, message):
         if not self.snowboy_token:
             self.speak("You need to create a snowboy token first")
@@ -152,36 +152,36 @@ class HotwordSkill(MycroftSkill):
         self.speak("Current wake word module is " + self.current_wuw)
 
     def handle_available_hot_intent(self, message):
-        if self.hotw_modules == {}:
+        if self.hot_words == {}:
             self.get_listener_config()
-        for hot_word in self.hotw_modules.keys():
-            module = self.hotw_modules[hot_word]["module"]
-            active = self.hotw_modules[hot_word].get("active", True)
+        for hot_word in self.hot_words.keys():
+            module = self.hot_words[hot_word]["module"]
+            active = self.hot_words[hot_word].get("active", True)
             self.speak("Available hot word for " + module + ". " + hot_word)
             if not active:
                 self.speak("but is not activated")
 
     def handle_available_wuw_intent(self, message):
-        if self.wuw_modules == {}:
-            self.get_listener_config()
-        for hot_word in self.wuw_modules.keys():
-            module = self.wuw_modules[hot_word]["module"]
-            active = self.wuw_modules[hot_word].get("active", True)
-            self.speak("Available wake up word for " + module + ". " + hot_word)
-            if not active:
-                self.speak("but is not activated")
+        self.speak("wake word is " + self.current_wuw)
+        if not self.snowboy_models == {}:
+            for hot_word in self.snowboy_models.keys():
+                self.speak("Available wake word for snowboy. " + hot_word)
 
     def handle_change_wuw_intent(self, message):
-        module = message.data.get("TargetKeyword")
+        module = message.data.get("TargetKeyword").replace(" ","")
         if not module:
-            self.speak("Change to what wake word?")
+            self.speak("Change to what module?")
+            return
+        modules = ["snowboy", "pocketsphinx"]
+        if module not in modules:
+            self.speak("I dont know " + module + " module")
             return
         listener = self.get_listener_config()
-        # TODO change
+        listener["module"] = module
         config = {"listener": listener}
         self.update_configs(config)
         sleep(2)
-        self.speak("Wake Word changed to " + module)
+        self.speak("Wake Word module changed to " + module)
 
     def handle_enable_hot_intent(self, message):
         module = message.data.get("TargetKeyword")
@@ -189,7 +189,12 @@ class HotwordSkill(MycroftSkill):
             self.speak("Enable what hot word?")
             return
         listener = self.get_listener_config()
-        # TODO change
+        if module in self.hot_words:
+            self.hot_words[module]["active"] = True
+        else:
+            self.speak(module + " is already active")
+            return
+        listener["hot_words"] = self.hot_words
         config = {"listener": listener}
         self.update_configs(config)
         sleep(2)
@@ -201,7 +206,12 @@ class HotwordSkill(MycroftSkill):
             self.speak("disable what hot word?")
             return
         listener = self.get_listener_config()
-        # TODO change
+        if module in self.hot_words:
+            self.hot_words[module]["active"] = False
+        else:
+            self.speak(module + " is already deactivated")
+            return
+        listener["hot_words"] = self.hot_words
         config = {"listener": listener}
         self.update_configs(config)
         sleep(2)
@@ -218,8 +228,12 @@ class HotwordSkill(MycroftSkill):
             self.log.error("could not get listener settings")
             listener = {}
         else:
-            # TODO parse config and save relevant data
-            pass
+            self.current_wuw_module = listener.get("module", "pocketsphinx")
+            self.current_wuw = listener.get("wake_word", "hey jarbas")
+            self.record = listener.get("record_wake_words", False)
+            self.hot_words = listener.get("hot_words", {})
+            self.snowboy_models = listener.get("models")
+
         return listener
 
     def new_snowboy_model(self, wav_files, hotword_name):
