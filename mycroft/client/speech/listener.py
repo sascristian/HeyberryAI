@@ -239,6 +239,8 @@ class RecognizerLoop(EventEmitter):
         hot_words = self.config.get("hot_words", {})
         for word in hot_words:
             data = hot_words[word]
+            if not data.get("active", True):
+                continue
             type = data["module"]
             ding = data.get("sound")
             utterance = data.get("utterance", False)
