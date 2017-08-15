@@ -51,8 +51,8 @@ class HotwordSkill(MycroftSkill):
         self.build_intents()
 
     def build_intents(self):
-        # TODO set record wake words flag intent
-        # TODO set listening sound flag
+        # TODO enable/disable record wake words flag intent
+        # TODO enable/disable listening sound flag
         # TODO remove sound for hotword intent
 
         intent = IntentBuilder("CurrentWuWIntent") \
@@ -190,9 +190,13 @@ class HotwordSkill(MycroftSkill):
             return
         listener = self.get_listener_config()
         if module in self.hot_words:
-            self.hot_words[module]["active"] = True
+            if self.hot_words[module].get("active", True):
+                self.speak(module + " is already active")
+                return
+            else:
+                self.hot_words[module]["active"] = True
         else:
-            self.speak(module + " is already active")
+            self.speak("No such hot word")
             return
         listener["hot_words"] = self.hot_words
         config = {"listener": listener}
@@ -207,15 +211,78 @@ class HotwordSkill(MycroftSkill):
             return
         listener = self.get_listener_config()
         if module in self.hot_words:
-            self.hot_words[module]["active"] = False
+            if not self.hot_words[module].get("active"):
+                self.speak(module + " is already deactivated")
+                return
+            else:
+                self.hot_words[module]["active"] = False
         else:
-            self.speak(module + " is already deactivated")
+            self.speak("No such hot word")
             return
+
         listener["hot_words"] = self.hot_words
         config = {"listener": listener}
         self.update_configs(config)
         sleep(2)
         self.speak("disabled " + module)
+
+    def handle_disable_hot_sound_intent(self, message):
+        module = message.data.get("TargetKeyword")
+        if not module:
+            self.speak("disable what hot word?")
+            return
+        listener = self.get_listener_config()
+        if module in self.hot_words:
+            if not self.hot_words[module].get("sound"):
+                self.speak(module + " sound is already deactivated")
+                return
+            else:
+                self.hot_words[module]["sound"] = None
+        else:
+            self.speak("No such hot word")
+            return
+
+        listener["hot_words"] = self.hot_words
+        config = {"listener": listener}
+        self.update_configs(config)
+        sleep(2)
+        self.speak("disabled " + module)
+
+    def handle_disable_wuw_sound_intent(self, message):
+        config = {"confirm_listening": False}
+        self.update_configs(config)
+        sleep(2)
+        self.speak("disabled wake word sound")
+
+    def handle_enable_wuw_sound_intent(self, message):
+        config = {"confirm_listening": True}
+        self.update_configs(config)
+        sleep(2)
+        self.speak("enabled wake word sound")
+
+    def handle_disable_save_wuw_intent(self, message):
+        listener = self.get_listener_config()
+        if listener.get("record_wake_words") == True:
+            listener["record_wake_words"] = False
+        else:
+            self.speak("wake word saving already disabled")
+            return
+        config = {"listener": listener}
+        self.update_configs(config)
+        sleep(2)
+        self.speak("disabled save wake words")
+
+    def handle_enable_save_wuw_intent(self, message):
+        listener = self.get_listener_config()
+        if listener.get("record_wake_words") == True:
+            self.speak("wake word saving already enabled")
+        else:
+            listener["record_wake_words"] = True
+            return
+        config = {"listener": listener}
+        self.update_configs(config)
+        sleep(2)
+        self.speak("enabled wake word sound")
 
     def handle_demo_wuw_intent(self, message):
         self.speak("Check this demo on youtube")
