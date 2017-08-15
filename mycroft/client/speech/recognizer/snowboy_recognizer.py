@@ -22,6 +22,7 @@ except:
     from mycroft.client.speech.recognizer.snowboy.snowboydecoder import HotwordDetector
 
 from mycroft.client.speech.recognizer.local_recognizer import LocalRecognizer
+from os.path import dirname
 
 __author__ = 'jarbas'
 
@@ -29,7 +30,12 @@ __author__ = 'jarbas'
 class SnowboyRecognizer(LocalRecognizer):
     def __init__(self, models_path_list, sensitivity=0.5, wake_word="snowboy"):
         self.key_phrase = wake_word
-        self.snowboy = HotwordDetector(models_path_list,
+        new_list = []
+        for model in models_path_list:
+            if "/" not in model:
+                model = dirname(__file__) + "/snowboy/resources/" + model
+            new_list.append(model)
+        self.snowboy = HotwordDetector(new_list,
                                        sensitivity=[sensitivity]*len(models_path_list))
 
     def found_wake_word(self, frame_data):
