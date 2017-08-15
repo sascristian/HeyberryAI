@@ -7,6 +7,7 @@ from mycroft.skills.displayservice import DisplayService
 import unirest
 import urllib2
 import os
+from os.path import dirname
 import webbrowser
 
 __author__ = 'jarbas'
@@ -31,8 +32,6 @@ class EPICSkill(MycroftSkill):
             os.makedirs(self.save_path)
 
         self.reload_skill = False
-        self.current = 0
-        self.lenght = 0
         self.get_EPIC()
 
     def initialize(self):
@@ -41,30 +40,15 @@ class EPICSkill(MycroftSkill):
 
         self.register_intent(epic_intent, self.handle_epic_intent)
 
-        previous_epic_intent = IntentBuilder("PreviousEPICIntent"). \
-            require("PreviousEPICKeyword").build()
-
-        self.register_intent(previous_epic_intent, self.handle_previous_epic_intent)
-
-        next_epic_intent = IntentBuilder("NextEPICIntent"). \
-            require("NextEPICKeyword").build()
-
-        self.register_intent(next_epic_intent, self.handle_next_epic_intent)
-
         about_epic_intent = IntentBuilder("AboutEPICIntent"). \
             require("aboutEPICKeyword").build()
 
         self.register_intent(about_epic_intent, self.handle_about_epic_intent)
 
         website_epic_intent = IntentBuilder("WebsiteEPICIntent"). \
-            require("websiteEPICKeyword").build()
+            require("websiteEPICKeyword").require("EPICKeyword").build()
 
         self.register_intent(website_epic_intent, self.handle_website_epic_intent)
-
-        fb_epic_intent = IntentBuilder("FbEPICIntent"). \
-            require("fbEPICKeyword").build()
-
-        self.register_intent(fb_epic_intent, self.handle_fb_epic_intent)
 
         self.disable_intent("PreviousEPICIntent")
 
@@ -74,20 +58,21 @@ class EPICSkill(MycroftSkill):
         webbrowser.open("http://epic.gsfc.nasa.gov/")
 
     def handle_about_epic_intent(self, message):
+        self.display_service.display([dirname(__file__)+"/epic.jpg"],
+                                     message.data.get("utterance"))
         self.speak_dialog("aboutEPIC")
 
     def handle_epic_intent(self, message):
-        self.current = self.lenght - 1
-        self.EPIC(self.current, message.data["utterance"])
+        self.EPIC(message.data["utterance"])
 
     def get_EPIC(self):
         url = "https://epic.gsfc.nasa.gov/api/natural"
         self.response = unirest.get(url)
-        self.lenght = len(self.response.body)
 
-    def EPIC(self, count=0, utterance = ""):
-        url = "https://epic.gsfc.nasa.gov/epic-archive/jpg/" + self.response.body[count]["image"] + ".jpg"
-        date = self.response.body[count]["date"]
+    def EPIC(self, utterance = ""):
+        date = self.response.body[-1]["date"]
+        url = "https://epic.gsfc.nasa.gov/epic-archive/jpg/" + \
+              self.response.body[-1]["image"] + ".jpg"
         img = urllib2.Request(url)
         raw_img = urllib2.urlopen(img).read()
         save_path = self.save_path + "/" + date + ".jpg"
@@ -95,7 +80,19 @@ class EPICSkill(MycroftSkill):
         f.write(raw_img)
         f.close()
         self.speak_dialog("EPIC", {"date": date})
-        self.display_service.display(save_path, utterance)
+        self.display_service.reset()
+        self.display_service.display([save_path], utterance)
+        for num in range(1, len(self.response.body)):
+            num = len(self.response.body) - num
+            url = "https://epic.gsfc.nasa.gov/epic-archive/jpg/" + self.response.body[num]["image"] + ".jpg"
+            img = urllib2.Request(url)
+            raw_img = urllib2.urlopen(img).read()
+            date = self.response.body[num]["date"]
+            save_path = self.save_path + "/" + date + ".jpg"
+            f = open(save_path, 'wb')
+            f.write(raw_img)
+            f.close()
+            self.display_service.add_pictures([save_path], utterance)
 
     def stop(self):
         pass

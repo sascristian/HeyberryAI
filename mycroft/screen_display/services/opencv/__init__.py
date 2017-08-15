@@ -42,16 +42,18 @@ class OpenCVService(DisplayBackend):
         self._is_Displaying = True
         image = cv2.imread(path)
         image = imutils.resize(image, self.width, self.height)
-        # Process finished with exit code 139 (interrupted by signal 11: SIGSEGV)
-        #  SIGSEGV 139 attempt to access a virtual address which is not in your address space
+        cv2.destroyAllWindows()
         cv2.imshow("OpenCV Display", image)
-        cv2.waitKey(1)
+        cv2.waitKey(0)
 
-    def display(self, pictures):
-        pictures = pictures.reverse()
-        for picture in pictures:
+    def add_pictures(self, picture_list):
+        logger.info("Adding pictures to OpenCVDisplay")
+        for picture in picture_list:
             self.pictures.insert(0, picture)
+
+    def display(self):
         logger.info('Call OpenCVDisplay')
+        self.index = 0
         self.emitter.emit(Message('mycroft.display.service.OpenCV'))
 
     def next(self):
@@ -60,6 +62,8 @@ class OpenCVService(DisplayBackend):
         """
         logger.info('Call OpenCVNext')
         self.index += 1
+        if self.index > len(self.pictures):
+            self.index = 0
         self._display()
 
     def previous(self):
@@ -68,6 +72,8 @@ class OpenCVService(DisplayBackend):
         """
         logger.info('Call OpenCVPrevious')
         self.index -= 1
+        if self.index > 0:
+            self.index = len(self.pictures)
         self._display()
 
     def reset(self):
@@ -77,7 +83,6 @@ class OpenCVService(DisplayBackend):
         logger.info('Call OpenCVReset')
         self.index = 0
         self.pictures = []
-        self.clear()
 
     def clear(self):
         """
@@ -86,11 +91,12 @@ class OpenCVService(DisplayBackend):
         # Create a black image
         image = np.zeros((512, 512, 3), np.uint8)
         cv2.imshow("OpenCV Display", image)
-        cv2.waitKey(1)
         self._is_Displaying = False
+        cv2.waitKey(0)
 
-    def stop(self):
+    def close(self):
         logger.info('OpenCVDisplayStop')
+        self.reset()
         cv2.destroyAllWindows()
 
 

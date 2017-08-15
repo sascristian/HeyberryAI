@@ -38,12 +38,13 @@ class WebBrowserService(DisplayBackend):
         self._is_Displaying = True
         webbrowser.open(path)
 
-    def display(self, pictures):
-        pictures = pictures.reverse()
-        for picture in pictures:
-            self.pictures.insert(0, picture)
+    def display(self):
         logger.info('Call WebBrowserDisplay')
         self.emitter.emit(Message('mycroft.display.service.WebBrowser'))
+
+    def add_pictures(self, picture_list):
+        for picture in picture_list:
+            self.pictures.insert(0, picture)
 
     def next(self):
         """
@@ -51,6 +52,8 @@ class WebBrowserService(DisplayBackend):
         """
         logger.info('Call WebBrowserNext')
         self.index += 1
+        if self.index > len(self.pictures):
+            self.index = 0
         self._display()
 
     def previous(self):
@@ -59,6 +62,8 @@ class WebBrowserService(DisplayBackend):
         """
         logger.info('Call WebBrowserPrevious')
         self.index -= 1
+        if self.index < 0:
+            self.index = len(self.pictures)
         self._display()
 
     def reset(self):
@@ -68,7 +73,6 @@ class WebBrowserService(DisplayBackend):
         logger.info('Call WebBrowserReset')
         self.index = 0
         self.pictures = []
-        self.clear()
 
     def clear(self):
         """
@@ -78,6 +82,7 @@ class WebBrowserService(DisplayBackend):
 
     def stop(self):
         logger.info('WebBrowserDisplayStop')
+        self.reset()
         self.clear()
 
 

@@ -1,22 +1,5 @@
 import time
-from os.path import abspath
 from mycroft.messagebus.message import Message
-
-
-def ensure_uri(s):
-    """
-        Interprete paths as file:// uri's
-
-        Args:
-            s: string to be checked
-
-        Returns:
-            if s is uri, s is returned otherwise file:// is prepended
-    """
-    if '://' not in s:
-        return 'file://' + abspath(s)
-    else:
-        return s
 
 
 class DisplayService():
@@ -38,52 +21,76 @@ class DisplayService():
         """
         self.info = message.data
 
-    def display(self, file_path, utterance=''):
-        """ Start playback.
+    def display(self, file_path_list, utterance=''):
+        """ Start display.
 
             Args:
-                tracks: track uri or list of track uri's
+                file_path: track or list of paths
                 utterance: forward utterance for further processing by the
                            audio service.
         """
-        if not isinstance(file_path, basestring):
+        if not isinstance(file_path_list, list):
             raise ValueError
 
         self.emitter.emit(Message('mycroft.display.service.display',
-                                  data={'file_path': file_path,
+                                  data={'file_list': file_path_list,
                                         'utterance': utterance}))
 
-    def next(self):
-        """ Change to next track. """
-        self.emitter.emit(Message('mycroft.display.service.next'))
+    def add_pictures(self, file_path_list, utterance = ""):
+        """ Start display.
 
-    def prev(self):
-        """ Change to previous track. """
-        self.emitter.emit(Message('mycroft.display.service.prev'))
+            Args:
+                file_path: track or list of paths
+                utterance: forward utterance for further processing by the
+                           audio service.
+        """
+        if not isinstance(file_path_list, list):
+            raise ValueError
 
-    def clear(self):
+        self.emitter.emit(Message('mycroft.display.service.add_pictures',
+                                  data={'file_list': file_path_list,
+                                        'utterance': utterance}))
+
+    def next(self, utterance = ""):
+        """ Change to next pic. """
+        self.emitter.emit(Message('mycroft.display.service.next',
+                                  data={'utterance': utterance}))
+
+    def close(self, utterance = ""):
+        """ Change to next pic. """
+        self.emitter.emit(Message('mycroft.display.service.close',
+                                  data={'utterance': utterance}))
+
+    def prev(self, utterance = ""):
+        """ Change to previous pic. """
+        self.emitter.emit(Message('mycroft.display.service.prev',
+                                  data={'utterance': utterance}))
+
+    def clear(self, utterance = ""):
         """ Clear Display """
-        self.emitter.emit(Message('mycroft.display.service.clear'))
+        self.emitter.emit(Message('mycroft.display.service.clear',
+                                  data={'utterance': utterance}))
 
-    def reset(self):
+    def reset(self, utterance = ""):
         """ Reset Display. """
-        self.emitter.emit(Message('mycroft.display.service.reset'))
+        self.emitter.emit(Message('mycroft.display.service.reset',
+                                  data={'utterance': utterance}))
 
-    def pic_info(self):
+    def pic_info(self, utterance = ""):
         """ Request information of current displaying pic.
 
             Returns:
                 Dict with pic info.
         """
         self.info = None
-        self.emitter.emit(Message('mycroft.display.service.pic_info'))
+        self.emitter.emit(Message('mycroft.display.service.pic_info',
+                                  data={'utterance': utterance}))
         wait = 5.0
         while self.info is None and wait >= 0:
             time.sleep(0.1)
             wait -= 0.1
-
         return self.info or {}
 
     @property
-    def is_playing(self):
-        return self.track_info() != {}
+    def is_displaying(self):
+        return self.pic_info() != {}

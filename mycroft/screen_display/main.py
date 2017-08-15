@@ -17,18 +17,13 @@
 
 
 import json
-from os.path import expanduser, exists, abspath, dirname, basename, isdir, join
+from os.path import abspath, dirname, basename, isdir, join
 from os import listdir
 import sys
-import time
 import imp
-import subprocess
-
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
-from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-import mycroft.audio.speech as speech
 
 
 __author__ = 'jarbas'
@@ -172,6 +167,8 @@ def load_services_callback():
     ws.on('mycroft.display.service.reset', _reset)
     ws.on('mycroft.display.service.prev', _prev)
     ws.on('mycroft.display.service.next', _next)
+    ws.on('mycroft.display.service.close', _close)
+    ws.on('mycroft.display.service.add_pictures', _add_pictures)
     ws.on('mycroft.stop', _stop)
 
 
@@ -269,6 +266,84 @@ def _lock(message):
     lock(prefered_service)
 
 
+def add_pictures(prefered_service, picture_list):
+    global current
+    logger.info('Add pictures Display')
+    # check if user requested a particular service
+    if prefered_service:
+        service = prefered_service
+    # check if default supports the uri
+    elif default:
+        logger.info("Using default backend")
+        logger.info(default.name)
+        service = default
+    else:  # TODO Check if any other service can play the media
+        return
+    service.add_pictures(picture_list)
+    current = service
+
+
+def _add_pictures(message):
+    """
+        Handler for mycroft.display.service.display. Starts display of a
+        picture. Also  determines if the user requested a special service.
+
+        Args:
+            message: message bus message, not used but required
+    """
+    global services
+    logger.info('mycroft.display.service.add_pictures')
+    # Find if the user wants to use a specific backend
+    for s in services:
+        logger.info(s.name)
+        if s.name in message.data['utterance']:
+            prefered_service = s
+            logger.info(s.name + ' would be prefered')
+            break
+    else:
+        prefered_service = None
+    picture_list = message.data.get("file_list", [])
+    add_pictures(prefered_service, picture_list)
+
+
+def close(prefered_service):
+    global current
+    logger.info('Close Display')
+    # check if user requested a particular service
+    if prefered_service:
+        service = prefered_service
+    # check if default supports the uri
+    elif default:
+        logger.info("Using default backend")
+        logger.info(default.name)
+        service = default
+    else:  # TODO Check if any other service can play the media
+        return
+    service.close()
+    current = service
+
+
+def _close(message):
+    """
+        Handler for mycroft.display.service.display. Starts display of a
+        picture. Also  determines if the user requested a special service.
+
+        Args:
+            message: message bus message, not used but required
+    """
+    global services
+    logger.info('mycroft.display.service.close')
+    # Find if the user wants to use a specific backend
+    for s in services:
+        logger.info(s.name)
+        if s.name in message.data['utterance']:
+            prefered_service = s
+            logger.info(s.name + ' would be prefered')
+            break
+    else:
+        prefered_service = None
+    close(prefered_service)
+
 def next(prefered_service):
     global current
     logger.info('Next Display')
@@ -347,7 +422,7 @@ def _prev(message):
     prev(prefered_service)
 
 
-def display(file_path, prefered_service):
+def display(file_path_list, prefered_service):
     global current
     logger.info('Display')
     # check if user requested a particular service
@@ -360,8 +435,8 @@ def display(file_path, prefered_service):
         service = default
     else:  # TODO Check if any other service can play the media
         return
-    logger.info('Add picture path' + str(file_path))
-    service.add_picture(file_path)
+    logger.info('Add picture paths: ' + str(file_path_list))
+    service.add_pictures(file_path_list)
     logger.info('Displaying')
     service.display()
     current = service
@@ -377,9 +452,9 @@ def _display(message):
     """
     global services
     logger.info('mycroft.display.service.display')
-    logger.info(message.data['file_path'])
+    logger.info(message.data['file_list'])
 
-    file_path = message.data['file_path']
+    file_list = message.data['file_list']
 
     # Find if the user wants to use a specific backend
     for s in services:
@@ -390,7 +465,7 @@ def _display(message):
             break
     else:
         prefered_service = None
-    display(file_path, prefered_service)
+    display(file_list, prefered_service)
 
 
 def clear(prefered_service):
@@ -484,7 +559,6 @@ def main():
     ws = WebsocketClient()
     ConfigurationManager.init(ws)
     config = ConfigurationManager.get()
-    speech.init(ws)
 
     def echo(message):
         accept = ["display"]
@@ -504,7 +578,6 @@ def main():
         ws.run_forever()
     except KeyboardInterrupt, e:
         logger.exception(e)
-        speech.shutdown()
         sys.exit()
 
 

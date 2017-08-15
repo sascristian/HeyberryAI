@@ -18,9 +18,16 @@ class DisplayBackend():
         pass
 
     @abstractmethod
-    def display(self, pictures):
+    def display(self):
         """
            Display First Picture in Pictures List of paths
+        """
+        pass
+
+    @abstractmethod
+    def add_pictures(self, picture_list):
+        """
+          add pics
         """
         pass
 
@@ -62,6 +69,9 @@ class DisplayBackend():
 
     def stop(self):
         """
-            Stop playback.
+            Stop display.
         """
         pass
+
+    def close(self):
+        self.stop()
