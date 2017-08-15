@@ -81,12 +81,14 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - no pairing
             - no config update from mycroft.ai
             - added "intent.start", "intent.end", "intent.failed" messages
-            - in skills/core.py SKILLS_DIR is now jarbas_skills folder instead of opt
+            - skills/core.py SKILLS_DIR is now jarbas_skills folder instead of opt
             - do not remove articles in normalize (too much normalization IMO)
-            - allow for many hot words
-            - offline stt (pocketpshinx)
+            - allow for multiple hot words of various kinds
+            - offline stt (pocketpshinx) <- WIP missing model
             - wakeword/hotword/standupword snowboy support
             - fallback skill order override in config file
+            - message_context update methods added to MycroftSkill
+            - update_config method added to MycroftSkill
 
             # temporary changes
             - no msm

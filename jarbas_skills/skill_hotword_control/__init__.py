@@ -143,13 +143,13 @@ class HotwordSkill(MycroftSkill):
         self.config_update(save=True)
 
     def handle_current_wuw_intent(self, message):
-        if not self.current_module:
+        if not self.current_wuw:
             self.get_listener_config()
-            if not self.current_module:
+            if not self.current_wuw:
                 self.speak("I could not get current wake word module from "
                        "configuration file")
                 return
-        self.speak("Current wake word module is " + self.current_module)
+        self.speak("Current wake word module is " + self.current_wuw)
 
     def handle_available_hot_intent(self, message):
         if self.hotw_modules == {}:
@@ -211,6 +211,7 @@ class HotwordSkill(MycroftSkill):
         self.speak("Check this demo on youtube")
         webbrowser.open("https://youtu.be/GIkBh0VFmbc")
 
+    # internal
     def get_listener_config(self):
         listener = self.config_core.get("listener")
         if not listener:
@@ -221,7 +222,6 @@ class HotwordSkill(MycroftSkill):
             pass
         return listener
 
-    # internal
     def new_snowboy_model(self, wav_files, hotword_name):
         out = hotword_name + ".pmdl"
         endpoint = "https://snowboy.kitt.ai/api/v1/train/"
