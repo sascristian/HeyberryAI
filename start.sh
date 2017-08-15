@@ -15,6 +15,7 @@ case $1 in
 	"client") SCRIPT=${TOP}/mycroft/client/client/main.py ;;
 	"skills") SCRIPT=${TOP}/mycroft/skills/main.py ;;
 	"audio") SCRIPT=${TOP}/mycroft/audio/main.py ;;
+	"display") SCRIPT=${TOP}/mycroft/display/main.py ;;
 	"skill_container") SCRIPT=${TOP}/mycroft/skills/container.py ;;
 	"voice") SCRIPT=${TOP}/mycroft/client/speech/main.py ;;
 	"cli") SCRIPT=${TOP}/mycroft/client/text/main.py ;;

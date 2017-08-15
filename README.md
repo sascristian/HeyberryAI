@@ -89,6 +89,7 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - fallback skill order override in config file
             - message_context update methods added to MycroftSkill
             - update_config method added to MycroftSkill
+            - screen display service
 
             # temporary changes
             - no msm

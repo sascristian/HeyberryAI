@@ -129,34 +129,32 @@ case "$1" in
   $0 stop
   start-mycroft service
   start-mycroft skills
+  start-mycroft audio
+  start-mycroft display
 
   case "$2" in
   "")
     start-mycroft voice
-    start-mycroft audio
     start-mycroft cli --quiet --simple
     ;;
   "-v"|"--voice")
-  start-mycroft audio
     start-mycroft voice
     ;;
   "-c"|"--cli")
-    start-mycroft audio
     start-mycroft cli
     ;;
   "-d"|"--debug")
-    start-mycroft audio
     start-mycroft-debug cli
     ;;
   "-s"|"--server")
     start-mycroft server
+    stop-mycroft display
+    stop-mycroft audio
     ;;
   "-cl"|"--client")
-    start-mycroft audio
     start-mycroft client
     start-mycroft cli
     start-mycroft voice
-    start-mycroft audio
     ;;
   *)
     echo "Usage"
@@ -174,6 +172,7 @@ case "$1" in
   stop-mycroft client
   stop-mycroft server
   stop-mycroft audio
+  stop-mycroft display
   ;;
 
 "restart")
