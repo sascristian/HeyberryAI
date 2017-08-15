@@ -170,6 +170,8 @@ def load_services_callback():
     ws.on('mycroft.display.service.clear', _clear)
     ws.on('mycroft.display.service.display', _display)
     ws.on('mycroft.display.service.reset', _reset)
+    ws.on('mycroft.display.service.prev', _prev)
+    ws.on('mycroft.display.service.next', _next)
     ws.on('mycroft.stop', _stop)
 
 
@@ -265,6 +267,84 @@ def _lock(message):
     else:
         prefered_service = None
     lock(prefered_service)
+
+
+def next(prefered_service):
+    global current
+    logger.info('Next Display')
+    # check if user requested a particular service
+    if prefered_service:
+        service = prefered_service
+    # check if default supports the uri
+    elif default:
+        logger.info("Using default backend")
+        logger.info(default.name)
+        service = default
+    else:  # TODO Check if any other service can play the media
+        return
+    service.next()
+    current = service
+
+
+def _next(message):
+    """
+        Handler for mycroft.display.service.display. Starts display of a
+        picture. Also  determines if the user requested a special service.
+
+        Args:
+            message: message bus message, not used but required
+    """
+    global services
+    logger.info('mycroft.display.service.next')
+    # Find if the user wants to use a specific backend
+    for s in services:
+        logger.info(s.name)
+        if s.name in message.data['utterance']:
+            prefered_service = s
+            logger.info(s.name + ' would be prefered')
+            break
+    else:
+        prefered_service = None
+    prev(prefered_service)
+
+
+def prev(prefered_service):
+    global current
+    logger.info('Previous Display')
+    # check if user requested a particular service
+    if prefered_service:
+        service = prefered_service
+    # check if default supports the uri
+    elif default:
+        logger.info("Using default backend")
+        logger.info(default.name)
+        service = default
+    else:  # TODO Check if any other service can play the media
+        return
+    service.previous()
+    current = service
+
+
+def _prev(message):
+    """
+        Handler for mycroft.display.service.display. Starts display of a
+        picture. Also  determines if the user requested a special service.
+
+        Args:
+            message: message bus message, not used but required
+    """
+    global services
+    logger.info('mycroft.display.service.prev')
+    # Find if the user wants to use a specific backend
+    for s in services:
+        logger.info(s.name)
+        if s.name in message.data['utterance']:
+            prefered_service = s
+            logger.info(s.name + ' would be prefered')
+            break
+    else:
+        prefered_service = None
+    prev(prefered_service)
 
 
 def display(file_path, prefered_service):

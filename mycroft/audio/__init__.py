@@ -1,5 +1,6 @@
 from mycroft.util.signal import check_for_signal
 import psutil
+import mycroft
 
 import time
 __author__ = "forslund"
