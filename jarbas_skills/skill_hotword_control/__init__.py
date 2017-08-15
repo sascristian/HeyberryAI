@@ -51,6 +51,10 @@ class HotwordSkill(MycroftSkill):
         self.build_intents()
 
     def build_intents(self):
+        # TODO set record wake words flag intent
+        # TODO set listening sound flag
+        # TODO remove sound for hotword intent
+
         intent = IntentBuilder("CurrentWuWIntent") \
                .require("CurrentKeyword").require("WuWKeyword") \
                .build()
