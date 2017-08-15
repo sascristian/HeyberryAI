@@ -442,9 +442,7 @@ class MycroftSkill(object):
             metadata = {}
         if data is None:
             data = {}
-        data['expect_response'] = expect_response
-        data["metadata"] = metadata
-        self.speak(self.dialog_renderer.render(key, data), message_context=self.get_context(message_context))
+        self.speak(self.dialog_renderer.render(key, data), expect_response=expect_response, metadata=metadata, message_context=self.get_context(message_context))
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)

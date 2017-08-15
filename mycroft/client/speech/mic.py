@@ -30,7 +30,6 @@ from speech_recognition import (
     AudioSource,
     AudioData
 )
-
 from mycroft.configuration import ConfigurationManager
 from mycroft.util import (
     check_for_signal,
@@ -156,9 +155,11 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
     # Time between pocketsphinx checks for the wake word
     SEC_BETWEEN_WW_CHECKS = 0.2
 
-    def __init__(self, wake_word_recognizer, hot_word_engines={}):
+    def __init__(self, wake_word_recognizer, hot_word_engines=None):
         # The maximum audio in seconds to keep for transcribing a phrase
         # The wake word must fit in this time
+        if hot_word_engines is None:
+            hot_word_engines = {}
         num_phonemes = len(listener_config.get('phonemes').split())
         len_phoneme = listener_config.get('phoneme_duration', 120) / 1000.0
         self.SAVED_WW_SEC = num_phonemes * len_phoneme
@@ -168,7 +169,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         self.multiplier = listener_config.get('multiplier')
         self.energy_ratio = listener_config.get('energy_ratio')
         # check the config for the flag to save wake words.
-        self.save_wake_words = listener_config.get('record_wake_words')
+        self.save_wake_words = listener_config.get('record_wake_words', False)
         self.mic_level_file = os.path.join(get_ipc_directory(), "mic_level")
         self._stop_signaled = False
         self.hot_word_engines = hot_word_engines
@@ -196,7 +197,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
             bytearray: complete audio buffer recorded, including any
                        silence at the end of the user's utterance
         """
-
+        logger.debug("Recording full sentence")
         num_loud_chunks = 0
         noise = 0
 
@@ -332,9 +333,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         energy_avg_samples = int(5 / sec_per_buffer)  # avg over last 5 secs
 
         counter = 0
-
         while not said_wake_word and not self._stop_signaled:
-
             if self._skip_wake_word():
                 break
             chunk = self.record_sound_chunk(source)
@@ -384,6 +383,14 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 said_wake_word = self.wake_word_recognizer.found_wake_word(audio_data)
                 if not said_wake_word and self.check_for_hotwords(audio_data, emitter):
                     said_wake_word = True
+                elif said_wake_word:
+                    # If enabled, play a wave file with a short sound to audibly
+                    # indicate recording has begun.
+                    if config.get('confirm_listening'):
+                        file = resolve_resource_file(
+                            config.get('sounds').get('start_listening'))
+                        if file:
+                            play_wav(file)
                 # if a wake word is success full then record audio in temp
                 # file.
                 if self.save_wake_words and said_wake_word:
@@ -405,9 +412,12 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 # If enabled, play a wave file with a short sound to audibly
                 # indicate hotword was detected.
                 if ding:
-                    file = resolve_resource_file(ding)
-                    if file:
-                        play_wav(file)
+                    try:
+                        file = resolve_resource_file(ding)
+                        if file:
+                            play_wav(file)
+                    except Exception as e:
+                        print e
                 # Hot Word succeeded
                 payload = {
                     'hotword': hotword,
@@ -425,6 +435,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 if listen:
                 # start listening
                     return True
+                return False
         return False
 
     @staticmethod
@@ -450,6 +461,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         Returns:
             AudioData: audio with the user's utterance, minus the wake-up-word
         """
+
         assert isinstance(source, AudioSource), "Source must be an AudioSource"
 
 #        bytes_per_sec = source.SAMPLE_RATE * source.SAMPLE_WIDTH
@@ -460,6 +472,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         # any, as we expect the user and Mycroft to not be talking.
         # NOTE: adjust_for_ambient_noise() doc claims it will stop early if
         #       speech is detected, but there is no code to actually do that.
+        logger.debug("Adjusting for ambient noise")
         self.adjust_for_ambient_noise(source, 1.0)
 
         logger.debug("Waiting for wake word...")
@@ -469,14 +482,6 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
 
         logger.debug("Recording...")
         emitter.emit("recognizer_loop:record_begin")
-
-        # If enabled, play a wave file with a short sound to audibly
-        # indicate recording has begun.
-        if config.get('confirm_listening'):
-            file = resolve_resource_file(
-                config.get('sounds').get('start_listening'))
-            if file:
-                play_wav(file)
 
         frame_data = self._record_phrase(source, sec_per_buffer)
         audio_data = self._create_audio_data(frame_data, source)

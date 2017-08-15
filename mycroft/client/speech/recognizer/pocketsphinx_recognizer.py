@@ -105,7 +105,6 @@ class PocketsphinxRecognizer(LocalRecognizer):
     def found_wake_word(self, frame_data):
         hyp = self.transcribe(frame_data)
         if hyp is not None:
-            print hyp.hypstr.lower()
+            return self.key_phrase in hyp.hypstr.lower()
         else:
             return False
-        return self.key_phrase in hyp.hypstr.lower()

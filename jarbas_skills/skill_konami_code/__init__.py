@@ -60,23 +60,23 @@ class KonamiCodeSkill(MycroftSkill):
 
     def handle_up_intent(self, message):
         self.layers.next()
-        self.speak_dialog("up")
+        self.speak_dialog("up", expect_response=True)
 
     def handle_down_intent(self, message):
         self.layers.next()
-        self.speak_dialog("down")
+        self.speak_dialog("down", expect_response=True)
 
     def handle_left_intent(self, message):
         self.layers.next()
-        self.speak_dialog("left")
+        self.speak_dialog("left", expect_response=True)
 
     def handle_right_intent(self, message):
         self.layers.next()
-        self.speak_dialog("right")
+        self.speak_dialog("right", expect_response=True)
 
     def handle_b_intent(self, message):
         self.layers.next()
-        self.speak_dialog("b")
+        self.speak_dialog("b", expect_response=True)
 
     def handle_a_intent(self, message):
         # check for script

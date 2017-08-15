@@ -27,7 +27,8 @@ __author__ = 'jarbas'
 
 
 class SnowboyRecognizer(LocalRecognizer):
-    def __init__(self, models_path_list, sensitivity=0.5):
+    def __init__(self, models_path_list, sensitivity=0.5, wake_word="snowboy"):
+        self.key_phrase = wake_word
         self.snowboy = HotwordDetector(models_path_list,
                                        sensitivity=[sensitivity]*len(models_path_list))
 

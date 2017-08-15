@@ -56,10 +56,14 @@ class AudioProducer(Thread):
         self.emitter = emitter
 
     def run(self):
-        LOG.info("Microphone listening started")
+
         with self.mic as source:
-            self.recognizer.adjust_for_ambient_noise(source)
+            try:
+                self.recognizer.adjust_for_ambient_noise(source)
+            except Exception as e:
+                print e
             while self.state.running:
+                LOG.info("Microphone listening started")
                 try:
                     audio = self.recognizer.listen(source, self.emitter)
                     self.queue.put(audio)
@@ -100,21 +104,29 @@ class AudioConsumer(Thread):
         self.wakeword_recognizer = wakeword_recognizer
         self.metrics = MetricsAggregator()
         self.config = ConfigurationManager.get()
+        self.word = self.wakeword_recognizer.key_phrase
+        emitter.on("recognizer_loop:hotword", self.set_word)
+
+    def set_word(self, event):
+        self.word = event.get("hotword", self.wakeword_recognizer.key_phrase)
 
     def run(self):
         while self.state.running:
             self.read()
 
     def read(self):
+
         audio = self.queue.get()
 
         if audio is None:
             return
-
-        if self.state.sleeping:
-            self.wake_up(audio)
-        else:
-            self.process(audio)
+        try:
+            if self.state.sleeping:
+                self.wake_up(audio)
+            else:
+                self.process(audio)
+        except Exception as e:
+            print e
 
     # TODO: Localization
     def wake_up(self, audio):
@@ -133,7 +145,7 @@ class AudioConsumer(Thread):
     def process(self, audio):
         SessionManager.touch()
         payload = {
-            'utterance': self.wakeword_recognizer.key_phrase,
+            'utterance': self.word,
             'session': SessionManager.get().session_id,
         }
         self.emitter.emit("recognizer_loop:wakeword", payload)
@@ -142,7 +154,10 @@ class AudioConsumer(Thread):
         else:
             self.transcribe(audio)
 
+        self.word = self.wakeword_recognizer.key_phrase
+
     def transcribe(self, audio):
+        LOG.debug("Transcribing audio")
         text = None
         try:
             # Invoke the STT engine on the audio clip
@@ -220,15 +235,17 @@ class RecognizerLoop(EventEmitter):
         self.state = RecognizerLoopState()
 
     def create_hot_word_engines(self):
+        LOG.info("creating hotword engines")
         hot_words = self.config.get("hot_words", {})
         for word in hot_words:
             data = hot_words[word]
             type = data["module"]
-            data = data["data"]
-            LOG.info("Creating hotword engine for " + word + " with type " + type)
             ding = data.get("sound")
             utterance = data.get("utterance", False)
             listen = data.get("listen", False)
+
+            data = data["data"]
+            LOG.info("Creating hotword engine for " + word + " with type " + type)
             if type == "pocket_sphinx":
                 lang = data.get("lang", self.config_core.get("lang", "en-us"))
                 rate = data.get("rate", self.config.get("rate"))
@@ -245,7 +262,7 @@ class RecognizerLoop(EventEmitter):
                 paths = []
                 for model in models.keys():
                     paths.append(models[model])
-                engine = SnowboyRecognizer(paths, sensitivity)
+                engine = SnowboyRecognizer(paths, sensitivity, word)
                 self.hot_word_engines[word] = [engine, ding, utterance,
                                                listen, type]
             else:
@@ -254,6 +271,7 @@ class RecognizerLoop(EventEmitter):
     def create_wake_word_recognizer(self, rate, lang):
         # Create a local recognizer to hear the wakeup word, e.g. 'Hey Mycroft'
         module = self.config.get('module', "pocketsphinx")
+        wake_word = self.config.get('wake_word').lower()
         if module == "snowboy":
             LOG.info("Using snowboy wake word detector")
             models = self.config.get("models", {})
@@ -261,10 +279,10 @@ class RecognizerLoop(EventEmitter):
             paths = []
             for model in models.keys():
                 paths.append(models[model])
-            return SnowboyRecognizer(paths, sensitivity)
+            return SnowboyRecognizer(paths, sensitivity, wake_word)
         elif module == "pocketsphinx":
             LOG.info("Using PocketSphinx wake word detector")
-            wake_word = self.config.get('wake_word').lower()
+
             phonemes = self.config.get('phonemes')
             threshold = self.config.get('threshold')
             return PocketsphinxRecognizer(wake_word, phonemes,
@@ -275,6 +293,7 @@ class RecognizerLoop(EventEmitter):
 
     def create_wakeup_recognizer(self, rate, lang):
         module = self.config.get('wake_up_module', "pocketsphinx")
+        wake_word = self.config.get('standup_word', "wake up").lower()
         if module == "snowboy":
             LOG.info("Using snowboy wake up detector")
             models = self.config.get("wake_up_models", {})
@@ -282,10 +301,10 @@ class RecognizerLoop(EventEmitter):
             paths = []
             for model in models.keys():
                 paths.append(models[model])
-            return SnowboyRecognizer(paths, sensitivity)
+            return SnowboyRecognizer(paths, sensitivity, wake_word)
         elif module == "pocketsphinx":
             LOG.info("Using PocketSphinx wake up detector")
-            wake_word = self.config.get('standup_word', "wake up").lower()
+
             phonemes = self.config.get('standup_phonemes', "W EY K . AH P")
             threshold = self.config.get('standup_threshold', 1e-18)
             return PocketsphinxRecognizer(wake_word, phonemes,
