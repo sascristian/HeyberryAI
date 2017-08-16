@@ -243,7 +243,7 @@ class RecognizerLoop(EventEmitter):
                 continue
             type = data["module"]
             ding = data.get("sound")
-            utterance = data.get("utterance", False)
+            utterance = data.get("utterance")
             listen = data.get("listen", False)
 
             data = data["data"]

@@ -429,7 +429,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 if utterance:
                 # send the transcribed word on for processing
                     payload = {
-                        'utterances': [hotword]
+                        'utterances': [utterance]
                     }
                     emitter.emit("recognizer_loop:utterance", payload)
                 if listen:
