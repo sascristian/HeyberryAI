@@ -58,7 +58,6 @@ imgurpython
 scipy
 tweepy
 python-dateutil==2.6.0
-git+https://github.com/forslund/pymimic.git
 autobahn
 twisted
 python-gnupg
@@ -73,5 +72,6 @@ aiml
 padatious==0.1.4
 urlfetch
 geopy
-git+https://github.com/seahawk1986/pytzwhere.git@fix_install
 nltk
+opencv-python
+cleverwrap

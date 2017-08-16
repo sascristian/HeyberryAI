@@ -76,15 +76,19 @@ fi
 
 source ${VIRTUALENV_ROOT}/bin/activate
 cd ${TOP}
-easy_install pip #==7.1.2 # force version of pip
+easy_install pip
 pip install --upgrade virtualenv
 
-# copy global open-cv to virtual env, pip open-cv version doesnt work
+# copy global open-cv to virtual env
 # https://medium.com/@manuganji/installation-of-opencv-numpy-scipy-inside-a-virtualenv-bf4d82220313
-sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
+# sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
 
 # tensorflow from binary
 pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
+# fixed tzwhere
+pip install git+https://github.com/seahawk1986/pytzwhere.git@fix_install
+# pymimic
+pip install git+https://github.com/forslund/pymimic.git
 
 # install other requirements
 if ! pip install -r requirements.txt; then

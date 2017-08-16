@@ -4,6 +4,8 @@ from mycroft.skills.displayservice import DisplayService
 from os.path import dirname
 from mycroft.skills.core import MycroftSkill
 from adapt.intent import IntentBuilder
+from jarbas_utils.jarbas_services import url_to_pic
+from time import sleep
 
 config = ConfigurationManager.get().get('Displays')
 
@@ -12,7 +14,7 @@ __author__ = 'jarbas'
 
 class DisplayControlSkill(MycroftSkill):
     def __init__(self):
-        super(DisplayControlSkill, self).__init__(name="DisplayControlSkill")
+        super(DisplayControlSkill, self).__init__()
         self.log.info('Display Control Started')
         self.reload_skill = False
 
@@ -21,6 +23,14 @@ class DisplayControlSkill(MycroftSkill):
         super(DisplayControlSkill, self).initialize()
         self.load_data_files(dirname(__file__))
         self.display_service = DisplayService(self.emitter)
+
+        random_intent = IntentBuilder("RandomPicIntent").require(
+            "PictureKeyword").require("RandomKeyword").optionally("ShowKeyword").build()
+        self.register_intent(random_intent, self.handle_random)
+
+        display_intent = IntentBuilder("DisplayPicIntent").require(
+            "PictureKeyword").require("ShowKeyword").build()
+        self.register_intent(display_intent, self.handle_display)
 
         unset_fs_intent = IntentBuilder("UnsetPicFullscreenIntent").require(
             "PictureKeyword").require("UnsetKeyword").require(
@@ -72,6 +82,13 @@ class DisplayControlSkill(MycroftSkill):
 
         self.handle_start(Message("dummy"))
 
+    def handle_random(self, message):
+        pic = url_to_pic("https://unsplash.it/600/?random")
+        self.display_service.display([pic], message.data.get("utterance"))
+
+    def handle_display(self):
+        self.display_service.display()
+
     def handle_close(self, message):
         self.display_service.close()
 
@@ -89,13 +106,16 @@ class DisplayControlSkill(MycroftSkill):
 
     def handle_start(self, message):
         pic = dirname(__file__) + "/pixel jarbas.png"
-        self.display_service.display([pic], "start opencv display")
-        #self.display_service.reset()
+        self.display_service.display([pic], message.data.get("utterance"))
+        sleep(2)
+        self.display_service.reset()
 
     def handle_stop(self, message):
         utterance = message.data.get("utterance")
-        self.display_service.reset()
+        self.display_service.reset(utterance)
         self.display_service.close(utterance)
+
+    # NOT WORKING in services yet
 
     def handle_currently_displaying(self, message):
         return

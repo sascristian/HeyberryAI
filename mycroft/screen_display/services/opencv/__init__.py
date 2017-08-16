@@ -29,20 +29,23 @@ class OpenCVService(DisplayBackend):
         # image size
         self.width = 500
         self.height = 500
-        cv2.namedWindow("OpenCV Display")
+        self.fullscreen = False
 
     def _display(self, message=None):
         """
         Open file with opencv
         """
+        cv2.destroyWindow("OpenCV Display")
         logger.info(self.name + '_display')
         if len(self.pictures) == 0:
             logger.error("No picture to display")
+            self.clear()
             return
         path = self.pictures[self.index]
         self._is_Displaying = True
         image = cv2.imread(path)
-        image = imutils.resize(image, self.width, self.height)
+        if not self.fullscreen:
+            image = imutils.resize(image, self.width, self.height)
         cv2.imshow("OpenCV Display", image)
         cv2.waitKey(0)
 
@@ -55,13 +58,17 @@ class OpenCVService(DisplayBackend):
         self.change_fullscreen(False)
 
     def change_fullscreen(self, value=True):
-        cv2.destroyAllWindows()
+
+        self.fullscreen = value
+        # TODO fix this, not working, breaks windows after
+        return
+        cv2.destroyWindow("OpenCV Display")
         if value:
             cv2.namedWindow("OpenCV Display", cv2.WND_PROP_FULLSCREEN)
             cv2.setWindowProperty("OpenCV Display", cv2.WND_PROP_FULLSCREEN,
                                   cv2.WINDOW_FULLSCREEN)
         else:
-            cv2.namedWindow("OpenCV Display", cv2.WINDOW_AUTOSIZE)
+            cv2.namedWindow("OpenCV Display")
         self.display()
 
     def add_pictures(self, picture_list):
@@ -108,6 +115,8 @@ class OpenCVService(DisplayBackend):
         """
         # Create a black image
         image = np.zeros((512, 512, 3), np.uint8)
+        if not self.fullscreen:
+            image = imutils.resize(image, self.width, self.height)
         cv2.imshow("OpenCV Display", image)
         self._is_Displaying = False
         cv2.waitKey(0)
@@ -115,7 +124,8 @@ class OpenCVService(DisplayBackend):
     def close(self):
         logger.info('OpenCVDisplayStop')
         self.reset()
-        cv2.destroyAllWindows()
+        self._is_Displaying = False
+        cv2.destroyWindow("OpenCV Display")
 
 
 def load_service(base_config, emitter):

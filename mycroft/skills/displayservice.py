@@ -21,14 +21,17 @@ class DisplayService():
         """
         self.info = message.data
 
-    def display(self, file_path_list, utterance=''):
+    def display(self, file_path_list=None, utterance=''):
         """ Start display.
 
             Args:
-                file_path: track or list of paths
+                file_path_list: list of paths
                 utterance: forward utterance for further processing by the
                            audio service.
         """
+        if file_path_list is None:
+            file_path_list = []
+
         if not isinstance(file_path_list, list):
             raise ValueError
 
