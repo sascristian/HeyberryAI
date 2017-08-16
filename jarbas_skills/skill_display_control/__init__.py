@@ -42,7 +42,7 @@ class DisplayControlSkill(MycroftSkill):
             "FullscreenKeyword").build()
         self.register_intent(set_fs_intent, self.handle_set_fullscreen)
 
-        width_intent = IntentBuilder("SetPicHeightIntent").require(
+        width_intent = IntentBuilder("SetPicWidthIntent").require(
             "PictureKeyword").require("SetKeyword").require(
             "TargetKeyword").require("WidthKeyword").build()
         self.register_intent(width_intent, self.handle_set_width)
