@@ -559,9 +559,16 @@ if __name__ == '__main__':
     # server
     host = config.get("host", "127.0.0.1")
     port = config.get("port", 5678)
+    max_connections = config.get("max_connections", -1)
     adress = u"ws://" + host + u":" + str(port)
-    cert = config.get("cert_file", dirname(__file__)+'/certs/jarbas_server.crt')
-    key = config.get("key_file", dirname(__file__)+'/certs/jarbas_server.key')
+    cert = config.get("cert_file",
+                      dirname(__file__) + '/certs/jarbas_server.crt')
+    key = config.get("key_file", dirname(__file__) + '/certs/jarbas_server.key')
+
+    factory = MyServerFactory(adress)
+    factory.protocol = MyServerProtocol
+    if max_connections >= 0:
+        factory.setProtocolOptions(maxConnections=max_connections)
 
     if not exists(key) or not exists(cert):
         logger.error("ssl keys dont exist, creating self signed")
@@ -572,15 +579,13 @@ if __name__ == '__main__':
         key = dir + "/" + name + ".key"
         logger.info("key created at: " + key)
         logger.info("crt created at: " + cert)
+        # update config with new keys
+        config["cert_file"] = cert
+        config["key_file"] = key
+        factory.config_update({"jarbas_server": config}, True)
 
     # SSL server context: load server key and certificate
     contextFactory = ssl.DefaultOpenSSLContextFactory(key, cert)
-    factory = MyServerFactory(adress)
-    factory.protocol = MyServerProtocol
-    # update config with new keys
-    config["cert_file"] = cert
-    config["key_file"] = key
-    factory.config_update(config, True)
-    # factory.setProtocolOptions(maxConnections=2)
+
     reactor.listenSSL(port, factory, contextFactory)
     reactor.run()
