@@ -127,3 +127,10 @@ fi
 
 # install pygtk for desktop_launcher skill
 "${TOP}/scripts/install-pygtk.sh"
+
+
+# get geckodriver to usr/bin for browser service
+wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
+tar -xvzf geckodriver-v0.18.0-linux64.tar.gz
+chmod +x geckodriver
+sudo mv geckodriver /usr/local/bin/
