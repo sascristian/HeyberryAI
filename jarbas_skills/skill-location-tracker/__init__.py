@@ -83,11 +83,16 @@ class LocationTrackerSkill(MycroftSkill):
             country = config.get("city", {}).get( "region").get("country").get("name", "unknow country")
             self.speak("your configuration says you are in " + city + " in " +
                        country)
+            self.set_context('Location', city + ', ' + country)
 
     def handle_update_intent(self, message):
         if connected():
             self.speak("updating location from ip address")
-            self.get_location("ip")
+            config = self.get_location("ip")
+            city = config.get("city", {}).get("name", "unknown city")
+            country = config.get("city", {}).get("region").get("country").get(
+                "name", "unknow country")
+            self.set_context('Location', city + ', ' + country)
         else:
             self.speak("Cant do that offline")
 
@@ -127,10 +132,10 @@ class LocationTrackerSkill(MycroftSkill):
         if source is None:
             source = self.source
         if source == "ip":
-            self.from_ip()
+            return self.from_ip()
         else:
             self.log.info("Failed to retrieve location data from " + source)
-        return
+        return {}
 
 
 def create_skill():

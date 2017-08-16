@@ -90,6 +90,9 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - message_context update methods added to MycroftSkill
             - update_config method added to MycroftSkill
             - screen display service
+            - speech messages set adapt context for LastSpeech and every metadata field
+            - recognizer_loop:speak message type
+            - ConfigurationManager.save checks for config existence before loading it
 
             # temporary changes
             - no msm
