@@ -129,6 +129,32 @@ class ServiceBackend(object):
         return self.result
 
 
+class PornDetect(ServiceBackend):
+    def __init__(self, emitter=None, timeout=10,
+                 waiting_messages=["porn.recognition.result"],
+                 logger=None):
+        super(PornDetect, self).__init__(name="PornDetect",
+                                         emitter=emitter,
+                                         timeout=timeout,
+                                         waiting_messages=waiting_messages,
+                                         logger=logger)
+
+    def is_porn(self, picture_path, context=None):
+        self.send_request("porn.recognition.request", {"picture_path":
+                                                           picture_path},
+                          message_context=context)
+        self.wait("porn.recognition.result")
+        return self.result.get("predictions")
+
+    def is_porn_from_url(self, picture_url, context=None):
+        picture_path = url_to_pic(picture_url)
+        self.send_request("porn.recognition.request", {"picture_path":
+                                                           picture_path},
+                          message_context=context)
+        self.wait("porn.recognition.result")
+        return self.result.get("predictions")
+
+
 class LILACSstorageService(ServiceBackend):
     def __init__(self, emitter=None, timeout=10, waiting_messages=None,
                  logger=None):
