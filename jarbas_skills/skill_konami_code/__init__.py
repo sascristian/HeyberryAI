@@ -21,8 +21,8 @@ class KonamiCodeSkill(MycroftSkill):
 
     def initialize(self):
         self.intent_parser = IntentParser(self.emitter)
-        self.build_intents()
-        self.build_intent_layers()
+        #self.build_intents()
+        #self.build_intent_layers()
 
     def build_intents(self):
 
@@ -105,7 +105,7 @@ class KonamiCodeSkill(MycroftSkill):
             # no longer inside this conversation
             # wrong cheat code entry
             self.log.info("Wrong cheat code entry, reseting layers")
-            self.layers.reset()
+            #self.layers.reset()
         return False
 
 

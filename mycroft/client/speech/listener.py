@@ -177,6 +177,10 @@ class AudioConsumer(Thread):
             LOG.error("Speech Recognition could not understand audio")
             self.__speak(mycroft.dialog.get("i didn't catch that",
                                             self.stt.lang))
+            payload = {
+                'utterance': "Speech Recognition could not understand audio"
+            }
+            self.emitter.emit("recognizer_loop:speak", payload)
         if text:
             # STT succeeded, send the transcribed speech on for processing
             payload = {

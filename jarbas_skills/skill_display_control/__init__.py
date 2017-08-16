@@ -18,16 +18,28 @@ class DisplayControlSkill(MycroftSkill):
         self.log.info('Display Control Started')
         self.reload_skill = False
         self.default_pic = dirname(__file__) + "/pixel jarbas.png"
+        self.height = 500
+        self.width = 500
 
     def initialize(self):
         self.log.info('initializing Display Control Skill')
         super(DisplayControlSkill, self).initialize()
         self.load_data_files(dirname(__file__))
         self.display_service = DisplayService(self.emitter)
+        self.display_service.set_width(self.width)
+        self.display_service.set_height(self.height)
 
         random_intent = IntentBuilder("RandomPicIntent").require(
             "PictureKeyword").require("RandomKeyword").optionally("ShowKeyword").build()
         self.register_intent(random_intent, self.handle_random)
+
+        increase_intent = IntentBuilder("DisplayIncreaseIntent").require(
+            "PictureKeyword").require("IncreaseKeyword").build()
+        self.register_intent(increase_intent, self.handle_increase)
+
+        decrease_intent = IntentBuilder("DisplaydecreaseIntent").require(
+            "PictureKeyword").require("DecreaseKeyword").build()
+        self.register_intent(decrease_intent, self.handle_decrease)
 
         display_intent = IntentBuilder("DisplayPicIntent").require(
             "PictureKeyword").require("ShowKeyword").build()
@@ -91,7 +103,7 @@ class DisplayControlSkill(MycroftSkill):
 
     def handle_display(self, message):
         self.speak("Displaying")
-        self.display_service.display(utterance=message.data.get("utterance"))
+        self.display_service.display(reset=False, utterance=message.data.get("utterance"))
 
     def handle_close(self, message):
         self.speak("Closing display")
@@ -108,6 +120,8 @@ class DisplayControlSkill(MycroftSkill):
     def handle_reset(self, message):
         self.speak("Reseting picture list and window size")
         self.display_service.reset(utterance=message.data.get("utterance"))
+        self.display_service.set_width(500, message.data.get("utterance"))
+        self.display_service.set_height(500, message.data.get("utterance"))
 
     def handle_clear(self, message):
         self.speak("Clearing Display")
@@ -115,10 +129,8 @@ class DisplayControlSkill(MycroftSkill):
 
     def handle_start(self, message):
         self.speak("Starting Display")
-        self.display_service.display([self.default_pic],
+        self.display_service.display([self.default_pic], reset=False,
                                      utterance=message.data.get("utterance"))
-        sleep(5)
-        self.display_service.reset(utterance=message.data.get("utterance"))
 
     def handle_stop(self, message):
         self.speak("Closing all displays")
@@ -126,10 +138,23 @@ class DisplayControlSkill(MycroftSkill):
         self.display_service.reset(utterance)
         self.display_service.close(utterance)
 
-    # NOT WORKING in services yet
+    def handle_decrease(self, message):
+        self.speak("Decreasing Display size")
+        h_ammount = self.height * 30 / 100
+        w_ammount = self.width * 30 / 100
+        self.width = self.width + w_ammount
+        self.height = self.height + h_ammount
+        self.display_service.set_width(self.width, message.data.get("utterance"))
+        self.display_service.set_height(self.height, message.data.get("utterance"))
+        self.display_service.display(reset=False)
 
-    def handle_currently_displaying(self, message):
-        return
+    def handle_increase(self, message):
+        self.speak("Increasing Display size")
+        h_ammount = self.height * 30 / 100
+        w_ammount = self.width * 30 / 100
+        self.display_service.set_width(self.width + w_ammount, message.data.get("utterance"))
+        self.display_service.set_height(self.height + h_ammount, message.data.get("utterance"))
+        self.display_service.display(reset=False)
 
     def handle_set_width(self, message):
         width = message.data.get("TargetKeyword", 500)
@@ -138,6 +163,7 @@ class DisplayControlSkill(MycroftSkill):
             return
         self.speak("Changing Display width to " + width)
         self.display_service.set_width(int(width), message.data.get("utterance"))
+        self.display_service.display(reset=False)
 
     def handle_set_height(self, message):
         height = message.data.get("TargetKeyword", 500)
@@ -147,6 +173,12 @@ class DisplayControlSkill(MycroftSkill):
         self.speak("Changing Display heigth to " + height)
         self.display_service.set_height(int(height), message.data.get(
             "utterance"))
+        self.display_service.display(reset=False)
+
+    # NOT WORKING in services yet
+
+    def handle_currently_displaying(self, message):
+        return
 
     def handle_set_fullscreen(self, message):
         self.speak("Setting fullscreen")

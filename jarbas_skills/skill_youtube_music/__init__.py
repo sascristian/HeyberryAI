@@ -30,7 +30,7 @@ import subprocess
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-#from mycroft.skills.audioservice import AudioService
+from mycroft.skills.audioservice import AudioService
 
 __author__ = 'jarbas'
 
@@ -62,7 +62,7 @@ class YoutubeSkill(MycroftSkill):
     def initialize(self):
 
         # initialize audio service
-        #self.audio_service = AudioService(self.emitter)
+        self.audio_service = AudioService(self.emitter)
 
         play_song_intent = IntentBuilder("PlayYoutubeIntent").require("Title").build()
         self.register_intent(play_song_intent, self.handle_play_song_intent)
@@ -84,7 +84,7 @@ class YoutubeSkill(MycroftSkill):
         if "fbchat_" in target:
             self.speak("Here is youtube link", metadata={"url": videos[0]})
         else:
-            #self.audio_service.play(videos, utterance + " in vlc")
+            self.audio_service.play(videos, utterance + " in vlc")
             command = ['cvlc']
             command.append('--no-video') # disables video output.
             command.append('--play-and-exit') # close cvlc after play

@@ -51,11 +51,9 @@ class OpenCVService(DisplayBackend):
 
     def change_width(self, value=500):
         self.width = int(value)
-        self.display()
 
     def change_height(self, value=500):
         self.height = int(value)
-        self.display()
 
     def change_fullscreen(self, value=True):
         return
@@ -117,8 +115,6 @@ class OpenCVService(DisplayBackend):
             image = imutils.resize(image, self.width, self.height)
         cv2.imshow("OpenCV Display", image)
         self._is_Displaying = False
-        self.width = 500
-        self.height = 500
         cv2.waitKey(0)
 
     def close(self):
@@ -126,6 +122,7 @@ class OpenCVService(DisplayBackend):
         self.reset()
         self._is_Displaying = False
         cv2.destroyWindow("OpenCV Display")
+        cv2.destroyAllWindows()
 
 
 def load_service(base_config, emitter):
