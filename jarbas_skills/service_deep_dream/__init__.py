@@ -20,7 +20,8 @@ from os.path import dirname
 import tensorflow as tf
 from PIL import Image
 
-from mycroft.util.jarbas_services import DreamService as DD
+from jarbas_utils.jarbas_services import DreamService as DD
+from mycroft.skills.displayservice import DisplayService
 
 __author__ = 'jarbas'
 
@@ -491,7 +492,7 @@ class DreamService(MycroftSkill):
             .require("dream").optionally("Subject").optionally("Nickname").build()
         self.register_intent(dream_intent,
                              self.handle_dream_intent)
-
+        self.display_service = DisplayService(self.emitter)
 
 
     def handle_dream_intent(self, message):
@@ -548,6 +549,8 @@ class DreamService(MycroftSkill):
             data = self.client.upload_from_path(result)
             link = data["link"]
             self.speak("Here is what i dreamed", metadata={"url": link, "file": result, "elapsed_time": elapsed_time})
+            self.display_service.display([result], utterance=message.data.get(
+                "utterance"))
         else:
             self.speak("I could not dream this time")
 

@@ -14,6 +14,7 @@ from jarbas_utils.jarbas_services import VisionService, ObjectRecogService, \
     ImageRecogService
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
+from mycroft.skills.displayservice import DisplayService
 
 __author__ = "jarbas"
 
@@ -42,6 +43,8 @@ class VisionSkill(MycroftSkill):
         self.emitter.on("vision.feed.request", self.handle_feed_request)
         self.emitter.on("vision.faces.request", self.handle_face_request)
         self.build_intents()
+
+        self.display_service = DisplayService(self.emitter)
 
     def build_intents(self):
 
@@ -213,7 +216,8 @@ class VisionSkill(MycroftSkill):
     def handle_what_do_you_see_intent(self, message):
         self.process_frame()
         path = self.save_feed()
-        #self.display_service.show(feed_path)
+        self.display_service.display([path],
+                                     utterance=message.data.get("utterance"))
         self.speak_dialog("vision")
         self.emit_result(path, False)
 
@@ -225,7 +229,8 @@ class VisionSkill(MycroftSkill):
         feed = vision.get_feed()
         #faces = vision.get_faces()
         self.speak("feed_data: " + str(data))
-
+        self.display_service.display([feed],
+                                     utterance=message.data.get("utterance"))
         # get tensor flow object recog api objects
         self.speak('Testing tensorflow object recognition')
         objrecog = ObjectRecogService(self.emitter)

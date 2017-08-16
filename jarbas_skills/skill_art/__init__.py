@@ -6,6 +6,7 @@ from os.path import dirname
 from jarbas_utils.art import psy_art
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
+from mycroft.skills.displayservice import DisplayService
 
 __author__ = 'jarbas'
 
@@ -46,11 +47,24 @@ class ArtSkill(MycroftSkill):
         self.register_intent(psy_intent, self.handle_psy_pic_intent)
 
         self.emitter.on("art.request", self.handle_psy_pic)
-
-    def handle_psy_pic_intent(self, message):
-        self.emitter.emit(Message("art.request", {}, self.message_context))
+        self.display_service = DisplayService(self.emitter)
 
     def handle_psy_pic(self, message):
+        try:
+            pic = psy_art(self.psypath, 1, message.data.get("name"))[0]
+            link = None
+            if pic is not None:
+                if self.client is not None:
+                    data = self.client.upload_from_path(pic)
+                    link = data["link"]
+                else:
+                    link = None
+            self.emitter.emit(Message("art.result", {"file": pic, "url": link},
+                                      self.message_context))
+        except Exception as e:
+            self.log.error(str(e))
+
+    def handle_psy_pic_intent(self, message):
         try:
 
             pic = psy_art(self.psypath, 1, message.data.get("name"))[0]
@@ -61,6 +75,7 @@ class ArtSkill(MycroftSkill):
                     link = data["link"]
                 else:
                     link = None
+                self.display_service.display([pic],utterance=message.data.get("utterance"))
                 self.speak("Here is what i created", metadata={"url": link, "file": pic})
             self.emitter.emit(Message("art.result", {"file": pic, "url": link}, self.message_context))
         except Exception as e:

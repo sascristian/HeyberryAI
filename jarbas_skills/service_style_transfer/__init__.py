@@ -16,6 +16,7 @@ from mycroft.util.jarbas_services import StyleTransferService
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft import MYCROFT_ROOT_PATH
+from mycroft.skills.displayservice import DisplayService
 
 __author__ = 'jarbas'
 
@@ -79,6 +80,7 @@ class StyleTransferSkill(MycroftSkill):
             .require("styletransfer").build()
         self.register_intent(style_transfer_intent,
                              self.handle_style_transfer_intent)
+        self.display_service = DisplayService(self.emitter)
 
     def handle_receive_transfer_result(self, message):
         self.log.info(
@@ -99,6 +101,8 @@ class StyleTransferSkill(MycroftSkill):
         time = transfer.get_result().get("elapsed_time")
         self.speak("Style transfer test complete in " + str(time) + " seconds",
                    metadata={"file": file, "url": url, "elapsed_time": time})
+        self.display_service.display([file],
+                                     utterance=message.data.get("utterance"))
 
     def handle_style_transfer(self, message):
         self.log.info("Style Transfer request")

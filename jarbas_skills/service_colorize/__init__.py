@@ -13,6 +13,7 @@ from os.path import dirname, exists
 
 from jarbas_models.tf_colorization.net import Net
 from jarbas_models.tf_colorization.utils import *
+from mycroft.skills.displayservice import DisplayService
 
 from imgurpython import ImgurClient
 
@@ -52,6 +53,7 @@ class ColorizationService(MycroftSkill):
             "BlackWhiteKeyword").build()
         self.register_intent(intent,
                              self.handle_colorize_intent)
+        self.display_service = DisplayService(self.emitter)
 
     def handle_colorize_intent(self, message):
         pic = message.data.get("picture_url")
@@ -65,6 +67,8 @@ class ColorizationService(MycroftSkill):
         path, url = self.colorize([pic])
         self.speak("Here is your colorized picture ", metadata={"url": url,
                                                                 "file": path})
+        self.display_service.display([path, path.replace(".jpg", "_bw.jpg")],
+                                     utterance=message.data.get("utterance"))
 
     def handle_colorize_request(self, message):
         url = message.data.get("picture_url")
@@ -74,13 +78,16 @@ class ColorizationService(MycroftSkill):
             pic = message.data.get("picture_path")
         file, url = self.colorize([pic])
         self.emitter.emit(Message("colorization.result",
-                                  {"url": url, "file": file},
+                                  {"url": url, "file": file,
+                                   "original": file.replace(".jpg", "_bw.jpg")},
                                   self.get_context(message.context)))
 
     def colorize(self, file_path, name=None):
         img = cv2.imread(file_path)
         if len(img.shape) == 3:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        path = dirname(__file__) + "/" + name + "_bw.jpg"
+        imsave(path, img)
 
         img = img[None, :, :, None]
         data_l = (img.astype(dtype=np.float32)) / 255.0 * 100 - 50

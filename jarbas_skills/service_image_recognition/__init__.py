@@ -41,7 +41,8 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
-from mycroft.util.jarbas_services import ImageRecogService
+from jarbas_utils.jarbas_services import ImageRecogService
+
 __author__ = 'jarbas'
 
 
@@ -70,6 +71,7 @@ class ImageRecognitionSkill(MycroftSkill):
             .require("imgstatus").build()
         self.register_intent(image_recog_status_intent,
                              self.handle_img_recog_intent)
+
 
     def maybe_download_and_extract(self):
         # """Download and extract model tar file."""

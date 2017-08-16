@@ -29,6 +29,7 @@ from pyvirtualdisplay import Display
 import logging
 from time import sleep
 from urllib import urlretrieve
+from mycroft.skills.displayservice import DisplayService
 # disable logs from easyprocess, or there is too much spam from display init
 logging.getLogger("easyprocess").setLevel(logging.WARNING)
 # disable selenium logger
@@ -238,6 +239,7 @@ class BrowserService(MycroftSkill):
             .require("inspirobot").build()
         self.register_intent(inspirobot_intent,
                              self.handle_inspirobot_intent)
+        self.display_service = DisplayService(self.emitter)
 
     def handle_ask_cleverbot_intent(self, message):
         ask = message.data.get("Ask")
@@ -319,7 +321,7 @@ class BrowserService(MycroftSkill):
                 sleep(0.5)
             else:
                 sucess = True
-        if not sucess:
+        if not sucess or not src:
             self.speak("could not get inspirobot generated picture")
             return
 
@@ -329,6 +331,8 @@ class BrowserService(MycroftSkill):
         urlretrieve(src, out_path.replace(" ", "_"))
 
         self.speak("Here is your Inspirobot picture", metadata={"file":out_path, "url":src})
+        self.display_service.display([out_path],
+                                     utterance=message.data.get("utterance"))
         # clean the used elements for this session
         browser.reset_elements()
         # optionally close the browser, but dont or other services may crash or take longer

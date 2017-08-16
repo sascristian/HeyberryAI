@@ -18,7 +18,7 @@
 from adapt.intent import IntentBuilder
 
 from mycroft.skills.core import MycroftSkill
-from mycroft.util.jarbas_services import ObjectRecogService
+from jarbas_utils.jarbas_services import ObjectRecogService
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
 from mycroft import MYCROFT_ROOT_PATH as root_path
@@ -28,7 +28,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 from os.path import dirname
-
+from mycroft.skills.displayservice import DisplayService
 sys.path.append(dirname(__file__))
 
 import label_map_util
@@ -75,6 +75,7 @@ def detect_objects(image_np, sess, detection_graph):
         [boxes, scores, classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
 
+    # TODO re implemte this now with display screen
     # Visualization of the results of a detection.
     # vis_util.visualize_boxes_and_labels_on_image_array(
     #    image_np,
@@ -99,6 +100,7 @@ class ObjectRecognitionSkill(MycroftSkill):
 
         self.emitter.on("object.recognition.request",
                         self.handle_recognition_request)
+        self.display_service = DisplayService(self.emitter)
 
     def handle_view_objects_intent(self, message):
         self.speak('Testing object recognition')
@@ -110,6 +112,8 @@ class ObjectRecognitionSkill(MycroftSkill):
         for object in labels:
             count = labels[object]
             ut += str(count) + " " + object + " \n"
+        self.display_service.display([dirname(__file__) + "/test.jpg"],
+                                     utterance=message.data.get("utterance"))
         self.speak(ut)
 
     def handle_recognition_request(self, message):
