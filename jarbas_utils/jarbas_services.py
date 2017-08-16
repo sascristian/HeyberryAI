@@ -129,6 +129,32 @@ class ServiceBackend(object):
         return self.result
 
 
+class Colorization(ServiceBackend):
+    def __init__(self, emitter=None, timeout=10,
+                 waiting_messages=["colorization.result"],
+                 logger=None):
+        super(Colorization, self).__init__(name="Colorization",
+                                         emitter=emitter,
+                                         timeout=timeout,
+                                         waiting_messages=waiting_messages,
+                                         logger=logger)
+
+    def colorize(self, picture_path, context=None):
+        self.send_request("colorization.request", {"picture_path":
+                                                           picture_path},
+                          message_context=context)
+        self.wait("colorization.result")
+        return file
+
+    def colorize_from_url(self, picture_url, context=None):
+        picture_path = url_to_pic(picture_url)
+        self.send_request("colorization.request", {"picture_path":
+                                                           picture_path},
+                          message_context=context)
+        self.wait("colorization.result")
+        return file
+
+
 class PornDetect(ServiceBackend):
     def __init__(self, emitter=None, timeout=10,
                  waiting_messages=["porn.recognition.result"],

@@ -1,0 +1,109 @@
+from adapt.intent import IntentBuilder
+from mycroft.skills.core import MycroftSkill
+from mycroft.messagebus.message import Message
+from jarbas_utils.jarbas_services import url_to_pic
+from mycroft import MYCROFT_ROOT_PATH as root_path
+
+import tensorflow as tf
+from skimage.io import imsave
+from skimage.transform import resize
+import cv2
+import time
+from os.path import dirname, exists
+
+from jarbas_models.tf_colorization.net import Net
+from jarbas_models.tf_colorization.utils import *
+
+from imgurpython import ImgurClient
+
+__author__ = 'jarbas'
+
+
+class ColorizationService(MycroftSkill):
+
+    def __init__(self):
+        super(ColorizationService, self).__init__()
+        self.reload_skill = False
+        self.model_path = root_path + '/jarbas_models/tf_colorization/models/model.ckpt'
+        if not exists(self.model_path):
+            # TODO download model
+            self.log.error("no model for colorize, download from https://drive.google.com/file/d/0B-yiAeTLLamRWVVDQ1VmZ3BxWG8/view")
+        try:
+            client_id = self.config_core.get("APIS")["ImgurKey"]
+            client_secret = self.config_core.get("APIS")["ImgurSecret"]
+        except:
+            if self.config is not None:
+                client_id = self.config.get("ImgurKey")
+                client_secret = self.config.get("ImgurSecret")
+            else:
+                # TODO throw error
+                client_id = 'xx'
+                client_secret = 'yyyyyyyyy'
+        self.client = ImgurClient(client_id, client_secret)
+
+
+    def initialize(self):
+        self.emitter.on("colorization.request",
+                        self.handle_colorize_request)
+
+        intent = IntentBuilder("ColorizeIntent") \
+            .require("ColorizeKeyword").optionally(
+            "picture_path").optionally("picture_url").optionally(
+            "BlackWhiteKeyword").build()
+        self.register_intent(intent,
+                             self.handle_colorize_intent)
+
+    def handle_colorize_intent(self, message):
+        pic = message.data.get("picture_url")
+        if not pic:
+            pic = message.data.get("picture_path")
+            if not pic:
+                pic = url_to_pic("https://unsplash.it/600")
+        else:
+            pic = url_to_pic(pic)
+
+        path, url = self.colorize([pic])
+        self.speak("Here is your colorized picture ", metadata={"url": url,
+                                                                "file": path})
+
+    def handle_colorize_request(self, message):
+        url = message.data.get("picture_url")
+        if url:
+            pic = url_to_pic(url)
+        else:
+            pic = message.data.get("picture_path")
+        file, url = self.colorize([pic])
+        self.emitter.emit(Message("colorization.result",
+                                  {"url": url, "file": file},
+                                  self.get_context(message.context)))
+
+    def colorize(self, file_path, name=None):
+        img = cv2.imread(file_path)
+        if len(img.shape) == 3:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        img = img[None, :, :, None]
+        data_l = (img.astype(dtype=np.float32)) / 255.0 * 100 - 50
+
+        # data_l = tf.placeholder(tf.float32, shape=(None, None, None, 1))
+        autocolor = Net(train=False)
+
+        conv8_313 = autocolor.inference(data_l)
+
+        saver = tf.train.Saver()
+        with tf.Session() as sess:
+            saver.restore(sess, self.model_path)
+            conv8_313 = sess.run(conv8_313)
+
+        img_rgb = decode(data_l, conv8_313, 2.63)
+        if name is None:
+            name = time.asctime().replace(" ", "_")
+        path = dirname(__file__) + "/" + name + ".jpg"
+        imsave(path, img_rgb)
+        data = self.client.upload_from_path(path)
+        url = data["link"]
+        return path, url
+
+
+def create_skill():
+    return ColorizationService()
