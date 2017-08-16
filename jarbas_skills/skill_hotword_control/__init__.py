@@ -52,6 +52,20 @@ class HotwordSkill(MycroftSkill):
 
     def build_intents(self):
 
+        intent = IntentBuilder("SoundWuWStatusIntent") \
+            .require("StatusKeyword") \
+            .require("SoundKeyword") \
+            .require("WuWKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_status_sound_wuw_intent)
+
+        intent = IntentBuilder("SaveWuWStatusIntent") \
+            .require("StatusKeyword") \
+            .require("SaveKeyword") \
+            .require("WuWKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_status_save_wuw_intent)
+
         intent = IntentBuilder("EnableSaveWuWIntent") \
             .require("EnableKeyword")\
             .require("SaveKeyword")\
@@ -322,6 +336,20 @@ class HotwordSkill(MycroftSkill):
         sleep(2)
         self.speak("enabled wake word sound")
 
+    def handle_status_save_wuw_intent(self, message):
+        listener = self.get_listener_config()
+        if listener.get("record_wake_words"):
+            self.speak("wake word saving enabled")
+        else:
+            self.speak("wake word saving disabled")
+
+    def handle_status_sound_wuw_intent(self, message):
+        sound = self.config_core.get("confirm_listening")
+        if sound:
+            self.speak("wake word sound enabled")
+        else:
+            self.speak("wake word sound disabled")
+
     def handle_demo_wuw_intent(self, message):
         self.speak("Check this demo on youtube")
         webbrowser.open("https://youtu.be/GIkBh0VFmbc")
@@ -370,7 +398,7 @@ class HotwordSkill(MycroftSkill):
     # send bus message to update all configs
     def update_configs(self, config):
         # change config message
-        self.config_update(config=config)
+        self.config_update(config=config, isSystem=True)
         sleep(1)
         self.get_listener_config()
         return True

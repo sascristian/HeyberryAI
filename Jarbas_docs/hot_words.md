@@ -106,10 +106,10 @@ example config, snowboy or pocketsphinx allowed
                      "stop":
                      {
                         "module":"snowboy",
-                        // play this sound on this hot word (omit for silence)
-                        "sound": "path/to/stop_sound.wav",
-                        // treat this like a full utterance
-                        "utterance": true,
+                        // play this sound on this hot word
+                        // (omit for silence)
+                        // send this utterance
+                        "utterance": "stop",
                         // start listening on this hot word
                         "listen": false,
                         "data":{
