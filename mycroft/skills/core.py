@@ -489,11 +489,8 @@ class MycroftSkill(object):
             config = {}
         if save:
             ConfigurationManager.save(config, isSystem)
-            self.emitter.emit(
-                Message("configuration.patch", {"config": config}))
-        else:
-            self.emitter.emit(
-                Message("configuration.patch", {"config": config}))
+        self.emitter.emit(
+            Message("configuration.patch", {"config": config}))
 
     def is_stop(self):
         passed_time = time.time() - self.stop_time

@@ -1,16 +1,16 @@
 from OpenSSL import crypto
 from socket import gethostname
-from os.path import exists, join, dirname
+from os.path import exists, join
+from os import mkdir
 
-CERT_FILE = "myapp.crt"
-KEY_FILE = "myapp.key"
-
-
-def create_self_signed_cert(cert_dir):
+def create_self_signed_cert(cert_dir, name="myapp"):
     """
     If datacard.crt and datacard.key don't exist in cert_dir, create a new
     self-signed cert and keypair and write them into that directory.
     """
+
+    CERT_FILE = name + ".crt"
+    KEY_FILE = name + ".key"
 
     if not exists(join(cert_dir, CERT_FILE)) \
             or not exists(join(cert_dir, KEY_FILE)):
@@ -33,9 +33,11 @@ def create_self_signed_cert(cert_dir):
         cert.set_pubkey(k)
         cert.sign(k, 'sha1')
 
+        if not exists(cert_dir):
+            mkdir(cert_dir)
         open(join(cert_dir, CERT_FILE), "wt").write(
             crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
         open(join(cert_dir, KEY_FILE), "wt").write(
             crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
 
-create_self_signed_cert(dirname(__file__)+"/certs")
+

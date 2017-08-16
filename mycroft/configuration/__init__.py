@@ -20,6 +20,7 @@ import inflection
 import re
 from genericpath import exists, isfile
 from os.path import join, dirname, expanduser
+from os import mkdir
 
 from mycroft.util.log import getLogger
 from mycroft.util.json_helper import load_commented_json
@@ -303,7 +304,14 @@ class ConfigurationManager(object):
         location = SYSTEM_CONFIG if is_system else USER_CONFIG
         try:
             LOG.info("Saving config")
-            loc_config = load_commented_json(location)
+            dir = location.replace("/mycroft.conf", "")
+            if not exists(dir):
+                mkdir(dir)
+            try:
+                loc_config = load_commented_json(location)
+            except:
+                loc_config = {}
+
             with open(location, 'w') as f:
                 config = loc_config.update(config)
                 json.dump(config, f)

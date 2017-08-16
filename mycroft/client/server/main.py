@@ -7,7 +7,7 @@ import logging
 import base64
 import json
 import time
-from os.path import dirname
+from os.path import dirname, exists
 from threading import Thread
 
 # websocket libs
@@ -30,7 +30,7 @@ from mycroft.skills.intent_service import IntentParser
 from mycroft.client.server.pgp import get_own_keys, encrypt_string, decrypt_string, generate_server_key, export_key, \
     import_key_from_ascii
 from mycroft.configuration import ConfigurationManager
-
+from mycroft.client.server.self_signed import create_self_signed_cert
 config = ConfigurationManager.get()
 config = config.get("jarbas_server", {})
 
@@ -141,6 +141,7 @@ class MyServerFactory(WebSocketServerFactory):
         if not encrypted.ok:
             key = generate_server_key(self.user, self.passwd)
             encrypted = encrypt_string(self.user, "Jarbas server key loaded")
+            self.public, self.private = get_own_keys(self.user)
 
         decrypted = decrypt_string(encrypted, self.passwd)
         if not decrypted.ok:
@@ -543,6 +544,13 @@ class MyServerFactory(WebSocketServerFactory):
                 return
         logger.error("Speak targeted to non existing client")
 
+    def config_update(self, config=None, save=False, isSystem=False):
+        if config is None:
+            config = {}
+        if save:
+            ConfigurationManager.save(config, isSystem)
+        self.emitter.emit(
+            Message("configuration.patch", {"config": config}))
 
 if __name__ == '__main__':
     # more logs
@@ -552,13 +560,27 @@ if __name__ == '__main__':
     host = config.get("host", "127.0.0.1")
     port = config.get("port", 5678)
     adress = u"ws://" + host + u":" + str(port)
-    cert = config.get("cert_file", dirname(__file__)+'/certs/myapp.crt')
-    key = config.get("key_file", dirname(__file__)+'/certs/myapp.key')
+    cert = config.get("cert_file", dirname(__file__)+'/certs/jarbas_server.crt')
+    key = config.get("key_file", dirname(__file__)+'/certs/jarbas_server.key')
+
+    if not exists(key) or not exists(cert):
+        logger.error("ssl keys dont exist, creating self signed")
+        dir = dirname(__file__) + "/certs"
+        name = key.split("/")[-1].replace(".key", "")
+        create_self_signed_cert(dir, name)
+        cert = dir + "/" + name + ".crt"
+        key = dir + "/" + name + ".key"
+        logger.info("key created at: " + key)
+        logger.info("crt created at: " + cert)
 
     # SSL server context: load server key and certificate
     contextFactory = ssl.DefaultOpenSSLContextFactory(key, cert)
     factory = MyServerFactory(adress)
     factory.protocol = MyServerProtocol
+    # update config with new keys
+    config["cert_file"] = cert
+    config["key_file"] = key
+    factory.config_update(config, True)
     # factory.setProtocolOptions(maxConnections=2)
     reactor.listenSSL(port, factory, contextFactory)
     reactor.run()
