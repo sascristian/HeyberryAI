@@ -26,35 +26,11 @@ LOGGER = getLogger(__name__)
 
 from mycroft.messagebus.message import Message
 from mycroft.skills.settings import SkillSettings
-
+from mycroft.configuration import ConfigurationManager
 from os.path import dirname
 import time, os
 
-default_forbidden_messages = ["incoming_file",
-                                            "image.classification.request",
-                                            "style.transfer.request",
-                                            "deep.dream.request",
-                                            "class.visualization.request",
-                                            "face.recognition.request",
-                                            "object.recognition.request"]
-default_forbidden_skills = ["control_center_skill", "LILACS_teach",
-                            "LILACS_feedback"]
-default_forbidden_intents = ["StyleTransferIntent",
-                                          "DreamIntent",
-                                          "DeepDrawIntent",
-                                          "ImageClassfyStatusIntent",
-                                          "TestObjectRecogIntent",
-                                          "FollowUserIntent",
-                                          "UnFollowUserIntent",
-                                          "PostTweetIntent",
-                                          "FbLikeRandomPhotoIntent",
-                                          "FbAddSuggestedFriendIntent",
-                                          "FbAddFriendsofFriendsIntent",
-                                          "FbBuildAboutMeIntent",
-                                          "FbLastOnlineIntent",
-                                          "FbChatPersonIntent",
-                                          "FbLikePhotosofPersonIntent"
-                                          ]
+server_config = ConfigurationManager.get().get("jarbas_server")
 
 
 class ClientUser():
@@ -62,6 +38,9 @@ class ClientUser():
         self.client_id = id
         self.name = name
         self.emitter = emitter
+        default_forbidden_messages = server_config.get("forbidden_messages", [])
+        default_forbidden_skills = server_config.get("forbidden_skills", [])
+        default_forbidden_intents = server_config.get("forbidden_intents", [])
         self.default_forbidden_messages = default_forbidden_messages
         self.default_forbidden_skills = default_forbidden_skills
         # TODO get parser skills names, not ids
@@ -81,11 +60,12 @@ class ClientUser():
     def init_user_settings(self, path=None):
         if path is None:
             path = dirname(__file__) + "/users"
+        self.settings = SkillSettings(path)
         # check if folders exist
         if not os.path.exists(path):
             os.makedirs(path)
         path += "/"+str(self.client_id) + ".json"
-        self.settings = SkillSettings(path)
+
         if self.client_id not in self.settings.keys():
             self.settings[self.client_id] = {}
 

@@ -117,6 +117,7 @@ class MyClientProtocol(WebSocketClientProtocol):
                 # TODO handle bad server
                 sys.exit()
             else:
+                logger.error("bad internal status: " + self.factory.status)
                 # not supposed to happen
                 # TODO handle bad server
                 sys.exit()

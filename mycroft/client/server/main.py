@@ -432,7 +432,7 @@ class MyServerFactory(WebSocketServerFactory):
 
             return
 
-        if skill in user_data["forbidden_skills"]:
+        if skill in user_data.get("forbidden_skills"):
             logger.warning("Skill " + skill + " is not allowed for " + user_data.get("nicknames", [client.peer])[0])
             self.send_message(client, "speak", {
                 "utterance": skill + " is not allowed for your account"},

@@ -39,6 +39,7 @@ class SelfDestructSkill(MycroftSkill):
         i = 5
         while i > 0:
             self.speak(str(i))
+            sleep(1)
             i -= 1
         self.speak("I'm sorry, im afraid i can't do that")
 

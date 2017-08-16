@@ -54,7 +54,8 @@ class CleverbotFallback(FallbackSkill):
         # register intents
         self.register_intent(off_intent, self.handle_chat_stop_intent)
         self.register_intent(on_intent, self.handle_chat_start_intent)
-        self.register_intent(ask_intent, self.handle_ask_Cleverbot_intent)
+        # using browser service for this (free)
+        #self.register_intent(ask_intent, self.handle_ask_Cleverbot_intent)
         self.register_intent(demo_intent, self.handle_talk_to_Cleverbot_intent)
 
     def handle_ask_Cleverbot_intent(self, message):

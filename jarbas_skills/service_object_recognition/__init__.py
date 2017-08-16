@@ -87,9 +87,9 @@ def detect_objects(image_np, sess, detection_graph):
     return image_np, boxes, scores, classes, num_detections
 
 
-class ObjectRecogSkill(MycroftSkill):
+class ObjectRecognitionSkill(MycroftSkill):
     def __init__(self):
-        super(ObjectRecogSkill, self).__init__(name="ObjectRecogSkill")
+        super(ObjectRecognitionSkill, self).__init__(name="ObjectRecogSkill")
 
     def initialize(self):
         view_objects_intent = IntentBuilder("TestObjectRecogIntent"). \
@@ -191,4 +191,4 @@ class ObjectRecogSkill(MycroftSkill):
 
 
 def create_skill():
-    return ObjectRecogSkill()
+    return ObjectRecognitionSkill()

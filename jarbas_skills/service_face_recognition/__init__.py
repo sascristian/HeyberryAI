@@ -4,15 +4,15 @@ import urllib
 from os.path import dirname
 from mycroft.skills.core import MycroftSkill
 from mycroft.messagebus.message import Message
-from mycroft.util.jarbas_services import FaceRecognitionService
+from jarbas_utils.jarbas_services import FaceRecognitionService
 
 __author__ = 'jarbas'
 
 
-class FaceRecService(MycroftSkill):
+class FaceRecognitionSkill(MycroftSkill):
 
     def __init__(self):
-        super(FaceRecService, self).__init__(name="FaceRecogSkill")
+        super(FaceRecognitionSkill, self).__init__()
         self.reload_skill = False
         self.known_faces = {}
         # load known faces
@@ -81,4 +81,4 @@ class FaceRecService(MycroftSkill):
 
 
 def create_skill():
-    return FaceRecService()
+    return FaceRecognitionSkill()
