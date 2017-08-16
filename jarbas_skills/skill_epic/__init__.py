@@ -59,7 +59,7 @@ class EPICSkill(MycroftSkill):
 
     def handle_about_epic_intent(self, message):
         self.display_service.display([dirname(__file__)+"/epic.jpg"],
-                                     message.data.get("utterance"))
+                                     utterance=message.data.get("utterance"))
         self.speak_dialog("aboutEPIC")
 
     def handle_epic_intent(self, message):

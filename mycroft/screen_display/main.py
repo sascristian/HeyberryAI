@@ -542,7 +542,7 @@ def _prev(message):
     prev(prefered_service)
 
 
-def display(file_path_list, prefered_service):
+def display(file_path_list, reset, prefered_service):
     global current
     logger.info('Display')
     # check if user requested a particular service
@@ -555,6 +555,9 @@ def display(file_path_list, prefered_service):
         service = default
     else:  # TODO Check if any other service can play the media
         return
+    if reset:
+        logger.info("Reseting service pic list")
+        service.reset()
     logger.info('Add picture paths: ' + str(file_path_list))
     service.add_pictures(file_path_list)
     logger.info('Displaying')
@@ -575,7 +578,7 @@ def _display(message):
     logger.info(message.data['file_list'])
 
     file_list = message.data['file_list']
-
+    reset = message.data.get("reset", True)
     # Find if the user wants to use a specific backend
     for s in services:
         logger.info(s.name)
@@ -585,7 +588,7 @@ def _display(message):
             break
     else:
         prefered_service = None
-    display(file_list, prefered_service)
+    display(file_list, reset, prefered_service)
 
 
 def clear(prefered_service):

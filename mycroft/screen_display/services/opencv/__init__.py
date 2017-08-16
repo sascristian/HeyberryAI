@@ -51,19 +51,16 @@ class OpenCVService(DisplayBackend):
 
     def change_width(self, value=500):
         self.width = int(value)
-        self.fullscreen = False
         self.display()
 
     def change_height(self, value=500):
         self.height = int(value)
-        self.fullscreen = False
         self.display()
 
     def change_fullscreen(self, value=True):
-
+        return
         self.fullscreen = value
         # TODO fix this, not working, breaks windows after
-        return
         cv2.destroyWindow("OpenCV Display")
         if value:
             cv2.namedWindow("OpenCV Display", cv2.WND_PROP_FULLSCREEN)
@@ -75,8 +72,7 @@ class OpenCVService(DisplayBackend):
 
     def add_pictures(self, picture_list):
         logger.info("Adding pictures to OpenCVDisplay")
-        for picture in picture_list:
-            self.pictures.insert(0, picture)
+        self.pictures.extend(picture_list)
 
     def display(self):
         logger.info('Call OpenCVDisplay')
@@ -109,6 +105,9 @@ class OpenCVService(DisplayBackend):
         """
         logger.info('Call OpenCVReset')
         self.index = 0
+        self.width = 500
+        self.height = 500
+        self.fullscreen = False
         self.pictures = []
 
     def clear(self):

@@ -17,6 +17,7 @@ class DisplayControlSkill(MycroftSkill):
         super(DisplayControlSkill, self).__init__()
         self.log.info('Display Control Started')
         self.reload_skill = False
+        self.default_pic = dirname(__file__) + "/pixel jarbas.png"
 
     def initialize(self):
         self.log.info('initializing Display Control Skill')
@@ -85,38 +86,39 @@ class DisplayControlSkill(MycroftSkill):
     def handle_random(self, message):
         self.speak("Displaying random picture")
         pic = url_to_pic("https://unsplash.it/600/?random")
-        self.display_service.display([pic], message.data.get("utterance"))
+        self.display_service.display([pic], utterance=message.data.get(
+            "utterance"))
 
-    def handle_display(self):
+    def handle_display(self, message):
         self.speak("Displaying")
-        self.display_service.display()
+        self.display_service.display(utterance=message.data.get("utterance"))
 
     def handle_close(self, message):
         self.speak("Closing display")
-        self.display_service.close()
+        self.display_service.close(utterance=message.data.get("utterance"))
 
     def handle_next(self, message):
         self.speak("Displaying next picture")
-        self.display_service.next()
+        self.display_service.next(utterance=message.data.get("utterance"))
 
     def handle_prev(self, message):
         self.speak("Displaying previous picture")
-        self.display_service.prev()
+        self.display_service.prev(utterance=message.data.get("utterance"))
 
     def handle_reset(self, message):
-        self.speak("Reseting picture list")
-        self.display_service.reset()
+        self.speak("Reseting picture list and window size")
+        self.display_service.reset(utterance=message.data.get("utterance"))
 
     def handle_clear(self, message):
         self.speak("Clearing Display")
-        self.display_service.clear()
+        self.display_service.clear(utterance=message.data.get("utterance"))
 
     def handle_start(self, message):
         self.speak("Starting Display")
-        pic = dirname(__file__) + "/pixel jarbas.png"
-        self.display_service.display([pic], message.data.get("utterance"))
-        sleep(2)
-        self.display_service.reset()
+        self.display_service.display([self.default_pic],
+                                     utterance=message.data.get("utterance"))
+        sleep(5)
+        self.display_service.reset(utterance=message.data.get("utterance"))
 
     def handle_stop(self, message):
         self.speak("Closing all displays")
