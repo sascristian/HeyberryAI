@@ -71,6 +71,22 @@ class DisplayService():
         self.emitter.emit(Message('mycroft.display.service.clear',
                                   data={'utterance': utterance}))
 
+    def set_fullscreen(self, active, utterance=""):
+        self.emitter.emit(Message('mycroft.display.service.fullscreen',
+                                  data={'utterance': utterance,
+                                        "active": active}))
+
+    def set_height(self, height=500, utterance=""):
+        """ Reset Display. """
+        self.emitter.emit(Message('mycroft.display.service.height',
+                                  data={'utterance': utterance,
+                                        "width": height}))
+
+    def set_width(self, width=500, utterance = ""):
+        """ Reset Display. """
+        self.emitter.emit(Message('mycroft.display.service.width',
+                                  data={'utterance': utterance, "width":width}))
+
     def reset(self, utterance = ""):
         """ Reset Display. """
         self.emitter.emit(Message('mycroft.display.service.reset',

@@ -51,24 +51,58 @@ class HotwordSkill(MycroftSkill):
         self.build_intents()
 
     def build_intents(self):
-        # TODO enable/disable record wake words flag intent
-        # TODO enable/disable listening sound flag
-        # TODO remove sound for hotword intent
+
+        intent = IntentBuilder("EnableSaveWuWIntent") \
+            .require("EnableKeyword")\
+            .require("SaveKeyword")\
+            .require("WuWKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_disable_save_wuw_intent)
+
+        intent = IntentBuilder("DisableSaveWuWIntent") \
+            .require("DisableKeyword")\
+            .require("SaveKeyword")\
+            .require("WuWKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_disable_save_wuw_intent)
+
+        intent = IntentBuilder("DisableHotWSoundIntent") \
+            .require("DisableKeyword")\
+            .require("SoundKeyword")\
+            .require("HotWKeyword")\
+            .require("TargetKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_disable_hot_sound_intent)
+
+        intent = IntentBuilder("EnableWuWSoundIntent") \
+            .require("EnableKeyword")\
+            .require("SoundKeyword")\
+            .require("WuWKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_enable_wuw_sound_intent)
+
+        intent = IntentBuilder("DisableWuWSoundIntent") \
+            .require("DisableKeyword")\
+            .require("SoundKeyword")\
+            .require("WuWKeyword") \
+            .build()
+        self.register_intent(intent, self.handle_disable_wuw_sound_intent)
 
         intent = IntentBuilder("CurrentWuWIntent") \
-               .require("CurrentKeyword").require("WuWKeyword") \
-               .build()
+            .require("CurrentKeyword")\
+            .require("WuWKeyword") \
+            .build()
         self.register_intent(intent, self.handle_current_wuw_intent)
 
         intent = IntentBuilder("AvailableWuWIntent") \
-            .require("AvailableKeyword").require("WuWKeyword") \
-            .optionally("TargetKeyword") \
+            .require("AvailableKeyword")\
+            .require("WuWKeyword") \
             .build()
         self.register_intent(intent, self.handle_available_wuw_intent)
 
         intent = IntentBuilder("AvailableHotWordsIntent") \
-            .require("AvailableKeyword").require("HotWKeyword") \
-            .optionally("TargetKeyword") \
+            .require("AvailableKeyword")\
+            .require("HotWKeyword") \
             .build()
         self.register_intent(intent, self.handle_available_hot_intent)
 
@@ -93,7 +127,7 @@ class HotwordSkill(MycroftSkill):
             .build()
         self.register_intent(intent, self.handle_disable_hot_intent)
 
-        intent = IntentBuilder("CreateotWIntent") \
+        intent = IntentBuilder("CreateHotWIntent") \
             .require("CreateKeyword") \
             .require("HotWKeyword") \
             .require("TargetKeyword") \
@@ -101,22 +135,26 @@ class HotwordSkill(MycroftSkill):
         self.register_intent(intent, self.handle_new_hotword_intent)
 
         intent = IntentBuilder("DemoHotWIntent") \
-            .require("DemoKeyword").require("HotWKeyword") \
+            .require("DemoKeyword")\
+            .require("HotWKeyword") \
             .build()
         self.register_intent(intent, self.handle_demo_wuw_intent)
 
         intent = IntentBuilder("PermanentHotWIntent") \
-            .require("PermanentKeyword").require("HotWKeyword") \
+            .require("PermanentKeyword")\
+            .require("HotWKeyword") \
             .build()
         self.register_intent(intent, self.handle_permanent_wuw_intent)
 
         intent = IntentBuilder("DemoWuWIntent") \
-            .require("DemoKeyword").require("WuWKeyword") \
+            .require("DemoKeyword")\
+            .require("WuWKeyword") \
             .build()
         self.register_intent(intent, self.handle_demo_wuw_intent)
 
         intent = IntentBuilder("PermanentWuWIntent") \
-            .require("PermanentKeyword").require("WuWKeyword") \
+            .require("PermanentKeyword")\
+            .require("WuWKeyword") \
             .build()
         self.register_intent(intent, self.handle_permanent_wuw_intent)
 

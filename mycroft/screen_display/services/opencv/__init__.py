@@ -29,6 +29,7 @@ class OpenCVService(DisplayBackend):
         # image size
         self.width = 500
         self.height = 500
+        cv2.namedWindow("OpenCV Display")
 
     def _display(self, message=None):
         """
@@ -42,9 +43,26 @@ class OpenCVService(DisplayBackend):
         self._is_Displaying = True
         image = cv2.imread(path)
         image = imutils.resize(image, self.width, self.height)
-        cv2.destroyAllWindows()
         cv2.imshow("OpenCV Display", image)
         cv2.waitKey(0)
+
+    def change_width(self, value=500):
+        self.width = value
+        self.change_fullscreen(False)
+
+    def change_height(self, value=500):
+        self.height = value
+        self.change_fullscreen(False)
+
+    def change_fullscreen(self, value=True):
+        cv2.destroyAllWindows()
+        if value:
+            cv2.namedWindow("OpenCV Display", cv2.WND_PROP_FULLSCREEN)
+            cv2.setWindowProperty("OpenCV Display", cv2.WND_PROP_FULLSCREEN,
+                                  cv2.WINDOW_FULLSCREEN)
+        else:
+            cv2.namedWindow("OpenCV Display", cv2.WINDOW_AUTOSIZE)
+        self.display()
 
     def add_pictures(self, picture_list):
         logger.info("Adding pictures to OpenCVDisplay")

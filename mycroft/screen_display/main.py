@@ -168,6 +168,9 @@ def load_services_callback():
     ws.on('mycroft.display.service.prev', _prev)
     ws.on('mycroft.display.service.next', _next)
     ws.on('mycroft.display.service.close', _close)
+    ws.on('mycroft.display.service.width', _width)
+    ws.on('mycroft.display.service.height', _height)
+    ws.on('mycroft.display.service.fullscreen', _fullscreen)
     ws.on('mycroft.display.service.add_pictures', _add_pictures)
     ws.on('mycroft.stop', _stop)
 
@@ -185,6 +188,123 @@ def _stop(message=None):
         current.stop()
         current = None
     logger.info('Stopped')
+
+
+def width(prefered_service, width=500):
+    global current
+    logger.info('Setting width')
+    # check if user requested a particular service
+    if prefered_service:
+        service = prefered_service
+    # check if default supports the uri
+    elif default:
+        logger.info("Using default backend")
+        logger.info(default.name)
+        service = default
+    else:  # TODO Check if any other service can play the media
+        return
+    service.change_width(width)
+    current = service
+
+
+def _width(message):
+    """
+        Handler for mycroft.display.service.unlock. Allow display after
+        a lock. Also  determines if the user requested a special service.
+
+        Args:
+            message: message bus message, not used but required
+    """
+    global services
+    logger.info('mycroft.display.service.width')
+    # Find if the user wants to use a specific backend
+    for s in services:
+        logger.info(s.name)
+        if s.name in message.data['utterance']:
+            prefered_service = s
+            logger.info(s.name + ' would be prefered')
+            break
+    else:
+        prefered_service = None
+    width(prefered_service, message.data.get("width", 500))
+
+
+def height(prefered_service, height=500):
+    global current
+    logger.info('Setting height')
+    # check if user requested a particular service
+    if prefered_service:
+        service = prefered_service
+    # check if default supports the uri
+    elif default:
+        logger.info("Using default backend")
+        logger.info(default.name)
+        service = default
+    else:  # TODO Check if any other service can play the media
+        return
+    service.change_height(height)
+    current = service
+
+
+def _height(message):
+    """
+        Handler for mycroft.display.service.unlock. Allow display after
+        a lock. Also  determines if the user requested a special service.
+
+        Args:
+            message: message bus message, not used but required
+    """
+    global services
+    logger.info('mycroft.display.service.height')
+    # Find if the user wants to use a specific backend
+    for s in services:
+        logger.info(s.name)
+        if s.name in message.data['utterance']:
+            prefered_service = s
+            logger.info(s.name + ' would be prefered')
+            break
+    else:
+        prefered_service = None
+    height(prefered_service, message.data.get("height", 500))
+
+
+def fullscreen(prefered_service):
+    global current
+    logger.info('Setting fullscreen')
+    # check if user requested a particular service
+    if prefered_service:
+        service = prefered_service
+    # check if default supports the uri
+    elif default:
+        logger.info("Using default backend")
+        logger.info(default.name)
+        service = default
+    else:  # TODO Check if any other service can play the media
+        return
+    service.change_fullscreen()
+    current = service
+
+
+def _fullscreen(message):
+    """
+        Handler for mycroft.display.service.unlock. Allow display after
+        a lock. Also  determines if the user requested a special service.
+
+        Args:
+            message: message bus message, not used but required
+    """
+    global services
+    logger.info('mycroft.display.service.fullscreen')
+    # Find if the user wants to use a specific backend
+    for s in services:
+        logger.info(s.name)
+        if s.name in message.data['utterance']:
+            prefered_service = s
+            logger.info(s.name + ' would be prefered')
+            break
+    else:
+        prefered_service = None
+    fullscreen(prefered_service)
 
 
 def unlock(prefered_service):

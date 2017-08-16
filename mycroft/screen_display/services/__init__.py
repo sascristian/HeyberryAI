@@ -67,6 +67,24 @@ class DisplayBackend():
         """
         pass
 
+    def change_fullscreen(self, value=True):
+        """
+           Unset Lock Flag so nothing else can display
+        """
+        pass
+
+    def change_height(self, value=500):
+        """
+           Unset Lock Flag so nothing else can display
+        """
+        pass
+
+    def change_width(self, value=500):
+        """
+           Unset Lock Flag so nothing else can display
+        """
+        pass
+
     def stop(self):
         """
             Stop display.
