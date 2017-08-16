@@ -67,9 +67,11 @@ class AIMLChatbotFallback(FallbackSkill):
         text = random.choice["Hello", "Do you believe in god", "lets chat",
                              "lets play a game", "are you a terminator",
                              "are you human", "are you alive", "do you love me", "are you evil"]
-        for i in range(0, 100):
+        i = 100
+        while i>0:
             text = self.ask_brain(text)
             self.speak(text)
+            i -= 1
 
     def handle_chat_start_intent(self, message):
         self.chat_mode = True

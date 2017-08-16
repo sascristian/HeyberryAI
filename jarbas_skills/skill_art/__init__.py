@@ -17,10 +17,7 @@ class ArtSkill(MycroftSkill):
         super(ArtSkill, self).__init__(name="ArtSkill")
         self.reload_skill = False
 
-        try:
-            self.psypath = self.config_core["database_path"] + "/pictures/psy"
-        except:
-            self.psypath = dirname(__file__) + "/psy"
+        self.psypath = dirname(__file__) + "/psy"
 
         # check if folders exist
         if not os.path.exists(self.psypath):

@@ -20,13 +20,7 @@ class EPICSkill(MycroftSkill):
     def __init__(self):
         super(EPICSkill, self).__init__(name="EPICSkill")
         self.save = True
-        try:
-            self.save_path = self.config_core["database_path"] + "/epic"
-        except:
-            try:
-                self.save_path = self.config["save_path"]
-            except:
-                self.save_path = os.path.dirname(__file__) + "/epic"
+        self.save_path = os.path.dirname(__file__) + "/epic"
 
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
