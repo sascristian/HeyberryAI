@@ -76,7 +76,6 @@ class OpenCVService(DisplayBackend):
 
     def display(self):
         logger.info('Call OpenCVDisplay')
-        self.index = 0
         self.emitter.emit(Message('mycroft.display.service.OpenCV'))
 
     def next(self):
@@ -105,8 +104,6 @@ class OpenCVService(DisplayBackend):
         """
         logger.info('Call OpenCVReset')
         self.index = 0
-        self.width = 500
-        self.height = 500
         self.fullscreen = False
         self.pictures = []
 
@@ -120,6 +117,8 @@ class OpenCVService(DisplayBackend):
             image = imutils.resize(image, self.width, self.height)
         cv2.imshow("OpenCV Display", image)
         self._is_Displaying = False
+        self.width = 500
+        self.height = 500
         cv2.waitKey(0)
 
     def close(self):
