@@ -50,12 +50,14 @@ class OpenCVService(DisplayBackend):
         cv2.waitKey(0)
 
     def change_width(self, value=500):
-        self.width = value
-        self.change_fullscreen(False)
+        self.width = int(value)
+        self.fullscreen = False
+        self.display()
 
     def change_height(self, value=500):
-        self.height = value
-        self.change_fullscreen(False)
+        self.height = int(value)
+        self.fullscreen = False
+        self.display()
 
     def change_fullscreen(self, value=True):
 
