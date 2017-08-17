@@ -433,6 +433,9 @@ class MycroftSkill(object):
                 'expect_response': expect_response,
                 "metadata": metadata}
         self.emitter.emit(Message("speak", data, self.get_context(message_context)))
+        self.set_context('Last_Speech', utterance)
+        for field in metadata:
+            self.set_context(field, metadata[field])
 
     def speak_dialog(self, key, data=None, expect_response=False, metadata=None, message_context=None):
         if message_context is None:

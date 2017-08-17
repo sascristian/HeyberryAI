@@ -6,6 +6,7 @@ import sys
 sys.path.append(dirname(__file__))
 
 from mycroft.skills.intent_service import IntentParser, IntentLayers
+from mycroft.messagebus.message import Message
 
 __author__ = 'jarbas'
 
@@ -15,17 +16,36 @@ logger = getLogger(__name__)
 class KonamiCodeSkill(MycroftSkill):
     def __init__(self):
         super(KonamiCodeSkill, self).__init__(name="KonamiCode")
-        # TODO use this path instead of importing default script and read from config file
+        # read from config file
         self.cheat_code_script = dirname(__file__)+"/cheat_code.py"
         self.reload_skill = False
+        self.active = False
+        self.counter = 0
+        self.top_fails = 3
 
     def initialize(self):
-        self.intent_parser = IntentParser(self.emitter)
-        #self.build_intents()
-        #self.build_intent_layers()
+        self.emitter.on("recognizer_loop:hotword", self.handle_hot_word)
+
+    def handle_hot_word(self, message):
+        # process hotword sequence
+        hotword = message.data.get("hotword")
+        if hotword == "up":
+            self.emitter.emit(Message(str(self.skill_id)+":KonamiUpIntent"))
+        elif not self.active:
+            return
+        elif hotword == "down":
+            self.emitter.emit(Message(str(self.skill_id) + ":KonamiDownIntent"))
+        elif hotword == "left":
+            self.emitter.emit(Message(str(self.skill_id) + ":KonamiLeftIntent"))
+        elif hotword == "right":
+            self.emitter.emit(Message(str(self.skill_id) + ":KonamiRightIntent"))
+        elif hotword == "b":
+            self.emitter.emit(Message(str(self.skill_id) + ":KonamiBIntent"))
+        elif hotword == "a":
+            self.emitter.emit(Message(str(self.skill_id) + ":KonamiAIntent"))
 
     def build_intents(self):
-
+        # keywords dont really exist, intent is triggered manually
         up_intent = IntentBuilder('KonamiUpIntent'). \
             require("KonamiUpKeyword").build()
         # register intent
@@ -59,24 +79,20 @@ class KonamiCodeSkill(MycroftSkill):
         self.layers = IntentLayers(self.emitter, layers, 60)
 
     def handle_up_intent(self, message):
+        self.active = True
         self.layers.next()
-        self.speak_dialog("up", expect_response=True)
 
     def handle_down_intent(self, message):
         self.layers.next()
-        self.speak_dialog("down", expect_response=True)
 
     def handle_left_intent(self, message):
         self.layers.next()
-        self.speak_dialog("left", expect_response=True)
 
     def handle_right_intent(self, message):
         self.layers.next()
-        self.speak_dialog("right", expect_response=True)
 
     def handle_b_intent(self, message):
         self.layers.next()
-        self.speak_dialog("b", expect_response=True)
 
     def handle_a_intent(self, message):
         # check for script
@@ -96,16 +112,20 @@ class KonamiCodeSkill(MycroftSkill):
         self.layers.reset()
 
     def stop(self):
-        self.layers.reset()
+        if self.active:
+            self.layers.reset()
+            self.active = False
+            self.counter = 0
 
     def converse(self, utterances, lang="en-us"):
-        # check if some of the intents will be handled
-        intent, id = self.intent_parser.determine_intent(utterances[0])
-        if id != self.skill_id:
-            # no longer inside this conversation
-            # wrong cheat code entry
-            self.log.info("Wrong cheat code entry, reseting layers")
-            #self.layers.reset()
+        if self.active:
+            self.counter += 1
+            if self.counter > self.top_fails:
+                # if user spoke reset cheat code ?
+                self.log.WARNING("Wrong cheat code entry, reseting layers")
+                self.layers.reset()
+                self.active = False
+                self.counter = 0
         return False
 
 
