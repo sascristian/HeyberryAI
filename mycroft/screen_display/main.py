@@ -287,8 +287,8 @@ def fullscreen(prefered_service):
 
 def _fullscreen(message):
     """
-        Handler for mycroft.display.service.unlock. Allow display after
-        a lock. Also  determines if the user requested a special service.
+        Handler for mycroft.display.service.fullscreen. Also  determines
+        if the user requested a special service.
 
         Args:
             message: message bus message, not used but required
