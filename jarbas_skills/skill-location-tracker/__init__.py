@@ -34,7 +34,9 @@ class LocationTrackerSkill(MycroftSkill):
     def __init__(self):
         super(LocationTrackerSkill, self).__init__()
         self.minutes = 15
-        self.source = "ip"
+        self.source = self.config.get("location").get("update_source", "ip")
+        self.active = self.config.get("location").get("tracking", True)
+        self.active = True
         self.timer = Timer(60 * self.minutes, self.get_location)
         self.timer.setDaemon(True)
 
@@ -45,17 +47,50 @@ class LocationTrackerSkill(MycroftSkill):
         self.register_intent(intent, self.handle_update_intent)
 
         intent = IntentBuilder("CurrentLocationIntent") \
-            .require("CurrentKeyword").require(
-            "LocationKeyword").build()
+            .require("CurrentKeyword").require("LocationKeyword").build()
         self.register_intent(intent, self.handle_current_location_intent)
 
-        intent = IntentBuilder("CurrentLocationIntent") \
+        intent = IntentBuilder("UnSetLocationTrackingIntent") \
+            .require("TrackingKeyword").require("LocationKeyword").require(
+            "DeactivateKeyword").build()
+        self.register_intent(intent, self.handle_deactivate_tracking_intent)
+
+        intent = IntentBuilder("SetLocationTrackingIntent") \
+            .require("TrackingKeyword").require("LocationKeyword").require(
+            "ActivateKeyword").build()
+        self.register_intent(intent, self.handle_activate_tracking_intent)
+
+        intent = IntentBuilder("WhereAmIIntent") \
             .require("WhereAmIKeyword").build()
-        self.register_intent(intent, self.handle_current_location_intent)
+        self.register_intent(intent, self.handle_where_am_i_intent)
 
-        self.timer.start()
+        if self.active:
+            self.timer.start()
+
+    def handle_deactivate_tracking_intent(self, message):
+        if not self.active:
+            self.speak("Location tracking from " + self.source + " is not active")
+        else:
+            self.active = False
+            self.speak("Location tracking from " + self.source + " deactivated")
+
+    def handle_activate_tracking_intent(self, message):
+        if self.active:
+            self.speak("Location tracking from " + self.source + " is active")
+        else:
+            self.active = True
+            self.speak("Location tracking from " + self.source + " activated")
 
     def handle_current_location_intent(self, message):
+        config = self.config_core.get("location")
+        city = config.get("city", {}).get("name", "unknown city")
+        country = config.get("city", {}).get("region").get("country").get(
+            "name", "unknow country")
+        self.speak("configuration location is " + city + ", " +
+                   country)
+        self.set_context('Location', city + ', ' + country)
+
+    def handle_where_am_i_intent(self, message):
         ip = message.context.get("ip")
         destinatary = message.context.get("destinatary")
         if "fbchat" in destinatary:
