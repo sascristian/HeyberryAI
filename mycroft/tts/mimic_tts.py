@@ -16,55 +16,59 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 import subprocess
+import os
+import os.path
 from time import time, sleep
-
-from os.path import join
+import unicodedata
 
 from mycroft import MYCROFT_ROOT_PATH
 from mycroft.configuration import ConfigurationManager
 from mycroft.tts import TTS, TTSValidator
-from mycroft.util import play_wav, check_for_signal
+import mycroft.util
+from mycroft.util.log import getLogger
+LOGGER = getLogger(__name__)
 
 __author__ = 'jdorleans', 'spenrod'
 
 config = ConfigurationManager.get().get("tts").get("mimic")
 
-BIN = config.get("path", join(MYCROFT_ROOT_PATH, 'mimic', 'bin', 'mimic'))
+BIN = config.get("path", os.path.join(MYCROFT_ROOT_PATH, 'mimic', 'bin',
+                                      'mimic'))
+if not os.path.isfile(BIN):
+    # Search for mimic on the path
+    import distutils.spawn
+    BIN = distutils.spawn.find_executable("mimic")
 
 
 class Mimic(TTS):
     def __init__(self, lang, voice):
         super(Mimic, self).__init__(lang, voice, MimicValidator(self))
         self.init_args()
+        self.clear_cache()
+        self.type = 'wav'
 
     def init_args(self):
-        self.args = [BIN, '-voice', self.voice, '-psdur', '-o', self.filename]
+        self.args = [BIN, '-voice', self.voice, '-psdur']
         stretch = config.get('duration_stretch', None)
         if stretch:
             self.args += ['--setf', 'duration_stretch=' + stretch]
 
-    def execute(self, sentence):
-        output = subprocess.check_output(self.args + ['-t', sentence])
-        self.blink(0.5)
-        process = play_wav(self.filename)
-        self.visime(output)
-        process.communicate()
-        self.blink(0.2)
+    def get_tts(self, sentence, wav_file):
+        # Generate WAV and phonemes
+        phonemes = subprocess.check_output(self.args + ['-o', wav_file,
+                                                        '-t', sentence])
+        return wav_file, phonemes
 
     def visime(self, output):
+        visimes = []
         start = time()
         pairs = output.split(" ")
         for pair in pairs:
-            if check_for_signal('buttonPress'):
-                return
             pho_dur = pair.split(":")  # phoneme:duration
             if len(pho_dur) == 2:
-                code = VISIMES.get(pho_dur[0], '4')
-                self.enclosure.mouth_viseme(code)
-                duration = float(pho_dur[1])
-                delta = time() - start
-                if delta < duration:
-                    sleep(duration - delta)
+                visimes.append((VISIMES.get(pho_dur[0], '4'),
+                                float(pho_dur[1])))
+        return visimes
 
 
 class MimicValidator(TTSValidator):
@@ -72,15 +76,16 @@ class MimicValidator(TTSValidator):
         super(MimicValidator, self).__init__(tts)
 
     def validate_lang(self):
-        # TODO
+        # TODO: Verify version of mimic can handle the requested language
         pass
 
     def validate_connection(self):
         try:
             subprocess.call([BIN, '--version'])
         except:
+            LOGGER.info("Failed to find mimic at: " + BIN)
             raise Exception(
-                'Mimic is not installed. Run install-mimic.sh to install it.')
+                'Mimic was not found. Run install-mimic.sh to install it.')
 
     def get_tts_class(self):
         return Mimic

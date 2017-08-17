@@ -20,7 +20,11 @@ sudo pacman -S --needed \
     mpg123 \
     screen \
     flac \
-    curl
+    curl \
+    pkg-config \
+    icu \
+    automake \
+    libjpeg-turbo
 
 # upgrade virtualenv to latest from pypi
 sudo pip2 install --upgrade virtualenv
