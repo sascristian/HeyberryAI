@@ -324,7 +324,7 @@ class MycroftSkill(object):
                                       {"status": "executed", "intent": name}))
 
         if handler:
-            self.emitter.on(name, self.handle_update_context)
+            self.emitter.on(name, self.handle_update_message_context)
             self.emitter.on(name, wrapper)
             self.events.append((name, wrapper))
 
@@ -343,7 +343,7 @@ class MycroftSkill(object):
         }))
         self.add_event(intent_name, handler)
 
-    def handle_update_context(self, message):
+    def handle_update_message_context(self, message):
         self.message_context = self.get_context(message.context)
 
     def disable_intent(self, intent_name):
@@ -424,7 +424,7 @@ class MycroftSkill(object):
     def speak(self, utterance, expect_response=False, metadata=None, message_context=None):
         if message_context is None:
             # use current context
-            message_context = self.message_context
+            message_context = {}
         if metadata is None:
             metadata = {}
         # registers the skill as being active
@@ -439,14 +439,11 @@ class MycroftSkill(object):
             self.set_context(field, metadata[field])
 
     def speak_dialog(self, key, data=None, expect_response=False, metadata=None, message_context=None):
-        if message_context is None:
-            # use current context
-            message_context = self.message_context
-        if metadata is None:
-            metadata = {}
         if data is None:
             data = {}
-        self.speak(self.dialog_renderer.render(key, data), expect_response=expect_response, metadata=metadata, message_context=self.get_context(message_context))
+        self.speak(self.dialog_renderer.render(key, data),
+                   expect_response=expect_response, metadata=metadata,
+                   message_context=message_context)
 
     def init_dialog(self, root_directory):
         dialog_dir = join(root_directory, 'dialog', self.lang)
@@ -534,20 +531,13 @@ class FallbackSkill(MycroftSkill):
         #  list of fallback handlers registered by this instance
         self.instance_fallback_handlers = []
 
-    def bind(self, emitter):
-        if emitter:
-            self.emitter = emitter
-            self.enclosure = EnclosureAPI(emitter, self.name)
-            self.__register_stop()
-            self.emitter.on('enable_intent', self.handle_enable_intent)
-            self.emitter.on('disable_intent', self.handle_disable_intent)
-            self.emitter.on('intent_failure', self.handle_update_context)
-
     @classmethod
     def make_intent_failure_handler(cls, ws):
         """Goes through all fallback handlers until one returns true"""
 
         def handler(message):
+            # message cpmtex t fpr fallback skills
+            cls.message_context = message.context
             if cls.override:
                 try:
                     # try fallbacks by pre defined order
@@ -630,7 +620,7 @@ class FallbackSkill(MycroftSkill):
             skill_folder = self._dir
         except:
             skill_folder = dirname(__file__)  # skill
-        self.emitter.on('intent_failure', self.handle_update_context)
+        self.emitter.on('intent_failure', self.handle_update_message_context)
         self._register_fallback(handler, priority, skill_folder)
 
     @classmethod
