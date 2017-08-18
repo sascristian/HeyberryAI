@@ -262,8 +262,6 @@ class MycroftSkill(object):
             self.__register_stop()
             self.emitter.on('enable_intent', self.handle_enable_intent)
             self.emitter.on('disable_intent', self.handle_disable_intent)
-            self.emitter.on('intent_failure',
-                            self.handle_update_message_context)
 
     def __register_stop(self):
         self.stop_time = time.time()
@@ -536,7 +534,7 @@ class FallbackSkill(MycroftSkill):
     @classmethod
     def make_intent_failure_handler(cls, ws):
         """Goes through all fallback handlers until one returns true"""
-
+        ws.on("intent_failure", cls.handle_update_message_context)
         def handler(message):
             if cls.override:
                 try:
