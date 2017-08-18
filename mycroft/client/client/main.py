@@ -277,6 +277,7 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
             logger.debug("Asking server for answer")
             if self.client is None or self.status != "connected":
                 logger.error("Key exchange was not completed")
+
             else:
                 self.sendMessage(event.type, event.data, event.context)
         else:

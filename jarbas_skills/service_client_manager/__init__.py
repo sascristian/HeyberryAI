@@ -61,12 +61,11 @@ class ClientUser():
     def init_user_settings(self, path=None):
         if path is None:
             path = dirname(__file__) + "/users"
-        self.settings = SkillSettings(path)
         # check if folders exist
         if not os.path.exists(path):
             os.makedirs(path)
         path += "/"+str(self.client_id) + ".json"
-
+        self.settings = SkillSettings(path, autopath=False)
         if self.client_id not in self.settings.keys():
             self.settings[self.client_id] = {}
 
