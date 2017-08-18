@@ -534,6 +534,15 @@ class FallbackSkill(MycroftSkill):
         #  list of fallback handlers registered by this instance
         self.instance_fallback_handlers = []
 
+    def bind(self, emitter):
+        if emitter:
+            self.emitter = emitter
+            self.enclosure = EnclosureAPI(emitter, self.name)
+            self.__register_stop()
+            self.emitter.on('enable_intent', self.handle_enable_intent)
+            self.emitter.on('disable_intent', self.handle_disable_intent)
+            self.emitter.on('intent_failure', self.handle_update_context)
+
     @classmethod
     def make_intent_failure_handler(cls, ws):
         """Goes through all fallback handlers until one returns true"""
@@ -546,7 +555,6 @@ class FallbackSkill(MycroftSkill):
                     logger.info("Fallback order " + str(cls.order))
                     missing_folders = cls.folders.keys()
                     logger.info("Fallbacks " + str(missing_folders))
-                    logger.debug(str(message.context))
                     for folder in cls.order:
                         for f in cls.folders.keys():
                             if folder == f:
@@ -624,7 +632,6 @@ class FallbackSkill(MycroftSkill):
             skill_folder = dirname(__file__)  # skill
         self.emitter.on('intent_failure', self.handle_update_context)
         self._register_fallback(handler, priority, skill_folder)
-
 
     @classmethod
     def remove_fallback(cls, handler_to_del):
