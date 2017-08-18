@@ -412,7 +412,7 @@ class MycroftSkill(object):
             if "destinatary" not in message_context.keys():
                 message_context["destinatary"] = self.message_context.get("destinatary", "all")
             if "target" not in message_context.keys():
-                message_context["target"] = self.message_context.get("destinatary", "all")
+                message_context["target"] = self.message_context.get("target", "all")
             if "mute" not in message_context.keys():
                 message_context["mute"] = self.message_context.get("mute", False)
             if "more_speech" not in message_context.keys():
@@ -532,6 +532,15 @@ class FallbackSkill(MycroftSkill):
 
         #  list of fallback handlers registered by this instance
         self.instance_fallback_handlers = []
+
+    def bind(self, emitter):
+        if emitter:
+            self.emitter = emitter
+            self.enclosure = EnclosureAPI(emitter, self.name)
+            self.__register_stop()
+            self.emitter.on('enable_intent', self.handle_enable_intent)
+            self.emitter.on('disable_intent', self.handle_disable_intent)
+            self.emitter.on('intent_failure', self.handle_update_context)
 
     @classmethod
     def make_intent_failure_handler(cls, ws):
