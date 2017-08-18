@@ -432,7 +432,6 @@ class MycroftSkill(object):
         data = {'utterance': utterance,
                 'expect_response': expect_response,
                 "metadata": metadata}
-        self.log.debug(message_context)
         self.emitter.emit(Message("speak", data, self.get_message_context(message_context)))
         self.set_context('Last_Speech', utterance)
         for field in metadata:
@@ -534,7 +533,6 @@ class FallbackSkill(MycroftSkill):
     @classmethod
     def make_intent_failure_handler(cls, ws):
         """Goes through all fallback handlers until one returns true"""
-        ws.on("intent_failure", cls.handle_update_message_context)
         def handler(message):
             if cls.override:
                 try:
@@ -549,8 +547,9 @@ class FallbackSkill(MycroftSkill):
                                 if f in missing_folders:
                                     missing_folders.remove(f)
                                 logger.info("Trying ordered fallback: " + folder)
-                                handler =cls.folders[f]
+                                handler, context_update_handler =cls.folders[f]
                                 try:
+                                    context_update_handler(message)
                                     if handler(message):
                                         return
                                 except Exception as e:
@@ -560,8 +559,9 @@ class FallbackSkill(MycroftSkill):
                     for folder in missing_folders:
                         logger.info("fallback not in ordered list, trying it now: " +
                                     folder)
-                        handler = cls.folders[folder]
+                        handler, context_update_handler = cls.folders[folder]
                         try:
+                            context_update_handler(message)
                             if handler(message):
                                 return
                         except Exception as e:
@@ -572,9 +572,11 @@ class FallbackSkill(MycroftSkill):
                     logger.warning("Fallback override is not working")
             else:
                 # try fallbacks by priority
-                for _, handler in sorted(cls.fallback_handlers.items(),
+                for _, handler, context_update_handler in sorted(
+                        cls.fallback_handlers.items(),
                                          key=operator.itemgetter(0)):
                     try:
+                        context_update_handler(message)
                         if handler(message):
                             return
                     except Exception as e:
@@ -586,7 +588,8 @@ class FallbackSkill(MycroftSkill):
         return handler
 
     @classmethod
-    def _register_fallback(cls, handler, priority, skill_folder=None):
+    def _register_fallback(cls, handler, priority, skill_folder=None,
+                           context_update_handler=None):
         """
         Register a function to be called as a general info fallback
         Fallback should receive message and return
@@ -598,12 +601,12 @@ class FallbackSkill(MycroftSkill):
         while priority in cls.fallback_handlers:
             priority += 1
 
-        cls.fallback_handlers[priority] = handler
+        cls.fallback_handlers[priority] = handler, context_update_handler
 
        # folder name
         if skill_folder:
             skill_folder = skill_folder.split("/")[-1]
-            cls.folders[skill_folder] = handler
+            cls.folders[skill_folder] = handler, context_update_handler
         else:
             logger.warning("skill folder error registering fallback")
 
@@ -618,7 +621,9 @@ class FallbackSkill(MycroftSkill):
             skill_folder = self._dir
         except:
             skill_folder = dirname(__file__)  # skill
-        self._register_fallback(handler, priority, skill_folder)
+        context_update_handler = self.handle_update_message_context
+        self._register_fallback(handler, priority, skill_folder,
+                                context_update_handler)
 
     @classmethod
     def remove_fallback(cls, handler_to_del):
