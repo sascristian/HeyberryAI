@@ -262,7 +262,6 @@ class MycroftSkill(object):
             self.__register_stop()
             self.emitter.on('enable_intent', self.handle_enable_intent)
             self.emitter.on('disable_intent', self.handle_disable_intent)
-            self.emitter.on('intent_failure', self.handle_update_context)
 
     def __register_stop(self):
         self.stop_time = time.time()
@@ -621,7 +620,9 @@ class FallbackSkill(MycroftSkill):
             skill_folder = self._dir
         except:
             skill_folder = dirname(__file__)  # skill
+        self.emitter.on('intent_failure', self.handle_update_context)
         self._register_fallback(handler, priority, skill_folder)
+
 
     @classmethod
     def remove_fallback(cls, handler_to_del):
