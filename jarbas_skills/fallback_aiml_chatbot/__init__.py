@@ -96,7 +96,8 @@ class AIMLChatbotFallback(FallbackSkill):
 
     def handle_fallback(self, message):
         utterance = message.data.get("utterance")
-        self.log.debug(message.context)
+        self.log.debug("context for aiml message: " + str(message.context))
+        self.log.debug("context for aiml skill: " + str(self.message_context))
         answer = self.ask_brain(utterance)
         if answer != "":
             self.speak(answer)
