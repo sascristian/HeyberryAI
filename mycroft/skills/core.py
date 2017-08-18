@@ -546,6 +546,7 @@ class FallbackSkill(MycroftSkill):
                     logger.info("Fallback order " + str(cls.order))
                     missing_folders = cls.folders.keys()
                     logger.info("Fallbacks " + str(missing_folders))
+                    logger.debug(str(message.context))
                     for folder in cls.order:
                         for f in cls.folders.keys():
                             if folder == f:
