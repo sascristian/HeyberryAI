@@ -62,7 +62,7 @@ class LILACSWolframalphaSkill(MycroftSkill):
             self.client = WAApi()
         else:
             try:
-                self.api = self.config_core.get("APIS").get("WolframAlphaAPI")
+                self.api = self.config_core.get("APIS").get("WolframAlpha")
             except:
                 self.api = self.config_core.get("WolframAlphaSkill").get("api_key")
             self.client = wolframalpha.Client(self.api)

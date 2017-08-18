@@ -35,7 +35,7 @@ class CleverbotFallback(FallbackSkill):
         self.chat_mode = False
         self.parser = None
         try:
-            api_key = self.config_core.get("APIS")["CleverbotApi"]
+            api_key = self.config_core.get("APIS")["Cleverbot"]
         except:
             api_key = self.config.get("CleverbotAPI")
         self.cleverbot = CleverWrap(api_key)
