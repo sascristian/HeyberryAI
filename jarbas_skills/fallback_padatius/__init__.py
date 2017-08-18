@@ -50,6 +50,7 @@ class PadatiusFallback(FallbackSkill):
         self.padatius = PadatiusFallbackService(self.emitter)
 
     def handle_fallback(self, message):
+        self.message_context = message.context
         return self.padatius.wait_server_response(message.data)
 
     def stop(self):
