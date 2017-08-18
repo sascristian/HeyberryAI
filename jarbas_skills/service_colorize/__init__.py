@@ -80,7 +80,7 @@ class ColorizationService(MycroftSkill):
         self.emitter.emit(Message("colorization.result",
                                   {"url": url, "file": file,
                                    "original": file.replace(".jpg", "_bw.jpg")},
-                                  self.get_context(message.context)))
+                                  self.get_message_context(message.context)))
 
     def colorize(self, file_path, name=None):
         img = cv2.imread(file_path)

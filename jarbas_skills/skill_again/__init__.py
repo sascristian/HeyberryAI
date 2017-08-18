@@ -49,7 +49,7 @@ class AgainSkill(MycroftSkill):
             if skill == str(self.skill_id) or not skill.isdigit():
                 return
             self.log.info("Tracking last executed intent: " + message.type)
-            self.context = self.get_context(message.context)
+            self.context = self.get_message_context(message.context)
             self.last_skill = skill
             self.last_intent = intent
             self.last_intent_context = self.context

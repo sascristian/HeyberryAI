@@ -208,7 +208,7 @@ class MycroftSkill(object):
         self.external_shutdown = True
         self.events = []
         self.skill_id = 0
-        self.message_context = self.get_context()
+        self.message_context = self.get_message_context()
 
     def is_current_language_supported(self):
         # for backward compatibility, by default,
@@ -344,7 +344,7 @@ class MycroftSkill(object):
         self.add_event(intent_name, handler)
 
     def handle_update_message_context(self, message):
-        self.message_context = self.get_context(message.context)
+        self.message_context = self.get_message_context(message.context)
 
     def disable_intent(self, intent_name):
         """Disable a registered intent"""
@@ -405,7 +405,7 @@ class MycroftSkill(object):
         re.compile(regex_str)  # validate regex
         self.emitter.emit(Message('register_vocab', {'regex': regex_str}))
 
-    def get_context(self, message_context=None):
+    def get_message_context(self, message_context=None):
         if message_context is None:
             message_context = {"destinatary": "all", "source": self.name, "mute": False, "more_speech": False, "target": "all"}
         else:
@@ -433,7 +433,7 @@ class MycroftSkill(object):
                 'expect_response': expect_response,
                 "metadata": metadata}
         self.log.debug(message_context)
-        self.emitter.emit(Message("speak", data, self.get_context(message_context)))
+        self.emitter.emit(Message("speak", data, self.get_message_context(message_context)))
         self.set_context('Last_Speech', utterance)
         for field in metadata:
             self.set_context(field, metadata[field])
