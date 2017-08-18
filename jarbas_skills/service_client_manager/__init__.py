@@ -420,8 +420,9 @@ class ClientManagerSkill(MycroftSkill):
     def handle_user_request(self, message):
         sock = message.data.get("sock")
         ip = message.data.get("ip")
+        if not ip or not sock:
+            return
         user_id = self.user_from_ip_sock(sock, ip)
-
         current_user = self.users[user_id]
         current_user.last_timestamp = time.time()
         current_user.last_seen = time.asctime()
