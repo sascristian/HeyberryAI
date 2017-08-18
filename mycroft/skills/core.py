@@ -432,6 +432,7 @@ class MycroftSkill(object):
         data = {'utterance': utterance,
                 'expect_response': expect_response,
                 "metadata": metadata}
+        self.log.debug(message_context)
         self.emitter.emit(Message("speak", data, self.get_context(message_context)))
         self.set_context('Last_Speech', utterance)
         for field in metadata:

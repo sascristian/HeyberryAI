@@ -257,6 +257,7 @@ class IntentService(object):
 
         utterances = message.data.get('utterances', '')
         context = self.get_context(message.context)
+        logger.debug(context)
         # check for conversation time-out
         self.active_skills = [skill for skill in self.active_skills
                               if time.time() - skill[1] <= self.converse_timeout * 60]

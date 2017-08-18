@@ -386,6 +386,7 @@ class MyServerFactory(WebSocketServerFactory):
                                                                 "name"])[0]
             except:
                 context["user_name"] = "unknown name"
+            logger.debug(context)
             # check if message also sent files
             # TODO file formats
             if self.clients[client.peer].get("file_path"):
