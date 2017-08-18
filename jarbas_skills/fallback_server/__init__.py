@@ -26,7 +26,7 @@ LOGGER = getLogger(__name__)
 
 
 class ServerFallbackService(ServiceBackend):
-    def __init__(self, emitter=None, timeout=5, waiting_messages=[
+    def __init__(self, emitter=None, timeout=30, waiting_messages=[
         "server.message.received"],logger=None):
         super(ServerFallbackService, self).__init__(name="ServerFallbackService",
                                                     emitter=emitter, timeout=timeout,
