@@ -530,14 +530,13 @@ class FallbackSkill(MycroftSkill):
 
         #  list of fallback handlers registered by this instance
         self.instance_fallback_handlers = []
+        self.emitter.on('intent_failure', self.handle_update_message_context)
 
     @classmethod
     def make_intent_failure_handler(cls, ws):
         """Goes through all fallback handlers until one returns true"""
 
         def handler(message):
-            # message cpmtex t fpr fallback skills
-            cls.message_context = message.context
             if cls.override:
                 try:
                     # try fallbacks by pre defined order
@@ -620,7 +619,6 @@ class FallbackSkill(MycroftSkill):
             skill_folder = self._dir
         except:
             skill_folder = dirname(__file__)  # skill
-        self.emitter.on('intent_failure', self.handle_update_message_context)
         self._register_fallback(handler, priority, skill_folder)
 
     @classmethod
