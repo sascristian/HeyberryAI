@@ -234,7 +234,7 @@ class IntentService(object):
             "skill_id": 0, "utterance": utterance, "lang": lang, "intent_name": ""}, message.context))
         return False
 
-    def get_context(self, context=None):
+    def get_message_context(self, context=None):
         if context is None:
             context = {}
         # by default set destinatary of reply to source of this message
@@ -256,7 +256,7 @@ class IntentService(object):
             lang = "en-us"
 
         utterances = message.data.get('utterances', '')
-        context = self.get_context(message.context)
+        context = self.get_message_context(message.context)
         logger.debug(context)
         # check for conversation time-out
         self.active_skills = [skill for skill in self.active_skills
