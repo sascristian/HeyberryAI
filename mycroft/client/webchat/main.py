@@ -122,10 +122,10 @@ def main():
     tornado.options.parse_command_line()
     config = ConfigurationManager.get().get("webchat", {})
     port = config.get("port", 4000)
-    ssl = config.get("ssl", True)
+    use_ssl = config.get("ssl", True)
     max_con = config.get("max_connections", -1)
     url = "http://" + str(ip) + ":" + str(port)
-    if ssl:
+    if use_ssl:
         url = "https://" + str(ip) + ":" + str(port)
         cert = config.get("cert_file",
                           dirname(__file__) + '/certs/webchat.crt')
@@ -167,8 +167,9 @@ def main():
     }
 
     application = tornado.web.Application(routes, **settings)
-    if ssl:
-        httpServer = tornado.httpserver.HTTPServer(application, ssl_options={
+    if use_ssl:
+        httpServer = tornado.httpserver.HTTPServer(application,
+                                                       ssl_options={
             "certfile": cert,
             "keyfile": key,
         })

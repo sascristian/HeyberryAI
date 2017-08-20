@@ -60,8 +60,6 @@ default_log_filters = ["enclosure.mouth.viseme"]
 log_filters = list(default_log_filters)
 log_files = []
 
-disable_speak_flag = False
-
 # Values used to display the audio meter
 show_meter = True
 meter_peak = 20
@@ -84,14 +82,6 @@ def stripNonAscii(text):
     """ Remove junk characters that might be in the file """
     return ''.join([i if ord(i) < 128 else ' ' for i in text])
 
-def set_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = True
-
-
-def unset_speak_flag(event):
-    global disable_speak_flag
-    disable_speak_flag = False
 
 ##############################################################################
 # Settings
@@ -257,24 +247,6 @@ def rebuild_filtered_log():
 
 def handle_speak(event):
     global chat
-    mutex.acquire()
-    if event.context.target == "cli" or event.context.target == "all" :
-        utterance = event.data.get('utterance')
-        if bSimple:
-            print(">> " + utterance)
-        else:
-            chat.append(">> " + utterance)
-        draw_screen()
-
-
-
-def handle_speak(event):
-    global chat
-    global disable_speak_flag
-    target = event.data.get("target", "all")
-    mute = event.data.get("mute", False)
-    if target != "all" and target != "cli":
-        return
     utterance = event.data.get('utterance')
     if bSimple:
         print(">> " + utterance)
@@ -663,8 +635,6 @@ def main(stdscr):
 
     ws = WebsocketClient()
     ws.on('speak', handle_speak)
-    ws.on('do_not_speak_flag_enable', set_speak_flag)
-    ws.on('do_not_speak_flag_disable', unset_speak_flag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()
@@ -789,9 +759,6 @@ def main(stdscr):
 def simple_cli():
     global ws
     ws = WebsocketClient()
-    ws.on('speak', handle_speak)
-    ws.on('do_not_speak_flag_enable', set_speak_flag)
-    ws.on('do_not_speak_flag_disable', unset_speak_flag)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()

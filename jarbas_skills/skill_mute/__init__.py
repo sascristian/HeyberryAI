@@ -45,12 +45,12 @@ class MuteSkill(MycroftSkill):
     def handle_speak_disable_intent(self, event):
         self.speak_dialog("speak_disabled")
         self.emitter.emit(
-            Message("do_not_speak_flag_enable"))
+            Message("speak.disable"))
 
     def handle_speak_enable_intent(self, event):
         self.speak_dialog("speak_enabled")
         self.emitter.emit(
-            Message("do_not_speak_flag_disable"))
+            Message("speak.enable"))
 
     def stop(self):
         pass
