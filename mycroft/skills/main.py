@@ -30,13 +30,14 @@ from mycroft.lock import Lock  # Creates PID file for single instance
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import load_skill, create_skill_descriptor, \
-    MainModule, SKILLS_DIR, FallbackSkill
+    MainModule, FallbackSkill
 from mycroft.skills.intent_service import IntentService
 from mycroft.skills.padatious_service import PadatiousService
 from mycroft.util import connected
 from mycroft.util.log import getLogger
 from mycroft.api import is_paired
 import mycroft.dialog
+from mycroft import MYCROFT_ROOT_PATH
 
 logger = getLogger("Skills")
 
@@ -56,6 +57,12 @@ installer_config = ConfigurationManager.instance().get("SkillInstallerSkill")
 MSM_BIN = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm', 'msm'))
 
 skills_config = ConfigurationManager.instance().get("skills")
+config_dir = skills_config.get("skills_dir")
+if config_dir == "default":
+    SKILLS_DIR = join(MYCROFT_ROOT_PATH, "jarbas_skills")
+else:
+    SKILLS_DIR = config_dir
+
 PRIORITY_SKILLS = skills_config["priority_skills"]
 BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
 

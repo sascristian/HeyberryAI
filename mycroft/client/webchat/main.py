@@ -25,8 +25,11 @@ __author__ = 'jarbas', 'jcasoft'
 from mycroft.messagebus.client.ws import WebsocketClient
 from mycroft.messagebus.message import Message
 from threading import Thread
+from mycroft.client.webchat.self_signed import create_self_signed_cert
+from os.path import exists, dirname, isfile
 
 ws = None
+max_con = -1
 
 import tornado.httpserver
 import tornado.websocket
@@ -37,8 +40,7 @@ import os.path
 from tornado.options import define, options
 import multiprocessing
 import json
-import time
-import os
+import os, sys
 from subprocess import check_output
 
 
@@ -64,7 +66,10 @@ class StaticFileHandler(tornado.web.RequestHandler):
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
-        global chat_id, clients
+        global chat_id, clients, max_con
+        if len(clients) > max_con and max_con > 0:
+            self.write_message("Welcome to Jarbas, maximum simultaneous connections limit was reached")
+            sys.exit()
         chat_id += 1
         self.id = chat_id
         self.message_context = {"source": "webchat_:" + str(self.id),
@@ -98,8 +103,18 @@ def connect():
     ws.run_forever()
 
 
+def config_update(config=None, save=False, isSystem=False):
+    global ws
+    if config is None:
+        config = {}
+    elif save:
+        ConfigurationManager.save(config, isSystem)
+    ws.emit(
+        Message("configuration.patch", {"config": config}))
+
+
 def main():
-    global ws, port
+    global ws, port, max_con
     ws = WebsocketClient()
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
@@ -107,8 +122,32 @@ def main():
     tornado.options.parse_command_line()
     config = ConfigurationManager.get().get("webchat", {})
     port = config.get("port", 4000)
-
+    ssl = config.get("ssl", True)
+    max_con = config.get("max_connections", -1)
     url = "http://" + str(ip) + ":" + str(port)
+    if ssl:
+        url = "https://" + str(ip) + ":" + str(port)
+        cert = config.get("cert_file",
+                          dirname(__file__) + '/certs/webchat.crt')
+        key = config.get("key_file", dirname(__file__) + '/certs/webchat.key')
+
+        if not exists(key) or not exists(cert):
+            print "ssl keys dont exist, creating self signed"
+            dir = dirname(__file__) + "/certs"
+            name = key.split("/")[-1].replace(".key", "")
+            create_self_signed_cert(dir, name)
+            cert = dir + "/" + name + ".crt"
+            key = dir + "/" + name + ".key"
+            print "key created at: " + key
+            print "crt created at: " + cert
+            # update config with new keys
+            config["cert_file"] = cert
+            config["key_file"] = key
+            config["ssl"] = ssl
+            config["port"] = port
+            config["max_connections"] = max_con
+            config_update({"webchat": config}, True)
+
 
     print "*********************************************************"
     print "*   Access from web browser " + url
@@ -128,7 +167,13 @@ def main():
     }
 
     application = tornado.web.Application(routes, **settings)
-    httpServer = tornado.httpserver.HTTPServer(application)
+    if ssl:
+        httpServer = tornado.httpserver.HTTPServer(application, ssl_options={
+            "certfile": cert,
+            "keyfile": key,
+        })
+    else:
+        httpServer = tornado.httpserver.HTTPServer(application)
     tornado.options.parse_command_line()
     httpServer.listen(port)
     tornado.ioloop.IOLoop.instance().start()

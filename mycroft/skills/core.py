@@ -35,13 +35,18 @@ from mycroft.filesystem import FileSystemAccess
 from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 from mycroft.skills.settings import SkillSettings
+from mycroft import MYCROFT_ROOT_PATH
 
 __author__ = 'seanfitz'
 
-
-SKILLS_DIR = join(dirname(dirname(dirname(__file__))) ,"jarbas_skills")
-
 skills_config = ConfigurationManager.instance().get("skills")
+config_dir = skills_config.get("skills_dir")
+if config_dir == "default":
+    SKILLS_DIR = join(MYCROFT_ROOT_PATH, "jarbas_skills")
+else:
+    SKILLS_DIR = config_dir
+
+
 BLACKLISTED_SKILLS = skills_config.get("blacklisted_skills", {})
 
 

@@ -549,6 +549,8 @@ class MyServerFactory(WebSocketServerFactory):
         target = event.context.get('destinatary', "all")
         if ":" not in target:
             return
+        elif "fbchat" in target or "webbchat" in target:
+            return
         utterance = event.data.get('utterance', "")
         logger.debug("Answer: " + utterance + " Target: " + target)
         target, sock_num = target.split(":")
