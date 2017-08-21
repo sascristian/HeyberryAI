@@ -29,12 +29,14 @@ __author__ = 'seanfitz, jdorleans'
 
 LOG = getLogger(__name__)
 
-DEFAULT_CONFIG = join(dirname(__file__), 'mycroft.conf')
-SYSTEM_CONFIG = '/etc/mycroft/mycroft.conf'
-USER_CONFIG = join(expanduser('~'), '.mycroft/mycroft.conf')
+DEFAULT_CONFIG = join(dirname(__file__), 'jarbas.conf')
+SYSTEM_CONFIG = '/etc/jarbas/jarbas.conf'
+USER_CONFIG = join(expanduser('~'), '.jarbas/jarbas.conf')
 REMOTE_CONFIG = "mycroft.ai"
+RUNTIME_CONFIG = join(dirname(__file__), 'jarbas_runtime.conf')
 
-load_order = [DEFAULT_CONFIG, REMOTE_CONFIG, SYSTEM_CONFIG, USER_CONFIG]
+load_order = [DEFAULT_CONFIG, REMOTE_CONFIG, SYSTEM_CONFIG, USER_CONFIG,
+              RUNTIME_CONFIG]
 
 
 class ConfigurationLoader(object):
@@ -301,10 +303,10 @@ class ConfigurationManager(object):
         Save configuration ``config``.
         """
         ConfigurationManager.update(config)
-        location = SYSTEM_CONFIG if is_system else USER_CONFIG
+        location = SYSTEM_CONFIG if is_system else RUNTIME_CONFIG
         try:
-            LOG.info("Saving config")
-            dir = location.replace("/mycroft.conf", "")
+            LOG.info("Saving config: " + location)
+            dir = location.replace("/jarbas_runtime.conf", "").replace("/jarbas.conf", "")
             if not exists(dir):
                 mkdir(dir)
             try:
