@@ -137,7 +137,7 @@ class RemoteConfiguration(object):
     config in the [core] config section
     """
     IGNORED_SETTINGS = ["uuid", "@type", "active", "user", "device"]
-    WEB_CONFIG_CACHE = '/opt/mycroft/web_config_cache.json'
+    WEB_CONFIG_CACHE = '/opt/jarbas/web_config_cache.json'
 
     @staticmethod
     def validate(config):
