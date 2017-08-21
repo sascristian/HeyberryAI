@@ -15,9 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-
-
-
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
@@ -37,8 +34,10 @@ class DictationSkill(MycroftSkill):
         self.parser = None
         self.words = ""
         self.dictation_name = None
-        self.path = "/home/user/jarbas-core/mycroft/skills/DictationSkill/dictations"
-        self.path = os.path.dirname(__file__) + "/dictations"
+        try:
+            self.path = self.config_core.get("database_path") + "/dictations"
+        except:
+            self.path = os.path.dirname(__file__) + "/dictations"
         self.reload_skill = False
         # check if folders exist
         if not os.path.exists(self.path):
@@ -59,18 +58,52 @@ class DictationSkill(MycroftSkill):
         self.register_intent(stop_dict_intent,
                              self.handle_stop_dictation_intent)
 
-        read_dict_intent = IntentBuilder("StopDictationIntent") \
+        read_dict_intent = IntentBuilder("ReadDictationIntent") \
             .require("ReadKeyword").require("DictationKeyword").build()
 
         self.register_intent(read_dict_intent,
                              self.handle_read_last_dictation_intent)
 
+        set_dict_intent = IntentBuilder("SetDictationNameIntent") \
+            .require("DictationFileName").require("DictationKeyword") \
+            .optionally("SetKeyword").build()
+
+        self.register_intent(set_dict_intent,
+                             self.handle_set_dictation_name_intent)
+
+        open_dict_intent = IntentBuilder("OpenDictationNameIntent") \
+            .require("DictationFileName").require("OpenKeyword").build()
+
+        self.register_intent(open_dict_intent,
+                             self.handle_open_dictation_name_intent)
+
         self.parser = IntentParser(self.emitter)
+
+    def handle_open_dictation_name_intent(self, message):
+        name = message.data.get("DictationFileName")
+        if ".txt" not in name:
+            name += ".txt"
+        path = self.path + "/" + name
+        if not os.path.exists(path):
+            self.speak(name + " does not seem to exist")
+            return
+        self.set_context("DictationFileName", name)
+        self.words = ""
+        with open(path) as f:
+            self.words = f.readlines()
+
+        self.dictating = True
+        self.speak("dictation resumed for " + name, expect_response=True)
+
+    def handle_set_dictation_name_intent(self, message):
+        name = message.data.get("DictationFileName")
+        self.set_context("DictationFileName", name)
+        self.speak("Dictation file name set to " + name)
 
     def handle_start_dictation_intent(self, message):
         name = message.data.get("DictationFileName")
         if not name:
-            self.dictation_name = time.asctime()
+            self.dictation_name = time.asctime().replace(" ", "_")
         else:
             self.dictation_name = name
 

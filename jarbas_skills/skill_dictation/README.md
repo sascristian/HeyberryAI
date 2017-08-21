@@ -1,13 +1,15 @@
-# Parrot Skill
+# Dictation Skill
 
-Repeat everything back to user, simple demo of converse method
+write to .txt what user says
 
 # usage
 
-    start parrot - Parrot mode started
+    start dictation
 
-    hello - hello
-    what - what
-    who are you - who are you
+    stop dictation
 
-    stop parrot - Parrot mode stopped
+    read last dictation
+
+    open "filename" dictation
+
+    set dictation name to "filename"
