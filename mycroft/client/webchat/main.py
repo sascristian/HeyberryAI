@@ -30,6 +30,8 @@ from os.path import exists, dirname, isfile
 
 ws = None
 max_con = -1
+all_speech = False
+mute_speech = True
 
 import tornado.httpserver
 import tornado.websocket
@@ -66,7 +68,7 @@ class StaticFileHandler(tornado.web.RequestHandler):
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
-        global chat_id, clients, max_con
+        global chat_id, clients, max_con, mute_speech
         if len(clients) > max_con and max_con > 0:
             self.write_message("Welcome to Jarbas, maximum simultaneous connections limit was reached")
             sys.exit()
@@ -74,7 +76,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         self.id = chat_id
         self.message_context = {"source": "webchat_:" + str(self.id),
                                 "user": "webchat " + str(self.id),
-                                "mute": True}
+                                "mute": mute_speech}
         clients.append(self)
         self.write_message("Welcome to Jarbas")
         ws.on("speak", self.handle_speak)
@@ -88,10 +90,11 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def handle_speak(self, event):
         target = event.context.get('destinatary', "all")
-        if ":" not in target:
-            return
-        elif "fbchat" in target or "webbchat" in target:
-            return
+        if not all_speech:
+            if ":" not in target:
+                return
+            elif "webchat" not in target:
+                return
         utterance = event.data.get('utterance', "")
         self.write_message(utterance)
 
@@ -114,7 +117,7 @@ def config_update(config=None, save=False, isSystem=False):
 
 
 def main():
-    global ws, port, max_con
+    global ws, port, max_con, all_speech, mute_speech
     ws = WebsocketClient()
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
@@ -124,6 +127,8 @@ def main():
     port = config.get("port", 4000)
     use_ssl = config.get("ssl", True)
     max_con = config.get("max_connections", -1)
+    all_speech = config.get("all_speech", True)
+    mute_speech = config.get("mute_speech", True)
     url = "http://" + str(ip) + ":" + str(port)
     if use_ssl:
         url = "https://" + str(ip) + ":" + str(port)
