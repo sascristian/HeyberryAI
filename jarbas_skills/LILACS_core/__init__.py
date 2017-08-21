@@ -227,7 +227,8 @@ class LilacsCoreSkill(FallbackSkill):
         try:
             center_node, target_node, parents, synonims, midle, question = \
             self.parse_utterance(utterance)
-
+            # set adapt context for current subject
+            self.set_context("LastNode", center_node)
         except Exception as e:
             logger.error(e)
             center_node = ""
@@ -882,6 +883,7 @@ class LilacsCoreSkill(FallbackSkill):
         metadata = {}
         links = data.get("links")
         if links:
+            self.set_context("RelatedUrls", links)
             metadata = {"links": links}
 
         answer = data.get("abstract", "")
