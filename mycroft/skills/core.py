@@ -40,7 +40,7 @@ from mycroft import MYCROFT_ROOT_PATH
 __author__ = 'seanfitz'
 
 skills_config = ConfigurationManager.instance().get("skills")
-config_dir = skills_config.get("skills_dir")
+config_dir = skills_config.get("skills_dir", "default")
 if config_dir == "default":
     SKILLS_DIR = join(MYCROFT_ROOT_PATH, "jarbas_skills")
 else:
