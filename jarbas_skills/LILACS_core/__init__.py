@@ -16,27 +16,26 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-import sys
 from time import sleep
 
 import os
 from adapt.intent import IntentBuilder
 from os.path import dirname
 
-sys.path.append(dirname(dirname(__file__)))
-from LILACS_core.concept import ConceptConnector
-from LILACS_core.crawler import ConceptCrawler
+from jarbas_skills.LILACS_core.concept import ConceptConnector
+from jarbas_skills.LILACS_core.crawler import ConceptCrawler
 from jarbas_utils.question_parser import LILACSQuestionParser
 # import helper questions functions
-from LILACS_core.questions import *
+from jarbas_skills.LILACS_core.questions import *
 
 from jarbas_utils.jarbas_services import KnowledgeService
 from mycroft.util.log import getLogger
 from mycroft.skills.core import FallbackSkill
+from mycroft.skills.displayservice import DisplayService
 
 logger = getLogger("Skills")
 
-__authors__ = ["jarbas", "heinzschmidt"]
+__author__ = "jarbas"
 
 
 class LilacsCoreSkill(FallbackSkill):
@@ -74,6 +73,7 @@ class LilacsCoreSkill(FallbackSkill):
         self.last_data = {}
 
     def initialize(self):
+        self.display_service = DisplayService(self.emitter, "LILACS")
         self.register_fallback(self.handle_fallback, 0)
         #self.emitter.on("intent_failure", self.handle_fallback)
         self.emitter.on("LILACS_feedback", self.feedback)
@@ -854,72 +854,53 @@ class LilacsCoreSkill(FallbackSkill):
                 self.connector.add_data(node, "description", description)
             except:
                 self.log.error("no wikidata for " + node)
-            try:
-                # TODO all fields
-                summary = wikipedia["summary"]
-                data["summary"] = summary
-                self.connector.add_data(node, "summary", summary)
-                description = wikipedia["description"]
-                data["description"] = description
-                self.connector.add_data(node, "description", description)
-            except:
-                self.log.error("no wikipedia for " + node)
                 try:
-                    definition = wordnik["definitions"][0]
-                    data["definition"] = definition
-                    self.connector.add_data(node, "definition", definition)
+                    # TODO all fields
+                    summary = wikipedia["summary"]
+                    data["summary"] = summary
+                    self.connector.add_data(node, "summary", summary)
+                    description = wikipedia["description"]
+                    data["description"] = description
+                    self.connector.add_data(node, "description", description)
                 except:
-                    self.log.error("no wordnik for " + node)
+                    self.log.error("no wikipedia for " + node)
+                    try:
+                        definition = wordnik["definitions"][0]
+                        data["definition"] = definition
+                        self.connector.add_data(node, "definition", definition)
+                    except:
+                        self.log.error("no wordnik for " + node)
 
         self.crawler.update_connector(self.connector)
         #self.save_nodes([node])
+
         # read node data
-        try:
-            #self.log.info("showing pic in browser")
-            pic = data["pic"][0]
-            self.log.info(pic)
-            #webbrowser.open(pic)
-        except:
-            pass
-            #self.log.info("could not show pic in browser")
+        pics = data.get("pic")
+        if pics:
+            self.display_service.display(pics)
 
-        try:
-            abstract = data["abstract"]
-            if abstract != "":
-                self.speak(abstract)
-                return True
-        except:
-            pass
-        try:
-            description = data["description"]
-            if description != "":
-                self.speak(description)
-                return True
-        except:
-            pass
-        try:
-            summary = data["summary"]
-            if summary != "":
-                self.speak(summary)
-                return True
-        except:
-            try:
-                definition = data["definition"]
-                self.speak(definition)
-                return True
-            except:
-                try:
-                    definition = data["wolfram_description"]
-                    self.speak(definition)
-                    return True
-                except:
-                    pass
+        metadata = {}
+        links = data.get("links")
+        if links:
+            metadata = {"links": links}
 
+        answer = data.get("abstract", "")
+        if answer == "":
+            answer = data.get("description", "")
+            if answer == "":
+                answer = data.get("summary", "")
+                if answer == "":
+                    answer = data.get("definition", "")
+                    if answer == "":
+                        answer = data.get("wolfram_description", "")
 
         # TODO use intent tree to give interactive dialog suggesting more info
         # self.speak("Do you want examples of " + node)
         # activate yes intent
         # use converse method to disable or do something
+        if answer != "":
+            self.speak(answer, metadata=metadata)
+            return True
         return False
 
     def handle_who_intent(self, node):
