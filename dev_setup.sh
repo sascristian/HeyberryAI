@@ -46,7 +46,7 @@ fi
 
 # Check whether to build mimic (it takes a really long time!)
 build_mimic='y'
-if [[ "$1" == '-sm' ]] ; then 
+if [[ "$1" == '-sm' ]] ; then
   build_mimic='n'
 else
   # first, look for a build of mimic in the folder
@@ -103,10 +103,12 @@ fi
 python -m nltk.downloader wordnet
 python -m nltk.downloader punkt
 
-if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
-  CORES=1
-else 
-  CORES=$(nproc)
+SYSMEM=$(free|awk '/^Mem:/{print $2}')
+MAXCORES=$(($SYSMEM / 512000))
+CORES=$(nproc)
+
+if [[ ${MAXCORES} -lt ${CORES} ]]; then
+  CORES=${MAXCORES}
 fi
 
 echo "Building with $CORES cores."
@@ -120,13 +122,13 @@ cd "${TOP}"
 
 if [[ "$build_mimic" == 'y' ]] || [[ "$build_mimic" == 'Y' ]]; then
   echo "WARNING: The following can take a long time to run!"
-  "${TOP}/scripts/install-mimic.sh"
+  "${TOP}/scripts/install-mimic.sh" " ${CORES}"
 else
   echo "Skipping mimic build."
 fi
 
 # install pygtk for desktop_launcher skill
-"${TOP}/scripts/install-pygtk.sh"
+"${TOP}/scripts/install-pygtk.sh" " ${CORES}"
 
 
 # get geckodriver to usr/bin for browser service
