@@ -49,15 +49,11 @@ def handle_speak(event):
     utterance = event.data['utterance']
     expect_response = event.data.get('expect_response', False)
     mute = event.data.get("mute", False)
-    target = event.data.get("target", "all")
-    if target != "speech" and target != "all":
-        return
     # Mild abuse of the signal system to allow other processes to detect
     # when TTS is happening.  See mycroft.util.is_speaking()
     create_signal("isSpeaking")
 
-    utterance = event.data['utterance']
-    if event.data.get('expect_response', False):
+    if expect_response:
         ws.once('recognizer_loop:audio_output_end', _trigger_expect_response)
 
     # This is a bit of a hack for Picroft.  The analog audio on a Pi blocks
