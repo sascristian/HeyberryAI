@@ -137,6 +137,9 @@ case "$1" in
     start-mycroft voice
     start-mycroft cli --quiet --simple
     ;;
+  "-w"|"--web")
+    start-mycroft webchat
+    ;;
   "-v"|"--voice")
     start-mycroft voice
     ;;

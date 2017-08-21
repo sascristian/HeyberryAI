@@ -49,12 +49,15 @@ class SkillSettings(dict):
         Args:
             settings_file (str): Path to storage file
     """
-    def __init__(self, directory):
+    def __init__(self, directory, autopath=True):
         super(SkillSettings, self).__init__()
         self.api = DeviceApi()
         self._device_identity = self.api.identity.uuid
         # set file paths
-        self._settings_path = join(directory, 'settings.json')
+        if autopath:
+            self._settings_path = join(directory, 'settings.json')
+        else:
+            self._settings_path = directory
         self._meta_path = join(directory, 'settingsmeta.json')
         self._api_path = "/" + self._device_identity + "/skill"
 

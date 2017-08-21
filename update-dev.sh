@@ -11,3 +11,4 @@ easy_install pip
 pip install --upgrade virtualenv
 pip install -r requirements.txt
 python -m nltk.downloader wordnet
+python -m nltk.downloader punkt

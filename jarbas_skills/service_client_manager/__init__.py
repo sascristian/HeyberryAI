@@ -27,8 +27,9 @@ LOGGER = getLogger(__name__)
 from mycroft.messagebus.message import Message
 from mycroft.skills.settings import SkillSettings
 from mycroft.configuration import ConfigurationManager
-from os.path import dirname
+from os.path import dirname, exists
 import time, os
+from os import mkdir
 
 server_config = ConfigurationManager.get().get("jarbas_server")
 
@@ -60,12 +61,11 @@ class ClientUser():
     def init_user_settings(self, path=None):
         if path is None:
             path = dirname(__file__) + "/users"
-        self.settings = SkillSettings(path)
         # check if folders exist
         if not os.path.exists(path):
             os.makedirs(path)
         path += "/"+str(self.client_id) + ".json"
-
+        self.settings = SkillSettings(path, autopath=False)
         if self.client_id not in self.settings.keys():
             self.settings[self.client_id] = {}
 
@@ -163,6 +163,8 @@ class ClientManagerSkill(MycroftSkill):
         self.emitter.on("user.from_id.request", self.handle_user_from_id_request)
         self.emitter.on("user.from_facebook.request", self.handle_user_from_facebook_request)
         # build users id list db from disk
+        if not exists(dirname(__file__) + "/users"):
+            mkdir(dirname(__file__) + "/users")
         user_files = os.listdir(dirname(__file__) + "/users")
         for file in user_files:
             if ".json" in file:
@@ -417,8 +419,9 @@ class ClientManagerSkill(MycroftSkill):
     def handle_user_request(self, message):
         sock = message.data.get("sock")
         ip = message.data.get("ip")
+        if not ip or not sock:
+            return
         user_id = self.user_from_ip_sock(sock, ip)
-
         current_user = self.users[user_id]
         current_user.last_timestamp = time.time()
         current_user.last_seen = time.asctime()

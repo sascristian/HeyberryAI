@@ -441,7 +441,6 @@ class LilacsCoreSkill(FallbackSkill):
     def handle_fallback(self, message):
         # try to deduce and learn an answer
         utterance = message.data["utterance"]
-        self.context = self.get_context(message.context)
         return self.deduce_answer(utterance)
 
     # questions methods

@@ -34,7 +34,7 @@ fi
 
 # Configure to use the standard commit template for
 # this repo only.
-git config commit.template .gitmessage
+# git config commit.template .gitmessage
 
 TOP=$(cd $(dirname $0) && pwd -L)
 
@@ -81,7 +81,7 @@ pip install --upgrade virtualenv
 
 # copy global open-cv to virtual env
 # https://medium.com/@manuganji/installation-of-opencv-numpy-scipy-inside-a-virtualenv-bf4d82220313
-# sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
+sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
 
 # tensorflow from binary
 pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
@@ -99,9 +99,9 @@ if ! pip install -r requirements.txt; then
     fi
 fi
 
-# nltk wordnet
-
+# nltk
 python -m nltk.downloader wordnet
+python -m nltk.downloader punkt
 
 if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
   CORES=1
@@ -134,3 +134,4 @@ wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodrive
 tar -xvzf geckodriver-v0.18.0-linux64.tar.gz
 chmod +x geckodriver
 sudo mv geckodriver /usr/local/bin/
+sudo rm -rf geckodriver-v0.18.0-linux64.tar.gz

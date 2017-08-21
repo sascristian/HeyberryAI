@@ -51,7 +51,7 @@ class PornDetectionService(MycroftSkill):
         predictions = self.is_this_porn([pic])
         self.emitter.emit(Message("porn.recognition.result",
                                   {"predictions": predictions},
-                                  self.get_context(message.context)))
+                                  self.get_message_context(message.context)))
 
     def is_this_porn(self, picture_list):
         model = NNPCR()

@@ -93,6 +93,7 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - speech messages set adapt context for LastSpeech and every metadata field
             - recognizer_loop:speak message type
             - ConfigurationManager.save checks for config existence before loading it
+            - webchat client
 
             # temporary changes
             - no msm

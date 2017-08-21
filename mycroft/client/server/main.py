@@ -366,7 +366,7 @@ class MyServerFactory(WebSocketServerFactory):
                     context["source"] = "unknown"
             if "mute" not in context.keys():
                 context["mute"] = False
-            context["destinatary"] = str(context["source"]) + ":" + sock_num
+            context["source"] = str(context["source"]) + ":" + sock_num
             context["ip"] = ip
             logger.debug("Message context: " + str(context))
             # authorize user message_type
@@ -379,8 +379,14 @@ class MyServerFactory(WebSocketServerFactory):
                 self.send_message(client, "speak", {"utterance": "Messages of type " + deserialized_message.type + " are not allowed for your account"}, context)
                 return
             user = user_data.get("id", sock_num)
+            logger.debug("user data: " + str(user_data))
             context["user"] = user
-            context["user_name"] = user_data.get("nicknames", ["unknown name"])[0]
+            try:
+                context["user_name"] = user_data.get("nicknames", ["unknown "
+                                                                "name"])[0]
+            except:
+                context["user_name"] = "unknown name"
+            logger.debug(context)
             # check if message also sent files
             # TODO file formats
             if self.clients[client.peer].get("file_path"):
@@ -412,18 +418,26 @@ class MyServerFactory(WebSocketServerFactory):
             # notify user action
             client_data = self.clients[client.peer]
             context = {"user": client_data["names"][0], "source": ip + ":" + str(sock_num)}
-            self.emitter.emit(
+            try:
+                self.emitter.emit(
                 Message("user.request",
                         {"ip": ip, "sock": sock_num, "pub_key": client_data["pgp"], "nicknames": client_data["names"]},
                         context))
+            except Exception as e:
+                logger.error(e)
         else:
             logger.warning("message type not allowed: " +
                            deserialized_message.type)
 
     def validate_user_utterance(self, utterance, user_data, context, client):
         # check if skill/intent that will trigger is authorized for this user
+        logger.info("Authorizing utterance for user")
         intent, skill = self.parser.determine_intent(utterance)
-        if intent in user_data.get("forbidden_intents", []):
+        if int(skill) == 0:
+            # TODO intent failure, authorize fallback
+            pass
+        if intent in user_data.get("forbidden_intents", config.get(
+                "forbidden_intents", [])):
             logger.warning("Intent " + intent + " is not allowed for " +
                            user_data.get("nicknames", [client.peer])[0])
             self.send_message(client, "speak", {
@@ -432,7 +446,8 @@ class MyServerFactory(WebSocketServerFactory):
 
             return
 
-        if skill in user_data.get("forbidden_skills"):
+        if skill in user_data.get("forbidden_skills", config.get(
+                "forbidden_skills", [])):
             logger.warning("Skill " + skill + " is not allowed for " + user_data.get("nicknames", [client.peer])[0])
             self.send_message(client, "speak", {
                 "utterance": skill + " is not allowed for your account"},
@@ -444,7 +459,8 @@ class MyServerFactory(WebSocketServerFactory):
             Message("recognizer_loop:utterance",
                     {'utterances': [utterance.strip()]}, context))
 
-        logger.debug("Waiting answer for user " + context["source"])
+        logger.debug("Waiting answer for user " + context.get("source",
+                                                              "source error!"))
 
     def Message_to_raw_data(self, Message):
         if hasattr(Message, 'serialize'):
@@ -455,6 +471,8 @@ class MyServerFactory(WebSocketServerFactory):
     def send_message(self, client, type="speak", data=None, context=None, cipher="none"):
         if data is None:
             data = {}
+        logger.info("Sending message to " + str(client.peer))
+        logger.info("cipher: " + cipher + " context: " + str(context) + " data: " + str(data))
         message = self.Message_to_raw_data(Message(type, data, context))
         if cipher == "pgp":
             logger.debug("target pgp fingerprint: " + self.clients[client.peer].get("fingerprint"))
@@ -530,6 +548,8 @@ class MyServerFactory(WebSocketServerFactory):
     def handle_speak(self, event):
         target = event.context.get('destinatary', "all")
         if ":" not in target:
+            return
+        elif "fbchat" in target or "webbchat" in target:
             return
         utterance = event.data.get('utterance', "")
         logger.debug("Answer: " + utterance + " Target: " + target)

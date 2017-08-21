@@ -35,7 +35,7 @@ class CleverbotFallback(FallbackSkill):
         self.chat_mode = False
         self.parser = None
         try:
-            api_key = self.config_core.get("APIS")["CleverbotApi"]
+            api_key = self.config_core.get("APIS")["Cleverbot"]
         except:
             api_key = self.config.get("CleverbotAPI")
         self.cleverbot = CleverWrap(api_key)
@@ -84,7 +84,6 @@ class CleverbotFallback(FallbackSkill):
 
     def handle_fallback(self, message):
         utterance = message.data.get("utterance")
-        self.context = self.get_context(message.context)
         answer = self.ask_cleverbot(utterance)
         if answer != "":
             self.speak(answer)

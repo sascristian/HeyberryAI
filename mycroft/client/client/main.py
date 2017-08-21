@@ -209,10 +209,12 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
     # websocket handlers
     def clientConnectionFailed(self, connector, reason):
         logger.info("Client connection failed: " + str(reason) + " .. retrying ..")
+        self.status = "waiting server pgp"
         self.retry(connector)
 
     def clientConnectionLost(self, connector, reason):
         logger.info("Client connection lost: " + str(reason) + " .. retrying ..")
+        self.status = "waiting server pgp"
         self.retry(connector)
 
     # mycroft handlers
@@ -275,6 +277,7 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
             logger.debug("Asking server for answer")
             if self.client is None or self.status != "connected":
                 logger.error("Key exchange was not completed")
+
             else:
                 self.sendMessage(event.type, event.data, event.context)
         else:

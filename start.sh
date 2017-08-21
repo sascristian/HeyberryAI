@@ -11,6 +11,7 @@ ${TOP}/scripts/prepare-msm.sh
 
 case $1 in
 	"service") SCRIPT=${TOP}/mycroft/messagebus/service/main.py ;;
+	"webchat") SCRIPT=${TOP}/mycroft/client/webchat/main.py ;;
 	"server") SCRIPT=${TOP}/mycroft/client/server/main.py ;;
 	"client") SCRIPT=${TOP}/mycroft/client/client/main.py ;;
 	"skills") SCRIPT=${TOP}/mycroft/skills/main.py ;;
