@@ -138,7 +138,8 @@ class IntentService(object):
         self.emitter.on('recognizer_loop:utterance', self.handle_utterance)
         self.emitter.on('detach_intent', self.handle_detach_intent)
         self.emitter.on('detach_skill', self.handle_detach_skill)
-        self.emitter.on('converse_status_response', self.handle_conversation_response)
+        self.emitter.on('skill.converse.response',
+                        self.handle_conversation_response)
         self.emitter.on('intent_request', self.handle_intent_request)
         self.emitter.on('intent_to_skill_request', self.handle_intent_to_skill_request)
         self.emitter.on('active_skill_request', self.handle_active_skill_request)
@@ -159,7 +160,7 @@ class IntentService(object):
                 self.context_manager.inject_context(context_entity)
 
     def do_conversation(self, utterances, skill_id, lang):
-        self.emitter.emit(Message("converse_status_request", {
+        self.emitter.emit(Message("skill.converse.request", {
             "skill_id": skill_id, "utterances": utterances, "lang": lang}))
         self.waiting = True
         self.result = False

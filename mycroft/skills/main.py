@@ -66,6 +66,7 @@ else:
 PRIORITY_SKILLS = skills_config["priority_skills"]
 BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
 
+
 def connect():
     global ws
     ws.run_forever()
@@ -365,17 +366,17 @@ def handle_conversation_request(message):
                 instance = loaded_skills[skill]["instance"]
             except:
                 logger.error("converse requested but skill not loaded")
-                ws.emit(Message("converse_status_response", {
+                ws.emit(Message("skill.converse.response", {
                     "skill_id": 0, "result": False}))
                 return
             try:
                 result = instance.converse(utterances, lang)
-                ws.emit(Message("converse_status_response", {
+                ws.emit(Message("skill.converse.response", {
                     "skill_id": skill_id, "result": result}))
                 return
             except:
                 logger.error("Converse method malformed for skill " + str(skill_id))
-    ws.emit(Message("converse_status_response", {
+    ws.emit(Message("skill.converse.response", {
         "skill_id": 0, "result": False}))
 
 
@@ -423,7 +424,7 @@ def main():
 
     ws.on('message', _echo)
     ws.once('open', _load_skills)
-    ws.on('converse_status_request', handle_conversation_request)
+    ws.on('skill.converse.request', handle_conversation_request)
     ws.on('reload_skill_request', handle_reload_skill_request)
     ws.on('shutdown_skill_request', handle_shutdown_skill_request)
     ws.on('loaded_skills_request', handle_loaded_skills_request)
