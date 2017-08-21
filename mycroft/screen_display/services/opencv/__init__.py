@@ -84,7 +84,7 @@ class OpenCVService(DisplayBackend):
         self.index += 1
         if self.index > len(self.pictures):
             self.index = 0
-        self._display()
+        self.display()
 
     def previous(self):
         """
@@ -94,7 +94,7 @@ class OpenCVService(DisplayBackend):
         self.index -= 1
         if self.index > 0:
             self.index = len(self.pictures)
-        self._display()
+        self.display()
 
     def reset(self):
         """

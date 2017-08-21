@@ -20,7 +20,7 @@ class DisplayBackend():
     @abstractmethod
     def display(self):
         """
-           Display First Picture in Pictures List of paths
+           Display self.index in Pictures List of paths
         """
         pass
 
@@ -66,6 +66,12 @@ class DisplayBackend():
            Unset Lock Flag so nothing else can display
         """
         pass
+
+    def change_index(self, index):
+        """
+           Change picture index
+        """
+        self.index = index
 
     def change_fullscreen(self, value=True):
         """

@@ -21,7 +21,8 @@ class DisplayService():
         """
         self.info = message.data
 
-    def display(self, file_path_list=None, reset=True, utterance=''):
+    def display(self, file_path_list=None, index=None, reset=True,
+                utterance=''):
         """ Start display.
 
             Args:
@@ -38,7 +39,8 @@ class DisplayService():
         self.emitter.emit(Message('mycroft.display.service.display',
                                   data={'file_list': file_path_list,
                                         'utterance': utterance,
-                                        'reset': reset}))
+                                        'reset': reset,
+                                        'index': index}))
 
     def add_pictures(self, file_path_list, utterance = ""):
         """ Start display.

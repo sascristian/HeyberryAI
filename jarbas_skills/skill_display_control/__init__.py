@@ -20,6 +20,8 @@ class DisplayControlSkill(MycroftSkill):
         self.default_pic = dirname(__file__) + "/pixel jarbas.png"
         self.height = 500
         self.width = 500
+        self.pics = []
+        self.index = 0
 
     def initialize(self):
         self.log.info('initializing Display Control Skill')
@@ -93,31 +95,62 @@ class DisplayControlSkill(MycroftSkill):
             "PictureKeyword").require("CloseKeyword").build()
         self.register_intent(close_intent, self.handle_close)
 
-        self.handle_start(Message("dummy"))
+        self.emitter.on('mycroft.display.service.display',
+                        self.handle_cache_pics)
+        self.emitter.on('mycroft.display.service.add_pictures',
+                        self.handle_cache_pics)
+
+    def handle_cache_pics(self, message):
+        self.log.info("Caching pictures")
+        pics = message.data.get("file_list")
+        reset = message.data.get("reset", True)
+        index = message.data.get("index")
+        if index is not None:
+            self.index = index
+        if reset is not None:
+            if reset:
+                self.pics = pics
+                return
+        self.pics.extend(pics)
 
     def handle_random(self, message):
         self.speak("Displaying random picture")
         pic = url_to_pic("https://unsplash.it/600/?random")
+        self.pics = [pic]
+        self.index = 0
         self.display_service.display([pic], utterance=message.data.get(
             "utterance"))
 
     def handle_display(self, message):
         self.speak("Displaying")
-        self.display_service.display(reset=False, utterance=message.data.get("utterance"))
+        # display cached picture paths, allow for "display in backend" current pic
+        self.display_service.display(self.pics,
+                                     self.index,
+                                     utterance=message.data.get("utterance"))
 
     def handle_close(self, message):
         self.speak("Closing display")
         self.display_service.close(utterance=message.data.get("utterance"))
 
     def handle_next(self, message):
+        self.index += 1
+        if self.index > len(self.pics):
+            self.index = 0
         self.speak("Displaying next picture")
         self.display_service.next(utterance=message.data.get("utterance"))
 
     def handle_prev(self, message):
+        self.index -= 1
+        if self.index > 0:
+            self.index = len(self.pics)
         self.speak("Displaying previous picture")
         self.display_service.prev(utterance=message.data.get("utterance"))
 
     def handle_reset(self, message):
+        self.index = 0
+        self.pics = []
+        self.width = 500
+        self.height = 500
         self.speak("Reseting picture list and window size")
         self.display_service.reset(utterance=message.data.get("utterance"))
         self.display_service.set_width(500, message.data.get("utterance"))
@@ -133,7 +166,11 @@ class DisplayControlSkill(MycroftSkill):
                                      utterance=message.data.get("utterance"))
 
     def handle_stop(self, message):
-        self.speak("Closing all displays")
+        self.speak("Closing display")
+        self.index = 0
+        self.pics = []
+        self.width = 500
+        self.height = 500
         utterance = message.data.get("utterance")
         self.display_service.reset(utterance)
         self.display_service.close(utterance)
@@ -162,6 +199,7 @@ class DisplayControlSkill(MycroftSkill):
             self.speak("invalid width")
             return
         self.speak("Changing Display width to " + width)
+        self.width = width
         self.display_service.set_width(int(width), message.data.get("utterance"))
         self.display_service.display(reset=False)
 
@@ -171,6 +209,7 @@ class DisplayControlSkill(MycroftSkill):
             self.speak("invalid height")
             return
         self.speak("Changing Display heigth to " + height)
+        self.height = height
         self.display_service.set_height(int(height), message.data.get(
             "utterance"))
         self.display_service.display(reset=False)
