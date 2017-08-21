@@ -26,9 +26,7 @@ class DisplayControlSkill(MycroftSkill):
 
     def initialize(self):
         self.log.info('initializing Display Control Skill')
-        super(DisplayControlSkill, self).initialize()
-        self.load_data_files(dirname(__file__))
-        self.display_service = DisplayService(self.emitter)
+        self.display_service = DisplayService(self.emitter, self.name)
         self.display_service.set_width(self.width)
         self.display_service.set_height(self.height)
 
@@ -44,7 +42,7 @@ class DisplayControlSkill(MycroftSkill):
             "PictureKeyword").require("IncreaseKeyword").build()
         self.register_intent(increase_intent, self.handle_increase)
 
-        decrease_intent = IntentBuilder("DisplaydecreaseIntent").require(
+        decrease_intent = IntentBuilder("DisplayDecreaseIntent").require(
             "PictureKeyword").require("DecreaseKeyword").build()
         self.register_intent(decrease_intent, self.handle_decrease)
 
@@ -118,7 +116,6 @@ class DisplayControlSkill(MycroftSkill):
                 self.pics = pics
                 return
         self.pics.extend(pics)
-
 
     def handle_random(self, message):
         self.speak("Displaying random picture")

@@ -9,7 +9,8 @@ class DisplayService():
         Args:
             emitter: eventemitter or websocket object
     """
-    def __init__(self, emitter):
+    def __init__(self, emitter, name="skills"):
+        self.name = name
         self.emitter = emitter
         self.emitter.on('mycroft.display.service.pic_info_reply',
                         self._pic_info)
@@ -40,7 +41,9 @@ class DisplayService():
                                   data={'file_list': file_path_list,
                                         'utterance': utterance,
                                         'reset': reset,
-                                        'index': index}))
+                                        'index': index},
+                                  context={"source": self.name,
+                                           "destinatary": "Display Service"}))
 
     def add_pictures(self, file_path_list, utterance = ""):
         """ Start display.

@@ -46,7 +46,7 @@ class EPICSkill(MycroftSkill):
 
         self.disable_intent("PreviousEPICIntent")
 
-        self.display_service = DisplayService(self.emitter)
+        self.display_service = DisplayService(self.emitter, self.name)
 
     def handle_website_epic_intent(self, message):
         webbrowser.open("http://epic.gsfc.nasa.gov/")
