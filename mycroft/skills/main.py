@@ -57,7 +57,7 @@ installer_config = ConfigurationManager.instance().get("SkillInstallerSkill")
 MSM_BIN = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm', 'msm'))
 
 skills_config = ConfigurationManager.instance().get("skills")
-config_dir = skills_config.get("skills_dir")
+config_dir = skills_config.get("skills_dir", "default")
 if config_dir == "default":
     SKILLS_DIR = join(MYCROFT_ROOT_PATH, "jarbas_skills")
 else:
