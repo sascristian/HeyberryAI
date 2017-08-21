@@ -22,6 +22,7 @@ class DisplayControlSkill(MycroftSkill):
         self.width = 500
         self.pics = []
         self.index = 0
+        self.source = "unknown"
 
     def initialize(self):
         self.log.info('initializing Display Control Skill')
@@ -30,6 +31,10 @@ class DisplayControlSkill(MycroftSkill):
         self.display_service = DisplayService(self.emitter)
         self.display_service.set_width(self.width)
         self.display_service.set_height(self.height)
+
+        current_intent = IntentBuilder("CurrentPicIntent").require(
+            "PictureKeyword").require("CurrentKeyword").build()
+        self.register_intent(current_intent, self.handle_currently_displaying)
 
         random_intent = IntentBuilder("RandomPicIntent").require(
             "PictureKeyword").require("RandomKeyword").optionally("ShowKeyword").build()
@@ -102,9 +107,10 @@ class DisplayControlSkill(MycroftSkill):
 
     def handle_cache_pics(self, message):
         self.log.info("Caching pictures")
-        pics = message.data.get("file_list")
-        reset = message.data.get("reset", True)
+        pics = message.data.get("file_list", [])
+        reset = message.data.get("reset")
         index = message.data.get("index")
+        self.source = message.context.get("source", "unknown")
         if index is not None:
             self.index = index
         if reset is not None:
@@ -113,11 +119,10 @@ class DisplayControlSkill(MycroftSkill):
                 return
         self.pics.extend(pics)
 
+
     def handle_random(self, message):
         self.speak("Displaying random picture")
         pic = url_to_pic("https://unsplash.it/600/?random")
-        self.pics = [pic]
-        self.index = 0
         self.display_service.display([pic], utterance=message.data.get(
             "utterance"))
 
@@ -129,6 +134,10 @@ class DisplayControlSkill(MycroftSkill):
                                      utterance=message.data.get("utterance"))
 
     def handle_close(self, message):
+        self.index = 0
+        self.pics = []
+        self.width = 500
+        self.height = 500
         self.speak("Closing display")
         self.display_service.close(utterance=message.data.get("utterance"))
 
@@ -214,10 +223,12 @@ class DisplayControlSkill(MycroftSkill):
             "utterance"))
         self.display_service.display(reset=False)
 
-    # NOT WORKING in services yet
-
     def handle_currently_displaying(self, message):
-        return
+        if len(self.pics):
+            self.speak("Currently displaying picture " + str(self.index)
+                       + "from " + self.source)
+        else:
+            self.speak("Currently not displaying any pictures")
 
     def handle_set_fullscreen(self, message):
         self.speak("Setting fullscreen")
