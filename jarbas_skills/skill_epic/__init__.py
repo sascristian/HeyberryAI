@@ -73,8 +73,8 @@ class EPICSkill(MycroftSkill):
         f = open(save_path, 'wb')
         f.write(raw_img)
         f.close()
+        # TODO format date for decent speech
         self.speak_dialog("EPIC", {"date": date})
-        self.display_service.reset()
         self.display_service.display([save_path], utterance)
         for num in range(1, len(self.response.body)):
             num = len(self.response.body) - num
