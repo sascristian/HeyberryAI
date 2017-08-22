@@ -35,11 +35,62 @@ class LILACSConceptNetSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("conceptnet.request", self.handle_ask_conceptnet)
         test_intent = IntentBuilder("TestconceptnetIntent") \
-            .require("testc").require("Subject").build()
-        self.register_intent(test_intent, self.handle_ask_conceptnet)
+            .require("testc").require("TargetKeyword").build()
+        self.register_intent(test_intent, self.handle_test_intent)
+
+    def handle_test_intent(self, message):
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
+        result = self.adquire(node).get("concept net")
+        if not result:
+            self.speak("Could not get info about " + node + " from concept net")
+            return
+
+        if len(result.get("IsA", [])):
+            self.speak("concept net says " + node + " is")
+            for thing in result["IsA"]:
+                self.speak(thing)
+
+        if len(result.get("CapableOf", [])):
+            self.speak("concept net says " + node + " is capable of")
+            for thing in result["CapableOf"]:
+                self.speak(thing)
+
+        if len(result.get("HasA", [])):
+            self.speak("concept net says " + node + " has ")
+            for thing in result["HasA"]:
+                self.speak(thing)
+
+        if len(result.get("Desires", [])):
+            self.speak("concept net says " + node + " desires")
+            for thing in result["Desires"]:
+                self.speak(thing)
+
+        if len(result.get("UsedFor", [])):
+            self.speak("concept net says " + node + " is used for")
+            for thing in result["UsedFor"]:
+                self.speak(thing)
+
+        if len(result.get("AtLocation", [])):
+            self.speak("concept net says " + node + " can be found at")
+            for thing in result["AtLocation"]:
+                self.speak(thing)
+
+        if len(result.get("RelatedTo", [])):
+            self.speak("concept net says " + node + " is related to")
+            for thing in result["RelatedTo"]:
+                self.speak(thing)
+
+        if len(result.get("RelatedNodes", [])):
+            self.speak("concept net says these things are related to " + node)
+            for thing in result["RelatedNodes"]:
+                self.speak(thing)
 
     def handle_ask_conceptnet(self, message):
-        node = message.data.get("Subject", "life")
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
         self.emitter.emit(Message("conceptnet.result", result, self.message_context))

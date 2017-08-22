@@ -518,8 +518,10 @@ class DreamService(MycroftSkill):
         # TODO dreaming queue, all params from message
         self.log.info("Dream request received")
         self.context = message.context
-        source = message.data.get("dream_source")
-        guide = message.data.get("dream_guide")
+        source = message.data.get("dream_source", message.data.get(
+            "PicturePath"))
+        guide = message.data.get("dream_guide", message.data.get(
+            "PicturePath"))
         name = message.data.get("dream_name")
         iter = message.data.get("iter_num", self.iter)
         categorie = message.data.get("categorie")

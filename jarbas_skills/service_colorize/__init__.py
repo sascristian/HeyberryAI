@@ -49,7 +49,7 @@ class ColorizationService(MycroftSkill):
 
         intent = IntentBuilder("ColorizeIntent") \
             .require("ColorizeKeyword").optionally(
-            "picture_path").optionally("picture_url").optionally(
+            "PicturePath").optionally("picture_url").optionally(
             "BlackWhiteKeyword").build()
         self.register_intent(intent,
                              self.handle_colorize_intent)
@@ -58,7 +58,7 @@ class ColorizationService(MycroftSkill):
     def handle_colorize_intent(self, message):
         pic = message.data.get("picture_url")
         if not pic:
-            pic = message.data.get("picture_path")
+            pic = message.data.get("PicturePath")
             if not pic:
                 pic = url_to_pic("https://unsplash.it/600")
         else:
@@ -75,7 +75,7 @@ class ColorizationService(MycroftSkill):
         if url:
             pic = url_to_pic(url)
         else:
-            pic = message.data.get("picture_path")
+            pic = message.data.get("PicturePath")
         file, url = self.colorize([pic])
         self.emitter.emit(Message("colorization.result",
                                   {"url": url, "file": file,

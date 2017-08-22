@@ -461,11 +461,11 @@ class LilacsCoreSkill(FallbackSkill):
 
         w_dict = wordnik
         wordnik = wordnik["relations"]
-        try:
+        if "antonym" in wordnik.keys():
             # antonyms are legit
             for antonim in wordnik["antonym"]:
                 self.connector.add_antonim(node, antonim)
-        except:
+        else:
             self.log.info("no antonyms in wordnik")
 
         # other fields not very reliable, make cousins
@@ -479,7 +479,7 @@ class LilacsCoreSkill(FallbackSkill):
 
         concepts = self.connector.get_concept_names()
         for r in related:
-            try:
+            if r in wordnik.keys():
                 for c in wordnik[r]:
                     c = c.lower().replace("the ", "")
                     if c not in concepts:
@@ -491,7 +491,7 @@ class LilacsCoreSkill(FallbackSkill):
                             self.speak("adding cousin: " + c + " to concept: " + node)
                         self.log.info("adding cousin: " + c + " to concept: " + node)
                         self.connector.add_cousin(node, c)
-            except:
+            else:
                 self.log.info("no " + r + " in wordnik")
         return w_dict
 
@@ -919,7 +919,6 @@ class LilacsCoreSkill(FallbackSkill):
                 return True
         else:
             return self.handle_what_intent(node)
-        return False
 
     def handle_when_intent(self, node):
         self.crawler.update_connector(self.connector)
@@ -955,7 +954,7 @@ class LilacsCoreSkill(FallbackSkill):
         self.speak_dialog("wrong_answer")
 
     def feedback(self, message):
-        feedback = message.data["feedback"]
+        feedback = message.data.get("feedback", "")
         # check if previously answered a question
         if feedback == "negative" and self.answered:
             # wrong answer was given, react to negative feedback

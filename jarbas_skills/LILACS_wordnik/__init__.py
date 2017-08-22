@@ -43,11 +43,33 @@ class LILACSWordnikSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("wordnik.request", self.handle_ask_wordnik)
         test_intent = IntentBuilder("TestWordnikIntent") \
-            .require("testn").require("Subject").build()
-        self.register_intent(test_intent, self.handle_ask_wordnik)
+            .require("testn").require("TargetKeyword").build()
+        self.register_intent(test_intent, self.handle_test_intent)
+
+    def handle_test_intent(self, message):
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
+        result = self.adquire(node).get("wordnik")
+        if not result:
+            self.speak("Could not get info about " + node + " from wordnik")
+            return
+        relations = result.get("relations", {})
+        definitions = result.get("definitions", [])
+        if len(definitions):
+            self.speak("wordnik found " + str(len(definitions)) + " definitions for " + node)
+            for definition in definitions:
+                self.speak(definition)
+        if len(relations.keys()):
+            self.speak("The following relationships to " + node + " are available")
+            for key in relations:
+                self.speak(key)
+                self.speak(relations[key])
 
     def handle_ask_wordnik(self, message):
-        node = message.data.get("Subject")
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
         self.emitter.emit(Message("wordnik.result", result, self.message_context))

@@ -25,6 +25,7 @@ __author__ = 'jarbas'
 logger = getLogger(__name__)
 
 import wptools
+from mycroft.skills.displayservice import DisplayService
 
 
 class LILACSWikipediaSkill(MycroftSkill):
@@ -35,11 +36,48 @@ class LILACSWikipediaSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("wikipedia.request", self.handle_ask_wikipedia)
         test_intent = IntentBuilder("TestWikipediaIntent") \
-            .require("testp").require("Subject").build()
-        self.register_intent(test_intent, self.handle_ask_wikipedia)
+            .require("testp").require("TargetKeyword").build()
+        self.register_intent(test_intent, self.handle_test_intent)
+        self.display_service = DisplayService(self.emitter, self.name)
+
+    def handle_test_intent(self, message):
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
+        result = self.adquire(node).get("wikipedia")
+        if not result:
+            self.speak("Could not get info about " + node + " from wikipedia")
+            return
+        url = result.get("url")
+        external_links = result.get("external_links", [])
+        pics = [result.get("pic")]
+        metadata = {}
+        if url:
+            metadata["url"] = url
+        if pics[0]:
+            metadata["pictures"] = pics
+            self.display_service.display(pics, utterance=message.data.get[
+                "utterance"])
+
+        if result.get("description", "") != "":
+            self.speak("wikipedia description says ")
+            self.speak(result["summary"])
+
+        infobox = result.get("infobox", {})
+        if infobox != {}:
+            self.speak("wikipedia infobox says ")
+            for key in infobox:
+                self.speak(key)
+                self.speak(infobox[key])
+
+        if result.get("summary", "") != "":
+            self.speak("wikipedia summary says ")
+            self.speak(result["summary"])
 
     def handle_ask_wikipedia(self, message):
-        node = message.data.get("Subject")
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
         self.emitter.emit(Message("wikipedia.result", result, self.message_context))

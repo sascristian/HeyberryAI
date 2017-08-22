@@ -129,7 +129,8 @@ class ImageRecognitionSkill(MycroftSkill):
         self.speak_dialog("imgrecogstatus")
         dest = message.context.get("destinatary", "all")
         imgrecog = ImageRecogService(self.emitter, timeout=130)
-        results = imgrecog.get_classification(dirname(__file__)+"/obama.jpg", server=False)
+        path = message.data.get("PicturePath", dirname(__file__)+"/obama.jpg")
+        results = imgrecog.get_classification(path, server=False)
         if not results:
             self.log.error("no classification received")
             return
@@ -141,11 +142,12 @@ class ImageRecognitionSkill(MycroftSkill):
     def handle_classify(self, message):
         if message.context is not None:
             self.message_context.update(message.context)
-        pic = message.data.get("file", None)
+        pic = message.data.get("file", message.data.get("PicturePath"))
         if pic is None:
             self.log.error("Could not read file to classify")
             self.speak("Could not read file to classify")
             return
+        self.set_context("PicturePath", pic)
         user_id = message.context.get("source", "unknown")
         if ":" not in user_id and ":" in message.context.get("destinatary", "unknown"):
             user_id =message.context.get("destinatary")

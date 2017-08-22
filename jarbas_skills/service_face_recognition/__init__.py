@@ -29,11 +29,12 @@ class FaceRecognitionSkill(MycroftSkill):
     def handle_recog(self, message):
         if message.context is not None:
             self.message_context.update(message.context)
-        face = message.data.get("file")
+        face = message.data.get("file", message.data.get("PicturePath"))
         if face is None:
             self.log.error("no file!")
             face = "missing file"
-
+        else:
+            self.set_context("PicturePath", face)
         result = "unknown person"
         # read unknown image
         self.log.info("loading unknown image")

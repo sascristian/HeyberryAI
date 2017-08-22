@@ -28,6 +28,8 @@ import spotlight
 import urlfetch
 import json
 from adapt.intent import IntentBuilder
+from mycroft.skills.displayservice import DisplayService
+
 
 class LILACSDBpediaSkill(MycroftSkill):
     def __init__(self):
@@ -38,11 +40,43 @@ class LILACSDBpediaSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("dbpedia.request", self.handle_ask_dbpedia)
         test_intent = IntentBuilder("TestdbpediaIntent") \
-            .require("testd").require("Subject").build()
-        self.register_intent(test_intent, self.handle_ask_dbpedia)
+            .require("testd").require("TargetKeyword").build()
+        self.register_intent(test_intent, self.handle_test_intent)
+        self.display_service = DisplayService(self.emitter, self.name)
+
+    def handle_test_intent(self, message):
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
+        result = self.adquire(node).get("dbpedia")
+        if not result:
+            self.speak("Could not get info about " + node + " from dbpedia")
+            return
+        metadata = {}
+        url = result.get("url")
+        result = result.get("page_info", {})
+        external_links = result.get("external_links", [])
+        pics = result.get("pictures", [])
+        if url:
+            metadata["url"] = url
+        if len(external_links):
+            metadata["external_links"] = external_links
+        if len(pics):
+            metadata["pictures"] = pics
+            self.display_service.display(pics, utterance=message.data.get["utterance"])
+
+        if result.get("abstract", "") != "":
+            self.speak(result["abstract"])
+
+        if len(result.get("related_subjects", [])):
+            self.speak("related subjects according to dbpedia")
+            for thing in result["related_subjects"]:
+                self.speak(thing)
 
     def handle_ask_dbpedia(self, message):
-        node = message.data.get("Subject")
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
         self.emitter.emit(Message("dbpedia.result", result, self.message_context))

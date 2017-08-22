@@ -77,7 +77,7 @@ class StyleTransferSkill(MycroftSkill):
                         self.handle_receive_transfer_result)
 
         style_transfer_intent = IntentBuilder("StyleTransferIntent") \
-            .require("styletransfer").build()
+            .require("styletransfer").optionally("PicturePath").build()
         self.register_intent(style_transfer_intent,
                              self.handle_style_transfer_intent)
         self.display_service = DisplayService(self.emitter)
@@ -91,7 +91,7 @@ class StyleTransferSkill(MycroftSkill):
             message.context = self.message_context
         style_img = [dirname(__file__) + "/styles/HRGiger/alien.jpg", dirname(
             __file__) + "/styles/HRGiger/giger.jpg"]
-        target_img = dirname(__file__) + "/test.jpg"
+        target_img = message.data.get("PicturePath", dirname(__file__) + "/test.jpg")
         iter_num = message.data.get("iter_num", 400)
         self.speak("testing style transfer")
         transfer = StyleTransferService(self.emitter)
@@ -113,6 +113,8 @@ class StyleTransferSkill(MycroftSkill):
         style_img = message.data.get("style_img", [
                                      dirname(__file__) + "/giger.jpg"])
         target_img = message.data.get("target_img")
+        if target_img:
+            self.set_context("PicturePath", target_img)
         iter_num = message.data.get("iter_num", ITERATIONS)
         speak = message.data.get("speak", True)
         if name is None:

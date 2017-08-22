@@ -114,8 +114,12 @@ class DisplayControlSkill(MycroftSkill):
         if reset is not None:
             if reset:
                 self.pics = pics
+                if len(pics):
+                    self.set_context("PicturePath", pics[0])
                 return
         self.pics.extend(pics)
+        if len(pics):
+            self.set_context("PicturePath", pics[0])
 
     def handle_random(self, message):
         self.speak("Displaying random picture")
@@ -142,6 +146,8 @@ class DisplayControlSkill(MycroftSkill):
         self.index += 1
         if self.index > len(self.pics):
             self.index = 0
+        if len(self.pics):
+            self.set_context("PicturePath", self.pics[self.index])
         self.speak("Displaying next picture")
         self.display_service.next(utterance=message.data.get("utterance"))
 
@@ -149,6 +155,8 @@ class DisplayControlSkill(MycroftSkill):
         self.index -= 1
         if self.index > 0:
             self.index = len(self.pics)
+        if len(self.pics):
+            self.set_context("PicturePath", self.pics[self.index])
         self.speak("Displaying previous picture")
         self.display_service.prev(utterance=message.data.get("utterance"))
 

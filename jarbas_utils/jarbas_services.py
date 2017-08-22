@@ -237,37 +237,37 @@ class KnowledgeService(ServiceBackend):
             return self.ask_conceptnet(subject)
 
     def ask_wikipedia(self, subject):
-        self.send_request("wikipedia.request", {"subject": subject})
+        self.send_request("wikipedia.request", {"TargetKeyword": subject})
         self.wait("wikipedia.result")
         return self.result
 
     def ask_wikidata(self, subject):
-        self.send_request("wikidata.request", {"Subject": subject})
+        self.send_request("wikidata.request", {"TargetKeyword": subject})
         self.wait("wikidata.result")
         return self.result
 
     def ask_dbpedia(self, subject):
-        self.send_request("dbpedia.request", {"Subject": subject})
+        self.send_request("dbpedia.request", {"TargetKeywordt": subject})
         self.wait("dbpedia.result")
         return self.result
 
     def ask_wolfram(self, subject):
-        self.send_request("wolframalpha.request", {"Subject": subject})
+        self.send_request("wolframalpha.request", {"TargetKeyword": subject})
         self.wait("wolframalpha.result")
         return self.result
 
     def ask_wikihow(self, subject):
-        self.send_request("wikihow.request", {"Subject": subject})
+        self.send_request("wikihow.request", {"TargetKeyword": subject})
         self.wait("wikihow.result")
         return self.result
 
     def ask_conceptnet(self, subject):
-        self.send_request("conceptnet.request", {"Subject": subject})
+        self.send_request("conceptnet.request", {"TargetKeyword": subject})
         self.wait("conceptnet.result")
         return self.result
 
     def ask_wordnik(self, subject):
-        self.send_request("wordnik.request", {"Subject": subject})
+        self.send_request("wordnik.request", {"TargetKeyword": subject})
         self.wait("wordnik.result")
         return self.result
 

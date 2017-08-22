@@ -167,6 +167,7 @@ class VisionSkill(MycroftSkill):
             self.message_context.update(message.context)
         feed = self.process_frame()
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
+        self.set_context("WebcamFeed", path)
         source = message.context.get("source")
         if source is not None and "server" in source:
             self.emit_result(path, True)
@@ -178,13 +179,16 @@ class VisionSkill(MycroftSkill):
             self.message_context.update(message.context)
         path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
         self.emitter.emit(Message("vision.feed.result", {"file": path}, self.message_context))
+        self.set_context("WebcamFeed", path)
 
     def handle_face_request(self, message):
         if message.context is not None:
             self.message_context.update(message.context)
-        path = message.data.get("file")
+        path = message.data.get("file", "PicturePath")
         if not path:
             path = self.save_feed(self.webcam_path + "/" + asctime().replace(" ", "_") + ".jpg")
+        else:
+            self.set_context("PicturePath", path)
 
         img = cv2.imread(path)
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
@@ -199,11 +203,14 @@ class VisionSkill(MycroftSkill):
         self.speak_dialog("webcam")
         path = self.save_feed(self.webcam_path+"/"+asctime()+".jpg")
         self.emit_result(path, False)
-        #self.display_service.show(path)
+        self.display_service.display([path],
+                                     utterance=message.data.get("utterance"))
 
     def handle_vision_data_intent(self, message):
         self.process_frame()
         path = self.save_feed(self.webcam_path + "/" + asctime() + ".jpg")
+        self.display_service.display([path],
+                                     utterance=message.data.get("utterance"))
         self.speak("There are " + str(self.num_persons) + " persons on view")
         self.emit_result(path, False)
         # TODO more context, movement, face recog

@@ -16,12 +16,11 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 from abc import ABCMeta, abstractmethod
 
-from speech_recognition import Recognizer
+from speech_recognition import Recognizer, UnknownValueError, RequestError
 
 from mycroft.api import STTApi
 from mycroft.configuration import ConfigurationManager
 from mycroft.util.log import getLogger
-from mycroft.client.speech.recognizer.pocketsphinx_recognizer import PocketsphinxRecognizer
 import re
 
 from requests import post
@@ -132,16 +131,16 @@ class KaldiSTT(STT):
 class PocketSphinxSTT(STT):
     def __init__(self):
         super(PocketSphinxSTT, self).__init__()
-        wake_word = "hey jarbas"
-        phonemes = "HH EY . JH AA R AH SH"
-        threshold = self.config.get('threshold', 1e-90)
-        lang = self.config.get('lang', self.lang)
-        rate = self.config.get('sample_rate', 16000)
-        self.recognizer = PocketsphinxRecognizer(wake_word, phonemes, threshold,
-                                     rate, lang, stt=True)
 
     def execute(self, audio, language=None):
-        return self.recognizer.execute(audio)
+        text = None
+        try:
+            text = self.recognizer.recognize_sphinx(audio)
+        except UnknownValueError:
+            LOG.error("Sphinx could not understand audio")
+        except RequestError as e:
+            LOG.error("Sphinx error; {0}".format(e))
+        return text
 
 
 class STTFactory(object):

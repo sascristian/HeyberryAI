@@ -34,7 +34,7 @@ fi
 
 # Configure to use the standard commit template for
 # this repo only.
-# git config commit.template .gitmessage
+#git config commit.template .gitmessage
 
 TOP=$(cd $(dirname $0) && pwd -L)
 
@@ -44,29 +44,7 @@ else
     VIRTUALENV_ROOT="$WORKON_HOME/jarbas"
 fi
 
-# Check whether to build mimic (it takes a really long time!)
-build_mimic='y'
-if [[ "$1" == '-sm' ]] ; then 
-  build_mimic='n'
-else
-  # first, look for a build of mimic in the folder
-  has_mimic=""
-  if [[ -f ${TOP}/mimic/bin/mimic ]] ; then
-      has_mimic=$( ${TOP}/mimic/bin/mimic -lv | grep Voice )
-  fi
-
-  # in not, check the system path
-  if [ "$has_mimic" = "" ] ; then
-    if [ -x "$(command -v mimic)" ]; then
-      has_mimic="$( mimic -lv | grep Voice )"
-    fi
-  fi
-
-  if ! [ "$has_mimic" == "" ] ; then
-    echo "Mimic is installed. Press 'y' to rebuild mimic, any other key to skip."
-    read -n1 build_mimic
-  fi
-fi
+# no mimic
 
 # create virtualenv, consistent with virtualenv-wrapper conventions
 if [ ! -d ${VIRTUALENV_ROOT} ]; then
@@ -79,16 +57,8 @@ cd ${TOP}
 easy_install pip
 pip install --upgrade virtualenv
 
-# copy global open-cv to virtual env
-# https://medium.com/@manuganji/installation-of-opencv-numpy-scipy-inside-a-virtualenv-bf4d82220313
-sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site-packages/
-
-# tensorflow from binary
-# pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
 # fixed tzwhere
 pip install git+https://github.com/seahawk1986/pytzwhere.git@fix_install
-# pymimic
-# pip install git+https://github.com/forslund/pymimic.git
 
 # install other requirements
 if ! pip install -r requirements.txt; then
@@ -99,9 +69,9 @@ if ! pip install -r requirements.txt; then
     fi
 fi
 
-# nltk
+# nltk wordnet
+
 python -m nltk.downloader wordnet
-python -m nltk.downloader punkt
 
 if  [[ $(free|awk '/^Mem:/{print $2}') -lt  1572864 ]] ; then
   CORES=1
@@ -115,15 +85,6 @@ echo "Building with $CORES cores."
 #cd ${TOP}
 #${TOP}/scripts/install-pocketsphinx.sh -q
 
-#build and install mimic
-cd "${TOP}"
-
-if [[ "$build_mimic" == 'y' ]] || [[ "$build_mimic" == 'Y' ]]; then
-  echo "WARNING: The following can take a long time to run!"
-  "${TOP}/scripts/install-mimic.sh"
-else
-  echo "Skipping mimic build."
-fi
 
 # install pygtk for desktop_launcher skill
 "${TOP}/scripts/install-pygtk.sh"
@@ -134,4 +95,3 @@ wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodrive
 tar -xvzf geckodriver-v0.18.0-linux64.tar.gz
 chmod +x geckodriver
 sudo mv geckodriver /usr/local/bin/
-sudo rm -rf geckodriver-v0.18.0-linux64.tar.gz

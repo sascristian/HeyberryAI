@@ -19,6 +19,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from mycroft.messagebus.message import Message
+from mycroft.skills.displayservice import DisplayService
 
 import bs4
 import requests
@@ -36,11 +37,41 @@ class LILACSWikiHowSkill(MycroftSkill):
     def initialize(self):
         self.emitter.on("wikihow.request", self.handle_ask_wikihow)
         test_intent = IntentBuilder("TestWikihowIntent") \
-            .require("testh").require("Subject").build()
-        self.register_intent(test_intent, self.handle_ask_wikihow)
+            .require("testh").require("TargetKeyword").build()
+        self.register_intent(test_intent, self.handle_test_intent)
+        self.display_service = DisplayService(self.emitter, self.name)
+
+    def handle_test_intent(self, message):
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
+        result = self.adquire(node).get("wikihow")
+        if not result:
+            self.speak("Could not get info about " + node + " from wikihow")
+            return
+        self.speak("found " + str(len(result)) + " how tos in wikihow")
+        how_tos = result.keys()
+        how_to = how_tos[0]
+        data = result[how_to]
+        if len(data.get("pics", [])):
+            self.display_service.display(data["pics"])
+        if "url" in data.keys():
+            metadata = {"url": data["url"]}
+        else:
+            metadata = {}
+        self.speak(how_to, metadata=metadata)
+        steps = data.get("steps", [])
+        i = 0
+        for step in steps:
+            text = "step " + str(i) + ". " + step
+            i += 1
+            self.speak(text)
+        self.speak("detailed steps are also available")
 
     def handle_ask_wikihow(self, message):
-        node = message.data.get("Subject")
+        self.handle_update_message_context(message)
+        node = message.data.get("TargetKeyword")
+        self.set_context("TargetKeyword", node)
         result = self.adquire(node)
         #self.speak(str(result))
         self.emitter.emit(Message("wikihow.result", result, self.message_context))

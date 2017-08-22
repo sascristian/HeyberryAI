@@ -28,7 +28,7 @@ class PornDetectionService(MycroftSkill):
 
         # only triggered in cli/fb or by context
         intent = IntentBuilder("PornRecogIntent") \
-            .require("IsThisPornKeyword").require("picture_path").build()
+            .require("IsThisPornKeyword").require("PicturePath").build()
         self.register_intent(intent,
                              self.handle_is_this_porn_intent)
 
@@ -40,7 +40,9 @@ class PornDetectionService(MycroftSkill):
     def handle_is_this_porn_intent(self, message):
         pic = message.data.get("picture_url")
         if not pic:
-            pic = message.data.get("picture_path")
+            pic = message.data.get("PicturePath")
+            if pic:
+                self.set_context("PicturePath", pic)
         else:
             pic = url_to_pic(pic)
         predictions = self.is_this_porn([pic])

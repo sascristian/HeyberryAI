@@ -59,7 +59,6 @@ class AstronomyPicSkill(MycroftSkill):
         f = open(save_path, 'wb')
         f.write(raw_img)
         f.close()
-
         self.speak(title)
         self.display_service.display([save_path], utterance=message.data["utterance"])
         self.speak(summary, metadata={"url":
