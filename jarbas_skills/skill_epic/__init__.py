@@ -57,7 +57,7 @@ class EPICSkill(MycroftSkill):
         self.speak_dialog("aboutEPIC")
 
     def handle_epic_intent(self, message):
-        self.EPIC(message.data["utterance"])
+        self.EPIC(message.data.get("utterance"))
 
     def get_EPIC(self):
         url = "https://epic.gsfc.nasa.gov/api/natural"
@@ -75,7 +75,7 @@ class EPICSkill(MycroftSkill):
         f.close()
         # TODO format date for decent speech
         self.speak_dialog("EPIC", {"date": date})
-        self.display_service.display([save_path], utterance)
+        self.display_service.display([save_path], utterance=utterance)
         for num in range(1, len(self.response.body)):
             num = len(self.response.body) - num
             url = "https://epic.gsfc.nasa.gov/epic-archive/jpg/" + self.response.body[num]["image"] + ".jpg"
@@ -86,7 +86,7 @@ class EPICSkill(MycroftSkill):
             f = open(save_path, 'wb')
             f.write(raw_img)
             f.close()
-            self.display_service.add_pictures([save_path], utterance)
+            self.display_service.add_pictures([save_path], utterance=utterance)
 
     def stop(self):
         pass

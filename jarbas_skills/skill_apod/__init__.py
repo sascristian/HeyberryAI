@@ -22,7 +22,7 @@ class AstronomyPicSkill(MycroftSkill):
                 self.key = self.config["NASAAPI"]
             except:
                 self.key = "DEMO_KEY"
-        self.save = True
+        self.save_text = True
         try:
             self.save_path = self.config_core["database_path"] + "/astronomy_picture_of_the_day"
             self.txt_save_path = self.config_core["database_path"] + "/astronomy_picture_of_the_day_descriptions"
@@ -60,11 +60,12 @@ class AstronomyPicSkill(MycroftSkill):
         f.write(raw_img)
         f.close()
         self.speak(title)
-        self.display_service.display([save_path], utterance=message.data["utterance"])
+        self.display_service.display([save_path],
+                                     utterance=message.data.get("utterance"))
         self.speak(summary, metadata={"url":
                                           "https://api.nasa.gov/planetary/apod"})
 
-        if self.save:
+        if self.save_text:
             save_path = self.txt_save_path + "/" + title.replace(" ", "_") + ".txt"
             # save description
             f = open(save_path, 'wb')

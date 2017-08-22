@@ -131,7 +131,7 @@ class DisplayControlSkill(MycroftSkill):
         self.speak("Displaying")
         # display cached picture paths, allow for "display in backend" current pic
         self.display_service.display(self.pics,
-                                     self.index,
+                                     index=self.index,
                                      utterance=message.data.get("utterance"))
 
     def handle_close(self, message):
@@ -167,8 +167,8 @@ class DisplayControlSkill(MycroftSkill):
         self.height = 500
         self.speak("Reseting picture list and window size")
         self.display_service.reset(utterance=message.data.get("utterance"))
-        self.display_service.set_width(500, message.data.get("utterance"))
-        self.display_service.set_height(500, message.data.get("utterance"))
+        self.display_service.set_width(500, utterance=message.data.get("utterance"))
+        self.display_service.set_height(500, utterance=message.data.get("utterance"))
 
     def handle_clear(self, message):
         self.speak("Clearing Display")
