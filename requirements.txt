@@ -75,3 +75,5 @@ geopy
 nltk
 cleverwrap
 unirest
+pyautogui
+num2words
