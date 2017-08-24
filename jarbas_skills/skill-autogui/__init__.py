@@ -23,10 +23,12 @@ from os.path import dirname
 
 import pyautogui
 import platform
-import cv2
+from PIL import ImageDraw, ImageFont
+
 from num2words import num2words
 
-# from mycroft.skills.displayservice import DisplayService
+# TODO handle no DisplayService, using PIL? im.show() fails for me
+from mycroft.skills.displayservice import DisplayService
 
 __author__ = 'eClarity'
 
@@ -40,12 +42,51 @@ class AutoguiSkill(MycroftSkill):
         self.resx = screen[0]
         self.resy = screen[1]
         self.boundings = []
+        self.grid = False
 
     def initialize(self):
-        # self.display_service = DisplayService(self.emitter)
+        self.display_service = DisplayService(self.emitter)
+
         type_intent = IntentBuilder("TypeIntent"). \
             require("TypeKeyword").require("Text").build()
         self.register_intent(type_intent, self.handle_type_intent)
+
+        intent = IntentBuilder("ActivateMouseClickGridIntent"). \
+            require("GridKeyword").require("EnableKeyword").build()
+        self.register_intent(intent,
+                             self.handle_activate_grid_intent)
+
+        intent = IntentBuilder("ResetMouseClickGridIntent"). \
+            require("GridKeyword").require("ResetKeyword").build()
+        self.register_intent(intent,
+                             self.handle_reset_grid_intent)
+
+        intent = IntentBuilder("DeactivateMouseClickGridIntent"). \
+            require("GridKeyword").require("DisableKeyword").build()
+        self.register_intent(intent,
+                             self.handle_deactivate_grid_intent)
+
+        intent = IntentBuilder("ZoomMouseClickGridIntent"). \
+            optionally("GridKeyword").require("ZoomKeyword")\
+            .require("TargetKeyword").build()
+        self.register_intent(intent,
+                             self.handle_zoom_grid_intent)
+
+        intent = IntentBuilder("GridMouseClickGridIntent"). \
+            optionally("GridKeyword").require("ClickKeyword")\
+            .require("TargetKeyword").build()
+        self.register_intent(intent,
+                             self.handle_click_grid_intent)
+
+        mouse_click_intent = IntentBuilder("MouseClickIntent"). \
+            optionally("MouseKeyword").require("ClickKeyword").build()
+        self.register_intent(mouse_click_intent,
+                             self.handle_mouse_click_intent)
+
+        mouse_pos_intent = IntentBuilder("MousePositionIntent"). \
+            require("MouseKeyword").require("PositionKeyword").build()
+        self.register_intent(mouse_pos_intent,
+                             self.handle_mouse_position_intent)
 
         mouse_absolute_intent = IntentBuilder("MouseAbsoluteIntent"). \
             require("MouseAbsoluteKeyword").require("X").require("Y").build()
@@ -53,17 +94,20 @@ class AutoguiSkill(MycroftSkill):
                              self.handle_mouse_absolute_intent)
 
         mouse_scroll_down_intent = IntentBuilder("MouseScrollDownIntent"). \
-            require("MouseScrollDownKeyword").require("Scroll").build()
+            optionally("MouseKeyword").require(
+            "MouseScrollDownKeyword").require("Scroll").build()
         self.register_intent(mouse_scroll_down_intent,
                              self.handle_mouse_scroll_down_intent)
 
         mouse_scroll_up_intent = IntentBuilder("MouseScrollUpIntent"). \
-            require("MouseScrollUpKeyword").require("Scroll").build()
+            optionally("MouseKeyword").require("MouseScrollUpKeyword").require(
+            "Scroll").build()
         self.register_intent(mouse_scroll_up_intent,
                              self.handle_mouse_scroll_up_intent)
 
         mouse_scroll_right_intent = IntentBuilder("MouseScrollRightIntent"). \
-            require("MouseScrollRightKeyword").require("Scroll").build()
+            optionally("MouseKeyword").require(
+            "MouseScrollRightKeyword").require("Scroll").build()
         self.register_intent(mouse_scroll_right_intent,
                              self.handle_mouse_scroll_right_intent)
 
@@ -86,25 +130,24 @@ class AutoguiSkill(MycroftSkill):
     def get_grid(self, path=None, num=-1):
         if path is None:
             path = dirname(__file__) + "/screenshot.jpg"
-        pyautogui.screenshot(path)
-        img = cv2.imread(path)
+        img = pyautogui.screenshot(path)
+        draw = ImageDraw.Draw(img)
         if num >= 1 and len(self.boundings):
             box = self.boundings[num]
-            img = img[box[1]:box[1] + box[3], box[0]:box[0] + box[2]]
+            img = img.crop((box[0], box[1], box[2], box[3]))
             self.grid_reference = [box[0], box[1]]
-        h, w = img.shape[:2]
+        w, h = img.size
         self.w = x = w / 3
         self.h = y = h / 3
-        font = cv2.FONT_HERSHEY_SIMPLEX
         # draw vertical lines
         i = 0
         while i < 4:
-            cv2.line(img, (x * i, 0), (x * i, h), (0, 0, 255), 5)
+            draw.line(((x * i, 0), (x * i, h)), fill=(255, 0, 0), width=5)
             i += 1
         # draw horizontal lines
         i = 0
         while i < 4:
-            cv2.line(img, (0, y * i), (w, y * i), (0, 0, 255), 5)
+            draw.line(((0, y * i), (w, y * i)), fill=(255, 0, 0), width=5)
             i += 1
         # save bounding boxes
         num = 0
@@ -112,39 +155,53 @@ class AutoguiSkill(MycroftSkill):
             for i in range(0, 3):
                 num += 1
                 box = [x * i, o * y, x, y]
-                print num, box
                 self.boundings.append(box)
-
         # draw nums
         for num in range(1, 10):
             box = self.boundings[num - 1]
             x = box[2] / 2 + box[0]
             y = box[3] / 2 + box[1]
-            cv2.putText(img, str(num), (x, y), font,
-                        1, (0, 0, 255), 2)
-
-        cv2.imwrite(path, img)
-        return img, path
+            font = ImageFont.truetype(dirname(__file__) + "/METALORD.TTF", 30)
+            draw.text((x, y), str(num), (255, 0, 0), font)
+        img.save(path)
+        return path
 
     def handle_activate_grid_intent(self, message):
         self.speak("Grid activated")
-        img, path = self.get_grid()
-        cv2.imshow("grid", img)
-        # self.display_service.display([path])
+        self.set_context("GridKeyword", "grid")
+        path = self.get_grid()
+        self.grid = True
+        self.display_service.set_fullscreen(True, utterance=message.data.get(
+            "utterance"))
+        self.display_service.display([path], utterance=message.data.get(
+            "utterance"))
 
     def handle_deactivate_grid_intent(self, message):
         self.speak("Grid deactivated")
-        # self.display_service.close()
-        cv2.destroyWindow("grid")
+        self.set_context("GridKeyword", "grid")
+        self.grid = False
+        self.display_service.set_fullscreen(False, utterance=message.data.get(
+            "utterance"))
+        self.display_service.clear(utterance=message.data.get(
+            "utterance"))
 
     def handle_reset_grid_intent(self, message):
+        if not self.grid:
+            self.handle_activate_grid_intent(message)
+            return
+        self.set_context("GridKeyword", "grid")
         self.speak("Grid reset")
         self.grid_reference = [0, 0]
-        img, path = self.get_grid(num=-1)
-        cv2.imshow("grid", img)
+        path = self.get_grid(num=-1)
+        self.display_service.display([path], utterance=message.data.get(
+            "utterance"))
 
     def handle_zoom_grid_intent(self, message):
-        num = message.data.get("GridNum")
+        if not self.grid:
+            self.speak("you must activate grid first")
+            return
+        self.set_context("GridKeyword", "grid")
+        num = message.data.get("TargetKeyword")
         if not num.isdigit():
             self.speak("bad input")
             return
@@ -153,11 +210,16 @@ class AutoguiSkill(MycroftSkill):
             self.speak("bad number")
             return
         self.speak("zooming to number " + str(num))
-        img, path = self.get_grid(num=num)
-        cv2.imshow("grid", img)
+        path = self.get_grid(num=num)
+        self.display_service.display([path], utterance=message.data.get(
+            "utterance"))
 
-    def handle_click_grid(self, message):
-        num = message.data.get("GridNum", "")
+    def handle_click_grid_intent(self, message):
+        if not self.grid:
+            self.speak("you must activate grid first")
+            return
+        self.set_context("GridKeyword", "grid")
+        num = message.data.get("TargetKeyword", "")
         if not num.isdigit():
             self.speak("bad input")
             return
@@ -167,8 +229,11 @@ class AutoguiSkill(MycroftSkill):
             return
         x = self.grid_reference[0] + self.w / 2
         y = self.grid_reference[1] + self.h / 2
+        # deactivate grid cause we dont want to click in picture
+        self.handle_deactivate_grid_intent(message)
         self.speak("clicking " + str(num))
-        pyautogui.moveTo(x, y, duration=1)
+        # move mouse to look better and work as a delay for grid to deactivate
+        pyautogui.moveTo(x, y, duration=2)
         pyautogui.click(x, y)
 
     def handle_mouse_position_intent(self, message):
