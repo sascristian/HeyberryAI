@@ -48,6 +48,7 @@ from subprocess import check_output
 
 ip = check_output(['hostname', '--all-ip-addresses']).replace(" \n", "")
 port = 4000
+mode = "client"
 
 clients = []
 chat_id = 0
@@ -80,8 +81,12 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         clients.append(self)
         self.write_message("Welcome to Jarbas")
         ws.on("speak", self.handle_speak)
+        ws.on("message", self.handle_log)
 
     def on_message(self, message):
+        if mode == "log":
+            self.write_message("running as LOG, discarding data")
+            return
         utterance = json.dumps(message)
         print("*****Utterance : ", utterance, "*****User_id: ", self.id)
         message_type = "recognizer_loop:utterance"
@@ -97,6 +102,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 return
         utterance = event.data.get('utterance', "")
         self.write_message(utterance)
+
+    def handle_log(self, message):
+        if mode == "log":
+            self.write_message(message)
 
     def on_close(self):
         clients.remove(self)
@@ -117,7 +126,7 @@ def config_update(config=None, save=False, isSystem=False):
 
 
 def main():
-    global ws, port, max_con, all_speech, mute_speech
+    global ws, port, max_con, all_speech, mute_speech, mode
     ws = WebsocketClient()
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
@@ -129,6 +138,7 @@ def main():
     max_con = config.get("max_connections", -1)
     all_speech = config.get("all_speech", True)
     mute_speech = config.get("mute_speech", True)
+    mode = config.get("mode", "client")
     url = "http://" + str(ip) + ":" + str(port)
     if use_ssl:
         url = "https://" + str(ip) + ":" + str(port)

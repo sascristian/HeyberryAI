@@ -40,4 +40,5 @@ sudo apt-get install -y \
     libjpeg-dev \
     libfann-dev \
     libgeos-dev \
-    libatlas-base-dev
+    libatlas-base-dev \
+    python-xlib
