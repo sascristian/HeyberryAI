@@ -29,7 +29,7 @@ set -Ee
 
 if [ $(id -u) -eq 0 ]; then
   echo "This script should not be run as root or with sudo."
-  exit 1
+  #exit 1
 fi
 
 # Configure to use the standard commit template for
