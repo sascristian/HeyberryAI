@@ -6,5 +6,4 @@ git reset --hard FETCH_HEAD
 # git clean -df
 ./build_host_setup_debian.sh
 ./update-dev.sh
-./mycroft.sh start
 screen -list

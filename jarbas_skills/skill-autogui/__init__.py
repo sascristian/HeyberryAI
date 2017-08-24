@@ -168,10 +168,13 @@ class AutoguiSkill(MycroftSkill):
         x = self.grid_reference[0] + self.w / 2
         y = self.grid_reference[1] + self.h / 2
         self.speak("clicking " + str(num))
+        pyautogui.moveTo(x, y, duration=1)
         pyautogui.click(x, y)
 
     def handle_mouse_position_intent(self, message):
-        self.speak("mouse position is TODO")
+        pos = pyautogui.recordMousePositions(amount=1)[0]
+        self.speak("mouse position is")
+        self.speak("x " + str(pos[0]) + " y " + str(pos[1]))
 
     def handle_mouse_click_intent(self, message):
         self.speak("clicking mouse")
