@@ -167,6 +167,10 @@ class AutoguiSkill(MycroftSkill):
         return path
 
     def handle_activate_grid_intent(self, message):
+        self.set_context("GridKeyword", "grid")
+        if self.grid:
+            self.speak("grid is already active")
+            return
         self.speak("Grid activated")
         self.set_context("GridKeyword", "grid")
         path = self.get_grid()
@@ -177,8 +181,12 @@ class AutoguiSkill(MycroftSkill):
             "utterance"))
 
     def handle_deactivate_grid_intent(self, message):
-        self.speak("Grid deactivated")
         self.set_context("GridKeyword", "grid")
+        if not self.grid:
+            self.speak("Grid is already deactivated")
+            return
+        self.boundings = []
+        self.speak("Grid deactivated")
         self.grid = False
         self.display_service.set_fullscreen(False, utterance=message.data.get(
             "utterance"))
@@ -186,10 +194,10 @@ class AutoguiSkill(MycroftSkill):
             "utterance"))
 
     def handle_reset_grid_intent(self, message):
+        self.set_context("GridKeyword", "grid")
         if not self.grid:
             self.handle_activate_grid_intent(message)
             return
-        self.set_context("GridKeyword", "grid")
         self.speak("Grid reset")
         self.grid_reference = [0, 0]
         path = self.get_grid(num=-1)
@@ -197,10 +205,10 @@ class AutoguiSkill(MycroftSkill):
             "utterance"))
 
     def handle_zoom_grid_intent(self, message):
+        self.set_context("GridKeyword", "grid")
         if not self.grid:
             self.speak("you must activate grid first")
             return
-        self.set_context("GridKeyword", "grid")
         num = message.data.get("TargetKeyword")
         if not num.isdigit():
             self.speak("bad input")
@@ -215,10 +223,10 @@ class AutoguiSkill(MycroftSkill):
             "utterance"))
 
     def handle_click_grid_intent(self, message):
+        self.set_context("GridKeyword", "grid")
         if not self.grid:
             self.speak("you must activate grid first")
             return
-        self.set_context("GridKeyword", "grid")
         num = message.data.get("TargetKeyword", "")
         if not num.isdigit():
             self.speak("bad input")
