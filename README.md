@@ -92,8 +92,10 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - screen display service
             - speech messages set adapt context for LastSpeech and every metadata field
             - recognizer_loop:speak message type
+            - runtime configuration file
             - ConfigurationManager.save checks for config existence before loading it
             - webchat client
+            - many helper classes
 
             # temporary changes
             - no msm
@@ -122,9 +124,6 @@ Generate random [pictures utility](https://github.com/JarbasAI/JarbasAI/blob/pat
 
 Example usage in [Art Skill](https://github.com/JarbasAI/JarbasAI/tree/patch-15/jarbas_skills/skill_art)
 
-# [PR#925](https://github.com/MycroftAI/mycroft-core/pull/925)
-
-[Converse method](https://github.com/JarbasAI/JarbasAI/blob/patch-15/Jarbas_docs/Converse.md), allow skills to handle utterances instead of intent service
 
 # [PR#859](https://github.com/MycroftAI/mycroft-core/pull/859)
 
@@ -179,9 +178,6 @@ control skills externally, allow run-levels, [external skill load and reload](ht
             - this flag is a global mute switch, if set no tts is ever made
             - skill to mute/unmute not yet merged
 
-# [PR#980](https://github.com/MycroftAI/mycroft-core/pull/980)
-
-            - allow internal config update at runtime
 
 
 # Server/Client
@@ -282,12 +278,8 @@ not updated often
 
 - Help Skill
 - R2D2 TTS
-- webchat client
-- black and white photo colorize
 - instagram skill
-- snowboy wakeword
 - pocket sphinx offline stt
 - kaldi install scripts
-- update skills using caffe for tensorflow version (already in server)
 - class vizualization/deep draw in tensorflow
 - models download script (they auto download on first skill run which takes...long)

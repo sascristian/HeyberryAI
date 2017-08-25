@@ -85,10 +85,9 @@ sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site
 
 # tensorflow from binary
 pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
+
 # fixed tzwhere
 pip install git+https://github.com/seahawk1986/pytzwhere.git@fix_install
-# pymimic
-pip install git+https://github.com/forslund/pymimic.git
 
 # install other requirements
 if ! pip install -r requirements.txt; then
@@ -128,7 +127,7 @@ else
 fi
 
 # install pygtk for desktop_launcher skill
-"${TOP}/scripts/install-pygtk.sh" " ${CORES}"
+# "${TOP}/scripts/install-pygtk.sh" " ${CORES}"
 
 
 # get geckodriver to usr/bin for browser service
