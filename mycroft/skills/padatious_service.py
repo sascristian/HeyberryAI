@@ -23,7 +23,6 @@ from os import mkdir
 
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.message import Message
-from mycroft.skills.core import FallbackSkill
 from mycroft.util.log import getLogger
 from mycroft.util.parse import normalize
 
@@ -35,8 +34,8 @@ logger = getLogger(__name__)
 class PadatiousService(object):
     def __init__(self, emitter):
         self.config = ConfigurationManager.get()['padatious']
-        intent_cache = expanduser(self.config['intent_cache'])
-        # TODO ffix this
+        # intent_cache = expanduser(self.config['intent_cache'])
+        # TODO really fix this
         intent_cache = dirname(__file__) + "/intent_cache"
         if not exists(intent_cache):
             mkdir(intent_cache)
@@ -56,7 +55,6 @@ class PadatiousService(object):
         self.emitter = emitter
         self.emitter.on('padatious:register_intent', self.register_intent)
         self.emitter.on('padatious:fallback.request', self.handle_fallback)
-        #FallbackSkill.register_fallback(self.handle_fallback, 5)
         self.finished_training_event = Event()
 
         self.train_delay = self.config['train_delay']
