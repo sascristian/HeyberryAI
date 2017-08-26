@@ -56,6 +56,15 @@ logger = getLogger(__name__)
 
 
 def load_vocab_from_file(path, vocab_type, emitter):
+    """
+        Load mycroft vocabulary from file. and send it on the message bus for
+        the intent handler.
+
+        Args:
+            path:       path to vocabulary file (*.voc)
+            vocab_type: keyword name
+            emitter:    emitter to access the message bus
+    """
     if path.endswith('.voc'):
         with open(path, 'r') as voc_file:
             for line in voc_file.readlines():
@@ -72,6 +81,14 @@ def load_vocab_from_file(path, vocab_type, emitter):
 
 
 def load_regex_from_file(path, emitter):
+    """
+        Load regex from file and send it on the message bus for
+        the intent handler.
+
+        Args:
+            path:       path to vocabulary file (*.voc)
+            emitter:    emitter to access the message bus
+    """
     if path.endswith('.rx'):
         with open(path, 'r') as reg_file:
             for line in reg_file.readlines():
@@ -95,6 +112,7 @@ def load_regex(basedir, emitter):
 
 
 def open_intent_envelope(message):
+    """ Convert dictionary received over messagebus to Intent. """
     intent_dict = message.data
     return Intent(intent_dict.get('name'),
                   intent_dict.get('requires'),
@@ -103,6 +121,15 @@ def open_intent_envelope(message):
 
 
 def load_skill(skill_descriptor, emitter, skill_id):
+    """
+        load skill from skill descriptor.
+
+        Args:
+            skill_descriptor: descriptor of skill to load
+            emitter:          messagebus emitter
+            skill_id:         id number for skill
+    """
+
     try:
         logger.info("ATTEMPTING TO LOAD SKILL: " + skill_descriptor["name"] +
                     " with ID " + str(skill_id))
@@ -277,6 +304,7 @@ class MycroftSkill(object):
             return self._settings
 
     def bind(self, emitter):
+        """ Register emitter with skill. """
         if emitter:
             self.emitter = emitter
             self.enclosure = EnclosureAPI(emitter, self.name)
@@ -304,12 +332,29 @@ class MycroftSkill(object):
         logger.debug("No initialize function implemented")
 
     def converse(self, utterances, lang="en-us"):
+        """
+            Handle conversation. This method can be used to override the normal
+            intent handler after the skill has been invoked once.
+
+            To enable this override thise converse method and return True to
+            indicate that the utterance has been handled.
+
+            Args:
+                utterances: The utterances from the user
+                lang:       language the utterance is in
+
+            Returns:    True if an utterance was handled, otherwise False
+        """
         return False
 
     def make_active(self):
-        # bump skill to active_skill list in intent_service
-        # this ensures converse method is called
-        self.emitter.emit(Message('active_skill_request', {"skill_id":self.skill_id}))
+        """
+            Bump skill to active_skill list in intent_service
+            this enables converse method to be called even without skill being
+            used in last 5 minutes
+        """
+        self.emitter.emit(Message('active_skill_request',
+                                  {"skill_id": self.skill_id}))
 
     def _register_decorated(self):
         """
@@ -324,6 +369,16 @@ class MycroftSkill(object):
         _intent_file_list = []
 
     def add_event(self, name, handler, need_self=False):
+        """
+                  Create event handler for executing intent
+
+                  Args:
+                      name:       IntentParser name
+                      handler:    method to call
+                      need_self:     optional parameter, when called from a decorated
+                                     intent handler the function will need the self
+                                     variable passed as well.
+              """
         def wrapper(message):
             try:
                 self.emitter.emit(Message("intent.execution.start",
@@ -368,6 +423,7 @@ class MycroftSkill(object):
             intent_parser = intent_parser.build()
         elif type(intent_parser) != Intent:
             raise ValueError('intent_parser is not an Intent')
+
         name = intent_parser.name
         intent_parser.name = str(self.skill_id) + ':' + intent_parser.name
         self.emitter.emit(Message("register_intent", intent_parser.__dict__))
@@ -446,6 +502,12 @@ class MycroftSkill(object):
         self.emitter.emit(Message('remove_context', {'context': context}))
 
     def register_vocabulary(self, entity, entity_type):
+        """ Register a word to an keyword
+
+            Args:
+                entity:         word to register
+                entity_type:    Intent handler entity to tie the word to
+        """
         self.emitter.emit(Message('register_vocab', {
             'start': entity, 'end': entity_type
         }))
@@ -471,6 +533,15 @@ class MycroftSkill(object):
         return message_context
 
     def speak(self, utterance, expect_response=False, metadata=None, message_context=None):
+        """
+                    Speak a sentence.
+
+                    Args:
+                        utterance:          sentence mycroft should speak
+                        expect_response:    set to True if Mycroft should expect a
+                                            response from the user and start listening
+                                            for response.
+                """
         if message_context is None:
             # use current context
             message_context = {}
@@ -487,6 +558,16 @@ class MycroftSkill(object):
             self.set_context(field, metadata[field])
 
     def speak_dialog(self, key, data=None, expect_response=False, metadata=None, message_context=None):
+        """
+                   Speak sentance based of dialog file.
+
+                   Args
+                       key: dialog file key (filname without extension)
+                       data: information to populate sentence with
+                       expect_response:    set to True if Mycroft should expect a
+                                           response from the user and start listening
+                                           for response.
+               """
         if data is None:
             data = {}
         self.speak(self.dialog_renderer.render(key, data),
@@ -568,6 +649,12 @@ class MycroftSkill(object):
 
 
 class FallbackSkill(MycroftSkill):
+    """
+        FallbackSkill is used to declare a fallback to be called when
+        no skill is matching an intent. The fallbackSkill implements a
+        number of fallback handlers to be called in an order determined
+        by their priority.
+    """
     fallback_handlers = {}
     folders = {}
     override = skills_config.get("fallback_override", False)
