@@ -18,7 +18,8 @@ from subprocess import call
 from time import time as get_time, sleep
 
 from threading import Event
-from os.path import expanduser, isfile
+from os.path import expanduser, isfile, exists
+from os import mkdir
 
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.message import Message
@@ -35,7 +36,8 @@ class PadatiousService(object):
     def __init__(self, emitter):
         self.config = ConfigurationManager.get()['padatious']
         intent_cache = expanduser(self.config['intent_cache'])
-
+        if not exists(intent_cache):
+            mkdir(intent_cache)
         try:
             from padatious import IntentContainer
         except ImportError:
