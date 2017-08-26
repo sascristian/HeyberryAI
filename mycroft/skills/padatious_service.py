@@ -36,8 +36,12 @@ class PadatiousService(object):
     def __init__(self, emitter):
         self.config = ConfigurationManager.get()['padatious']
         intent_cache = expanduser(self.config['intent_cache'])
-        if not exists(intent_cache):
-            mkdir(intent_cache)
+        try:
+            if not exists(intent_cache):
+                mkdir(intent_cache)
+        except Exception as e:
+            print e
+
         try:
             from padatious import IntentContainer
         except ImportError:
