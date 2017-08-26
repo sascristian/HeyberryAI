@@ -18,7 +18,7 @@ from subprocess import call
 from time import time as get_time, sleep
 
 from threading import Event
-from os.path import expanduser, isfile, exists
+from os.path import expanduser, isfile, exists, dirname
 from os import mkdir
 
 from mycroft.configuration import ConfigurationManager
@@ -36,12 +36,10 @@ class PadatiousService(object):
     def __init__(self, emitter):
         self.config = ConfigurationManager.get()['padatious']
         intent_cache = expanduser(self.config['intent_cache'])
-        try:
-            if not exists(intent_cache):
-                mkdir(intent_cache)
-        except Exception as e:
-            print e
-
+        # TODO ffix this
+        intent_cache = dirname(__file__) + "/intent_cache"
+        if not exists(intent_cache):
+            mkdir(intent_cache)
         try:
             from padatious import IntentContainer
         except ImportError:
@@ -75,7 +73,7 @@ class PadatiousService(object):
 
             self.finished_training_event.clear()
             logger.info('Training...')
-            self.container.train(print_updates=False)
+            self.container.train(print_updates=True)
             logger.info('Training complete.')
             self.finished_training_event.set()
 
