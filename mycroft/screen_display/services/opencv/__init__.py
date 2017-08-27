@@ -121,8 +121,11 @@ class OpenCVService(DisplayBackend):
         logger.info('OpenCVDisplayStop')
         self.reset()
         self._is_Displaying = False
+        image = np.zeros((512, 512, 3), np.uint8)
         cv2.destroyWindow("OpenCV Display")
         cv2.destroyAllWindows()
+        cv2.waitKey(-1)
+        cv2.imshow("OpenCV Display", image)
 
 
 def load_service(base_config, emitter):
