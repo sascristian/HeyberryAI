@@ -158,7 +158,7 @@ def main():
             # update config with new keys
             config["cert_file"] = cert
             config["key_file"] = key
-            config["ssl"] = ssl
+            config["ssl"] = use_ssl
             config["port"] = port
             config["max_connections"] = max_con
             config_update({"webchat": config}, True)

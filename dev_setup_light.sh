@@ -123,6 +123,9 @@ else
   echo "Skipping pymimic build."
 fi
 
+# install pymimic
+pip install git+https://github.com/forslund/pymimic.git
+
 # install pygtk for desktop_launcher skill
 #"${TOP}/scripts/install-pygtk.sh"
 

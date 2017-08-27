@@ -325,7 +325,7 @@ class TTSFactory(object):
     from mycroft.tts.mimic_tts import Mimic
     from mycroft.tts.spdsay_tts import SpdSay
     from mycroft.tts.morse_code_tts import MorseCode
-    from mycroft.tts.pymimic_tts import Pymimic
+    #from mycroft.tts.pymimic_tts import Pymimic
 
     CLASSES = {
         "mimic": Mimic,
@@ -334,7 +334,7 @@ class TTSFactory(object):
         "fatts": FATTS,
         "espeak": ESpeak,
         "spdsay": SpdSay,
-        "pymimic": Pymimic,
+        #"pymimic": Pymimic,
         "morse": MorseCode
     }
 

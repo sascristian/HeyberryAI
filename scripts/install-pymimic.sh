@@ -32,8 +32,5 @@ else
     make install
 fi
 
-git clone https://github.com/forslund/pymimic
-cd pymimic
-./setup.py install
 
 wget -c https://github.com/MycroftAI/mimic/raw/master/voices/mycroft_voice_4.0.flitevox
