@@ -107,7 +107,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         urls = ["url", "urls", "link", "links"]
         for word in urls:
             if word in metadata:
-                utterance += " " + word +": " + str(metadata[word])
+                utterance += "\n " + word +": " + str(metadata[word])
         self.write_message(utterance)
 
     def handle_log(self, message):
