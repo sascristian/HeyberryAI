@@ -103,6 +103,11 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             elif "webchat" not in target:
                 return
         utterance = event.data.get('utterance', "")
+        metadata = event.data.get("metadata", {})
+        urls = ["url", "urls", "link", "links"]
+        for word in urls:
+            if word in metadata:
+                utterance += " " + word +": " + str(metadata[word])
         self.write_message(utterance)
 
     def handle_log(self, message):

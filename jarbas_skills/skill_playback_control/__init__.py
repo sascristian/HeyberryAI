@@ -41,7 +41,7 @@ class PlaybackControlSkill(MediaSkill):
 
     def stop(self, message=None):
         logger.info("Stopping audio")
-        self.emitter.emit(Message('MycroftAudioServiceStop'))
+        self.emitter.emit(Message('mycroft.audio.service.stop'))
 
 
 def create_skill():
