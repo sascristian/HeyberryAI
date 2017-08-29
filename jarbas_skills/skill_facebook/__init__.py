@@ -30,7 +30,7 @@ from threading import Thread
 import time, sys
 from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
-from browser_service import BrowserControl
+from service_browser import BrowserControl
 from mycroft.skills.settings import SkillSettings
 from fuzzywuzzy import fuzz
 __author__ = 'jarbas'
