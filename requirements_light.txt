@@ -40,6 +40,7 @@ pulsectl==17.7.4
 padatious==0.1.4
 aiml==0.8.6
 pycrypto
+pyopenssl
 twisted
 python-gnupg
 autobahn
