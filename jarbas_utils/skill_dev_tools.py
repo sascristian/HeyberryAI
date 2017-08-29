@@ -6,7 +6,7 @@ import time
 class ResponderBackend(object):
     """
         Base class for all responder implementations. checks message source
-        to see if it was a server request, and formats answer
+        to see if it was a server/client request, and formats answer
 
         allows for example server to request webcam for face recognition
 
