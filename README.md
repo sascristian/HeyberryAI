@@ -5,7 +5,7 @@ Support me on [Patreon](https://www.patreon.com/jarbasAI)
 
 Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to 15B4ZQFY5UfopjRtSRQPx7ibRaFukE1Ntq
 
-[!magic money](https://github.com/JarbasAI/JarbasAI/blob/patch-15/qrcode.bmp)
+![magic money](https://github.com/JarbasAI/JarbasAI/blob/patch-15/qrcode.bmp)
 
 # Jarbas
 
@@ -145,26 +145,39 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
 
 
 Display Service Demo
+
 [![Display Service Demo](https://img.youtube.com/vi/y9rb1wKZiUs/0.jpg)](http://www.youtube.com/watch?v=y9rb1wKZiUs)
 
+
 Hotwords/Snowboy Demo
+
 [![Hotwords/Snowboy Demo](https://img.youtube.com/vi/GIkBh0VFmbc/0.jpg)](http://www.youtube.com/watch?v=GIkBh0VFmbc)
 
+
 TTS runtime change Demo
+
 [![TTS runtime change Demo](https://img.youtube.com/vi/cKc_RxRbJ3U/0.jpg)](http://www.youtube.com/watch?v=cKc_RxRbJ3U)
 
 # very old videos
 
+
 Facebook chat client Demo
+
 [![Facebook chat client Demo](https://img.youtube.com/vi/oh1Y9f16xTk/0.jpg)](http://www.youtube.com/watch?v=oh1Y9f16xTk)
 
+
 LILACS learning demo
+
 [![LILACS learning demo](https://img.youtube.com/vi/BPYOC1Dass4/0.jpg)](http://www.youtube.com/watch?v=BPYOC1Dass4)
 
+
 Morse Code TTS engine joke
+
 [![Morse Code TTS engine joke](https://img.youtube.com/vi/ZEhA8VXzLII/0.jpg)](http://www.youtube.com/watch?v=ZEhA8VXzLII)
 
+
 AIML chatbot demo
+
 [![AIML chatbot demo](https://img.youtube.com/vi/6gbKz2u-q8k/0.jpg)](http://www.youtube.com/watch?v=6gbKz2u-q8k)
 
 
