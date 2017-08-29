@@ -171,6 +171,8 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         # check the config for the flag to save wake words.
         self.save_wake_words = listener_config.get('record_wake_words', False)
         self.save_utterances = listener_config.get('record_utterances', False)
+        self.wake_word_save_path = listener_config.get('wake_word_save_path')
+        self.utterance_save_path = listener_config.get('utterance_save_path')
         self.mic_level_file = os.path.join(get_ipc_directory(), "mic_level")
         self._stop_signaled = False
         self.hot_word_engines = hot_word_engines
@@ -398,7 +400,10 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                     logger.info("Recording wakeword")
                     audio = self._create_audio_data(audio_data, source)
                     stamp = str(datetime.datetime.now())
-                    filename = "/tmp/mycroft_wake_success%s.wav" % stamp
+                    if self.wake_word_save_path:
+                        filename = self.wake_word_save_path + "/mycroft_wake_success%s.wav" % stamp
+                    else:
+                        filename = "/tmp/mycroft_wake_success%s.wav" % stamp
                     with open(filename, 'wb') as filea:
                         filea.write(audio.get_wav_data())
 
@@ -491,7 +496,10 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         if self.save_utterances:
             logger.info("Recording utterance")
             stamp = str(datetime.datetime.now())
-            filename = "/tmp/mycroft_utterance%s.wav" % stamp
+            if self.utterance_save_path:
+                filename = self.utterance_save_path + "/mycroft_utterance%s.wav" % stamp
+            else:
+                filename = "/tmp/mycroft_utterance%s.wav" % stamp
             with open(filename, 'wb') as filea:
                 filea.write(audio_data.get_wav_data())
         return audio_data
