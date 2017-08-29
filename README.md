@@ -6,43 +6,11 @@ Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to
 
 # Jarbas
 
-Jarbas is a fork of mycroft-core, why fork?
-
-Personal Reasons
-
-    - Development, i need a place to test changes before contributing to
-    mycroft-core! This fork also includes many developer tools i made
-
-    - Backup, i work in a very unstable workstation, i push everything all the time for safe storage
-
-    - Easy deployment, i have my own setup ready to deploy anywhere
-
-    - Freedom, some stuff just won't make it into core because of different design
-    philosophies, that doesn't mean it shouldn't be available
-
-Community Reasons
-
-    - Content, with so much different stuff available it makes sense to maintain a
-    fork with all additions implemented and ready to use, it is not trivial to
-    install all this fork's differences in mycroft-core
-
-    - Demonstration, test my stuff without breaking your mycroft-core install before
-     deciding to merge some of the features
-
-    - Proof of Concept, since i work alone i can do whatever i wan't even if it's
-    not up to industry standards, this allows ideas to be tested and discarded
-    more easily
-
-    - Early access, impatient people can start using buggy features not available yet
-
-    - Collaboration, I try to make things up to mycroft-core standards and
-    make Pull Requests, everyone wins
-
-Some day i hope this fork won't be needed, that would mean mycroft-core is doing a perfect job!
+Jarbas is a fork of mycroft-core
 
 ##### WARNING ######
 
-if you paid attention this means THERE BE DRAGONS
+THERE BE DRAGONS
 
 everything can break anytime!
 things designed for mycroft may not work with jarbas!
