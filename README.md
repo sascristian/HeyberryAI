@@ -8,9 +8,12 @@ Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to
 
 Jarbas is a fork of mycroft-core
 
+
+# THERE BE DRAGONS
+
 ##### WARNING ######
 
-THERE BE DRAGONS
+# THERE BE DRAGONS
 
 everything can break anytime!
 things designed for mycroft may not work with jarbas!
@@ -25,6 +28,10 @@ but i give absolutely no warranty of this!
 that means the 3rd party should support it and not hard code it
 - msm temporarly removed, skill install is old-school manual install
 - no use of mycroft.ai, this means no web ui (yet) and harder setup
+- no online config, must edit files
+- no mycroft stt, must configure Kaldi or other online service
+- no shared api keys (weather/wolfram...)
+- some skills not fully functional  / added yet / configured for server / undocumented setup
 
 Still interested?
 
@@ -32,7 +39,8 @@ Still interested?
 Dev branch
 ==========
 
-This branch is a work in progress, forever in development
+This branch (patch-15) is a work in progress, forever in development, the other
+branches should all be considered broken / abandoned / temporary
 
 Check the jarbas_docs folder for more info on each change, expect this to be
 outdated
@@ -48,12 +56,6 @@ whenever official mycroft documentation mentions "workon mycroft" use "workon ja
 
 not everything will work out of the box, expect bumps
 
-- no online config, must edit files
-- no mycroft stt, must configure Kaldi or other online service
-- no shared api keys (twitter/facebook/weather/wolfram...)
-- some skills not fully functional  / added yet / configured for server / undocumented setup
-
-
 
 # The idea
 
@@ -64,7 +66,7 @@ Stick some hardware and they are glorified alarm clocks than run scripts instead
 Jarbas fork intends to show that mycroft is much more than this by harnessing the power of open source,
 an AI assistant should do "AI stuff" on demand, where is the AI in mycroft/jarbas?
 
-# TODO links in each one
+         #### TODO links in each one ####
 
 The essential parts that make it work, many options available for each
 
@@ -84,7 +86,7 @@ The "AI stuff" it can already do for you
         - Copy the style of any artist using Style Transfer
         - Colorize Black and White photos
         - Chatbot using AIML
-        - Auto complete your stories with a Char-RNN
+        - Auto complete your stories with a Char-RNN (training...)
         - Learn and build a database of what it learns with LILACS
 
 And dont forget the "not really AI" stuff
@@ -153,6 +155,69 @@ LILACS learning demo - https://www.youtube.com/watch?v=BPYOC1Dass4
 Morse Code TTS engine joke - https://www.youtube.com/watch?v=ZEhA8VXzLII
 
 AIML chatbot demo - https://www.youtube.com/watch?v=6gbKz2u-q8k
+
+
+# Install
+
+only debian officially supported, ubuntu complains because firefox package name is different
+
+- build_host_setup_debian.sh
+- build_dev_setup.sh
+
+# light install
+
+if you don't care about pre-packaged skills / using a pi
+
+- build_host_setup_debian_light.sh
+- build_dev_setup_light.sh
+
+this won't install most skill requirements, only core and client/server requirements
+
+in the future will install pymimic instead of mimic
+
+# Update
+
+to update packages:
+- git pull -> for merging this fork changes
+- re-run host setup script -> for updating system packages
+- run dev-update.sh or dev-update-light.sh -> update python packages in virtual env
+
+using full update scripts:
+
+this means overwrite all changes and revert to current github state, update host
+ packages, and update dev packages
+
+- full_update_debian.sh or full_update_debian_light.sh
+
+# Usage
+
+to start it is the same as mycroft-core, jarbas.sh and mycroft.sh are duplicates
+
+- TODO - all usage flags -c -v -cl -s -w
+- ./jarbas.sh start
+
+or with different processes
+
+- ./start.sh service
+- ./start.sh skills
+- ./start.sh audio
+- ./start.sh display
+- ./start.sh voice
+- ./start.sh cli
+- ./start.sh server
+- ./start.sh client
+- ./start.sh webchat
+
+
+# Other scripts
+
+all others scripts are not meant for use, open them to understand what they do,
+comments explain most things
+
+of interest:
+- pymimic install scripts
+- tensorflow model download scripts in jarbas_models/model_folder
+- all mimic voices download script
 
 ##### EVERYTHING BELLOW IS NOT UPDATED OFTEN , SORRY ########
 
