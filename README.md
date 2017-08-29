@@ -1,15 +1,80 @@
-# Jarbas 
+# Want to help me work on mycroft full time?
 
-Stable branch
+Support me on [Patreon](https://www.patreon.com/jarbasAI)
+
+Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to 15B4ZQFY5UfopjRtSRQPx7ibRaFukE1Ntq
+
+# Jarbas
+
+Jarbas is a fork of mycroft-core, why fork?
+
+Personal Reasons
+
+    - Development, i need a place to test changes before contributing to
+    mycroft-core! This fork also includes many developer tools i made
+
+    - Backup, i work in a very unstable workstation, i push everything all the time for safe storage
+
+    - Easy deployment, i have my own setup ready to deploy anywhere
+
+    - Freedom, some stuff just won't make it into core because of different design
+    philosophies, that doesn't mean it shouldn't be available
+
+Community Reasons
+
+    - Content, with so much different stuff available it makes sense to maintain a
+    fork with all additions implemented and ready to use, it is not trivial to
+    install all this fork's differences in mycroft-core
+
+    - Demonstration, test my stuff without breaking your mycroft-core install before
+     deciding to merge some of the features
+
+    - Proof of Concept, since i work alone i can do whatever i wan't even if it's
+    not up to industry standards, this allows ideas to be tested and discarded
+    more easily
+
+    - Early access, impatient people can start using buggy features not available yet
+
+    - Collaboration, I try to make things up to mycroft-core standards and
+    make Pull Requests, everyone wins
+
+Some day i hope this fork won't be needed, that would mean mycroft-core is doing a perfect job!
+
+##### WARNING ######
+
+if you paid attention this means THERE BE DRAGONS
+
+everything can break anytime!
+things designed for mycroft may not work with jarbas!
+some things designed for jarbas wont work in mycroft!
+support for this branch is limited to me alone, folks from mycroft community may not be able to help
+
+
+that said, everything that works in mycroft i try to make work with jarbas,
+but i give absolutely no warranty of this!
+
+- bus address is different, but it is supposed to be configured in config file,
+that means the 3rd party should support it and not hard code it
+- msm temporarly removed, skill install is old-school manual install
+- no use of mycroft.ai, this means no web ui (yet) and harder setup
+
+Still interested?
+
+
+Dev branch
 ==========
 
-This branch is a work in progress, all jarbas changes are being merged one by one to make this a stable version
+This branch is a work in progress, forever in development
 
-Check the jarbas_docs folder for more info on each change as it is added
+Check the jarbas_docs folder for more info on each change, expect this to be
+outdated
 
-This should install in a virtual env just like mycroft, only debian scripts were updated
+This should install in a virtual env just like mycroft, only debian
+install scripts were updated
 
-virtual env is named jarbas , it should be possible to have both mycroft and jarbas at same time, each one running in a different virtual env
+virtual env is named jarbas , it is possible to have both mycroft and jarbas at
+same time, each one running in a different virtual env and using different bus
+adress
 
 whenever official mycroft documentation mentions "workon mycroft" use "workon jarbas"
 
@@ -18,14 +83,9 @@ not everything will work out of the box, expect bumps
 - no online config, must edit files
 - no mycroft stt, must configure Kaldi or other online service
 - no shared api keys (twitter/facebook/weather/wolfram...)
-- some skills not fully functional  / added yet / configured for server
+- some skills not fully functional  / added yet / configured for server / undocumented setup
 
 
-# Want to help me work on mycroft full time?
-
-Support me on [Patreon](https://www.patreon.com/jarbasAI)
-
-Or send me some [magic internet money](https://en.wikipedia.org/wiki/Bitcoin) to 15B4ZQFY5UfopjRtSRQPx7ibRaFukE1Ntq
 
 # The idea
 
@@ -81,24 +141,52 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - no pairing
             - no config update from mycroft.ai
             - added "intent.start", "intent.end", "intent.failed" messages
-            - skills/core.py SKILLS_DIR is now jarbas_skills folder instead of opt
+            - skills/core.py SKILLS_DIR is now jarbas_skills folder instead of opt but configurable
             - do not remove articles in normalize (too much normalization IMO)
             - allow for multiple hot words of various kinds
-            - offline stt (pocketpshinx) <- WIP missing model
+            - offline stt (pocketpshinx) <- WIP
             - wakeword/hotword/standupword snowboy support
             - fallback skill order override in config file
             - message_context update methods added to MycroftSkill
             - update_config method added to MycroftSkill
             - screen display service
+            - speech messages transmit metadata together with speech
             - speech messages set adapt context for LastSpeech and every metadata field
             - recognizer_loop:speak message type
             - runtime configuration file
+            - external STT requests (decode audio from a skill)
+            - runtime shutdown/reload of skills
+            - runtime changes of tts/stt(wip)/hotwords
+            - centralized API section in config
             - ConfigurationManager.save checks for config existence before loading it
             - webchat client
+            - encrypted multi instance networking (server/client)
+            - multiple connected clients support, authorization per client per action
             - many helper classes
+            - many skills bundled by default
 
             # temporary changes
             - no msm
+
+# Videos
+
+Display Service Demo - https://www.youtube.com/watch?v=y9rb1wKZiUs
+
+Hotwords/Snowboy Demo - https://www.youtube.com/watch?v=GIkBh0VFmbc
+
+TTS runtime change Demo - https://www.youtube.com/watch?v=cKc_RxRbJ3U
+
+# very old videos
+
+Facebook chat client Demo - https://www.youtube.com/watch?v=oh1Y9f16xTk
+
+LILACS learning demo - https://www.youtube.com/watch?v=BPYOC1Dass4
+
+Morse Code TTS engine joke - https://www.youtube.com/watch?v=ZEhA8VXzLII
+
+AIML chatbot demo - https://www.youtube.com/watch?v=6gbKz2u-q8k
+
+##### EVERYTHING BELLOW IS NOT UPDATED OFTEN , SORRY ########
 
 # Intent Layers
 
