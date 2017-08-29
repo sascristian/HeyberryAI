@@ -120,17 +120,18 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - offline stt (pocketpshinx) <- WIP
             - wakeword/hotword/standupword snowboy support
             - fallback skill order override in config file
+            - apis centralized in self.APIS for all skills
             - message_context update methods added to MycroftSkill
             - update_config method added to MycroftSkill
             - screen display service
             - speech messages transmit metadata together with speech
             - speech messages set adapt context for LastSpeech and every metadata field
             - recognizer_loop:speak / hotword / external stt message types
-            - new runtime configuration file
             - save utterances if desired (configurable, disabled by default)
+            - utterance and hotword save paths configurable
             - external STT requests (transcribe audio from a skill)
             - runtime shutdown/reload of skills
-            - runtime changes of tts/stt(wip)/hotwords
+            - runtime changes of configuration (tts/stt/hotwords)
             - centralized API section in config
             - ConfigurationManager.save checks for config existence before loading it
             - webchat client
