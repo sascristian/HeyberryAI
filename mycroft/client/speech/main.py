@@ -63,9 +63,9 @@ def handle_hotword(event):
 
 
 def handle_external_audio(event):
-    logger.info("External audio STT request: " + event["wave_file"])
-    loop.emit(Message('recognizer_loop:external_audio', event))
-    ws.emit(Message('recognizer_loop:external_audio', event))
+    logger.info("External audio STT request: " + event.data["wave_file"])
+    loop.emit(Message('recognizer_loop:external_audio', event.data))
+
 
 def handle_external_audio_reply(event):
     logger.info("External audio STT result: " + event["stt"])
