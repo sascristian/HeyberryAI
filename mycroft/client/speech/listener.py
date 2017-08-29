@@ -17,6 +17,7 @@
 
 
 import time
+import wave
 from Queue import Queue
 from threading import Thread
 
@@ -105,7 +106,21 @@ class AudioConsumer(Thread):
         self.metrics = MetricsAggregator()
         self.config = ConfigurationManager.get()
         self.word = self.wakeword_recognizer.key_phrase
-        emitter.on("recognizer_loop:hotword", self.set_word)
+        self.emitter.on("recognizer_loop:hotword", self.set_word)
+        self.emitter.on("recognizer_loop:external_audio",
+                    self.handle_external_audio_request)
+
+    def read_wave_file(self, wave_file_path):
+        wr = wave.open(wave_file_path, 'r')
+        return wr.readframes(wr.getnframes()-1)
+
+    def handle_external_audio_request(self, event):
+        wave_file = event.get("wave_file")
+        audio = self.read_wave_file(wave_file)
+        if audio is not None:
+            text = self.transcribe(audio, False)
+            self.emitter.emit("recognizer_loop:external_audio.reply",
+                               {"stt": text})
 
     def set_word(self, event):
         self.word = event.get("hotword", self.wakeword_recognizer.key_phrase)
@@ -156,7 +171,7 @@ class AudioConsumer(Thread):
 
         self.word = self.wakeword_recognizer.key_phrase
 
-    def transcribe(self, audio):
+    def transcribe(self, audio, emit=True):
         LOG.debug("Transcribing audio")
         text = None
         try:
@@ -188,8 +203,10 @@ class AudioConsumer(Thread):
                 'lang': self.stt.lang,
                 'session': SessionManager.get().session_id
             }
-            self.emitter.emit("recognizer_loop:utterance", payload)
-            self.metrics.attr('utterances', [text])
+            if emit:
+                self.emitter.emit("recognizer_loop:utterance", payload)
+                self.metrics.attr('utterances', [text])
+        return text
 
     def __speak(self, utterance):
         payload = {
