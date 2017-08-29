@@ -125,9 +125,10 @@ In practice it can act as a vocal search engine, a helper for disabled people, a
             - screen display service
             - speech messages transmit metadata together with speech
             - speech messages set adapt context for LastSpeech and every metadata field
-            - recognizer_loop:speak message type
-            - runtime configuration file
-            - external STT requests (decode audio from a skill)
+            - recognizer_loop:speak / hotword / external stt message types
+            - new runtime configuration file
+            - save utterances if desired (configurable, disabled by default)
+            - external STT requests (transcribe audio from a skill)
             - runtime shutdown/reload of skills
             - runtime changes of tts/stt(wip)/hotwords
             - centralized API section in config
