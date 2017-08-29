@@ -49,6 +49,7 @@ from subprocess import check_output
 ip = check_output(['hostname', '--all-ip-addresses']).replace(" \n", "")
 if " " in ip:
     ip = ip.split(" ")[0]
+ip = "127.0.0.1"
 port = 4000
 mode = "client"
 

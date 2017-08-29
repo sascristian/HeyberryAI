@@ -25,36 +25,37 @@ __author__ = 'jarbas'
 LOGGER = getLogger(__name__)
 
 
-class PadatiusFallbackQuery(QueryBackend):
-    def __init__(self, emitter=None, timeout=5, waiting_messages=["padatius:fallback.response"],logger=None):
-        super(PadatiusFallbackQuery, self).__init__(
-            name="PadatiusFallbackService", emitter=emitter, timeout=timeout,
-            waiting_messages=waiting_messages, logger=logger)
+class PadatiousFallbackQuery(QueryBackend):
+    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+                 server=False, client=False):
+        super(PadatiousFallbackQuery, self).__init__(name=None, emitter=None,
+                                                     timeout=5,
+                                                logger=None,
+                                                server=False, client=False)
 
-    def wait_server_response(self, data = None):
+    def get_padatious_response(self, data=None, context=None):
         if data is None:
             data = {}
-        self.send_request(message_type="padatius:fallback.request",
-                          message_data=data)
-        self.wait("padatius:fallback.response")
-        return self.result.get("success", False)
+        result = self.send_request(message_type="padatious:fallback.request",
+                          message_data=data, message_context=context)
+        return result.get("success", False)
 
 
-class PadatiusFallback(FallbackSkill):
+class PadatiousFallback(FallbackSkill):
     def __init__(self):
-        super(PadatiusFallback, self).__init__()
-        self.padatius = None
+        super(PadatiousFallback, self).__init__()
+        self.padatious = None
 
     def initialize(self):
         self.register_fallback(self.handle_fallback, 99)
-        self.padatius = PadatiusFallbackQuery(self.emitter)
+        self.padatious = PadatiousFallbackQuery(self.emitter)
 
     def handle_fallback(self, message):
-        return self.padatius.wait_server_response(message.data)
+        return self.padatius.get_padatious_response(message.data)
 
     def stop(self):
         pass
 
 
 def create_skill():
-    return PadatiusFallback()
+    return PadatiousFallback()

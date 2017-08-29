@@ -18,15 +18,15 @@
 import random
 from time import sleep
 
-import os
+import os, sys
 from adapt.intent import IntentBuilder
 from os.path import dirname
-
-from jarbas_skills.LILACS_core.concept import ConceptConnector
-from jarbas_skills.LILACS_core.crawler import ConceptCrawler
+sys.path.append(dirname(__file__))
+from concept import ConceptConnector
+from crawler import ConceptCrawler
 from jarbas_utils.question_parser import LILACSQuestionParser
 # import helper questions functions
-from jarbas_skills.LILACS_core.questions import *
+from questions import *
 
 from jarbas_utils.skill_tools import KnowledgeQuery
 from mycroft.util.log import getLogger

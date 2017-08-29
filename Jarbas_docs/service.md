@@ -48,17 +48,17 @@ vision service
                 super(VisionService, self).__init__(name="VisionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
             def get_feed(self, context=None):
-                self.send_request("vision.feed.request")
+                self.set_response_handler("vision.feed.request")
                 self.wait("vision.feed.result")
                 return self.result.get("file")
 
             def get_data(self, context=None):
-                self.send_request("vision_request")
+                self.set_response_handler("vision_request")
                 self.wait("vision_result")
                 return self.result
 
             def get_faces(self, file=None, context=None):
-                self.send_request("vision.faces.request", {"file": file})
+                self.set_response_handler("vision.faces.request", {"file": file})
                 self.wait("vision.faces.result")
                 return self.result.get("faces", [])
 
@@ -69,7 +69,7 @@ asking server service
                 super(ImageRecogService, self).__init__(name="ImageRecognitionService", emitter=emitter, timeout=timeout, waiting_messages=waiting_messages, logger=logger)
 
             def get_classification(self, file_path, server=True, context=None):
-                self.send_request(message_type="image.classification.request",
+                self.set_response_handler(message_type="image.classification.request",
                                   message_data={"file": file_path},
                                   message_context=context,
                                   server=server)
@@ -79,7 +79,7 @@ asking server service
             def get_deep_draw(self, class_num=None, server=True, context=None):
                 if class_num is None:
                     class_num = random.randint(0, 1000)
-                self.send_request(message_type="class.visualization.request",
+                self.set_response_handler(message_type="class.visualization.request",
                                   message_data={"class": class_num},
                                   message_context=context,
                                   server=server)
@@ -127,7 +127,7 @@ asking server service
                 for msg in waiting_messages:
                     self.emitter.on(msg, self.end_wait)
 
-            def send_request(self, message_type, message_data=None, message_context=None, server=False):
+            def set_response_handler(self, message_type, message_data=None, message_context=None, server=False):
                 """
                   send message
                 """

@@ -12,7 +12,7 @@ from PIL import Image
 from imgurpython import ImgurClient
 
 from adapt.intent import IntentBuilder
-from mycroft.util.jarbas_services import StyleTransferService
+from jarbas_utils.skill_tools import StyleTransferQuery as StyleTransferService
 from mycroft.messagebus.message import Message
 from mycroft.skills.core import MycroftSkill
 from mycroft import MYCROFT_ROOT_PATH
