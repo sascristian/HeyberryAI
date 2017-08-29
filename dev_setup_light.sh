@@ -113,18 +113,31 @@ echo "Building with $CORES cores."
 #cd ${TOP}
 #${TOP}/scripts/install-pocketsphinx.sh -q
 
+
+
 #build and install mimic
 cd "${TOP}"
 
 if [[ "$build_mimic" == 'y' ]] || [[ "$build_mimic" == 'Y' ]]; then
   echo "WARNING: The following can take a long time to run!"
-  "${TOP}/scripts/install-pymimic.sh"
+  "${TOP}/scripts/install-mimic.sh" " ${CORES}"
 else
-  echo "Skipping pymimic build."
+  echo "Skipping mimic build."
 fi
 
+# TODO full pymimic support
+#build and install mimic
+#cd "${TOP}"
+
+#if [[ "$build_mimic" == 'y' ]] || [[ "$build_mimic" == 'Y' ]]; then
+#  echo "WARNING: The following can take a long time to run!"
+#  "${TOP}/scripts/install-pymimic.sh"
+#else
+#  echo "Skipping pymimic build."
+#fi
+
 # install pymimic
-pip install git+https://github.com/forslund/pymimic.git
+#pip install git+https://github.com/forslund/pymimic.git
 
 # install pygtk for desktop_launcher skill
 #"${TOP}/scripts/install-pygtk.sh"
