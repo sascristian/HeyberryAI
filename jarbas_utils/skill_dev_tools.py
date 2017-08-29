@@ -20,7 +20,7 @@ class ResponderBackend(object):
     """
 
     def __init__(self, name=None, emitter=None, logger=None,
-                 server=True, client=True):
+                 server=True, client=True, override=True):
         """
            initialize emitter, register events, initialize internal variables
         """
@@ -39,6 +39,14 @@ class ResponderBackend(object):
         self.client = client
         self.client_request_message = "client.message.request"
         self.server_request_message = "server.message.request"
+        self.config = ConfigurationManager.get().get(self.name, {})
+        if override:
+            server = self.config.get("answer_server")
+            if server is not None:
+                self.server = server
+            client = self.config.get("answer_client")
+            if client is not None:
+                self.client = client
 
     def update_response_data(self, response_data=None, response_context=None):
         if self.responder is not None:
@@ -178,11 +186,11 @@ class QueryBackend(object):
             timeout: time in seconds to wait for response (int)
             server: send this query to jarbas server
             client: send this query to jarbas client
-
+            override: get client and server params from config file
     """
 
     def __init__(self, name=None, emitter=None, timeout=5, logger=None,
-                 server=False, client=False):
+                 server=False, client=False, override=True):
         """
            initialize emitter, register events, initialize internal variables
         """
@@ -201,12 +209,13 @@ class QueryBackend(object):
         self.waiting_messages = []
         self.elapsed_time = 0
         self.config = ConfigurationManager.get().get(self.name, {})
-        server = self.config.get("server_flag")
-        if server is not None:
-            self.server = server
-        client = self.config.get("client_flag")
-        if client is not None:
-            self.client = client
+        if override:
+            server = self.config.get("ask_server")
+            if server is not None:
+                self.server = server
+            client = self.config.get("ask_client")
+            if client is not None:
+                self.client = client
 
     def send_request(self, message_type, message_data=None,
                      message_context=None, response_messages=None,

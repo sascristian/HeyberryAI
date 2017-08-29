@@ -16,29 +16,13 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from jarbas_utils.skill_tools import QueryBackend
+from jarbas_utils.skill_tools import PadatiousFallbackQuery
 from mycroft.skills.core import FallbackSkill
 from mycroft.util.log import getLogger
 
 __author__ = 'jarbas'
 
 LOGGER = getLogger(__name__)
-
-
-class PadatiousFallbackQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
-                 server=False, client=False):
-        super(PadatiousFallbackQuery, self).__init__(name=None, emitter=None,
-                                                     timeout=5,
-                                                logger=None,
-                                                server=False, client=False)
-
-    def get_padatious_response(self, data=None, context=None):
-        if data is None:
-            data = {}
-        result = self.send_request(message_type="padatious:fallback.request",
-                          message_data=data, message_context=context)
-        return result.get("success", False)
 
 
 class PadatiousFallback(FallbackSkill):
@@ -51,7 +35,7 @@ class PadatiousFallback(FallbackSkill):
         self.padatious = PadatiousFallbackQuery(self.emitter)
 
     def handle_fallback(self, message):
-        return self.padatius.get_padatious_response(message.data)
+        return self.padatious.get_padatious_response(message.data)
 
     def stop(self):
         pass
