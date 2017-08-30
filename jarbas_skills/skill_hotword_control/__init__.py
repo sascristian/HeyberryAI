@@ -38,7 +38,7 @@ class HotwordSkill(MycroftSkill):
     def __init__(self):
         super(HotwordSkill, self).__init__()
         self.reload_skill = False
-        self.snowboy_token = self.config_core.get("APIS", {}).get("Snowboy")
+        self.snowboy_token = self.APIS.get("Snowboy")
         self.snowboy_age_group = self.config_core.get("listener", {}).get("snowboy_age", "20_29")
         self.snowboy_gender = self.config_core.get("listener", {}).get("snowboy_gender", "M")
         if not self.snowboy_token:
@@ -49,8 +49,11 @@ class HotwordSkill(MycroftSkill):
         self.get_listener_config()
         # build intents
         self.build_intents()
+        # FIXME for new config
+        self.log.warn("Skill not functional, needs update for hotword factory")
 
     def build_intents(self):
+        # TODO record utterances status, set, unset intents
 
         intent = IntentBuilder("SoundWuWStatusIntent") \
             .require("StatusKeyword") \
@@ -398,7 +401,7 @@ class HotwordSkill(MycroftSkill):
     # send bus message to update all configs
     def update_configs(self, config):
         # change config message
-        self.config_update(config=config, isSystem=True)
+        self.config_update(config=config)
         sleep(1)
         self.get_listener_config()
         return True
