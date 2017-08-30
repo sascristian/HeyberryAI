@@ -1,15 +1,15 @@
 from mycroft.configuration import ConfigurationManager
 from mycroft.util.log import getLogger
-from mycroft.client.speech.recognizer.pocketsphinx_recognizer import PocketsphinxRecognizer
-from mycroft.client.speech.recognizer.snowboy_recognizer import SnowboyRecognizer
 
 __author__ = "jarbas"
 
-LOG = getLogger("Hotwords")
+LOG = getLogger("HotwordFactory")
 
 
 class PocketsphinxHotWord():
     def __init__(self, key_phrase, lang="en-us", config=None):
+        from mycroft.client.speech.recognizer.pocketsphinx_recognizer import \
+            PocketsphinxRecognizer
         if config is None:
             config = ConfigurationManager.get().get("hot_words", {})
             config = config.get(key_phrase, {})
@@ -28,6 +28,8 @@ class PocketsphinxHotWord():
 
 class SnowboyHotWord():
     def __init__(self, key_phrase, lang="en-us", config=None):
+        from mycroft.client.speech.recognizer.snowboy_recognizer import \
+            SnowboyRecognizer
         if config is None:
             config = ConfigurationManager.get().get("hot_words", {})
             config = config.get(key_phrase, {})
