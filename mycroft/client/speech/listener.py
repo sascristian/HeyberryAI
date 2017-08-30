@@ -27,15 +27,14 @@ from requests.exceptions import ConnectionError
 
 import mycroft.dialog
 from mycroft.client.speech.mic import MutableMicrophone, ResponsiveRecognizer
-from mycroft.client.speech.recognizer.pocketsphinx_recognizer \
-    import PocketsphinxRecognizer
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.message import Message
 from mycroft.metrics import MetricsAggregator
 from mycroft.session import SessionManager
 from mycroft.stt import STTFactory
 from mycroft.util.log import getLogger
-from mycroft.client.speech.recognizer.snowboy_recognizer import SnowboyRecognizer
+from mycroft.client.speech.hot_word_factory import HotWordFactory
+
 LOG = getLogger(__name__)
 
 
@@ -248,18 +247,17 @@ class RecognizerLoop(EventEmitter):
         self.microphone = MutableMicrophone(device_index, rate)
         # FIXME - channels are not been used
         self.microphone.CHANNELS = self.config.get('channels')
-        self.wakeword_recognizer = self.create_wake_word_recognizer(rate,
-                                                                    self.lang)
+        self.wakeword_recognizer = self.create_wake_word_recognizer()
         # TODO - localization
         self.hot_word_engines = {}
         self.create_hot_word_engines()
-        self.wakeup_recognizer = self.create_wakeup_recognizer(rate, self.lang)
+        self.wakeup_recognizer = self.create_wakeup_recognizer()
         self.responsive_recognizer = ResponsiveRecognizer(self.wakeword_recognizer, self.hot_word_engines)
         self.state = RecognizerLoopState()
 
     def create_hot_word_engines(self):
         LOG.info("creating hotword engines")
-        hot_words = self.config.get("hot_words", {})
+        hot_words = self.config_core.get("hot_words", {})
         for word in hot_words:
             data = hot_words[word]
             if not data.get("active", True):
@@ -268,75 +266,18 @@ class RecognizerLoop(EventEmitter):
             ding = data.get("sound")
             utterance = data.get("utterance")
             listen = data.get("listen", False)
+            engine = HotWordFactory.create_hotword(word)
+            self.hot_word_engines[word] = [engine, ding, utterance,
+                                           listen, type]
 
-            data = data["data"]
-            LOG.info("Creating hotword engine for " + word + " with type " + type)
-            if type == "pocket_sphinx":
-                lang = data.get("lang", self.config_core.get("lang", "en-us"))
-                rate = data.get("rate", self.config.get("rate"))
-                hot_word = data.get("hot_word").lower()
-                phonemes = data.get('phonemes')
-                threshold = data.get('threshold')
-                engine = PocketsphinxRecognizer(hot_word, phonemes,
-                                                threshold, rate, lang)
-                self.hot_word_engines[word] = [engine, ding, utterance,
-                                               listen, type]
-            elif type == "snowboy":
-                models = data.get("models", {})
-                sensitivity = data.get("sensitivity", 0.5)
-                paths = []
-                for model in models.keys():
-                    paths.append(models[model])
-                engine = SnowboyRecognizer(paths, sensitivity, word)
-                self.hot_word_engines[word] = [engine, ding, utterance,
-                                               listen, type]
-            else:
-                LOG.error("unknown hotword engine " + type)
-
-    def create_wake_word_recognizer(self, rate, lang):
+    def create_wake_word_recognizer(self):
         # Create a local recognizer to hear the wakeup word, e.g. 'Hey Mycroft'
-        module = self.config.get('module', "pocketsphinx")
-        wake_word = self.config.get('wake_word').lower()
-        if module == "snowboy":
-            LOG.info("Using snowboy wake word detector")
-            models = self.config.get("models", {})
-            sensitivity = self.config.get("sensitivity", 0.5)
-            paths = []
-            for model in models.keys():
-                paths.append(models[model])
-            return SnowboyRecognizer(paths, sensitivity, wake_word)
-        elif module == "pocketsphinx":
-            LOG.info("Using PocketSphinx wake word detector")
+        LOG.info("creating wake word engine")
+        return HotWordFactory.create_wake_word()
 
-            phonemes = self.config.get('phonemes')
-            threshold = self.config.get('threshold')
-            return PocketsphinxRecognizer(wake_word, phonemes,
-                                          threshold, rate, lang)
-        else:
-            LOG.error("Bad wake word configuration")
-            return None
-
-    def create_wakeup_recognizer(self, rate, lang):
-        module = self.config.get('wake_up_module', "pocketsphinx")
-        wake_word = self.config.get('standup_word', "wake up").lower()
-        if module == "snowboy":
-            LOG.info("Using snowboy wake up detector")
-            models = self.config.get("wake_up_models", {})
-            sensitivity = self.config.get("wake_up_sensitivity", 0.5)
-            paths = []
-            for model in models.keys():
-                paths.append(models[model])
-            return SnowboyRecognizer(paths, sensitivity, wake_word)
-        elif module == "pocketsphinx":
-            LOG.info("Using PocketSphinx wake up detector")
-
-            phonemes = self.config.get('standup_phonemes', "W EY K . AH P")
-            threshold = self.config.get('standup_threshold', 1e-18)
-            return PocketsphinxRecognizer(wake_word, phonemes,
-                                          threshold, rate, lang)
-        else:
-            LOG.error("Bad wake up word configuration")
-            return None
+    def create_wakeup_recognizer(self):
+        LOG.info("creating stand up word engine")
+        return HotWordFactory.create_standup_word()
 
     def start_async(self):
         """
