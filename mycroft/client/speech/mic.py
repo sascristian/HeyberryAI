@@ -170,6 +170,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         self.energy_ratio = listener_config.get('energy_ratio')
         # check the config for the flag to save wake words.
         self.save_wake_words = listener_config.get('record_wake_words', False)
+        self.save_hot_words = listener_config.get('record_hot_words', False)
         self.save_utterances = listener_config.get('record_utterances', False)
         self.wake_word_save_path = listener_config.get('wake_word_save_path')
         self.utterance_save_path = listener_config.get('utterance_save_path')
@@ -384,8 +385,31 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 buffers_since_check -= buffers_per_check
                 audio_data = byte_data + silence
                 said_wake_word = self.wake_word_recognizer.found_wake_word(audio_data)
+                # if a wake word is success full then record audio in temp file.
+                if self.save_wake_words and said_wake_word:
+                    logger.info("Recording wakeword")
+                    audio = self._create_audio_data(audio_data, source)
+                    stamp = str(datetime.datetime.now())
+                    if self.wake_word_save_path:
+                        filename = self.wake_word_save_path + "/mycroft_wake_success%s.wav" % stamp
+                    else:
+                        filename = "/tmp/mycroft_wake_word%s.wav" % stamp
+                    with open(filename, 'wb') as filea:
+                        filea.write(audio.get_wav_data())
+
                 if not said_wake_word and self.check_for_hotwords(audio_data, emitter):
                     said_wake_word = True
+                    if self.save_hot_words and said_wake_word:
+                        logger.info("Recording hotword")
+                        audio = self._create_audio_data(audio_data, source)
+                        stamp = str(datetime.datetime.now())
+                        if self.wake_word_save_path:
+                            filename = self.wake_word_save_path + \
+                                       "/mycroft_hot_word%s.wav" % stamp
+                        else:
+                            filename = "/tmp/mycroft_wake_success%s.wav" % stamp
+                        with open(filename, 'wb') as filea:
+                            filea.write(audio.get_wav_data())
                 elif said_wake_word:
                     # If enabled, play a wave file with a short sound to audibly
                     # indicate recording has begun.
@@ -394,18 +418,6 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                             config.get('sounds').get('start_listening'))
                         if file:
                             play_wav(file)
-                # if a wake word is success full then record audio in temp
-                # file.
-                if self.save_wake_words and said_wake_word:
-                    logger.info("Recording wakeword")
-                    audio = self._create_audio_data(audio_data, source)
-                    stamp = str(datetime.datetime.now())
-                    if self.wake_word_save_path:
-                        filename = self.wake_word_save_path + "/mycroft_wake_success%s.wav" % stamp
-                    else:
-                        filename = "/tmp/mycroft_wake_success%s.wav" % stamp
-                    with open(filename, 'wb') as filea:
-                        filea.write(audio.get_wav_data())
 
     def check_for_hotwords(self, audio_data, emitter):
         # check hot word
