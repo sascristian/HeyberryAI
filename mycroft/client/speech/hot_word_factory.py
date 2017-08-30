@@ -31,9 +31,12 @@ class SnowboyHotWord():
         if config is None:
             config = ConfigurationManager.get().get("hot_words", {})
             config = config.get(key_phrase, {})
-        models_path_list = config.get("models")
+        models = config.get("models", {})
+        paths = []
+        for key in models:
+            paths.append(models[key])
         sensitivity = config.get("sensitivity", 0.5)
-        self.recognizer = SnowboyRecognizer(models_path_list=models_path_list,
+        self.recognizer = SnowboyRecognizer(models_path_list=paths,
                                             sensitivity=sensitivity,
                                             wake_word=key_phrase)
         self.lang = str(lang).lower()
