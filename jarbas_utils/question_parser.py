@@ -20,6 +20,7 @@ class RegexQuestionParser():
         self.regexes = [
             re.compile(
                 ".*(?P<QuestionWord>who|what|when|where|why|which|how)"
+                "(?P<QuestionVerb>is|are|was|were|to)"
                 "(?P<Query1>.*) (?P<QuestionTargetWord>of|from|at|on|in|off) "
                 "(?P<Query2>.*)"),
             re.compile(
