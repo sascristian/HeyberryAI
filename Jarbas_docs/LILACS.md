@@ -2,9 +2,27 @@
 
 LILACS is a learning and comprehension subsystem
 
+![LILACSS](https://github.com/ElliotTheRobot/LILACS-mycroft-core/raw/dev/lilacs-core.jpg)
+
+The idea is that Jarbas gathers knowledge about anything it hears, searches info
+ on several possible knowledge backends, and learns from user input
+
+This knowledge comes both in the form of connections/properties of subjects and text info, this allows mycroft:
+
+    to be vocally programmed about relationships of things (music tastes, family relationships)
+    to gather all the info from the internet, more backends can be added any time
+    to deduce answers from node relationships and answer several kinds of questions
+    to be more personal
+        "individual" knowledge between units
+        a "personality" depending on usage history
+        can "talk/rant" about subjects
+    store gathered knowledge in several fashions
+        collective database
+        personal database
+
 The job of lilacs is to understand concepts and answer questions about them
 
-![LILACSS](https://github.com/ElliotTheRobot/LILACS-mycroft-core/raw/dev/lilacs-core.jpg)
+[![LILACS learning demo](https://img.youtube.com/vi/BPYOC1Dass4/0.jpg)](http://www.youtube.com/watch?v=BPYOC1Dass4)
 
 # Step 1: Understanding what is being asked
 
@@ -260,7 +278,12 @@ Each of these sources is also a skill that can be triggered with
 
 # Step 4 - Node relationships
 
-Each concept in LILACS is stored as a "concept node" with the following anatomy
+Each concept in LILACS is stored as a "concept node"
+
+Each connection also has a weight determining how strong the connection is
+
+Under data any arbitrary field can be added
+
 
     Node:
        name: <- the concept this node is about
@@ -268,15 +291,15 @@ Each concept in LILACS is stored as a "concept node" with the following anatomy
        Connections:
            synonims: []  <- is the same as
            antonims: [] <- can never be related to
-           parents: {name : distance }  <- is an instance of
-           childs: {name : distance } <- can have the following instances
-           cousins: [] <- somewhat related subjects
-           spawns: []  <- what comes from this?
-           spawned_by: [] <- where does this come from?
-           consumes: [] <- what does this need/spend ?
-           consumed_by: []  <- what consumes this?
-           parts : [ ] <- what smaller nodes can this be divided into?
-           part_off: [ ] <- what can be made out of this?
+           parents: {name : weight }  <- is an instance of
+           childs: {name : weight } <- can have the following instances
+           cousins: {name : weight } <- somewhat related subjects
+           spawns: {name : weight }  <- what comes from this?
+           spawned_by: {name : weight } <- where does this come from?
+           consumes: {name : weight } <- what does this need/spend ?
+           consumed_by: {name : weight }  <- what consumes this?
+           parts : {name : weight } <- what smaller nodes can this be divided into?
+           part_off: {name : weight } <- what can be made out of this?
        Data:
             description: wikidata description_field
             abstract: dbpedia abstract
@@ -290,7 +313,6 @@ Each concept in LILACS is stored as a "concept node" with the following anatomy
 
 Currently the following relationships are "crawled" in order to answer questions
 
-### TODO examples
 
 # step 5 - Node storage
 
@@ -321,6 +343,28 @@ available, this will fill the node relationships at first much like a vocal
 programming language, in the future for trusted users this can be made "passive"
  with machine learning on curiosity skill
 
+# step 7 - Navigating Node Connections
+
+the ConceptCrawler helper class will implement several strategies to navigate
+node connections, the crawler will need a search depth (there could be infinite
+nodes) and to choose what nodes to load/unload in memory as it crawls
+
+Currently not much was done in this regard, the following POC crawlers navigate
+childs and parents connections
+
+- Drunk Crawler - choose next connection semi-randomly going to the strongest ones most of the times
+- Explorer Crawler - check all connections and choose the best one
+
+more crawlers will be added for all kinds of questions, strategies, connections and other functions
+
+    - maintenance crawler will improve node connections, remove duplicate nodes,add shortcuts etc.
+    - learning crawler will start at a subject and search everything it can about it and related nodes and save the populated info
+    - anti-crawler could choose always the least likely connections
+    - discoverer crawler could seek nodes with the least number of connections and populate those, because they represent a void in knowledge
+
+A crawl-log would be a great representation for the thinking process , a "thought stream" of sorts
+
+
 # Extra skills that leverage LILACS
 
 LILACS rhymes skill was made to show usage of KnowledgeQuery from other skill
@@ -349,5 +393,3 @@ this allows for things like
 this works per unit, not per user, until user authentication is done expect it
 to behave a little dumb, however using server client architecture every client
 is considered a different user, same goes for facebook chat
-
-### TODO add picture ###
