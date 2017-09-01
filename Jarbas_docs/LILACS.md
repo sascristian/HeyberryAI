@@ -311,13 +311,11 @@ Under data any arbitrary field can be added
             links: [ wikipedia link, dbpedia link  ]
             external_links[ suggested links from dbpedia]
 
-Currently the following relationships are "crawled" in order to answer questions
-
 
 # step 5 - Node storage
 
 Currently all nodes are stored as .json object, this is temporary and eventually
- several backends should be available to use
+ several storage backends should be available to use
 
  The LILACS storage skill will handle this and is responsible to listen for save
   and load node messages, a good analogy would be retrieving long term memory
@@ -325,8 +323,8 @@ Currently all nodes are stored as .json object, this is temporary and eventually
 
 # step 6 - Filling nodes
 
-Nodes are auto populated with some info from the knowledge sources, one way to
-trigger this is with questions of the kind "think about" or "talk about"
+Nodes are auto populated with some info from the knowledge sources on every
+question, one way to trigger this is with questions of the kind "think about"
 
 
         Input: think about evil
