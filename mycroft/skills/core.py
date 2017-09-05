@@ -17,6 +17,7 @@
 import abc
 import imp
 import time
+import sys
 
 import operator
 import os.path
@@ -24,6 +25,9 @@ import re
 import time
 from os.path import join, dirname, splitext, isdir
 
+from os.path import join, abspath, dirname, splitext, isdir, \
+                    basename, exists
+from os import listdir
 from functools import wraps
 
 from adapt.intent import Intent, IntentBuilder
@@ -98,14 +102,14 @@ def load_regex_from_file(path, emitter):
 
 
 def load_vocabulary(basedir, emitter):
-    for vocab_type in os.listdir(basedir):
+    for vocab_type in listdir(basedir):
         if vocab_type.endswith(".voc"):
             load_vocab_from_file(
                 join(basedir, vocab_type), splitext(vocab_type)[0], emitter)
 
 
 def load_regex(basedir, emitter):
-    for regex_type in os.listdir(basedir):
+    for regex_type in listdir(basedir):
         if regex_type.endswith(".rx"):
             load_regex_from_file(
                 join(basedir, regex_type), emitter)
@@ -146,7 +150,6 @@ def load_skill(skill_descriptor, emitter, skill_id):
                 logger.info("SKILL DOES NOT SUPPORT CURRENT LANGUAGE")
                 return None
             skill.bind(emitter)
-            skill._dir = dirname(skill_descriptor['info'][1])
             skill.skill_id = skill_id
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
             # Set up intent handlers
@@ -189,7 +192,7 @@ def get_skills(skills_folder):
 
 def create_skill_descriptor(skill_folder):
     info = imp.find_module(MainModule, [skill_folder])
-    return {"name": os.path.basename(skill_folder), "info": info}
+    return {"name": basename(skill_folder), "info": info}
 
 
 def load_skills(emitter, skills_root=SKILLS_DIR):
@@ -243,6 +246,9 @@ class MycroftSkill(object):
 
     def __init__(self, name=None, emitter=None):
         self.name = name or self.__class__.__name__
+        # Get directory of skill
+        self._dir = dirname(abspath(sys.modules[self.__module__].__file__))
+
         self.bind(emitter)
         self.config_core = ConfigurationManager.get()
         self.APIS = self.config_core.get("APIS", {})
@@ -317,7 +323,7 @@ class MycroftSkill(object):
         self.stop_time = time.time()
         self.stop_threshold = self.config_core.get("skills").get(
             'stop_threshold')
-        self.emitter.on('mycroft.stop', self.__handle_stop)
+        self.add_event('mycroft.stop', self.__handle_stop, False)
 
     def detach(self):
         for (name, intent) in self.registered_intents:
@@ -397,6 +403,7 @@ class MycroftSkill(object):
                     handler(self, message)
                 else:
                     handler(message)
+                self.settings.store()  # Store settings if they've changed
             except Exception as e:
                 # TODO: Localize
                 self.speak(
@@ -594,12 +601,12 @@ class MycroftSkill(object):
         self.init_dialog(root_directory)
         self.load_vocab_files(join(root_directory, 'vocab', self.lang))
         regex_path = join(root_directory, 'regex', self.lang)
-        if os.path.exists(regex_path):
+        if exists(regex_path):
             self.load_regex_files(regex_path)
 
     def load_vocab_files(self, vocab_dir):
         self.vocab_dir = vocab_dir
-        if os.path.exists(vocab_dir):
+        if exists(vocab_dir):
             load_vocabulary(vocab_dir, self.emitter)
         else:
             logger.debug('No vocab loaded, ' + vocab_dir + ' does not exist')
@@ -647,6 +654,7 @@ class MycroftSkill(object):
         # removing events
         for e, f in self.events:
             self.emitter.remove(e, f)
+        self.events = None  # Remove reference to wrappers
 
         self.emitter.emit(
             Message("detach_skill", {"skill_id": str(self.skill_id) + ":"}))

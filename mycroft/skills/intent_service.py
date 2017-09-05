@@ -203,6 +203,26 @@ class IntentService(object):
         # add skill with timestamp to start of skill_list
         self.active_skills.insert(0, [skill_id, time.time()])
 
+    def update_context(self, intent):
+        """
+            updates context with keyword from the intent.
+
+            NOTE: This method currently won't handle one_of intent keywords
+                  since it's not using quite the same format as other intent
+                  keywords. This is under investigation in adapt, PR pending.
+
+            Args:
+                intent: Intent to scan for keywords
+        """
+        for tag in intent['__tags__']:
+            if 'entities' not in tag:
+                continue
+            context_entity = tag['entities'][0]
+            if self.context_greedy:
+                self.context_manager.inject_context(context_entity)
+            elif context_entity['data'][0][1] in self.context_keywords:
+                self.context_manager.inject_context(context_entity)
+
     def handle_active_skill_request(self, message):
         # allow external sources to ensure converse method of this skill is called
         skill_id = message.data["skill_id"]

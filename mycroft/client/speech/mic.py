@@ -23,13 +23,13 @@ from time import sleep
 import audioop
 
 import pyaudio
-
 import speech_recognition
 from speech_recognition import (
     Microphone,
     AudioSource,
     AudioData
 )
+
 from mycroft.configuration import ConfigurationManager
 from mycroft.util import (
     check_for_signal,
@@ -46,7 +46,6 @@ __author__ = 'seanfitz'
 
 
 class MutableStream(object):
-
     def __init__(self, wrapped_stream, format, muted=False):
         assert wrapped_stream is not None
         self.wrapped_stream = wrapped_stream
@@ -92,7 +91,6 @@ class MutableStream(object):
 
 
 class MutableMicrophone(Microphone):
-
     def __init__(self, device_index=None, sample_rate=16000, chunk_size=1024):
         Microphone.__init__(
             self, device_index=device_index, sample_rate=sample_rate,
@@ -349,19 +347,19 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
             if len(energies) < energy_avg_samples:
                 # build the average
                 energies.append(energy)
-                avg_energy += float(energy)/energy_avg_samples
+                avg_energy += float(energy) / energy_avg_samples
             else:
                 # maintain the running average and rolling buffer
-                avg_energy -= float(energies[idx_energy])/energy_avg_samples
-                avg_energy += float(energy)/energy_avg_samples
+                avg_energy -= float(energies[idx_energy]) / energy_avg_samples
+                avg_energy += float(energy) / energy_avg_samples
                 energies[idx_energy] = energy
-                idx_energy = (idx_energy+1) % energy_avg_samples
+                idx_energy = (idx_energy + 1) % energy_avg_samples
 
                 # maintain the threshold using average
-                if energy < avg_energy*1.5:
+                if energy < avg_energy * 1.5:
                     if energy > self.energy_threshold:
                         # bump the threshold to just above this value
-                        self.energy_threshold = energy*1.2
+                        self.energy_threshold = energy * 1.2
 
             # Periodically output energy level stats.  This can be used to
             # visualize the microphone input, e.g. a needle on a meter.
@@ -482,7 +480,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
 
         assert isinstance(source, AudioSource), "Source must be an AudioSource"
 
-#        bytes_per_sec = source.SAMPLE_RATE * source.SAMPLE_WIDTH
+        #        bytes_per_sec = source.SAMPLE_RATE * source.SAMPLE_WIDTH
         sec_per_buffer = float(source.CHUNK) / source.SAMPLE_RATE
 
         # Every time a new 'listen()' request begins, reset the threshold
