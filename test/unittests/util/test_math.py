@@ -1,72 +1,68 @@
-
 # -*- coding: iso-8859-15 -*-
-
 import unittest
-from mycroft.util.format import nice_number
+from mycroft.util.format import solve_expression, extract_expression
 
-numbers_fixture = {
-    1.435634: '1.436',
-    2: '2',
-    5.0: '5',
-    0.027: '0.027',
-    0.5: 'a half',
-    1.333: '1 and a third',
-    2.666: '2 and 2 thirds',
-    0.25: 'a forth',
-    1.25: '1 and a forth',
-    0.75: '3 forths',
-    1.75: '1 and 3 forths',
-    3.4: '3 and 2 fifths',
-    16.8333: '16 and 5 sixths',
-    12.5714: '12 and 4 sevenths',
-    9.625: '9 and 5 eigths',
-    6.777: '6 and 7 ninths',
-    3.1: '3 and a tenth',
-    2.272: '2 and 3 elevenths',
-    5.583: '5 and 7 twelveths',
-    8.384: '8 and 5 thirteenths',
-    0.071: 'a fourteenth',
-    6.466: '6 and 7 fifteenths',
-    8.312: '8 and 5 sixteenths',
-    2.176: '2 and 3 seventeenths',
-    200.722: '200 and 13 eighteenths',
-    7.421: '7 and 8 nineteenths',
-    0.05: 'a twentyith'
-}
+__author__ = "jarbas"
 
 
-class TestNieceNumberFormat(unittest.TestCase):
+class TestMathExtractFormat(unittest.TestCase):
+    def test_extract_exps(self):
+        self.assertEqual(
+            extract_expression("one dog plus one dog plus two frogs"),
+            [['1dog', '+', '1dog'], ['prev', '+', '2frogs']])
 
-    def test_convert_float_to_nice_number(self):
-        for number, number_str in numbers_fixture.items():
-            self.assertEqual(nice_number(number), number_str,
-                             'should format {} as {} and not {}'.format(
-                             number, number_str, nice_number(number)))
+        self.assertEqual(
+            extract_expression("one plus two plus one"),
+            [['1', '+', '2'], ['prev', '+', '1']])
 
-    def test_specify_denominator(self):
-        self.assertEqual(nice_number(5.5, denominators=[1, 2, 3]),
-                         '5 and a half',
-                         'should format 5.5 as 5 and a half not {}'.format(
-                         nice_number(5.5, denominators=[1, 2, 3])))
-        self.assertEqual(nice_number(2.333, denominators=[1, 2]),
-                         '2.333',
-                         'should format 2.333 as 2.333 not {}'.format(
-                         nice_number(2.333, denominators=[1, 2])))
+        self.assertEqual(
+            extract_expression("ten factorial"),
+            [['10', '!', 'next']])
 
-    def test_no_speech(self):
-        self.assertEqual(nice_number(6.777, speech=False),
-                         '6 7/9',
-                         'should format 6.777 as 6 7/9 not {}'.format(
-                         nice_number(6.777, speech=False)))
-        self.assertEqual(nice_number(6.0, speech=False),
-                         '6',
-                         'should format 6.0 as 6 not {}'.format(
-                         nice_number(6.0, speech=False)))
+        self.assertEqual(
+            extract_expression("one plus pi plus x"),
+            [['1', '+', 'pi'], ['prev', '+', 'x']])
 
-    def test_different_language(self):
-        self.assertEqual(nice_number(5.5, lang="es-us"), '5.5',
-                         'should format 5.5 as 5.5 not {}'.format(
-                         nice_number(5.5, lang="es-us")))
+        self.assertEqual(
+            extract_expression("y divided by x"),
+            [['y', '/', 'x']])
+
+        self.assertEqual(
+            extract_expression("one times seven plus two multiply by two"),
+            [['1', '*', '7'], ['prev', '+', '2'], ['prev', '*', '2']])
+
+        self.assertEqual(
+            extract_expression("six"),
+            [['0', '+', '6']])
+
+    def test_solve_exps(self):
+        self.assertEqual(
+            solve_expression("one dog plus one dog plus two frogs"),
+            "1dog + 1dog + 2frogs")
+
+        self.assertEqual(
+            solve_expression("one plus two plus one"),
+            '4')
+
+        self.assertEqual(
+            solve_expression("ten factorial"),
+            '3628800')
+
+        self.assertEqual(
+            solve_expression("one plus pi plus x"),
+            "4.14159265359 + x")
+
+        self.assertEqual(
+            solve_expression("y divided by x"),
+            "y / x")
+
+        self.assertEqual(
+            solve_expression("one times seven plus two multiply by two"),
+            '11')
+
+        self.assertEqual(
+            solve_expression("six"),
+            '6')
 
 
 if __name__ == "__main__":
