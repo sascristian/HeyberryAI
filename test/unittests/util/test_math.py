@@ -8,36 +8,41 @@ __author__ = "jarbas"
 class TestMathExtractFormat(unittest.TestCase):
     def test_extract_exps(self):
         self.assertEqual(
-            extract_expression("one dog plus one dog plus two frogs"),
-            [['1dog', '+', '1dog'], ['prev', '+', '2frogs']])
+            extract_expression("do you think one plus two plus one are "
+                               "relevant"),
+            ([['1.0', '+', '2.0'], ['prev', '+', '1.0']], "do you think ___ "
+                                                          "relevant"))
 
         self.assertEqual(
-            extract_expression("one plus two plus one"),
-            [['1', '+', '2'], ['prev', '+', '1']])
+            extract_expression("how much is one dog plus one dog plus two "
+                               "frogs"),
+            ([['1.0dog', '+', '1.0dog'], ['prev', '+', '2.0frogs']],
+             "how much ___"))
 
         self.assertEqual(
             extract_expression("ten factorial"),
-            [['10', '!', 'next']])
+            ([['10.0', '!', 'next']], "___"))
 
         self.assertEqual(
             extract_expression("square root of 4"),
-            [['4.0', 'sqrt', 'next']])
+            ([['4.0', 'sqrt', 'next']], "___"))
 
         self.assertEqual(
             extract_expression("one plus pi plus x"),
-            [['1', '+', 'pi'], ['prev', '+', 'x']])
+            ([['1.0', '+', 'pi'], ['prev', '+', 'x']], "___"))
 
         self.assertEqual(
             extract_expression("y divided by x"),
-            [['y', '/', 'x']])
+            ([['y', '/', 'x']], "___"))
 
         self.assertEqual(
             extract_expression("one times seven plus two multiply by two"),
-            [['1', '*', '7'], ['prev', '+', '2'], ['prev', '*', '2']])
+            ([['1.0', '*', '7.0'], ['prev', '+', '2.0'], ['prev', '*',
+                                                          '2.0']], "___"))
 
         self.assertEqual(
             extract_expression("six"),
-            [['0', '+', '6']])
+            ([['0.0', '+', '6.0']], "___"))
 
     def test_solve_exps(self):
         self.assertEqual(
@@ -63,7 +68,7 @@ class TestMathExtractFormat(unittest.TestCase):
 
         self.assertEqual(
             solve_expression("one dog minus one dog"),
-            "")
+            "0")
 
         self.assertEqual(
             solve_expression(
@@ -76,8 +81,8 @@ class TestMathExtractFormat(unittest.TestCase):
         #    "1cat")
 
         # self.assertEqual(
-        #    solve_expression("one dog multiplied by one dog plus two frogs"),
-        #    "1dog squared + 2frogs")
+        #   solve_expression("one dog multiplied by one dog plus two frogs"),
+        #   "1dog squared + 2frogs")
 
         # self.assertEqual(
         #    solve_expression("one dog minus + one dog plus two frogs"),
@@ -109,9 +114,9 @@ class TestMathExtractFormat(unittest.TestCase):
             solve_expression("square root of four"),
             '2')
 
-        #  self.assertEqual(
-        #      solve_expression("x equals one plus two"),
-        #      '3')#TODO = operation
+        self.assertEqual(
+            solve_expression("x equals one plus two"),
+            '3')  # TODO handle equals x = 3
 
         self.assertEqual(
             solve_expression("ten factorial"),

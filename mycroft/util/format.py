@@ -170,7 +170,8 @@ def convert_number(number, denominators):
     return int_number, int(round(numerator)), denominator
 
 
-operations = ["+", "-", "/", "*", "!", "^", "**", "exp", "log", "sqrt", "(",
+math_operations = ["+", "-", "/", "*", "!", "^", "**", "exp", "log", "sqrt",
+                   "(",
               ")", "sqr", "qb", "pow", "=", "is"]
 
 
@@ -181,6 +182,10 @@ class ElementalOperation():
         self.num_1 = x
         self.num_2 = y
         self.op = str(op)
+        self.nice = False
+
+    def set_nice(self):
+        self.nice = True
 
     def define_var(self, var, value="unknown"):
         self.variables[var] = str(value)
@@ -188,7 +193,7 @@ class ElementalOperation():
     def _operate(self, operation, x=0, y=1):
         # TODO equations
         if operation == "is":
-            self.define_var(x, str(y))
+            self.define_var(str(x), str(y))
             return str(x) + " = " + str(y)
         if str(x) in self.constants:
             x = self.constants[str(x)]
@@ -198,40 +203,47 @@ class ElementalOperation():
             x = self.variables[str(x)]
         if str(y) in self.variables:
             y = self.variables[str(y)]
-        if not is_numeric(x) or not is_numeric(y):
+        if not is_numeric(x) and is_numeric(y):
+            return str(x) + " " + operation + " " + str(float(y))
+        if is_numeric(x) and not is_numeric(y):
+            return str(float(x)) + " " + operation + " " + str(y)
+        if not is_numeric(x) and not is_numeric(y):
             return str(x) + " " + operation + " " + str(y)
         x = float(x)
         y = float(y)
+        result = ""
         if operation == "+":
-            return x + y
-        if operation == "/":
-            return x / y
-        if operation == "-":
-            return x - y
-        if operation == "*":
-            return x * y
-        if operation == "%":
-            return x % y
-        if operation == "sqrt":
-            return math.sqrt(x)
-        if operation == "!":
-            return math.factorial(x)
-        if operation == "log":
-            return math.log(x, y)
-        if operation == "exp":
-            return math.exp(x)
-        if operation in ["^", "**", "pow"]:
-            return math.pow(x, y)
-        if operation == "sqr":
-            return math.pow(x, 2)
-        if operation == "qb":
-            return math.pow(x, 3)
+            result = x + y
+        elif operation == "/":
+            result = x / y
+        elif operation == "-":
+            result = x - y
+        elif operation == "*":
+            result = x * y
+        elif operation == "%":
+            result = x % y
+        elif operation == "sqrt":
+            result = math.sqrt(x)
+        elif operation == "!":
+            result = math.factorial(x)
+        elif operation == "log":
+            result = math.log(x, y)
+        elif operation == "exp":
+            result = math.exp(x)
+        elif operation in ["^", "**", "pow"]:
+            result = math.pow(x, y)
+        elif operation == "sqr":
+            result = math.pow(x, 2)
+        elif operation == "qb":
+            result = math.pow(x, 3)
         # TODO priority
-        if operation == "(":
+        elif operation == "(":
             pass
-        if operation == ")":
+        elif operation == ")":
             pass
-        return None
+        if self.nice:
+            result = nice_number(float(result)).replace(" ", "_")
+        return result
 
     def get_expression(self):
         return str(self.num_1) + " " + self.op + " " + str(self.num_2)
@@ -266,20 +278,129 @@ class StringOperation():
         self.string = normalize(input_str, self.lang)
 
         if is_numeric(self.string):
-            self.input_operations = [["0", "+", self.string]]
+            self.input_operations = [["0.0", "+", self.string]]
             self.chain = [self.string]
             self.result = self.chain[0]
         else:
-            self.input_operations = extract_expression(self.string, self.lang)
+            self.input_operations, self.leftover = extract_expression(
+                self.string, self.lang)
             self.chain, self.result = self._chained_operation(
                 self.input_operations)
 
         self._get_result()
 
+    def _get_vars_data(self, op):
+        num1 = ""
+        num2 = ""
+        var1 = op[0]
+        var2 = op[2]
+        for i in range(0, len(op[0])):
+            char = op[0][i]
+            if is_numeric(char) or char == ".":
+                num1 += char
+                var1 = op[0][i + 1:]
+        for i in range(0, len(op[2])):
+            char = op[2][i]
+            if is_numeric(char) or char == ".":
+                num2 += char
+                var2 = op[2][i + 1:]
+        if not num1:
+            num1 = "1"
+        if not num2:
+            num2 = "1"
+        return num1, num2, var1, var2
+
+    def _org_var(self, operations):
+        passes = [
+            # ["=", "is"],
+            # ["!", "exp", "log", "^", "sqrt", "**", "sqr", "qb", "pow"],
+            ["*", "/", "%"],
+            ["+", "-"]
+        ]
+
+        # handle vars
+        inserts = {}
+        for idx, op in enumerate(operations):
+            if not op:
+                continue
+            num1, num2, var1, var2 = self._get_vars_data(op)
+            # print num1, num2, var1, var2
+            if not is_numeric(op[0]) and op[0] != "prev":
+                operations[idx][0] = op[0] = "prev"
+                operation = [num1, "*", var1]
+                inserts[idx] = operation
+            elif not is_numeric(op[2]) and op[2] != "next":
+                operations[idx][2] = op[2] = "next"
+                operation = [num2, "*", var2]
+                inserts[idx + 1] = operation
+                # TODO find ( and )
+        new = operations
+        for insert in inserts:
+            new.insert(insert, inserts[insert])
+        # solve vars
+        OP = ElementalOperation("0.0", "0.0", "+")
+        for current_pass in passes:
+            for idx, op in enumerate(operations):
+                if not op:
+                    continue
+                # find info
+                op[0] = str(op[0])
+                op[2] = str(op[2])
+                num1, num2, var1, var2 = self._get_vars_data(op)
+                prev_op = operations[idx - 1] if idx - 1 >= 0 else ""
+                next_op = operations[idx + 1] if idx + 1 < len(
+                    operations) else ""
+
+                # chain with previous
+                if prev_op:
+                    prev_op[0] = str(prev_op[0])
+                    prev_op[2] = str(prev_op[2])
+                    prevnum1, prevnum2, prevvar1, vprevar2 = self._get_vars_data(
+                        prev_op)
+                    if not is_numeric(op[0]) and op[0] != "prev":
+                        if prev_op[1] in current_pass:
+                            if prev_op[2] != "next" and prevvar2 == var1:
+                                OP.set(prevnum2, num1, prev_op[1])
+                                if self.nice:
+                                    OP.set_nice()
+                                OP.variables = self.variables
+                                result = str(OP.operate())
+                                operations[idx - 1][2] = result + var1
+                                operations[idx][0] = "prev"
+
+                if op[1] not in current_pass:
+                    continue
+
+                continue
+                if op[1] == "(":
+                    exp = []
+                    end = -1
+                    for i, n_op in enumerate(operations):
+                        if not n_op:
+                            continue
+                        if n_op[1] == ")":
+                            end = i
+                            break
+                    if end == -1:
+                        operations[idx] = ""
+                        continue
+                    # get expression between ( )
+                    exp = operations[idx, end]
+                    # solve
+                    res = self._chained_operation(exp)[1]
+                    # extract solved ops
+                    exp, leftover = extract_expression(res)
+                    # replace in chain
+                    operations = operations[:idx] + exp + operations[end:]
+                    # count vars
+        return operations
+
     def _chained_operation(self, operations):
         # this operation object will contain all var definitions and be
         # re-set and re used internally
         OP = ElementalOperation()
+        if self.nice:
+            OP.set_nice()
         OP.variables = self.variables
         # prioritize operations by this order
         passes = [
@@ -288,11 +409,39 @@ class StringOperation():
             ["*", "/", "%"],
             ["+", "-"]
         ]
+        # organize vars and handle parenthesis
+        #        operations = self._org_var(operations)
+
         for current_pass in passes:
             for idx, op in enumerate(operations):
                 if not op or op[1] not in current_pass:
                     continue
+                if is_numeric(op[0]):
+                    op[0] = float(op[0])
+                if is_numeric(op[2]):
+                    op[2] = float(op[2])
+                op[0] = str(op[0])
+                op[2] = str(op[2])
+
+                # find nums and vars
                 prev_op = operations[idx - 1] if idx - 1 >= 0 else ""
+                next_op = operations[idx + 1] if idx + 1 < len(
+                    operations) else ""
+                num1 = ""
+                num2 = ""
+                var1 = op[0]
+                var2 = op[2]
+                for i in range(0, len(op[0])):
+                    char = op[0][i]
+                    if is_numeric(char) or char == ".":
+                        num1 += char
+                        var1 = op[0][i + 1:]
+
+                for i in range(0, len(op[2])):
+                    char = op[2][i]
+                    if is_numeric(char) or char == ".":
+                        num2 += char
+                        var2 = op[2][i + 1:]
 
                 # check for numbers
                 if op[0] in OP.constants:
@@ -309,22 +458,21 @@ class StringOperation():
                                                    "log"]:
                     OP.set(op[0], op[0], op[1])
                     result = OP.operate()
-                    operations[idx] = [0, "+", result]
+                    operations[idx] = ["0.0", "+", result]
                     continue
 
-                # chain operation
+                # chain operation with previous member
                 if op[0] == "prev":
 
-                    if prev_op == ["0", "+", "0"]:
-                        operations[idx][0] = "0"
+                    if prev_op == ["0.0", "+", "0.0"]:
+                        operations[idx][0] = "0.0"
                         operations[idx - 1] = ""
                     elif prev_op:
-
                         if is_numeric(prev_op[2]):
                             OP.set(prev_op[2], op[2], op[1])
                             operations[idx - 1][2] = "next"
                             result = OP.operate()
-                            operations[idx] = [0, "+", result]
+                            operations[idx] = ["0.0", "+", result]
                         elif prev_op[2] == "next":
                             operations[idx] = [prev_op[0], "+", op[2]]
                             operations[idx - 1] = ""
@@ -333,86 +481,45 @@ class StringOperation():
                 if is_numeric(op[0]) and is_numeric(op[2]):
                     OP.set(op[0], op[2], op[1])
                     result = OP.operate()
-                    operations[idx] = [0, "+", result]
+                    operations[idx] = ["0.0", "+", result]
                     continue
 
-                # handle vars
                 if is_numeric(op[0]) and not is_numeric(op[2]):
                     pass
                 if not is_numeric(op[0]) and is_numeric(op[2]):
                     pass
                 if not is_numeric(op[0]) and not is_numeric(op[2]):
+                    # same expression both sides
                     if op[0] == op[2]:
-                        # find num
-                        num = ""
-                        for i in range(0, len(op[2])):
-                            char = op[2][i]
-                            if is_numeric(char) or char == ".":
-                                num += char
+                        num = num1
                         if op[1] == "-":
-                            operations[idx] = ["0", "+", "0"]
+                            operations[idx] = ["0.0", "+", "0.0"]
                             continue
                         if op[1] == "/":
-                            operations[idx] = ["0", "+", "1"]
+                            operations[idx] = ["0.0", "+", "1.0"]
                             continue
                         if op[1] == "*":
-                            operations[idx] = [op[0], "sqr", "next"]
+                            operations[idx] = [op[0], "sqr", op[0]]
                             continue
                         if op[1] == "+":
                             if not num:
-                                operations[idx] = ["0", "+", "2" + op[0]]
+                                operations[idx] = ["0.0", "+", "2.0" + op[0]]
                                 continue
                             op[0] = op[0].replace(str(num), "")
                             num = str(2 * float(num))
-                            if len(num) >= 3 and num[-2:] == ".0":
-                                num = num[:-2]
-                            operations[idx] = ["0", "+", num + op[0]]
+                            operations[idx] = ["0.0", "+", num + op[0]]
                             continue
                             # TODO other ops ^ exp log sqr qb sqrt
 
+                    # dif expression both sides
                     else:
-                        # find nums
-                        num1 = ""
-                        num2 = ""
-                        var1 = 1
-                        var2 = 2
-                        for i in range(0, len(op[0])):
-                            char = op[0][i]
-                            if is_numeric(char) or char == ".":
-                                num1 += char
-                                var1 = op[0][i + 1:]
-                        for i in range(0, len(op[2])):
-                            char = op[2][i]
-                            if is_numeric(char) or char == ".":
-                                num2 += char
-                                var2 = op[2][i + 1:]
                         if var1 == var2:
                             var = var1
-                            if op[1] == "-":
-                                num = str(float(num1) - float(num2))
-                                if len(num) >= 3 and num[-2:] == ".0":
-                                    num = num[:-2]
-                                operations[idx] = ["0", "+", str(num) + var]
-                                continue
-                            if op[1] == "/":
-                                num = str(float(num1) / float(num2))
-                                if len(num) >= 3 and num[-2:] == ".0":
-                                    num = num[:-2]
-                                operations[idx] = ["0", "+", str(num) + var]
-                                continue
-                            if op[1] == "*":
-                                num = str(float(num1) * float(num2))
-                                if len(num) >= 3 and num[-2:] == ".0":
-                                    num = num[:-2]
-                                operations[idx] = ["0", "+", str(num) + var]
-                                continue
-                            if op[1] == "+":
-                                num = str(float(num1) + float(num2))
-                                if len(num) >= 3 and num[-2:] == ".0":
-                                    num = num[:-2]
-                                operations[idx] = ["0", "+", str(num) + var]
-                                continue
-                                # TODO other ops ^ exp log sqr qb sqrt
+                            OP.set(num1, num2, op[1])
+                            result = str(OP.operate())
+
+                            operations[idx] = ["0.0", "+", result + var]
+
         self.variables = OP.variables
         # clean empty elements
         result = ""
@@ -421,41 +528,55 @@ class StringOperation():
             chain.append(op)
             for element in op:
                 if element and element != "prev" and element != "next":
+                    # nice numbers in result
+                    if not is_numeric(
+                            element) and element not in math_operations:
+                        if self.nice and element:
+                            element = nice_var(element)
+                    elif is_numeric(element) and self.nice:
+                        element = nice_number(float(element)).replace(" ", "_")
                     result += str(element)
         return chain, result
 
-    def _get_result(self):
+    def _get_result(self, res=None):
         # clean
-        res = self.result
+
+        if res is not None:
+            res = res.replace(" ", "")
+        else:
+            res = self.result.replace(" ", "")
+
+        if self.nice:
+            words = res.split(" ")
+            for idx, word in enumerate(words):
+                if is_numeric(word):
+                    words[idx] = nice_number(float(word))
+            res = " ".join(words).replace(" ", "")
+
         while res and res[0] == "+":
             res = res[1:]
         res = res.replace("next", "")
         res = res.replace("prev", "")
-        res = res.replace(" ", "")
         res = res.replace("+-", "-")
         res = res.replace("-+", "-")
         res = res.replace("++", "+")
         res = res.replace("--", "-")
-        res = res.replace("+ -", "-")
-        res = res.replace("- +", "-")
-        res = res.replace("+ +", "+")
-        res = res.replace("- -", "-")
+        res = res.replace("+*", "*")
+        res = res.replace("*+", "*")
+        res = res.replace("-*", "*-")
         res = res.replace("/1", "")
+        res = res.replace("/1.0", "")
         res = res.replace("sqr", " squared")
         res = res.replace("qb", " cubed")
-        while len(res) > 2 and res[0] in ["+", "0"] and res[1] != ".":
-            if res[0] == "+":
-                res = res[1:]
-            elif res[0] == "0":
-                res = res[1:]
-        if len(res) > 3:
-            if res[-3:] == ".00":
-                res = res[:-3]
-        if len(res) > 2:
-            if res[-2:] == ".0":
-                res = res[:-2]
-        for op in operations:
+        res = " " + res
+        for op in math_operations:
             res = res.replace(op, " " + op + " ")
+        # crop start zeros
+        while " 0 + " in res or " 0.0 + " in res:
+            res = res.replace(" 0 + ", " ")
+            res = res.replace(" 0.0 + ", " ")
+        res = res.replace(" 0 - ", " -")
+        res = res.replace(" 0.0 - ", " -")
         self.result = res
         return res
 
@@ -465,7 +586,7 @@ class StringOperation():
             print "raw string:", self.raw_str
 
         lang = self.lang
-        OP = StringOperation(self.raw_str, lang=lang)
+        OP = StringOperation(self.raw_str, lang=lang, nice=self.nice)
         res = OP.result
         variables = OP.variables
         if debug:
@@ -473,11 +594,12 @@ class StringOperation():
             print "result:", res
             print "chain", OP.chain
         i = 0
-        depth = 5
+        depth = 10
         prev_res = ""
         while not res == prev_res and i < depth:
             prev_res = res
-            OP = StringOperation(res, variables=variables, lang=lang)
+            OP = StringOperation(res, variables=variables, lang=lang,
+                                 nice=self.nice)
             res = OP.result
             variables = OP.variables
             if debug:
@@ -488,19 +610,38 @@ class StringOperation():
         if debug:
             print "vars:", OP.variables
             print "\n"
-        # make nice numbers
-        if self.nice:
-            words = res.split(" ")
+        # update result
+        self._get_result(res)
+        return self.result.replace("_", " ")
+
+
+def nice_var(var_string):
+    num = ""
+    var = ""
+    for i in range(0, len(var_string)):
+        char = var_string[i]
+        if is_numeric(char) or char == ".":
+            num += char
+            var = var_string[i + 1:]
+        elif char in math_operations:
+            words = var_string.split(" ")
             for idx, word in enumerate(words):
-                if is_numeric(word):
-                    words[idx] = nice_number(float(word))
-            res = " ".join(words)
-        return res
+                if word not in math_operations:
+                    words[idx] = nice_var(word)
+            return " ".join(words)
+    if num:
+        num = nice_number(float(num)).replace(" ", "_")
+        var_string = num + var
+    return var_string
 
 
 def solve_expression(string, nice=True, lang="en-us", debug=False):
     OP = StringOperation(string, lang=lang, nice=nice)
-    return OP.solve(debug=debug)
+    res = OP.solve(debug=debug)
+    res = res.replace("  ", " ")
+    if res[0] == " ":
+        res = res[1:]
+    return res
 
 
 def extract_expression(string, lang="en-us"):
@@ -527,44 +668,53 @@ def extract_expression_en(string):
                    "exp": ["exponent", "exponentiate", "exponentiated"],
                    "(": ["open"],
                    ")": ["close"]}
-    # clean string
-    noise_words = ["by", "and", "the", "in", "at", "a", "for", "an", "to",
-                   "with", "off", "of", "is"]
 
-    # replace natural language expression
+    noise_words = ["by", "and", "the", "in", "at", "a", "for", "an", "to",
+                   "with", "off", "of", "is", "are", "can", "be"]
+    string = normalize(string)
+    # clean string
     for op in expressions:
         string = string.replace(op, " " + op + " ")
     words = string.replace(",", "").replace("'", "").replace('"', "") \
-        .replace("square root", "sqrt").split(" ")
+        .replace("square root", "square_root").split(" ")
 
+    # replace natural language math vocabulary
     for idx, word in enumerate(words):
-        if word in noise_words:
-            words[idx] = ""
-        else:
-            for operation in expressions:
-                if word in expressions[operation]:
-                    words[idx] = operation
-    words = [word for word in words if word]
-    exps = []
+        for operation in expressions:
+            if word in expressions[operation]:
+                words[idx] = operation
+
     # convert all numbers
     for idx, word in enumerate(words):
         if not word:
             continue
         if extractnumber(word):
-            words[idx] = str(extractnumber(word))
+            words[idx] = str(float(extractnumber(word)))
         # join unknown vars nums
-        if idx + 1 < len(words) and words[idx + 1] not in operations:
+        if idx + 1 < len(words) and words[idx + 1] not in math_operations:
             # 3 x = 3x
-            if is_numeric(word) and not is_numeric(words[idx + 1]):
-                words[idx] = word + words[idx + 1]
+            if is_numeric(word) and not is_numeric(words[idx + 1] and words[
+                        idx + 1] not in noise_words):
+                # words[idx] = str(float(words[idx])) + " * " + words[idx + 1]
+                words[idx] = str(float(words[idx])) + words[idx + 1]
                 words[idx + 1] = ""
-        if idx - 1 >= 0 and word not in operations:
+        if idx - 1 >= 0 and word not in math_operations:
             # 1 2 x = 1 2x
-            if not is_numeric(word) and is_numeric(words[idx - 1]):
-                words[idx] = words[idx - 1] + word
+            if not is_numeric(word) and is_numeric(words[idx - 1]) and words[
+                idx] not in noise_words:
+                # words[idx] = words[idx - 1] + " * " +  words[idx]
+                words[idx] = words[idx - 1] + words[idx]
                 words[idx - 1] = ""
 
     words = [word for word in words if word]
+
+    # remove noise words
+    for idx, word in enumerate(words):
+        if word in noise_words:
+            words[idx] = ""
+
+    words = [word for word in words if word]
+    exps = []
 
     # extract operations
     for idx, word in enumerate(words):
@@ -573,6 +723,9 @@ def extract_expression_en(string):
         # is an operation
         if word in expressions:
             operation = word
+            if operation == "(" or operation == ")":
+                exps.append(["prev", operation, "next"])
+                continue
             if idx > 0:
                 woi = words[idx - 1:idx + 2]
                 words[idx - 1] = ""
@@ -609,5 +762,15 @@ def extract_expression_en(string):
                     # TODO exponent, log
 
     if not exps and extractnumber(string):
-        exps = [["0", "+", str(extractnumber(string))]]
-    return exps
+        exps = [["0.0", "+", str(extractnumber(string))]]
+        words = [word for word in words if not is_numeric(word)]
+        if words == []:
+            words = ["___"]
+    leftover = ""
+    for word in words:
+        if not word and "___" not in leftover:
+            leftover += " ___"
+        elif word:
+            leftover += " " + word
+    leftover = leftover[1:]
+    return exps, leftover
