@@ -172,12 +172,15 @@ _intent_list = []
 
 def intent_handler(intent_parser):
     """ Decorator for adding a method as an intent handler. """
+
     def real_decorator(func):
         @wraps(func)
         def handler_method(*args, **kwargs):
             return func(*args, **kwargs)
+
         _intent_list.append((intent_parser, func))
         return handler_method
+
     return real_decorator
 
 
@@ -490,7 +493,7 @@ class FallbackSkill(MycroftSkill):
 
         cls.fallback_handlers[priority] = handler
 
-       # folder name
+        # folder name
         if skill_folder:
             skill_folder = skill_folder.split("/")[-1]
             cls.folders[skill_folder] = handler
@@ -549,4 +552,3 @@ class FallbackSkill(MycroftSkill):
         """
         self.remove_instance_handlers()
         super(FallbackSkill, self).shutdown()
-
