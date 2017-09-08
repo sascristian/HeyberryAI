@@ -415,54 +415,63 @@ class FallbackSkill(MycroftSkill):
     def make_intent_failure_handler(cls, ws):
         """Goes through all fallback handlers until one returns true"""
 
-        def handler(message):
-            if cls.override:
-                try:
-                    # try fallbacks by pre defined order
-                    logger.info("Overriding fallback order")
-                    logger.info("Fallback order " + str(cls.order))
-                    missing_folders = cls.folders.keys()
-                    logger.info("Fallbacks " + str(missing_folders))
-                    for folder in cls.order:
-                        for f in cls.folders.keys():
-                            logger.info(folder + " " + f)
-                            if folder == f:
-                                if f in missing_folders:
-                                    missing_folders.remove(f)
-                                logger.info("Trying ordered fallback: " + folder)
-                                handler =cls.folders[f]
-                                try:
-                                    if handler(message):
-                                        return
-                                except Exception as e:
-                                    logger.info('Exception in fallback: ' + cls.name + " " +
-                                                str(e))
-                    logger.info("Missing fallbacks " + str(missing_folders))
-                    for folder in missing_folders:
-                        logger.info("fallback not in ordered list, trying it now: " +
-                                    folder)
-                        handler = cls.folders[folder]
+        def ordered_handler(message):
+            logger.info("Overriding fallback order")
+            logger.info("Fallback order " + str(cls.order))
+            missing_folders = cls.folders.keys()
+            logger.info("Fallbacks " + str(missing_folders))
+
+            # try fallbacks in ordered list
+            for folder in cls.order:
+                for f in cls.folders.keys():
+                    logger.info(folder + " " + f)
+                    if folder == f:
+                        if f in missing_folders:
+                            missing_folders.remove(f)
+                        logger.info("Trying ordered fallback: " + folder)
+                        handler = cls.folders[f]
                         try:
                             if handler(message):
-                                return
+                                return True
                         except Exception as e:
-                            logger.info('Exception in fallback: ' + cls.name + " " +
-                                        str(e))
+                            logger.info(
+                                'Exception in fallback: ' + cls.name + " " +
+                                str(e))
+
+            # try fallbacks missing from ordered list
+            logger.info("Missing fallbacks " + str(missing_folders))
+            for folder in missing_folders:
+                logger.info("fallback not in ordered list, trying it now: " +
+                            folder)
+                handler = cls.folders[folder]
+                try:
+                    if handler(message):
+                        return True
                 except Exception as e:
-                    logger.error(e)
-                    logger.warning("Fallback override is not working")
+                    logger.info('Exception in fallback: ' + cls.name + " " +
+                                str(e))
+            return False
+
+        def priority_handler(message):
+            # try fallbacks by priority
+            for _, handler in sorted(cls.fallback_handlers.items(),
+                                     key=operator.itemgetter(0)):
+                try:
+                    if handler(message):
+                        return True
+                except Exception as e:
+                    logger.info('Exception in fallback: ' + cls.name + " " +
+                                str(e))
+            return False
+
+        def handler(message):
+            if cls.override:
+                success = ordered_handler(message)
             else:
-                # try fallbacks by priority
-                for _, handler in sorted(cls.fallback_handlers.items(),
-                                         key=operator.itemgetter(0)):
-                    try:
-                        if handler(message):
-                            return
-                    except Exception as e:
-                        logger.info('Exception in fallback: ' + cls.name + " " +
-                                    str(e))
-            ws.emit(Message('complete_intent_failure'))
-            logger.warn('No fallback could handle intent.')
+                success = priority_handler(message)
+            if not success:
+                ws.emit(Message('complete_intent_failure'))
+                logger.warn('No fallback could handle intent.')
 
         return handler
 
