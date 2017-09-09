@@ -30,9 +30,11 @@ class ResponderBackend(object):
         self.name = name or self.__class__.__name__
         if emitter is None:
             self.emitter = WebsocketClient()
+
             def connect():
                 self.emitter.run_forever()
-            ws_thread = Thread(connect)
+            ws_thread = thread.start_new_thread(connect, ())
+
             ws_thread.setDaemon(True)
             ws_thread.start()
         else:
@@ -208,9 +210,11 @@ class QueryBackend(object):
         self.name = name or self.__class__.__name__
         if emitter is None:
             self.emitter = WebsocketClient()
+
             def connect():
                 self.emitter.run_forever()
-            ws_thread = thread.start_new_thread(connect)
+
+            ws_thread = thread.start_new_thread(connect, ())
             ws_thread.setDaemon(True)
             ws_thread.start()
         else:
