@@ -4,6 +4,9 @@ Intent Layers is an helper class to activate and deactivate intents, giving stat
 
 Each layer has different intents available to be executed, this allows for much easier sequential event programming
 
+Depending on the use case it may be better to use Adapt context since it
+allows something similar and is much simpler, both methods have their advantages and disadvantages
+
 
 # Konami Code Example - layers with a single intent
 

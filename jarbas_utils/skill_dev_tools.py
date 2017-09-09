@@ -3,7 +3,7 @@ from mycroft.util.log import getLogger
 import time
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
-from threading import Thread
+import thread
 
 
 class ResponderBackend(object):
@@ -210,7 +210,7 @@ class QueryBackend(object):
             self.emitter = WebsocketClient()
             def connect():
                 self.emitter.run_forever()
-            ws_thread = Thread(connect)
+            ws_thread = thread.start_new_thread(connect)
             ws_thread.setDaemon(True)
             ws_thread.start()
         else:
