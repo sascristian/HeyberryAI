@@ -11,8 +11,8 @@ import cv2
 import time
 from os.path import dirname, exists
 
-from jarbas_models.tf_colorization.net import Net
-from jarbas_models.tf_colorization.utils import *
+from jarbas_models.tf_colorize.net import Net
+from jarbas_models.tf_colorize.utils import *
 from mycroft.skills.displayservice import DisplayService
 from jarbas_utils.skill_dev_tools import ResponderBackend
 from jarbas_utils.skill_tools import ColorizationQuery
