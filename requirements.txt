@@ -75,4 +75,4 @@ geopy
 nltk
 cleverwrap
 unirest
-skicit-image
+scikit-image
