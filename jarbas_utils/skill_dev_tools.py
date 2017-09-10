@@ -3,8 +3,7 @@ from mycroft.util.log import getLogger
 import time
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
-import thread
-
+from threading import Thread
 
 class ResponderBackend(object):
     """
@@ -33,8 +32,7 @@ class ResponderBackend(object):
 
             def connect():
                 self.emitter.run_forever()
-            ws_thread = thread.start_new_thread(connect, ())
-
+            ws_thread = Thread(target=connect)
             ws_thread.setDaemon(True)
             ws_thread.start()
         else:
@@ -214,7 +212,7 @@ class QueryBackend(object):
             def connect():
                 self.emitter.run_forever()
 
-            ws_thread = thread.start_new_thread(connect, ())
+            ws_thread = Thread(target=connect)
             ws_thread.setDaemon(True)
             ws_thread.start()
         else:
