@@ -21,7 +21,7 @@ class ResponderBackend(object):
 
     """
 
-    def __init__(self, name=None, emitter=None, logger=None,
+    def __init__(self, name="ResponderBackend", emitter=None, logger=None,
                  server=True, client=True, override=True):
         """
            initialize emitter, register events, initialize internal variables
@@ -200,7 +200,8 @@ class QueryBackend(object):
             override: get client and server params from config file (at name)
     """
 
-    def __init__(self, name=None, emitter=None, timeout=5, logger=None,
+    def __init__(self, name="QueryBackend", emitter=None, timeout=5,
+                 logger=None,
                  server=False, client=False, override=True):
         """
            initialize emitter, register events, initialize internal variables
