@@ -99,7 +99,8 @@ class MyServerFactory(WebSocketServerFactory):
         self.create_internal_emitter()
         # mycroft utils
         self.parser = IntentParser(self.emitter)
-        self.user_manager = UserManagerQuery(self.emitter)
+        self.user_manager = UserManagerQuery(name="server_ClientManager",
+                                             emitter=self.emitter)
 
         # messages to send queue
         self.message_queue = []
