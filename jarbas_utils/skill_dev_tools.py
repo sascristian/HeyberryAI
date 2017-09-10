@@ -5,6 +5,7 @@ from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.client.ws import WebsocketClient
 from threading import Thread
 
+
 class ResponderBackend(object):
     """
         Base class for all responder implementations. checks message source
@@ -26,7 +27,7 @@ class ResponderBackend(object):
         """
            initialize emitter, register events, initialize internal variables
         """
-        self.name = name or self.__class__.__name__
+        self.name = name
         if emitter is None:
             self.emitter = WebsocketClient()
 
@@ -206,7 +207,7 @@ class QueryBackend(object):
         """
            initialize emitter, register events, initialize internal variables
         """
-        self.name = name or self.__class__.__name__
+        self.name = name
         if emitter is None:
             self.emitter = WebsocketClient()
 
