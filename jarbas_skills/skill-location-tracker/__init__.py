@@ -18,10 +18,14 @@
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from mycroft.messagebus.message import Message
 from threading import Timer
 import unirest
 from mycroft.util import connected
+#from wifi import Cell
+#import requests
+#import json
+#import decimal
+#from geopy.geocoders import Nominatim
 
 __author__ = 'jarbas'
 
@@ -35,12 +39,17 @@ class LocationTrackerSkill(MycroftSkill):
         super(LocationTrackerSkill, self).__init__()
         self.config = self.config_core.get("location")
         self.minutes = self.config.get("update_mins", 15)
+        # TODO list with prefered order ["wifi", "gps", "ip"]
         self.source = self.config.get("update_source", "ip")
         self.active = self.config.get("tracking", True)
         self.auto_context = self.config.get("auto_context", True)
         self.active = True
         self.timer = Timer(60 * self.minutes, self.get_location)
         self.timer.setDaemon(True)
+
+        # wifi geolocate
+        self.geolocateApiKey = ""
+        self.googlemapsApiKey = ""
 
     def initialize(self):
         intent = IntentBuilder("UpdateLocationIntent") \
@@ -216,6 +225,82 @@ class LocationTrackerSkill(MycroftSkill):
             self.log.info("Failed to retrieve location data from " + source)
             config = {}
         return config
+
+    # TODO finish this
+
+    def from_wifi(self, update=True):
+        self.log.info("Retrieving location data from available wifi")
+        if connected():
+            url = "https://www.googleapis.com/geolocation/v1/geolocate" \
+                       "?key=" + self.geolocateApiKey
+            # TODO this only supports connected to networks, change
+            available = Cell.all('wlan0')
+            mac = []
+            signal = []
+            channel = []
+            for wifi in available:
+                channel.append(wifi.channel)
+                mac.append(wifi.address)
+                signal.append(wifi.signal)
+            payload, headers = self.build_wifi_JSON(mac, signal, channel)
+
+            try:
+                response = requests.post(url,
+                                              data=json.dumps(payload),
+                                              headers=headers)
+                text = json.loads(response.text)
+
+                if response.ok == False:  # Check if the response was ok
+                    if text['error']['errors'][0]['reason'] == 'dailyLimitExceeded':
+                        self.log.error('You have exceeded you daily limit')
+                    elif text['error']['errors'][0]['reason'] == 'keyInvalid':
+                        self.log.error('Your API key is not valid for the '
+                                       'Google Maps Geolocation API')
+                    elif text['error']['errors'][0]['reason'] == 'userRateLimitExceeded':
+                        self.log.error('You\'ve exceeded the requests per '
+                                       'second per user limit that you configured in the Google Developers Console')
+                    elif text['error']['errors'][0]['reason'] == 'notFound':
+                        self.log.error('The request was valid, but no results were returned')
+                    elif text['error']['errors'][0]['reason'] == 'parseError':
+                        self.log.error('The request body is not valid JSON')
+                    else:
+                        self.log.error('Unknown error in the geolocation '
+                                       'response. Might be caught in an exception.')
+            except Exception, e:
+                self.log.error( str(e))
+                return
+
+            decimal.getcontext().prec = 15  # Setting precision for lat/lng response
+            lng = decimal.Decimal(text['location']['lng']) + 0
+            lat = decimal.Decimal(text['location']['lat']) + 0
+            accuracy = response['accuracy']
+            geolocator = Nominatim()
+            location = geolocator.reverse(str(lat) + ", " + str(lng))
+            adress = location.adress
+            # TODO config update and return
+
+    def build_wifi_JSON(self, bssids, rssi, channel, considerIP='true'):
+
+        headers = {'content-type': 'application/json'}
+        payload = {}
+
+        if len(bssids) < 3:
+            self.log.warning('Atleast two BSSIDs are required for wifi '
+                             'geolocation')
+            self.log.debug('Current number of bssids: %i' % len(bssids))
+            return payload, headers
+
+        # Building payload as per google-guidelines
+        payload['considerIp'] = considerIP
+        payload['wifiAccessPoints'] = []
+        for i in range(0,len(bssids)):
+            payload["wifiAccessPoints"].append({})
+            payload['wifiAccessPoints'][i]['macAddress'] = bssids[i]
+            payload['wifiAccessPoints'][i]['signalStrength'] = rssi[i]
+            payload['wifiAccessPoints'][i]['channel'] = channel[i]
+
+        # Payload structure reference: https://developers.google.com/maps/documentation/geolocation/intro#body
+        return payload, headers
 
 
 def create_skill():
