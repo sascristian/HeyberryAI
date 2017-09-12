@@ -1,8 +1,6 @@
 from mycroft.tts import TTSFactory
 from mycroft.util import create_signal, stop_speaking, check_for_signal
-from mycroft.lock import Lock as PIDLock  # Create/Support PID locking file
 from mycroft.configuration import ConfigurationManager
-from mycroft.messagebus.message import Message
 from mycroft.util.log import getLogger
 
 from threading import Lock
@@ -53,29 +51,32 @@ def handle_speak(event):
     if event.data.get('expect_response', False):
         ws.once('recognizer_loop:audio_output_end', _trigger_expect_response)
 
-    # This is a bit of a hack for Picroft.  The analog audio on a Pi blocks
-    # for 30 seconds fairly often, so we don't want to break on periods
-    # (decreasing the chance of encountering the block).  But we will
-    # keep the split for non-Picroft installs since it give user feedback
-    # faster on longer phrases.
-    #
-    # TODO: Remove or make an option?  This is really a hack, anyway,
-    # so we likely will want to get rid of this when not running on Mimic
-    if not config.get('enclosure', {}).get('platform') == "picroft":
-        start = time.time()
-        chunks = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s',
-                          utterance)
-        for chunk in chunks:
-            try:
-                mute_and_speak(chunk)
-            except KeyboardInterrupt:
-                raise
-            except:
-                logger.error('Error in mute_and_speak', exc_info=True)
-            if _last_stop_signal > start or check_for_signal('buttonPress'):
-                break
-    else:
-        mute_and_speak(utterance)
+    logger.info("Speak: " + utterance)
+    if speak_flag:
+        # This is a bit of a hack for Picroft.  The analog audio on a Pi blocks
+        # for 30 seconds fairly often, so we don't want to break on periods
+        # (decreasing the chance of encountering the block).  But we will
+        # keep the split for non-Picroft installs since it give user feedback
+        # faster on longer phrases.
+        #
+        # TODO: Remove or make an option?  This is really a hack, anyway,
+        # so we likely will want to get rid of this when not running on Mimic
+        if not config.get('enclosure', {}).get('platform') == "picroft":
+            start = time.time()
+            chunks = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s',
+                              utterance)
+            for chunk in chunks:
+                try:
+                    mute_and_speak(chunk)
+                except KeyboardInterrupt:
+                    raise
+                except:
+                    logger.error('Error in mute_and_speak', exc_info=True)
+                if _last_stop_signal > start or check_for_signal(
+                        'buttonPress'):
+                    break
+        else:
+            mute_and_speak(utterance)
 
     # This check will clear the "signal"
     check_for_signal("isSpeaking")
@@ -88,7 +89,7 @@ def mute_and_speak(utterance):
         Args:
             utterance: The sentence to be spoken
     """
-    global tts_hash, disable_speak_flag
+    global tts_hash
 
     lock.acquire()
     # update TTS object if configuration has changed
@@ -102,10 +103,8 @@ def mute_and_speak(utterance):
         tts.init(ws)
         tts_hash = hash(str(config.get('tts', '')))
 
-    logger.info("Speak: " + utterance)
     try:
-        if speak_flag:
-            tts.execute(utterance)
+        tts.execute(utterance)
     finally:
         lock.release()
 
