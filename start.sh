@@ -17,6 +17,7 @@ case $1 in
 	"skills") SCRIPT=${TOP}/mycroft/skills/main.py ;;
 	"audio") SCRIPT=${TOP}/mycroft/audio/main.py ;;
 	"display") SCRIPT=${TOP}/mycroft/screen_display/main.py ;;
+	"wav") SCRIPT=${TOP}/mycroft/client/wave_file/main.py ;;
 	"skill_container") SCRIPT=${TOP}/mycroft/skills/container.py ;;
 	"voice") SCRIPT=${TOP}/mycroft/client/speech/main.py ;;
 	"cli") SCRIPT=${TOP}/mycroft/client/text/main.py ;;
@@ -27,7 +28,7 @@ case $1 in
 	"sdkdoc") SCRIPT=${TOP}/doc/generate_sdk_docs.py ;;
     "enclosure") SCRIPT=${TOP}/mycroft/client/enclosure/main.py ;;
     "wifi") SCRIPT=${TOP}/mycroft/client/wifisetup/main.py ;;
-	*) echo "Usage: start.sh [service | skills | skill_container | voice | cli | audiotest| audioaccuracytest | collector | unittest | enclosure | sdkdoc | wifi]"; exit ;;
+	*) echo "Usage: start.sh [service | skills | skill_container | voice | cli | audio | display |wav | audiotest| audioaccuracytest | collector | unittest | enclosure | sdkdoc | wifi]"; exit ;;
 esac
 
 echo "Starting $@"
