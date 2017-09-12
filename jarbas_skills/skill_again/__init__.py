@@ -34,6 +34,7 @@ class AgainSkill(MycroftSkill):
         self.last_intent_data = {}
         self.last_intent_context = {}
         self.context = {"repetition": True}
+        self.last_utterance = None
 
     def initialize(self):
         again_intent = IntentBuilder("AgainIntent"). \
@@ -44,24 +45,37 @@ class AgainSkill(MycroftSkill):
 
     def track_intent(self, message):
         message = Message.deserialize(message)
+        fmessages = ["padatious"]
         if ":" in message.type:
             skill, intent = message.type.split(":")
-            if skill == str(self.skill_id) or not skill.isdigit():
+            self.context = self.get_message_context(message.context)
+            if intent == "utterance":
+                utterance = message.data["utterance"]
+                self.log.info(
+                    "Tracking last executed utterance: " + utterance)
+                self.last_utterance = utterance
+                self.last_skill = "utterance"
+                return
+            elif skill == str(self.skill_id) or skill in fmessages:
                 return
             self.log.info("Tracking last executed intent: " + message.type)
-            self.context = self.get_message_context(message.context)
             self.last_skill = skill
             self.last_intent = intent
-            self.last_intent_context = self.context
             self.last_intent_data = message.data
 
     def handle_again_intent(self, message):
-        if self.last_skill == 0 or self.last_intent is None:
+        if self.last_skill == "utterance":
+            msg = Message("recognizer_loop:utterance",
+                          {"utterance": self.last_utterance},
+                          self.context)
+            self.log.info("Repeating last sent utterance")
+            self.emitter.emit(msg)
+        elif self.last_intent is None:
             self.speak_dialog("again.fail")
             return
-        msg = Message(self.last_skill+":"+self.last_intent,
-                      self.last_intent_data, self.last_intent_context)
-        #self.speak_dialog("again", {"intent": self.last_intent})
+        msg = Message(str(self.last_skill) + ":" + self.last_intent,
+                      self.last_intent_data, self.context)
+        # self.speak_dialog("again", {"intent": self.last_intent})
         self.log.info("Repeating last executed intent")
         self.emitter.emit(msg)
 
