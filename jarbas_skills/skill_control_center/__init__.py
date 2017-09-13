@@ -56,6 +56,8 @@ class ControlCenterSkill(MycroftSkill):
 
         self.emitter.on("reload_skill_response", self.end_wait)
         self.emitter.on("shutdown_skill_response", self.end_wait)
+        self.emitter.on("skill.loaded.fail", self.end_wait)
+        self.emitter.on("skill.loaded", self.end_wait)
         self.emitter.on("loaded_skills_response", self.handle_receive_loaded_skills)
 
     def build_intents(self):
@@ -117,7 +119,8 @@ class ControlCenterSkill(MycroftSkill):
 
     def end_wait(self, message):
         status = message.data.get("status")
-        if status == "forbidden" or status == "shutdown" or status == "reloading":
+        if status == "forbidden" or status == "shutdown" or status == \
+                "reloading" or "skill.loaded" in message.type:
             self.status = status
             self.waiting = False
 
