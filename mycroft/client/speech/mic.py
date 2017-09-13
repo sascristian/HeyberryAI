@@ -158,7 +158,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         # The wake word must fit in this time
         if hot_word_engines is None:
             hot_word_engines = {}
-        num_phonemes = len(listener_config.get('phonemes').split())
+        num_phonemes = wake_word_recognizer.num_phonemes
         len_phoneme = listener_config.get('phoneme_duration', 120) / 1000.0
         self.SAVED_WW_SEC = num_phonemes * len_phoneme
         speech_recognition.Recognizer.__init__(self)

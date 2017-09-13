@@ -20,6 +20,7 @@ from time import time as get_time, sleep
 from threading import Event
 from os.path import expanduser, isfile, exists, dirname
 from os import mkdir
+from pkg_resources import get_distribution
 
 from mycroft.configuration import ConfigurationManager
 from mycroft.messagebus.message import Message
@@ -29,6 +30,8 @@ from mycroft.util.parse import normalize
 __author__ = 'matthewscholefield'
 
 logger = getLogger(__name__)
+
+PADATIOUS_VERSION = '0.2.2'  # Also update in requirements.txt
 
 
 class PadatiousService(object):
@@ -49,6 +52,11 @@ class PadatiousService(object):
             except OSError:
                 pass
             return
+        ver = get_distribution('padatious').version
+        logger.warning('VERSION: ' + ver)
+        if ver != PADATIOUS_VERSION:
+            logger.warning('Using Padatious v' + ver + '. Please re-run ' +
+                           'dev_setup.sh to install ' + PADATIOUS_VERSION)
 
         self.container = IntentContainer(intent_cache)
 

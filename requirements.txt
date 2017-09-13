@@ -69,7 +69,7 @@ enum34==1.1.6
 colorama
 pyspotlight
 aiml
-padatious==0.1.4
+padatious==0.2.2
 urlfetch
 geopy
 nltk

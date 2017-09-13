@@ -33,7 +33,7 @@ from mycroft.metrics import MetricsAggregator
 from mycroft.session import SessionManager
 from mycroft.stt import STTFactory
 from mycroft.util.log import getLogger
-from mycroft.client.speech.hot_word_factory import HotWordFactory
+from mycroft.client.speech.hotword_factory import HotWordFactory
 
 LOG = getLogger(__name__)
 
@@ -105,23 +105,6 @@ class AudioConsumer(Thread):
         self.config = ConfigurationManager.get()
         self.word = self.wakeword_recognizer.key_phrase
         self.emitter.on("recognizer_loop:hotword", self.set_word)
-        self.emitter.on("recognizer_loop:external_audio",
-                    self.handle_external_audio_request)
-
-    def read_wave_file(self, wave_file_path):
-        # use the audio file as the audio source
-        r = sr.Recognizer()
-        with sr.AudioFile(wave_file_path) as source:
-            audio = r.record(source)
-        return audio
-
-    def handle_external_audio_request(self, event):
-        wave_file = event.get("wave_file")
-        audio = self.read_wave_file(wave_file)
-        if audio is not None:
-            text = self.transcribe(audio, False)
-            self.emitter.emit("recognizer_loop:external_audio.reply",
-                               {"stt": text})
 
     def set_word(self, event):
         self.word = event.get("hotword", self.wakeword_recognizer.key_phrase)
@@ -228,6 +211,7 @@ class RecognizerLoop(EventEmitter):
         EventEmitter loop running speech recognition. Local wake word
         recognizer and remote general speech recognition.
     """
+
     def __init__(self):
         super(RecognizerLoop, self).__init__()
         self._load_config()
@@ -249,10 +233,11 @@ class RecognizerLoop(EventEmitter):
         self.microphone.CHANNELS = self.config.get('channels')
         self.wakeword_recognizer = self.create_wake_word_recognizer()
         # TODO - localization
+        self.wakeup_recognizer = self.create_wakeup_recognizer()
+        self.responsive_recognizer = ResponsiveRecognizer(
+            self.wakeword_recognizer)
         self.hot_word_engines = {}
         self.create_hot_word_engines()
-        self.wakeup_recognizer = self.create_wakeup_recognizer()
-        self.responsive_recognizer = ResponsiveRecognizer(self.wakeword_recognizer, self.hot_word_engines)
         self.state = RecognizerLoopState()
 
     def create_hot_word_engines(self):
@@ -266,18 +251,28 @@ class RecognizerLoop(EventEmitter):
             ding = data.get("sound")
             utterance = data.get("utterance")
             listen = data.get("listen", False)
-            engine = HotWordFactory.create_hotword(word)
+            engine = HotWordFactory.create_hotword(word, lang=self.lang)
             self.hot_word_engines[word] = [engine, ding, utterance,
                                            listen, type]
 
     def create_wake_word_recognizer(self):
         # Create a local recognizer to hear the wakeup word, e.g. 'Hey Mycroft'
         LOG.info("creating wake word engine")
-        return HotWordFactory.create_wake_word()
+        word = "hey mycroft"  # self.config.get("wake_word", "hey mycroft")
+        # TODO remove this, only for server settings compatibility
+        phonemes = self.config.get("phonemes")
+        thresh = self.config.get("threshold")
+        config = self.config_core.get("hotwords", {word: {}})
+        config[word]["phonemes"] = phonemes
+        config[word]["threshold"] = thresh
+        if not phonemes and not thresh:
+            config = None
+        return HotWordFactory.create_hotword(word, config, self.lang)
 
     def create_wakeup_recognizer(self):
         LOG.info("creating stand up word engine")
-        return HotWordFactory.create_standup_word()
+        word = self.config.get("stand_up_word", "wake up")
+        return HotWordFactory.create_hotword(word, lang=self.lang)
 
     def start_async(self):
         """
@@ -328,8 +323,8 @@ class RecognizerLoop(EventEmitter):
         while self.state.running:
             try:
                 time.sleep(1)
-                if self._config_hash != hash(str(ConfigurationManager()
-                                                 .get())):
+                if self._config_hash != hash(str(
+                        ConfigurationManager().get())):
                     LOG.debug('Config has changed, reloading...')
                     self.reload()
             except KeyboardInterrupt as e:

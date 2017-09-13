@@ -41,6 +41,8 @@ from mycroft.util.log import getLogger
 from mycroft.skills.settings import SkillSettings
 from mycroft import MYCROFT_ROOT_PATH
 
+from inspect import getargspec
+
 __author__ = 'seanfitz'
 
 skills_config = ConfigurationManager.instance().get("skills")
@@ -407,9 +409,19 @@ class MycroftSkill(object):
                                            "intent": name}))
                 if need_self:
                     # When registring from decorator self is required
-                    handler(self, message)
+                    if len(getargspec(handler).args) == 2:
+                        handler(self, message)
+                    elif len(getargspec(handler).args) == 1:
+                        handler(self)
+                    else:
+                        raise TypeError
                 else:
-                    handler(message)
+                    if len(getargspec(handler).args) == 2:
+                        handler(message)
+                    elif len(getargspec(handler).args) == 1:
+                        handler()
+                    else:
+                        raise TypeError
                 self.settings.store()  # Store settings if they've changed
             except Exception as e:
                 # TODO: Localize
