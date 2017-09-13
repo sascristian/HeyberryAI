@@ -84,7 +84,7 @@ class DreamBotSkill(MycroftSkill):
         intent, self.handle_dreambot_objective = my_objective.build()
         self.register_intent(intent, self.handle_dreambot_objective)
 
-        my_objective.add_timer(self.time*60)
+        my_objective.add_timer(self.time * 2)
 
     def handle_dream_intent(self, message):
         self.speak("dreambot activated")
