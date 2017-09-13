@@ -40,7 +40,8 @@ class ClientUser():
         self.client_id = id
         self.name = name
         self.emitter = emitter
-        default_forbidden_messages = server_config.get("forbidden_messages", [])
+        default_forbidden_messages = server_config.get("forbidden_messages",
+                                                       [])
         default_forbidden_skills = server_config.get("forbidden_skills", [])
         default_forbidden_intents = server_config.get("forbidden_intents", [])
         self.default_forbidden_messages = default_forbidden_messages
@@ -53,7 +54,7 @@ class ClientUser():
         self.load_user()
         self.save_user()
         # session data
-        self.session_key = None #encrypt everything with this shared key
+        self.session_key = None  # encrypt everything with this shared key
         self.current_sock = None
         self.current_ip = None
         self.status = "offline"
@@ -65,7 +66,7 @@ class ClientUser():
         # check if folders exist
         if not os.path.exists(path):
             os.makedirs(path)
-        path += "/"+str(self.client_id) + ".json"
+        path += "/" + str(self.client_id) + ".json"
         self.settings = SkillSettings(path, autopath=False)
         if self.client_id not in self.settings.keys():
             self.settings[self.client_id] = {}
@@ -74,38 +75,51 @@ class ClientUser():
         self.name = self.settings[self.client_id].get("name", "user")
         self.nicknames = self.settings[self.client_id].get("nicknames", [])
         self.public_key = self.settings[self.client_id].get("public_key")
-        self.security_level = self.settings[self.client_id].get("security_level", 0)
-        self.forbidden_skills = self.settings[self.client_id].get("forbidden_skills", self.default_forbidden_skills)
-        self.forbidden_messages = self.settings[self.client_id].get("forbidden_messages", self.default_forbidden_messages)
-        self.forbidden_intents = self.settings[self.client_id].get("forbidden_intents", self.default_forbidden_intents)
-        self.last_seen = self.settings[self.client_id].get("last_seen", "never")
+        self.security_level = self.settings[self.client_id].get(
+            "security_level", 0)
+        self.forbidden_skills = self.settings[self.client_id].get(
+            "forbidden_skills", self.default_forbidden_skills)
+        self.forbidden_messages = self.settings[self.client_id].get(
+            "forbidden_messages", self.default_forbidden_messages)
+        self.forbidden_intents = self.settings[self.client_id].get(
+            "forbidden_intents", self.default_forbidden_intents)
+        self.last_seen = self.settings[self.client_id].get("last_seen",
+                                                           "never")
         self.last_timestamp = self.settings[self.client_id].get("last_ts", 0)
         self.known_ips = self.settings[self.client_id].get("known_ips", [])
-        self.timestamp_history = self.settings[self.client_id].get("timestamp_history", [])
+        self.timestamp_history = self.settings[self.client_id].get(
+            "timestamp_history", [])
         self.photo = self.settings[self.client_id].get("photo")
-        self.user_type = self.settings[self.client_id].get("user_type", "client")
+        self.user_type = self.settings[self.client_id].get("user_type",
+                                                           "client")
 
     def save_user(self):
         self.settings[self.client_id]["name"] = self.name
         self.settings[self.client_id]["nicknames"] = self.nicknames
         self.settings[self.client_id]["public_key"] = self.public_key
         self.settings[self.client_id]["security_level"] = self.security_level
-        self.settings[self.client_id]["forbidden_skills"] = self.forbidden_skills
-        self.settings[self.client_id]["forbidden_intents"] = self.forbidden_intents
+        self.settings[self.client_id][
+            "forbidden_skills"] = self.forbidden_skills
+        self.settings[self.client_id][
+            "forbidden_intents"] = self.forbidden_intents
         self.settings[self.client_id]["last_seen"] = self.last_seen
         self.settings[self.client_id]["last_ts"] = self.last_timestamp
         self.settings[self.client_id]["known_ips"] = self.known_ips
-        self.settings[self.client_id]["timestamp_history"] = self.timestamp_history
+        self.settings[self.client_id][
+            "timestamp_history"] = self.timestamp_history
         self.settings[self.client_id]["photo"] = self.photo
         self.settings[self.client_id]["user_type"] = self.user_type
-        self.settings[self.client_id]["forbidden_messages"] = self.forbidden_messages
+        self.settings[self.client_id][
+            "forbidden_messages"] = self.forbidden_messages
         self.settings.store()
 
     def add_new_ip(self, ip, emit=True):
         if ip not in self.known_ips:
             self.known_ips.append(ip)
             if emit:
-                self.emitter.emit(Message("user.new_ip", {"ts": time.time(), "name": self.name, "last_seen": self.last_seen}))
+                self.emitter.emit(Message("user.new_ip", {"ts": time.time(),
+                                                          "name": self.name,
+                                                          "last_seen": self.last_seen}))
 
     def update_timestamp(self):
         self.last_timestamp = time.time()
@@ -149,8 +163,8 @@ class ClientManagerSkill(MycroftSkill):
         super(ClientManagerSkill, self).__init__()
         self.reload_skill = False
         self.user_list = {}  # id, sock
-        self.users = {}    # id, user object
-        self.facebook_users = {} #fb_id, user object
+        self.users = {}  # id, user object
+        self.facebook_users = {}  # fb_id, user object
 
     def initialize(self):
         # listen for status updates
@@ -161,7 +175,6 @@ class ClientManagerSkill(MycroftSkill):
         self.emitter.on("fb.chat.message", self.handle_fb_message_received)
         self.emitter.on("fb.chat.message.seen", self.handle_fb_message_seen)
         self.emitter.on("fb.last.seen.timestamps", self.handle_fb_timestamp)
-
 
         # build users id list db from disk
         if not exists(dirname(__file__) + "/users"):
@@ -184,22 +197,26 @@ class ClientManagerSkill(MycroftSkill):
                 self.facebook_users[user_id] = user
 
         # set responders
-        self.sock_responder = ResponderBackend(self.name+"_socks",
+        self.sock_responder = ResponderBackend(self.name + "_socks",
                                                self.emitter,
-                                               self.log)
-        self.id_responder = ResponderBackend(self.name+"_id",
-                                               self.emitter,
-                                               self.log)
-        self.facebook_responder = ResponderBackend(self.name+"_facebook",
-                                               self.emitter,
-                                               self.log)
+                                               self.log, server=False,
+                                               client=False)
+        self.id_responder = ResponderBackend(self.name + "_id",
+                                             self.emitter,
+                                             self.log, server=False,
+                                             client=False)
+        self.facebook_responder = ResponderBackend(self.name + "_facebook",
+                                                   self.emitter,
+                                                   self.log, server=False,
+                                                   client=False)
         # set responder answers
         self.sock_responder.set_response_handler("user.from_sock.request",
                                                  self.handle_user_from_sock_request)
         self.id_responder.set_response_handler("user.from_id.request",
                                                self.handle_user_from_id_request)
-        self.facebook_responder.set_response_handler("user.from_facebook.request",
-                                                     self.handle_user_from_facebook_request)
+        self.facebook_responder.set_response_handler(
+            "user.from_facebook.request",
+            self.handle_user_from_facebook_request)
 
     # internal messages
     def handle_user_from_id_request(self, message):
@@ -223,8 +240,10 @@ class ClientManagerSkill(MycroftSkill):
         else:
             data = {"id": user_id,
                     "forbidden_skills": self.users[user_id].forbidden_skills,
-                    "forbidden_messages": self.users[user_id].forbidden_messages,
-                    "forbidden_intents": self.users[user_id].forbidden_intents,
+                    "forbidden_messages": self.users[
+                        user_id].forbidden_messages,
+                    "forbidden_intents": self.users[
+                        user_id].forbidden_intents,
                     "security_level": self.users[user_id].security_level,
                     "pub_key": self.users[user_id].public_key,
                     "nicknames": self.users[user_id].nicknames}
@@ -233,10 +252,14 @@ class ClientManagerSkill(MycroftSkill):
 
         if found:
             data = {"id": user_id,
-                    "forbidden_skills": self.facebook_users[user_id].forbidden_skills,
-                    "forbidden_messages": self.facebook_users[user_id].forbidden_messages,
-                    "forbidden_intents": self.facebook_users[user_id].forbidden_intents,
-                    "security_level": self.facebook_users[user_id].security_level,
+                    "forbidden_skills": self.facebook_users[
+                        user_id].forbidden_skills,
+                    "forbidden_messages": self.facebook_users[
+                        user_id].forbidden_messages,
+                    "forbidden_intents": self.facebook_users[
+                        user_id].forbidden_intents,
+                    "security_level": self.facebook_users[
+                        user_id].security_level,
                     "pub_key": self.facebook_users[user_id].public_key,
                     "nicknames": self.facebook_users[user_id].nicknames}
             self.id_responder.update_response_data(data, message.context)
@@ -247,18 +270,22 @@ class ClientManagerSkill(MycroftSkill):
     def handle_user_from_facebook_request(self, message):
         user_id = message.data.get("id")
         if user_id not in self.facebook_users.keys():
-            self.log.warning("Unknown facebook id provided, creating new user profile")
+            self.log.warning(
+                "Unknown facebook id provided, creating new user profile")
             # new user
             new_user = ClientUser(id=user_id, emitter=self.emitter)
             self.facebook_users[user_id] = new_user
 
         data = {"id": user_id,
-            "forbidden_skills": self.facebook_users[user_id].forbidden_skills,
-            "forbidden_messages": self.facebook_users[user_id].forbidden_messages,
-            "forbidden_intents": self.facebook_users[user_id].forbidden_intents,
-            "security_level": self.facebook_users[user_id].security_level,
-            "pub_key": self.facebook_users[user_id].public_key,
-            "nicknames": self.facebook_users[user_id].nicknames}
+                "forbidden_skills": self.facebook_users[
+                    user_id].forbidden_skills,
+                "forbidden_messages": self.facebook_users[
+                    user_id].forbidden_messages,
+                "forbidden_intents": self.facebook_users[
+                    user_id].forbidden_intents,
+                "security_level": self.facebook_users[user_id].security_level,
+                "pub_key": self.facebook_users[user_id].public_key,
+                "nicknames": self.facebook_users[user_id].nicknames}
         self.facebook_responder.update_response_data(data, message.context)
 
     def handle_user_from_sock_request(self, message):
@@ -279,7 +306,9 @@ class ClientManagerSkill(MycroftSkill):
         if user_id is None:
             self.log.error("Something went wrong")
             # TODO send close request?
-            self.sock_responder.update_response_data({"id": None, "error": "user does not seem to exist"}, message.context)
+            self.sock_responder.update_response_data(
+                {"id": None, "error": "user does not seem to exist"},
+                message.context)
             return
 
         data = {"id": user_id,
@@ -300,7 +329,8 @@ class ClientManagerSkill(MycroftSkill):
             if id in self.facebook_users.keys():
                 current_user = self.facebook_users[id]
             else:
-                current_user = ClientUser(id=id, name=name, emitter=self.emitter)
+                current_user = ClientUser(id=id, name=name,
+                                          emitter=self.emitter)
                 self.facebook_users[id] = current_user
             current_user.name = name
             current_user.add_nicknames([name])
@@ -383,7 +413,8 @@ class ClientManagerSkill(MycroftSkill):
             new_id = str(new_id)
             self.log.info("Creating user")
             try:
-                new_user = ClientUser(new_id, user_name, self.emitter, reset=False)
+                new_user = ClientUser(new_id, user_name, self.emitter,
+                                      reset=False)
             except Exception as e:
                 self.log.error("Error creating user: " + str(e))
                 return
@@ -392,7 +423,7 @@ class ClientManagerSkill(MycroftSkill):
             current_user = new_id
 
         self.log.info("Setting user sock")
-        self.user_list[current_user] = sock # set active sock
+        self.user_list[current_user] = sock  # set active sock
         # update user info
         self.log.info("Updating user info")
         current_user = self.users[current_user]
@@ -406,8 +437,15 @@ class ClientManagerSkill(MycroftSkill):
         current_user.status = "online"
         current_user.add_nicknames(nicknames)
         current_user.save_user()
-        self.log.info("User updated: " + current_user.name + " " + current_user.current_ip + " " + str(current_user.last_timestamp))
-        self.emitter.emit(Message("user.connected", {"internal_id":current_user.id, "name":current_user.name, "ip":current_user.current_ip, "sock":current_user.current_sock} ,message.context))
+        self.log.info(
+            "User updated: " + current_user.name + " " + current_user.current_ip + " " + str(
+                current_user.last_timestamp))
+        self.emitter.emit(Message("user.connected",
+                                  {"internal_id": current_user.id,
+                                   "name": current_user.name,
+                                   "ip": current_user.current_ip,
+                                   "sock": current_user.current_sock},
+                                  message.context))
 
     def user_from_ip_sock(self, sock, ip):
         user_id = None
@@ -458,7 +496,7 @@ class ClientManagerSkill(MycroftSkill):
         current_user.timestamp_history.append(time.time())
         current_user.status = "offline"
         current_user.save_user()
-        self.emitter.emit(Message("user.disconnected",{},message.context))
+        self.emitter.emit(Message("user.disconnected", {}, message.context))
 
     def stop(self):
         # save all users
