@@ -30,7 +30,7 @@ __author__ = 'jarbas'
 class DreamBotSkill(MycroftSkill):
     def __init__(self):
         super(DreamBotSkill, self).__init__()
-        self.time = 60 * 3 # minutes
+        self.time = 60 * 1  # 1 minute
         self.reload_skill = False
         self.external_reload = False
         self.external_shutdown = False
@@ -84,7 +84,7 @@ class DreamBotSkill(MycroftSkill):
         intent, self.handle_dreambot_objective = my_objective.build()
         self.register_intent(intent, self.handle_dreambot_objective)
 
-        my_objective.add_timer(self.time * 2)
+        my_objective.add_timer(self.time * 60)  # hours
 
     def handle_dream_intent(self, message):
         self.speak("dreambot activated")
