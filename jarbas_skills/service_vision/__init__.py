@@ -227,7 +227,7 @@ class VisionSkill(MycroftSkill):
     def handle_describe_what_do_you_see_intent(self, message):
         # get vision feed and haar-cascade processing
         self.speak("Testing open cv vision")
-        vision = WebcamQuery(self.emitter)
+        vision = WebcamQuery(self.name, self.emitter)
         data = vision.get_data()
         feed = vision.get_feed()
         #faces = vision.get_faces()
@@ -236,7 +236,7 @@ class VisionSkill(MycroftSkill):
                                      utterance=message.data.get("utterance"))
         # get tensor flow object recog api objects
         self.speak('Testing tensorflow object recognition')
-        objrecog = ObjectRecognitionQuery(self.emitter)
+        objrecog = ObjectRecognitionQuery(self.name, self.emitter)
         result = objrecog.recognize_objects(feed)
         objects = result.get("objects", []) # list of all detected objects
         labels = result.get("labels", {}) # label and ocurrences of each object with score > 30%
@@ -244,7 +244,7 @@ class VisionSkill(MycroftSkill):
 
         # get bvlc googlenet top 5 classification labels
         self.speak('Testing bvlc googlenet image recognition')
-        imgrecog = ImageRecognitionQuery(self.emitter)
+        imgrecog = ImageRecognitionQuery(self.name, self.emitter)
         results = imgrecog.get_classification(feed)
         # quick cleanup of ugly label names
         i = 0

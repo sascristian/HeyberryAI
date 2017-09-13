@@ -511,7 +511,7 @@ class DreamService(MycroftSkill):
         filepath = dirname(__file__)+"/dream_seed.jpg"
         urllib.urlretrieve(url, filepath)
 
-        dreamer = DD(self.emitter)
+        dreamer = DD(self.name, self.emitter)
         dreamer.dream_from_file(filepath, categorie=cat, context=message.context)
 
     def handle_dream_response(self, message):

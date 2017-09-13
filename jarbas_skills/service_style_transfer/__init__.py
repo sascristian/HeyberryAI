@@ -92,7 +92,7 @@ class StyleTransferSkill(MycroftSkill):
         target_img = message.data.get("PicturePath", dirname(__file__) + "/test.jpg")
         iter_num = message.data.get("iter_num", 400)
         self.speak("testing style transfer")
-        transfer = StyleTransferService(self.emitter)
+        transfer = StyleTransferService(self.name, self.emitter)
         file = transfer.transfer_from_file(target_img, style_img, iter=iter_num,
                                            context=self.message_context, server=False)
         url = transfer.get_result().get("url")

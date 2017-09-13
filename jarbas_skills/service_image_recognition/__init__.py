@@ -130,7 +130,7 @@ class ImageRecognitionSkill(MycroftSkill):
 
     def handle_image_classification_intent(self, message):
         self.speak_dialog("imgrecogstatus")
-        imgrecog = ImageRecognitionQuery(self.emitter, timeout=130)
+        imgrecog = ImageRecognitionQuery(self.name, self.emitter, timeout=130)
         path = message.data.get("PicturePath", dirname(__file__)+"/obama.jpg")
         results = imgrecog.get_classification(path)
         if not results:
