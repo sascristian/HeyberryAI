@@ -244,6 +244,7 @@ class QueryBackend(object):
             client = self.config.get("ask_client")
             if client is not None:
                 self.client = client
+        self.result = {}
 
     def send_request(self, message_type, message_data=None,
                      message_context=None, response_messages=None,

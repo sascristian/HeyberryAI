@@ -61,7 +61,6 @@ class ColorizationQuery(QueryBackend):
         result = self.send_request("colorization.request",
                                  {"picture_path": picture_path},
                                  message_context=context)
-        result = result.get("file")
         return result
 
     def colorize_from_url(self, picture_url, context=None):

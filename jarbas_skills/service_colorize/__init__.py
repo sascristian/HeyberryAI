@@ -64,7 +64,7 @@ class ColorizationService(MycroftSkill):
         else:
             pic = url_to_pic(pic)
 
-        colorize_tool = ColorizationQuery(self.name, self.emitter, 200)
+        colorize_tool = ColorizationQuery(self.name, self.emitter)
         result = colorize_tool.colorize(picture_path=pic, context=message.context)
         path = result.get("file")
         self.speak("Here is your colorized picture ", metadata=result,
