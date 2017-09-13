@@ -181,7 +181,7 @@ class FaceChat(fbchat.Client):
 
     def handle_speak(self, message):
         utterance = message.data.get("utterance")
-        target = message.data.get("target")
+        target = message.context.get("destinatary")
         metadata = message.data.get("metadata")
         if "fbchat" in target and self.active:
             if "url" in metadata.keys():

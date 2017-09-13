@@ -473,7 +473,6 @@ class MycroftSkill(object):
         self.add_event(intent_name, handler)
 
     def handle_update_message_context(self, message):
-        print "handle update context", message.context
         self.message_context = self.get_message_context(message.context)
 
     def disable_intent(self, intent_name):
@@ -546,7 +545,7 @@ class MycroftSkill(object):
         if message_context is None:
             message_context = {
                 "destinatary": self.message_context.get("destinatary", "all"),
-                "source": self.name, "mute": False, "more_speech": False,
+                "mute": False, "more_speech": False,
                 "target": self.message_context.get("target", "all")}
         else:
             if "destinatary" not in message_context.keys():
@@ -562,7 +561,6 @@ class MycroftSkill(object):
                 message_context["more_speech"] = self.message_context.get(
                     "more_speech", False)
         message_context["source"] = self.name
-        print "get message context", message_context
         return message_context
 
     def speak(self, utterance, expect_response=False, metadata=None,
