@@ -699,14 +699,17 @@ class FallbackSkill(MycroftSkill):
                             if folder == f:
                                 if f in missing_folders:
                                     missing_folders.remove(f)
-                                logger.info("Trying ordered fallback: " + folder)
+
                                 handler, context_update_handler =cls.folders[f]
+                                logger.info(
+                                    "Trying ordered fallback: " + handler.__self__.name)
                                 try:
                                     context_update_handler(message)
                                     if handler(message):
                                         return
                                 except Exception as e:
-                                    logger.info('Exception in fallback: ' + cls.name + " " +
+                                    logger.info('Exception in fallback: ' +
+                                                handler.__self__.name + " " +
                                                 str(e))
                     logger.info("Missing fallbacks " + str(missing_folders))
                     for folder in missing_folders:
@@ -718,8 +721,10 @@ class FallbackSkill(MycroftSkill):
                             if handler(message):
                                 return
                         except Exception as e:
-                            logger.info('Exception in fallback: ' + cls.name + " " +
-                                        str(e))
+                            logger.info(
+                                'Exception in fallback: ' + handler.__self__.name +
+                                " " +
+                                str(e))
                 except Exception as e:
                     logger.error(e)
                     logger.warning("Fallback override is not working")
@@ -733,8 +738,9 @@ class FallbackSkill(MycroftSkill):
                         if handler(message):
                             return
                     except Exception as e:
-                        logger.info('Exception in fallback: ' + cls.name + " " +
-                                    str(e))
+                        logger.info(
+                            'Exception in fallback: ' + handler.__self__.name + " " +
+                            str(e))
             ws.emit(Message('complete_intent_failure'))
             logger.warn('No fallback could handle intent.')
 
