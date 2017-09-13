@@ -29,11 +29,15 @@ class ServerFallbackQuery(QueryBackend):
             data = {}
         if context is None:
             context = {}
-        return self.send_request(message_type="server.intent_failure",
+        self.query = None
+        result = self.send_request(message_type="server.intent_failure",
                                  message_data=data,
                                  message_context=context,
                                  response_messages=[
                                      "server.message.received"])
+        if self.query is not None:
+            return True
+        return False
 
 
 class PadatiousFallbackQuery(QueryBackend):
