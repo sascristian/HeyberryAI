@@ -32,7 +32,7 @@ class PadatiousFallbackQuery(QueryBackend):
 
 
 class RBMQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=100, logger=None,
                  server=False, client=False, override=True):
         super(RBMQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
@@ -49,7 +49,7 @@ class RBMQuery(QueryBackend):
 
 
 class ColorizationQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=60 * 15, logger=None,
                  server=False, client=False, override=True):
         super(ColorizationQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
@@ -73,7 +73,7 @@ class ColorizationQuery(QueryBackend):
 
 
 class PornDetectQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=300, logger=None,
                  server=False, client=False, override=True):
         super(PornDetectQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
@@ -128,7 +128,7 @@ class LILACSstorageQuery(QueryBackend):
 
 
 class KnowledgeQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=120, logger=None,
                  server=False, client=False, override=True):
         super(KnowledgeQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
@@ -204,7 +204,7 @@ class UserManagerQuery(QueryBackend):
 
 
 class FaceRecognitionQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=60 * 15, logger=None,
                  server=False, client=False, override=True):
         super(FaceRecognitionQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
@@ -226,7 +226,7 @@ class FaceRecognitionQuery(QueryBackend):
 
 
 class ImageRecognitionQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=60 * 15, logger=None,
                  server=False, client=False, override=True):
         super(ImageRecognitionQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
@@ -265,7 +265,7 @@ class WebcamQuery(QueryBackend):
 
 
 class ObjectRecognitionQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=60 * 15, logger=None,
                  server=False, client=False, override=True):
         super(ObjectRecognitionQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
@@ -285,7 +285,7 @@ class ObjectRecognitionQuery(QueryBackend):
 
 
 class DeepDreamQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=60 * 15, logger=None,
                  server=False, client=False, override=True):
         super(DeepDreamQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
@@ -319,7 +319,8 @@ class DeepDreamQuery(QueryBackend):
 
 
 class StyleTransferQuery(QueryBackend):
-    def __init__(self, name=None, emitter=None, timeout=35, logger=None,
+    def __init__(self, name=None, emitter=None, timeout=60 * 60 * 3,
+                 logger=None,
                  server=False, client=False, override=True):
         super(StyleTransferQuery, self).__init__(name=name, emitter=emitter,
                                        timeout=timeout,
