@@ -267,7 +267,8 @@ class MycroftSkill(object):
         self.external_shutdown = True
         self.events = []
         self.skill_id = 0
-        self.message_context = self.get_message_context({})
+        self.message_context = {}
+        self.message_context = self.get_message_context()
 
     def is_current_language_supported(self):
         # for backward compatibility, by default,
