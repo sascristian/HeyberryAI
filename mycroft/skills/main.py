@@ -392,6 +392,8 @@ class WatchSkills(Thread):
                         else:
                             ws.emit(Message("skill.loaded.fail",
                                             {"skill": skill["id"]}))
+                            skill["shutdown"] = True
+                    loaded_skills[skill_folder] = skill
 
             # get the last modified skill
             modified_dates = map(lambda x: x.get("last_modified"),
