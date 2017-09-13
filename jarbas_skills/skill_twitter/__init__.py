@@ -39,41 +39,6 @@ __author__ = 'btotharye'
 LOGGER = getLogger(__name__)
 
 
-class TwitterClient():
-    def __init__(self, emitter):
-        self.emitter = emitter
-        self.emitter.on("twitter_post", self.end_wait)
-        self.waiting = False
-        self.waiting_for = "tweet_post"
-
-    def end_wait(self, message):
-        if self.waiting and message.type == self.waiting_for:
-            self.waiting = False
-
-    def wait(self, time_out=15):
-        elapsed = 0
-        start = time.time()
-        while self.waiting and elapsed <= time_out:
-            time.sleep(0.3)
-            elapsed = time.time() - start
-        return self.waiting
-
-    def post_to_twitter(self, text, pic=None):
-        # get tweet type
-        if pic is not None:
-            if "http" in pic:
-                tweet_type = "remote_image"
-            else:
-                tweet_type = "image"
-        else:
-            tweet_type = "text"
-        # send tweet
-        self.emitter.emit(Message("tweet_request", {"tweet_pic": pic, "tweet_text": text, "tweet_type": tweet_type}))
-        self.waiting_for = "tweet_post"
-        self.waiting = True
-        return self.wait()
-
-
 class TwitterAPI(object):
     def __init__(self, consumer_key, consumer_secret, access_token, access_secret, user):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -138,11 +103,14 @@ class TwitterSkill(MycroftSkill):
 
         # external tweet requests"
         self.emitter.on("tweet_request", self.handle_tweet_request)
+
         # automatic tweets
-        self.emitter.on("class_visualization_result", self.handle_tweet_deepdraw)
-        self.emitter.on("deep_dream_result", self.handle_tweet_dream)
-        self.emitter.on("style_transfer_result", self.handle_tweet_style_transfer)
-        self.emitter.on("inspirobot_result", self.handle_tweet_inspirobot)
+        self.emitter.on("class.visualization.reply",
+                        self.handle_tweet_deepdraw)
+        self.emitter.on("deep.dream.reply", self.handle_tweet_dream)
+        self.emitter.on("style.transfer.reply",
+                        self.handle_tweet_style_transfer)
+        self.emitter.on("inspirobot.reply", self.handle_tweet_inspirobot)
 
     # The "handle_xxxx_intent" functions define Mycroft's behavior when
     # each of the skill's intents is triggered: in this case, he simply
