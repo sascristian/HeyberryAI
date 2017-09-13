@@ -15,29 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from jarbas_utils.skill_tools import QueryBackend
+from jarbas_utils.skill_tools import ServerFallbackQuery
 from mycroft.skills.core import FallbackSkill
 from mycroft.util.log import getLogger
 
 __author__ = 'jarbas'
 
 LOGGER = getLogger(__name__)
-
-
-class ServerFallbackQuery(QueryBackend):
-    def __init__(self, emitter=None, timeout=30, waiting_messages=[
-        "server.message.received"],logger=None):
-        super(ServerFallbackQuery, self).__init__(name="ServerFallbackService",
-                                                  emitter=emitter, timeout=timeout,
-                                                  waiting_messages=waiting_messages, logger=logger)
-
-    def wait_server_response(self, data = None):
-        if data is None:
-            data = {}
-        self.send_request(message_type="server.intent_failure",
-                          message_data=data)
-        return self.wait("server.message.received")
 
 
 class ServerFallback(FallbackSkill):

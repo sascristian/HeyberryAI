@@ -32,7 +32,7 @@ import time, os
 from os import mkdir
 from jarbas_utils.skill_dev_tools import ResponderBackend
 
-server_config = ConfigurationManager.get().get("jarbas_server")
+server_config = ConfigurationManager.get().get("jarbas_server", {})
 
 
 class ClientUser():
