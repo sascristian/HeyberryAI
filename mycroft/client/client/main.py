@@ -66,8 +66,16 @@ class MyClientProtocol(WebSocketClientProtocol):
                 # update iv for next message
                 self.factory.aes_iv = deserialized_message.context.get("aes_iv", self.factory.aes_iv)
                 self.factory.aes_iv = base64.b64decode(self.factory.aes_iv)
+                # restore destinatary context
+                try:
+                    target, sock = message.context.get("destinatary").split(
+                        ":")
+                except:
+                    target = "all"
+                message.context["destinatary"] = target
                 # validate server message and emit to internal bus
                 if (self.factory.message_policy and deserialized_message.type not in self.factory.message_list) or (not self.factory.message_policy and deserialized_message.type in self.factory.message_list):
+
                     self.factory.emitter.emit(deserialized_message)
                 else:
                     logger.warning("server message not allowed " + deserialized_message.type)
@@ -282,6 +290,9 @@ class MyClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
                 self.sendMessage(event.type, event.data, event.context)
         else:
             logger.debug("Not asking server")
+
+    def validate_server_message(self, deserialized_message):
+        pass
 
     def sendRaw(self, data):
         if self.client is None:
