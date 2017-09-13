@@ -50,7 +50,7 @@ class AgainSkill(MycroftSkill):
             skill, intent = message.type.split(":")
             self.context = self.get_message_context(message.context)
             if intent == "utterance":
-                utterance = message.data["utterance"]
+                utterance = message.data["utterances"][0]
                 self.log.info(
                     "Tracking last executed utterance: " + utterance)
                 self.last_utterance = utterance
