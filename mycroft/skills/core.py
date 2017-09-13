@@ -587,8 +587,8 @@ class FallbackSkill(MycroftSkill):
                                 return True
                         except Exception as e:
                             logger.info(
-                                'Exception in fallback: ' + cls.name + " " +
-                                str(e))
+                                'Exception in fallback: ' +
+                                handler.__self__.name + " " + str(e))
 
             # try fallbacks missing from ordered list
             logger.info("Missing fallbacks " + str(missing_folders))
@@ -600,8 +600,8 @@ class FallbackSkill(MycroftSkill):
                     if handler(message):
                         return True
                 except Exception as e:
-                    logger.info('Exception in fallback: ' + cls.name + " " +
-                                str(e))
+                    logger.info('Exception in fallback: ' +
+                                handler.__self__.name + " " + str(e))
             return False
 
         def priority_handler(message):
@@ -612,8 +612,8 @@ class FallbackSkill(MycroftSkill):
                     if handler(message):
                         return True
                 except Exception as e:
-                    logger.info('Exception in fallback: ' + cls.name + " " +
-                                str(e))
+                    logger.info('Exception in fallback: ' +
+                                handler.__self__.name + " " + str(e))
             return False
 
         def handler(message):
