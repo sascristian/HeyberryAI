@@ -257,6 +257,9 @@ def rebuild_filtered_log():
 def handle_speak(event):
     global chat
     utterance = event.data.get('utterance')
+    destinatary = event.context.get('destinatary', "all")
+    if destinatary not in ["all", "cli"]:
+        return
     if bSimple:
         print(">> " + utterance)
     else:
