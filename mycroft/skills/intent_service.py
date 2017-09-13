@@ -151,14 +151,6 @@ class IntentService(object):
         self.emitter.on('remove_context', self.handle_remove_context)
         self.emitter.on('clear_context', self.handle_clear_context)
 
-    def update_context(self, intent):
-        for tag in intent['__tags__']:
-            context_entity = tag.get('entities')[0]
-            if self.context_greedy:
-                self.context_manager.inject_context(context_entity)
-            elif context_entity['data'][0][1] in self.context_keywords:
-                self.context_manager.inject_context(context_entity)
-
     def do_conversation(self, utterances, skill_id, lang):
         self.emitter.emit(Message("skill.converse.request", {
             "skill_id": skill_id, "utterances": utterances, "lang": lang}))
@@ -275,7 +267,6 @@ class IntentService(object):
         lang = message.data.get('lang', None)
         if not lang:
             lang = "en-us"
-
         utterances = message.data.get('utterances', '')
         context = self.get_message_context(message.context)
         # check for conversation time-out

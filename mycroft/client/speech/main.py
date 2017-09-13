@@ -78,8 +78,7 @@ def handle_speak(event):
 
 def handle_utterance(event):
     logger.info("Utterance: " + str(event['utterances']))
-    event["source"] = "speech"
-    ws.emit(Message('recognizer_loop:utterance', event))
+    ws.emit(Message('recognizer_loop:utterance', event, {"source": "speech"}))
 
 
 def handle_complete_intent_failure(event):

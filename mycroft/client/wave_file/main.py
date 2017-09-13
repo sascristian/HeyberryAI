@@ -71,6 +71,9 @@ class FileConsumer(Thread):
                 audio = read_wave_file(self.path)
                 text = self.stt.execute(audio).lower().strip()
                 logger.info(text)
+                self.emitter.emit(Message("recognize_loop:utterance",
+                                          {"utterances": [text]}, {"source":
+                                                                       "wav_file"}))
                 remove(self.path)
             time.sleep(0.5)
 
