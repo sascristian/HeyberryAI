@@ -257,7 +257,6 @@ class QueryBackend(object):
         """
         if response_messages is None:
             response_messages = []
-
         # generate reply messages
         self.waiting_messages = response_messages
         if ".request" in message_type:

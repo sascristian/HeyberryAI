@@ -35,7 +35,7 @@ class ServerFallbackQuery(QueryBackend):
                                  message_context=context,
                                  response_messages=[
                                      "server.message.received"])
-        if self.query is not None:
+        if self.query.get_response_type() == "server.message.received":
             return True
         return False
 
