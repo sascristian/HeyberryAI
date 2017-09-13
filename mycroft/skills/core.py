@@ -704,73 +704,79 @@ class FallbackSkill(MycroftSkill):
 
     @classmethod
     def make_intent_failure_handler(cls, ws):
-        """Goes through all fallback handlers until one returns true"""
+        """Goes through all fallback handlers until one returns True"""
+
+        def ordered_handler(message):
+            logger.info("Overriding fallback order")
+            logger.info("Fallback order " + str(cls.order))
+            missing_folders = cls.folders.keys()
+            logger.info("Fallbacks " + str(missing_folders))
+
+            # try fallbacks in ordered list
+            for folder in cls.order:
+                for f in cls.folders.keys():
+                    logger.info(folder + " " + f)
+                    if folder == f:
+                        if f in missing_folders:
+                            missing_folders.remove(f)
+                        logger.info("Trying ordered fallback: " + folder)
+                        handler = cls.folders[f]
+                        try:
+                            handler.__self__.handle_update_message_context(
+                                message)
+                            if handler(message):
+                                return True
+                        except Exception as e:
+                            logger.info(
+                                'Exception in fallback: ' +
+                                handler.__self__.name + " " +
+                                str(e))
+
+            # try fallbacks missing from ordered list
+            logger.info("Missing fallbacks " + str(missing_folders))
+            for folder in missing_folders:
+                logger.info("fallback not in ordered list, trying it now: " +
+                            folder)
+                handler = cls.folders[folder]
+                try:
+                    handler.__self__.handle_update_message_context(
+                        message)
+                    if handler(message):
+                        return True
+                except Exception as e:
+                    logger.info('Exception in fallback: ' +
+                                handler.__self__.name + " " +
+                                str(e))
+            return False
+
+        def priority_handler(message):
+            # try fallbacks by priority
+            for _, handler in sorted(cls.fallback_handlers.items(),
+                                     key=operator.itemgetter(0)):
+                try:
+                    handler.__self__.handle_update_message_context(
+                        message)
+                    if handler(message):
+                        return True
+                except Exception as e:
+                    logger.info('Exception in fallback: ' +
+                                handler.__self__.name + " " +
+                                str(e))
+            return False
 
         def handler(message):
             if cls.override:
-                try:
-                    # try fallbacks by pre defined order
-                    logger.info("Overriding fallback order")
-                    logger.info("Fallback order " + str(cls.order))
-                    missing_folders = cls.folders.keys()
-                    logger.info("Fallbacks " + str(missing_folders))
-                    for folder in cls.order:
-                        for f in cls.folders.keys():
-                            if folder == f:
-                                if f in missing_folders:
-                                    missing_folders.remove(f)
-
-                                handler, context_update_handler = cls.folders[
-                                    f]
-                                logger.info(
-                                    "Trying ordered fallback: " + handler.__self__.name)
-                                try:
-                                    context_update_handler(message)
-                                    if handler(message):
-                                        return
-                                except Exception as e:
-                                    logger.info('Exception in fallback: ' +
-                                                handler.__self__.name + " " +
-                                                str(e))
-                    logger.info("Missing fallbacks " + str(missing_folders))
-                    for folder in missing_folders:
-                        logger.info(
-                            "fallback not in ordered list, trying it now: " +
-                            folder)
-                        handler, context_update_handler = cls.folders[folder]
-                        try:
-                            context_update_handler(message)
-                            if handler(message):
-                                return
-                        except Exception as e:
-                            logger.info(
-                                'Exception in fallback: ' + handler.__self__.name +
-                                " " +
-                                str(e))
-                except Exception as e:
-                    logger.error(e)
-                    logger.warning("Fallback override is not working")
+                success = ordered_handler(message)
             else:
-                # try fallbacks by priority
-                for _, handler, context_update_handler in sorted(
-                        cls.fallback_handlers.items(),
-                        key=operator.itemgetter(0)):
-                    try:
-                        context_update_handler(message)
-                        if handler(message):
-                            return
-                    except Exception as e:
-                        logger.info(
-                            'Exception in fallback: ' + handler.__self__.name + " " +
-                            str(e))
-            ws.emit(Message('complete_intent_failure'))
-            logger.warn('No fallback could handle intent.')
+                success = priority_handler(message)
+            if not success:
+                ws.emit(Message('complete_intent_failure'))
+                logger.warn('No fallback could handle intent.')
 
         return handler
 
     @classmethod
-    def _register_fallback(cls, handler, priority, skill_folder=None,
-                           context_update_handler=None):
+    def _register_fallback(cls, handler, priority, skill_folder=None):
         """
         Register a function to be called as a general info fallback
         Fallback should receive message and return
@@ -782,12 +788,12 @@ class FallbackSkill(MycroftSkill):
         while priority in cls.fallback_handlers:
             priority += 1
 
-        cls.fallback_handlers[priority] = handler, context_update_handler
+        cls.fallback_handlers[priority] = handler
 
         # folder name
         if skill_folder:
             skill_folder = skill_folder.split("/")[-1]
-            cls.folders[skill_folder] = handler, context_update_handler
+            cls.folders[skill_folder] = handler
         else:
             logger.warning("skill folder error registering fallback")
 
@@ -814,22 +820,21 @@ class FallbackSkill(MycroftSkill):
             Args:
                 handler_to_del: reference to handler
         """
-        flag1 = False
+        success = False
         for priority, handler in cls.fallback_handlers.items():
             if handler == handler_to_del:
                 del cls.fallback_handlers[priority]
-                flag1 = True
+                success = True
+        if not success:
+            logger.warn('Could not remove fallback!')
 
-        flag2 = False
+        success = False
         for folder in cls.folders.keys():
             handler = cls.folders[folder]
             if handler == handler_to_del:
                 del cls.folders[folder]
-                flag2 = True
-
-        if not flag1:
-            logger.warn('Could not remove fallback!')
-        if not flag2:
+                success = True
+        if not success:
             logger.warn('Could not remove ordered fallback!')
 
     def remove_instance_handlers(self):
