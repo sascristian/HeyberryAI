@@ -89,7 +89,7 @@ class DreamBotSkill(MycroftSkill):
     def handle_dream_intent(self, message):
         self.speak("dreambot activated")
         url = message.data.get("url", "https://unsplash.it/600/?random")
-        file = self.dreamer.dream_from_url(picture_url=url, server=True)
+        file = self.dreamer.dream_from_url(picture_url=url)
         result_dict = self.dreamer.result
         return result_dict
 
@@ -108,7 +108,8 @@ class DreamBotSkill(MycroftSkill):
     def handle_pure_dream_intent(self, message):
         self.speak("dreaming on my own art")
         pictures = psy_art(path=dirname(__file__), name="dream_seed", numPics=3)
-        file = self.dreamer.dream_from_file(picture_path=random.choice(pictures), server=True)
+        file = self.dreamer.dream_from_file(
+            picture_path=random.choice(pictures))
         result_dict = self.dreamer.result
         return result_dict
 
