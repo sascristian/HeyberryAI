@@ -38,7 +38,7 @@ class DreamBotSkill(MycroftSkill):
 
     def initialize(self):
         # start dreamer
-        self.dreamer = DeepDreamQuery(self.emitter)
+        self.dreamer = DeepDreamQuery(self.name, self.emitter)
         # register intents
         intent = IntentBuilder("DreamBotIntent").require("DreamBotKeyword") \
             .optionally("url").build()

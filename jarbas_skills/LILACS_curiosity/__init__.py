@@ -49,7 +49,7 @@ class LILACSCuriositySkill(MycroftSkill):
     def initialize(self):
         # register intents
         self.parser = LILACSQuestionParser()
-        self.service = KnowledgeQuery(self.emitter)
+        self.service = KnowledgeQuery(self.name, self.emitter)
         self.build_intents()
 
         timer_thread = Timer(60, self.make_active)

@@ -451,10 +451,13 @@ class DreamService(MycroftSkill):
         self.t_input = None
         self.iter = self.config.get("iter_num", 40) #dreaming iterations
 
-        self.outputdir = self.config_core.get("database_path", dirname( __file__)) + \
-                         "/dreams/"
+        self.outputdir = self.config_core.get("database_path",
+                                              dirname(__file__))
 
-        # check if folders exist
+        # check if folders
+        if not os.path.exists(self.outputdir):
+            os.makedirs(self.outputdir)
+        self.outputdir += "/dreams/"
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
 

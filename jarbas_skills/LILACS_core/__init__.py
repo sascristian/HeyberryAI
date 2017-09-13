@@ -79,7 +79,7 @@ class LilacsCoreSkill(FallbackSkill):
         self.emitter.on("LILACS_feedback", self.feedback)
 
         self.parser = LILACSQuestionParser()
-        self.service = KnowledgeQuery(self.emitter)
+        self.service = KnowledgeQuery(self.name, self.emitter)
         self.build_intents()
 
         self.connector = ConceptConnector(emitter=self.emitter)
