@@ -68,11 +68,12 @@ class MyClientProtocol(WebSocketClientProtocol):
                 self.factory.aes_iv = base64.b64decode(self.factory.aes_iv)
                 # restore destinatary context
                 try:
-                    target, sock = message.context.get("destinatary").split(
+                    target, sock = deserialized_message.context.get(
+                        "destinatary").split(
                         ":")
                 except:
                     target = "all"
-                message.context["destinatary"] = target
+                deserialized_message.context["destinatary"] = target
                 # validate server message and emit to internal bus
                 if (self.factory.message_policy and deserialized_message.type not in self.factory.message_list) or (not self.factory.message_policy and deserialized_message.type in self.factory.message_list):
 
