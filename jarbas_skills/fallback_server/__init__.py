@@ -31,7 +31,7 @@ class ServerFallback(FallbackSkill):
 
     def initialize(self):
         self.register_fallback(self.handle_fallback, 50)
-        self.server = ServerFallbackQuery(self.emitter)
+        self.server = ServerFallbackQuery(self.name, self.emitter)
 
     def handle_fallback(self, message):
         return self.server.get_padatious_response(message.data)
