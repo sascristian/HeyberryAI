@@ -392,7 +392,7 @@ class WatchSkills(Thread):
                         else:
                             ws.emit(Message("skill.loaded.fail",
                                             {"skill": skill["id"]}))
-                            skill["shutdown"] = True
+                            skill["do_not_load"] = True
                     loaded_skills[skill_folder] = skill
 
             # get the last modified skill
