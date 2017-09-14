@@ -570,12 +570,11 @@ class DreamService(MycroftSkill):
             if categorie in self.layer_nicknames.keys():
                 layer, channel = self.layer_nicknames[categorie]
         result = None
-        link = None
         start = time.time()
         if channel == 888:
             channel = random.randint(1, 500)
         if source is None:
-            self.log.error("No dream source")
+            self.log.error("No dream seed")
         # elif guide is not None:
         #    result = self.guided_dream(source, guide, name, iter)
         else:
@@ -585,6 +584,9 @@ class DreamService(MycroftSkill):
                 self.log.error(str(e))
         elapsed_time = time.time() - start
         layer = random.choice(self.layers)
+        message.data = {"dream_url": None, "file": None, "elapsed_time":
+            elapsed_time, "layer": layer, "channel": channel,
+                        "iter_num": iter}
         if result is not None:
             data = self.client.upload_from_path(result)
             link = data["link"]
@@ -593,13 +595,13 @@ class DreamService(MycroftSkill):
                                  "elapsed_time": elapsed_time})
             self.display_service.display([result], utterance=message.data.get(
                 "utterance"))
+            message.data = {"dream_url": link, "file": result, "elapsed_time":
+                elapsed_time, "layer": layer, "channel": channel,
+                            "iter_num": iter}
+
         else:
             self.speak("I could not dream this time")
-            return
 
-        message.data = {"dream_url": link, "file": result, "elapsed_time":
-            elapsed_time, "layer": layer, "channel": channel,
-                        "iter_num": iter}
         self.responder.update_response_data(message.data,
                                             self.message_context)
         self.handle_tweet_dream(Message("tweet.dream", message.data,
@@ -651,7 +653,7 @@ class DreamService(MycroftSkill):
                                     octave_n=self.octave_value,
                                     octave_scale=self.octave_scale_value)
             except Exception as e:
-                self.speak("dream failed, retrying")
+                self.speak("dreaming with this layer failed, retrying")
                 self.log.error(str(e))
                 # bad layer, cant dream # TODO make list accurate
                 self.layers.remove(layer)
