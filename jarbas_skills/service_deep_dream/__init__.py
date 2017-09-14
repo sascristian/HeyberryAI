@@ -595,11 +595,13 @@ class DreamService(MycroftSkill):
                 "utterance"))
         else:
             self.speak("I could not dream this time")
+            return
 
         message.data = {"dream_url": link, "file": result, "elapsed_time":
             elapsed_time, "layer": layer, "channel": channel,
                         "iter_num": iter}
-        self.responder.update_response_data(message.data, message.context)
+        self.responder.update_response_data(message.data,
+                                            self.message_context)
         self.handle_tweet_dream(Message("tweet.dream", message.data,
                                         message.context))
 
@@ -638,15 +640,18 @@ class DreamService(MycroftSkill):
         image = None
         if not channel:
             channel = self.channel_value
-        self.speak("Using layer: " + layer + " and channel: " + str(channel),
-                   metadata={"channel": channel, "layer": layer})
+
         while image is None:
             try:
+                self.speak(
+                    "Using layer: " + layer + " and channel: " + str(channel),
+                    metadata={"channel": channel, "layer": layer})
                 image = self.render(dreampic, layer=layer, channel=channel,
                                     iter_n=iter, step=self.step_size,
                                     octave_n=self.octave_value,
                                     octave_scale=self.octave_scale_value)
             except Exception as e:
+                self.speak("dream failed, retrying")
                 self.log.error(str(e))
                 # bad layer, cant dream # TODO make list accurate
                 self.layers.remove(layer)
