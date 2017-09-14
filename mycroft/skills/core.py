@@ -820,9 +820,7 @@ class FallbackSkill(MycroftSkill):
             skill_folder = self._dir
         except:
             skill_folder = dirname(__file__)  # skill
-        context_update_handler = self.handle_update_message_context
-        self._register_fallback(handler, priority, skill_folder,
-                                context_update_handler)
+        self._register_fallback(handler, priority, skill_folder)
 
     @classmethod
     def remove_fallback(cls, handler_to_del):
