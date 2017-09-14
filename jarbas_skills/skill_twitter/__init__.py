@@ -102,7 +102,7 @@ class TwitterSkill(MycroftSkill):
         self.register_intent(post_btc_tweet_intent, self.handle_tweet_btc)
 
         # external tweet requests"
-        self.emitter.on("tweet_request", self.handle_tweet_request)
+        self.emitter.on("tweet.request", self.handle_tweet_request)
 
     # The "handle_xxxx_intent" functions define Mycroft's behavior when
     # each of the skill's intents is triggered: in this case, he simply
