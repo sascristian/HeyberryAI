@@ -513,7 +513,7 @@ class DreamService(MycroftSkill):
             "I dream therefore I am ",
             "Dreams Dreams Dreams",
             "LOOK! a dreaming robot",
-            "If life gives you electric lemons, dream about it"
+            "If life gives you electric lemons, dream about it",
             "I have more dreams than money",
             "Wouldn't it be nice if you could share your dreams?"]
 
@@ -598,14 +598,14 @@ class DreamService(MycroftSkill):
             message.data = {"dream_url": link, "file": result, "elapsed_time":
                 elapsed_time, "layer": layer, "channel": channel,
                             "iter_num": iter}
+            self.handle_tweet_dream(Message("tweet.dream", message.data,
+                                            message.context))
 
         else:
             self.speak("I could not dream this time")
 
         self.responder.update_response_data(message.data,
                                             self.message_context)
-        self.handle_tweet_dream(Message("tweet.dream", message.data,
-                                        message.context))
 
     #### dreaming functions
     def dream(self, imagepah, name=None, iter=25, layer=None, channel=None):
