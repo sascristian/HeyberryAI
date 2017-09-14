@@ -22,6 +22,7 @@ from PIL import Image
 from jarbas_utils.skill_tools import DeepDreamQuery as DD
 from jarbas_utils.skill_dev_tools import ResponderBackend
 from mycroft.skills.displayservice import DisplayService
+from mycroft.messagebus.message import Message
 
 __author__ = 'jarbas'
 
@@ -462,6 +463,7 @@ class DreamService(MycroftSkill):
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
 
+        self.auto_tweet = True
         # check if model exists, if not download!
         # self.maybe_download_and_extract()
         # helper resize function using TF
@@ -497,6 +499,37 @@ class DreamService(MycroftSkill):
         self.responder = ResponderBackend(self.name, self.emitter, self.log)
         self.responder.set_response_handler("deep.dream.request",
                                             self.handle_dream_response)
+
+    def handle_tweet_dream(self, message):
+        if not self.auto_tweet:
+            return
+        tweet_pic_url = message.data.get("dream_url")
+        layer = message.data.get("layer")
+        possible_tweets = [
+            "Ever meet a dreaming robot before?",
+            "I AM THE ROBO-DREAMER",
+            "Artificial Dreaming, deal with it",
+            "Dreaming does not involve electric sheep",
+            "I dream therefore I am ",
+            "Dreams Dreams Dreams",
+            "LOOK! a dreaming robot",
+            "If life gives you electric lemons, dream about it"
+            "I have more dreams than money",
+            "Wouldn't it be nice if you could share your dreams?"]
+
+        tweet_text = random.choice(possible_tweets) + " #DeepDream"
+        if layer is not None:
+            tweet_text += " #" + str(layer)
+        if "#JarbasAI" not in tweet_text:
+            tweet_text += " #JarbasAI"
+        if "#MycroftAI" not in tweet_text:
+            tweet_text += " #MycroftAI"
+        msg = Message("tweet.request", {}, message.context)
+        msg.data["tweet_type"] = "remote_image"
+        msg.data["tweet_pic"] = tweet_pic_url
+        msg.data["tweet_text"] = tweet_text
+
+        self.emitter.emit(msg)
 
     def handle_dream_intent(self, message):
         search = message.data.get("TargetKeyword")
@@ -567,6 +600,8 @@ class DreamService(MycroftSkill):
             elapsed_time, "layer": layer, "channel": channel,
                         "iter_num": iter}
         self.responder.update_response_data(message.data, message.context)
+        self.handle_tweet_dream(Message("tweet.dream", message.data,
+                                        message.context))
 
     #### dreaming functions
     def dream(self, imagepah, name=None, iter=25, layer=None, channel=None):
