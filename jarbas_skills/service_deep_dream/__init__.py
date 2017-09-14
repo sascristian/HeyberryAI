@@ -498,12 +498,12 @@ class DreamService(MycroftSkill):
 
         self.responder = ResponderBackend(self.name, self.emitter, self.log)
         self.responder.set_response_handler("deep.dream.request",
-                                            self.handle_dream_response)
+                                            self.handle_dream_request)
 
     def handle_tweet_dream(self, message):
         if not self.auto_tweet:
             return
-        tweet_pic_url = message.data.get("dream_url")
+        tweet_pic_url = message.data.get("url")
         layer = message.data.get("layer")
         possible_tweets = [
             "Ever meet a dreaming robot before?",
@@ -551,7 +551,7 @@ class DreamService(MycroftSkill):
         dreamer.dream_from_file(filepath, categorie=cat,
                                 context=message.context)
 
-    def handle_dream_response(self, message):
+    def handle_dream_request(self, message):
         # TODO dreaming queue, no multiple dreams at once,
         # TODO get all params from message
         self.log.info("Dream request received")
@@ -584,7 +584,7 @@ class DreamService(MycroftSkill):
                 self.log.error(str(e))
         elapsed_time = time.time() - start
         layer = random.choice(self.layers)
-        message.data = {"dream_url": None, "file": None, "elapsed_time":
+        message.data = {"url": None, "file": None, "elapsed_time":
             elapsed_time, "layer": layer, "channel": channel,
                         "iter_num": iter}
         if result is not None:
@@ -595,7 +595,7 @@ class DreamService(MycroftSkill):
                                  "elapsed_time": elapsed_time})
             self.display_service.display([result], utterance=message.data.get(
                 "utterance"))
-            message.data = {"dream_url": link, "file": result, "elapsed_time":
+            message.data = {"url": link, "file": result, "elapsed_time":
                 elapsed_time, "layer": layer, "channel": channel,
                             "iter_num": iter}
             self.handle_tweet_dream(Message("tweet.dream", message.data,

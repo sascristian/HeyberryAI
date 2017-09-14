@@ -106,7 +106,7 @@ class ObjectRecognitionSkill(MycroftSkill):
 
     def handle_view_objects_intent(self, message):
         self.speak('Testing object recognition')
-        objrecog = ObjectRecognitionQuery(self.name, self.emitter, timeout=30)
+        objrecog = ObjectRecognitionQuery(timeout=30)
         path = message.data.get("PicturePath", dirname(__file__) + "/test.jpg")
         result = objrecog.recognize_objects(path)
         labels = result.get("labels", {})
@@ -120,7 +120,7 @@ class ObjectRecognitionSkill(MycroftSkill):
 
     def handle_recognition_request(self, message):
         if message.context is not None:
-            self.message_context.update(message.context)
+            self.handle_update_message_context(message)
         file = message.data.get("file", message.data.get("PicturePath", dirname(__file__) + "/test.jpg"))
         if file:
             self.set_context("PicturePath", file)
