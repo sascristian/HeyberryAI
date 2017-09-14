@@ -38,6 +38,12 @@ __author__ = 'btotharye'
 # statements will show up in the command line when running Mycroft.
 LOGGER = getLogger(__name__)
 
+# disable the damn logs
+import logging
+
+logging.getLogger("requests_oauthlib.oauth1_auth").setLevel(logging.WARNING)
+logging.getLogger("oauthlib.oauth1.rfc5849").setLevel(logging.WARNING)
+
 
 class TwitterAPI(object):
     def __init__(self, consumer_key, consumer_secret, access_token, access_secret, user):
