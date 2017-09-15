@@ -245,6 +245,9 @@ class RecognizerLoop(EventEmitter):
         hot_words = self.config_core.get("hot_words", {})
         for word in hot_words:
             data = hot_words[word]
+            if word == self.wakeup_recognizer.key_phrase or word == \
+                    self.wakeword_recognizer.key_phrase:
+                continue
             if not data.get("active", True):
                 continue
             type = data["module"]
