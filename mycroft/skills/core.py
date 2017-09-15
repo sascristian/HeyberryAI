@@ -552,6 +552,7 @@ class FallbackSkill(MycroftSkill):
         number of fallback handlers to be called in an order determined
         by their priority.
     """
+    skills_config = ConfigurationManager.instance().get("skills")
     fallback_handlers = {}
     folders = {}
     override = skills_config.get("fallback_override", False)
