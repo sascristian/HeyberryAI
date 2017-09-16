@@ -81,6 +81,13 @@ def handle_utterance(event):
     ws.emit(Message('recognizer_loop:utterance', event, {"source": "speech"}))
 
 
+def handle_speak(event):
+    """
+        Forward speak message to message bus.
+    """
+    ws.emit(Message('speak', event))
+
+
 def handle_complete_intent_failure(event):
     logger.info("Failed to find intent.")
     # TODO: Localize
@@ -98,13 +105,11 @@ def handle_wake_up(event):
 
 
 def handle_mic_mute(event):
-    if not loop.is_muted():
-        loop.mute()
+    loop.mute()
 
 
 def handle_mic_unmute(event):
-    if loop.is_muted():
-        loop.unmute()
+    loop.unmute()
 
 
 def handle_stop(event):
@@ -117,12 +122,25 @@ def handle_paired(event):
 
 
 def handle_audio_start(event):
-    if not loop.is_muted():
-        loop.mute()  # only mute if necessary
+    """
+        Mute recognizer loop
+    """
+    loop.mute()
 
 
 def handle_audio_end(event):
+    """
+        Request unmute, if more sources has requested the mic to be muted
+        it will remain muted.
+    """
     loop.unmute()  # restore
+
+
+def handle_stop(event):
+    """
+        Handler for mycroft.stop, i.e. button press
+    """
+    loop.force_unmute()
 
 
 def handle_open():
@@ -145,6 +163,7 @@ def main():
     ConfigurationManager.init(ws)
     loop = RecognizerLoop()
     loop.on('recognizer_loop:utterance', handle_utterance)
+    loop.on('speak', handle_speak)
     loop.on('recognizer_loop:record_begin', handle_record_begin)
     loop.on('recognizer_loop:wakeword', handle_wakeword)
     loop.on('recognizer_loop:hotword', handle_hotword)
@@ -164,6 +183,7 @@ def main():
     ws.on("mycroft.paired", handle_paired)
     ws.on('recognizer_loop:audio_output_start', handle_audio_start)
     ws.on('recognizer_loop:audio_output_end', handle_audio_end)
+    ws.on('mycroft.stop', handle_stop)
     event_thread = Thread(target=connect)
     event_thread.setDaemon(True)
     event_thread.start()

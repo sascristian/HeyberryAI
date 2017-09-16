@@ -51,7 +51,6 @@ def handle_speak(event):
     mute = event.data.get("mute", False)
     # Mild abuse of the signal system to allow other processes to detect
     # when TTS is happening.  See mycroft.util.is_speaking()
-    create_signal("isSpeaking")
 
     if expect_response:
         ws.once('recognizer_loop:audio_output_end', _trigger_expect_response)
@@ -83,9 +82,6 @@ def handle_speak(event):
                     break
         else:
             mute_and_speak(utterance)
-
-    # This check will clear the "signal"
-    check_for_signal("isSpeaking")
 
 
 def mute_and_speak(utterance):

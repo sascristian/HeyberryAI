@@ -168,6 +168,16 @@ class EnclosureReader(Thread):
             self.ws.emit(Message("speak", {
                 'utterance': mycroft.dialog.get("ssh disabled")}))
 
+        if "unit.enable-learning" in data or "unit.disable-learning" in data:
+            enable = 'enable' in data
+            word = 'enabled' if enable else 'disabled'
+
+            LOG.info("Setting wake word upload to: " + word)
+            new_config = {'listener': {'wake_word_upload': {'enable': enable}}}
+            ConfigurationManager.save(new_config)
+            self.ws.emit(Message("speak", {
+                'utterance': mycroft.dialog.get("learning " + word)}))
+
     def stop(self):
         self.alive = False
 
@@ -360,6 +370,13 @@ class Enclosure(object):
             self.serial.close()
             self.ws.close()
 
+    def _handle_pairing_complete(self, Message):
+        """
+            Handler for 'mycroft.paired', unmutes the mic after the pairing is
+            complete.
+        """
+        self.ws.emit(Message("mycroft.mic.unmute"))
+
     def _do_net_check(self):
         # TODO: This should live in the derived Enclosure, e.g. Enclosure_Mark1
         LOG.info("Checking internet connection")
@@ -380,7 +397,10 @@ class Enclosure(object):
                 # TODO: Enclosure/localization
 
                 # Don't listen to mic during this out-of-box experience
-                self.ws.emit(Message("mycroft.mic.mute", None))
+                self.ws.emit(Message("mycroft.mic.mute"))
+                # Setup handler to unmute mic at the end of on boarding
+                # i.e. after pairing is complete
+                self.ws.once('mycroft.paired', self._handle_pairing_complete)
 
                 # Kick off wifi-setup automatically
                 self.ws.emit(Message("mycroft.wifi.start",

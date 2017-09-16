@@ -52,8 +52,6 @@ if config_dir == "default":
 else:
     SKILLS_DIR = config_dir
 
-BLACKLISTED_SKILLS = skills_config.get("blacklisted_skills", {})
-
 MainModule = '__init__'
 
 logger = getLogger(__name__)
@@ -124,7 +122,7 @@ def open_intent_envelope(message):
                   intent_dict.get('optional'))
 
 
-def load_skill(skill_descriptor, emitter, skill_id):
+def load_skill(skill_descriptor, emitter, skill_id, BLACKLISTED_SKILLS=None):
     """
         load skill from skill descriptor.
 
@@ -133,7 +131,7 @@ def load_skill(skill_descriptor, emitter, skill_id):
             emitter:          messagebus emitter
             skill_id:         id number for skill
     """
-
+    BLACKLISTED_SKILLS = BLACKLISTED_SKILLS or []
     try:
         logger.info("ATTEMPTING TO LOAD SKILL: " + skill_descriptor["name"] +
                     " with ID " + str(skill_id))
@@ -198,20 +196,25 @@ def create_skill_descriptor(skill_folder):
     return {"name": basename(skill_folder), "info": info}
 
 
-def load_skills(emitter, skills_root=SKILLS_DIR):
-    logger.info("Checking " + skills_root + " for new skills")
-    skill_list = []
-    for skill in get_skills(skills_root):
-        skill_list.append(load_skill(skill, emitter))
+def get_handler_name(handler):
+    """
+        Return name (including class if available) of handler
+        function.
 
-    return skill_list
+        Args:
+            handler (function): Function to be named
+
+        Returns: handler name as string
+    """
+    name = ''
+    if '__self__' in dir(handler) and \
+            'name' in dir(handler.__self__):
+        name += handler.__self__.name + '.'
+    name += handler.__name__
+    return name
 
 
-def unload_skills(skills):
-    for s in skills:
-        s.shutdown()
-
-
+# Lists used when adding skill handlers using decorators
 _intent_list = []
 _intent_file_list = []
 
@@ -404,9 +407,10 @@ class MycroftSkill(object):
 
         def wrapper(message):
             try:
-                self.emitter.emit(Message("intent.execution.start",
-                                          {"status": "start",
-                                           "intent": name}))
+                # Indicate that the skill handler is starting
+                name = get_handler_name(handler)
+                self.emitter.emit(Message("mycroft.skill.handler.start",
+                                          data={'handler': name}))
                 if need_self:
                     # When registring from decorator self is required
                     if len(getargspec(handler).args) == 2:
@@ -431,13 +435,13 @@ class MycroftSkill(object):
                 logger.error(
                     "An error occurred while processing a request in " +
                     self.name, exc_info=True)
-                self.emitter.emit(Message("intent.execution.error",
-                                          {"status": "failed", "intent": name,
-                                           "exception": str(e)}))
-                return
-            self.emitter.emit(Message("intent.execution.end",
-                                      {"status": "executed", "intent": name}))
-
+                # indicate completion with exception
+                self.emitter.emit(Message('mycroft.skill.handler.complete',
+                                          data={'handler': name,
+                                                'exception': e.message}))
+            # Indicate that the skill handler has completed
+            self.emitter.emit(Message('mycroft.skill.handler.complete',
+                                      data={'handler': name}))
         if handler:
             self.emitter.on(name, self.handle_update_message_context)
             self.emitter.on(name, wrapper)
@@ -694,6 +698,80 @@ class MycroftSkill(object):
         except:
             logger.error("Failed to stop skill: {}".format(self.name),
                          exc_info=True)
+
+    def _schedule_event(self, handler, when, data=None, name=None,
+                        repeat=None):
+        """
+            Underlying method for schedle_event and schedule_repeating_event.
+            Takes scheduling information and sends it of on the message bus.
+        """
+        data = data or {}
+        if not name:
+            name = self.name + handler.__name__
+        name = str(self.skill_id) + ':' + name
+        self.add_event(name, handler, False)
+        event_data = {}
+        event_data['time'] = time.mktime(when.timetuple())
+        event_data['event'] = name
+        event_data['repeat'] = repeat
+        event_data['data'] = data
+        self.emitter.emit(Message('mycroft.scheduler.schedule_event',
+                                  data=event_data))
+
+    def schedule_event(self, handler, when, data=None, name=None):
+        """
+            Schedule a single event.
+
+            Args:
+                handler:               method to be called
+                when (datetime):       when the handler should be called
+                data (dict, optional): data to send when the handler is called
+                name (str, optional):  friendly name parameter
+        """
+        data = data or {}
+        self._schedule_event(handler, when, data, name)
+
+    def schedule_repeating_event(self, handler, when, frequency,
+                                 data=None, name=None):
+        """
+            Schedule a repeating event.
+
+            Args:
+                handler:                method to be called
+                when (datetime):        time for calling the handler
+                frequency (float/int):  time in seconds between calls
+                data (dict, optional):  data to send along to the handler
+                name (str, optional):   friendly name parameter
+        """
+        data = data or {}
+        self._schedule_event(handler, when, data, name, frequency)
+
+    def update_event(self, name, data=None):
+        """
+            Change data of event.
+
+            Args:
+                name (str):   Name of event
+        """
+        data = data or {}
+        data = {
+            'event': name,
+            'data': data
+        }
+        self.emitter.emit(Message('mycroft.schedule.update_event',
+                                  data=data))
+
+    def cancel_event(self, name):
+        """
+            Cancel a pending event. The event will no longer be scheduled
+            to be executed
+
+            Args:
+                name (str):   Name of event
+        """
+        data = {'event': name}
+        self.emitter.emit(Message('mycroft.scheduler.remove_event',
+                                  data=data))
 
 
 class FallbackSkill(MycroftSkill):

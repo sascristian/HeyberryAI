@@ -18,12 +18,18 @@
 
 import collections
 import datetime
+from tempfile import gettempdir
+from threading import Thread, Lock
+
 import os
-from time import sleep
+from time import sleep, time as get_time
 import audioop
 
 import pyaudio
 import speech_recognition
+from os import mkdir
+from os.path import isdir, join, expanduser, isfile
+import shutil
 from speech_recognition import (
     Microphone,
     AudioSource,
@@ -31,6 +37,7 @@ from speech_recognition import (
 )
 
 from mycroft.configuration import ConfigurationManager
+from mycroft.session import SessionManager
 from mycroft.util import (
     check_for_signal,
     get_ipc_directory,
@@ -39,8 +46,6 @@ from mycroft.util import (
 )
 from mycroft.util.log import getLogger
 
-config = ConfigurationManager.instance()
-listener_config = config.get('listener')
 logger = getLogger(__name__)
 __author__ = 'seanfitz'
 
@@ -50,6 +55,7 @@ class MutableStream(object):
         assert wrapped_stream is not None
         self.wrapped_stream = wrapped_stream
         self.muted = muted
+
         self.SAMPLE_WIDTH = pyaudio.get_sample_size(format)
         self.muted_buffer = b''.join([b'\x00' * self.SAMPLE_WIDTH])
 
@@ -91,11 +97,14 @@ class MutableStream(object):
 
 
 class MutableMicrophone(Microphone):
-    def __init__(self, device_index=None, sample_rate=16000, chunk_size=1024):
+    def __init__(self, device_index=None, sample_rate=16000, chunk_size=1024,
+                 mute=False):
         Microphone.__init__(
             self, device_index=device_index, sample_rate=sample_rate,
             chunk_size=chunk_size)
         self.muted = False
+        if mute:
+            self.mute()
 
     def __enter__(self):
         assert self.stream is None, \
@@ -154,13 +163,20 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
     SEC_BETWEEN_WW_CHECKS = 0.2
 
     def __init__(self, wake_word_recognizer, hot_word_engines=None):
+        self.config = ConfigurationManager.instance()
+        listener_config = self.config.get('listener')
+        self.upload_config = listener_config.get('wake_word_upload')
+        self.wake_word_name = listener_config['wake_word']
         # The maximum audio in seconds to keep for transcribing a phrase
         # The wake word must fit in this time
         if hot_word_engines is None:
             hot_word_engines = {}
         num_phonemes = wake_word_recognizer.num_phonemes
         len_phoneme = listener_config.get('phoneme_duration', 120) / 1000.0
-        self.SAVED_WW_SEC = num_phonemes * len_phoneme
+        self.TEST_WW_SEC = int(num_phonemes * len_phoneme)
+        self.SAVED_WW_SEC = (10 if self.upload_config['enable']
+                             else self.TEST_WW_SEC)
+
         speech_recognition.Recognizer.__init__(self)
         self.wake_word_recognizer = wake_word_recognizer
         self.audio = pyaudio.PyAudio()
@@ -172,6 +188,11 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         self.save_utterances = listener_config.get('record_utterances', False)
         self.wake_word_save_path = listener_config.get('wake_word_save_path')
         self.utterance_save_path = listener_config.get('utterance_save_path')
+        self.save_wake_words = listener_config.get('record_wake_words') \
+            or self.upload_config['enable']
+        self.upload_lock = Lock()
+        self.save_wake_words_dir = join(gettempdir(), 'mycroft_wake_words')
+        self.filenames_to_upload = []
         self.mic_level_file = os.path.join(get_ipc_directory(), "mic_level")
         self._stop_signaled = False
         self.hot_word_engines = hot_word_engines
@@ -303,6 +324,36 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         """
         self._stop_signaled = True
 
+    def _upload_file(self, filename):
+        server = self.upload_config['server']
+        keyfile = resolve_resource_file('wakeword_rsa')
+        userfile = expanduser('~/.mycroft/wakeword_rsa')
+
+        if not isfile(userfile):
+            shutil.copy2(keyfile, userfile)
+            os.chmod(userfile, 0o600)
+            keyfile = userfile
+
+        address = self.upload_config['user'] + '@' + \
+            server + ':' + self.upload_config['folder']
+
+        self.upload_lock.acquire()
+        try:
+            self.filenames_to_upload.append(filename)
+            for i, fn in enumerate(self.filenames_to_upload):
+                logger.debug('Uploading ' + fn + '...')
+                os.chmod(fn, 0o666)
+                cmd = 'scp -o StrictHostKeyChecking=no -P ' + \
+                      str(self.upload_config['port']) + ' -i ' + \
+                      keyfile + ' ' + fn + ' ' + address
+                if os.system(cmd) == 0:
+                    del self.filenames_to_upload[i]
+                    os.remove(fn)
+                else:
+                    logger.debug('Could not upload ' + fn + ' to ' + server)
+        finally:
+            self.upload_lock.release()
+
     def _wait_until_wake_word(self, source, sec_per_buffer, emitter):
         """Listen continuously on source until a wake word is spoken
 
@@ -323,6 +374,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
 
         # Max bytes for byte_data before audio is removed from the front
         max_size = self.sec_to_bytes(self.SAVED_WW_SEC, source)
+        test_size = self.sec_to_bytes(self.TEST_WW_SEC, source)
 
         said_wake_word = False
 
@@ -381,19 +433,30 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
             buffers_since_check += 1.0
             if buffers_since_check > buffers_per_check:
                 buffers_since_check -= buffers_per_check
-                audio_data = byte_data + silence
-                said_wake_word = self.wake_word_recognizer.found_wake_word(audio_data)
-                # if a wake word is success full then record audio in temp file.
+                chopped = byte_data[-test_size:] \
+                    if test_size < len(byte_data) else byte_data
+                audio_data = chopped + silence
+                said_wake_word = \
+                    self.wake_word_recognizer.found_wake_word(audio_data)
+                # if a wake word is success full then record audio in temp
+                # file.
                 if self.save_wake_words and said_wake_word:
                     logger.info("Recording wakeword")
                     audio = self._create_audio_data(audio_data, source)
-                    stamp = str(datetime.datetime.now())
-                    if self.wake_word_save_path:
-                        filename = self.wake_word_save_path + "/mycroft_wake_success%s.wav" % stamp
-                    else:
-                        filename = "/tmp/mycroft_wake_word%s.wav" % stamp
+                    stamp = str(int(1000 * get_time()))
+                    uid = SessionManager.get().session_id
+                    if not isdir(self.wake_word_save_path):
+                        mkdir(self.wake_word_save_path)
+                    dr = self.wake_word_save_path
+                    ww = self.wake_word_name.replace(' ', '-')
+                    filename = join(dr, ww + '.' + stamp + '.' + uid + '.wav')
+
                     with open(filename, 'wb') as filea:
                         filea.write(audio.get_wav_data())
+                    if self.upload_config['enable']:
+                        t = Thread(target=self._upload_file, args=(filename,))
+                        t.daemon = True
+                        t.start()
 
                 if not said_wake_word and self.check_for_hotwords(audio_data, emitter):
                     said_wake_word = True
@@ -411,9 +474,9 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 elif said_wake_word:
                     # If enabled, play a wave file with a short sound to audibly
                     # indicate recording has begun.
-                    if config.get('confirm_listening'):
+                    if self.config.get('confirm_listening'):
                         file = resolve_resource_file(
-                            config.get('sounds').get('start_listening'))
+                            self.config.get('sounds').get('start_listening'))
                         if file:
                             play_wav(file)
 
