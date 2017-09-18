@@ -57,9 +57,6 @@ cd ${TOP}
 easy_install pip
 pip install --upgrade virtualenv
 
-# fixed tzwhere
-pip install git+https://github.com/seahawk1986/pytzwhere.git@fix_install
-
 # install other requirements
 if ! pip install -r requirements.txt; then
     echo "Warning: Failed to install all requirements. Continue? y/N"

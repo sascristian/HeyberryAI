@@ -85,8 +85,6 @@ pip install --upgrade virtualenv
 
 # tensorflow from binary
 # pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
-# fixed tzwhere
-# pip install git+https://github.com/seahawk1986/pytzwhere.git@fix_install
 
 # install other requirements
 if ! pip install -r requirements_light.txt; then
