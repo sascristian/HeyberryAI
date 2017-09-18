@@ -173,7 +173,8 @@ class EnclosureReader(Thread):
             word = 'enabled' if enable else 'disabled'
 
             LOG.info("Setting wake word upload to: " + word)
-            new_config = {'listener': {'wake_word_upload': {'enable': enable}}}
+            new_config = {
+                'listener': {'wake_word_upload': {'enable': enable}}}
             ConfigurationManager.save(new_config)
             self.ws.emit(Message("speak", {
                 'utterance': mycroft.dialog.get("learning " + word)}))

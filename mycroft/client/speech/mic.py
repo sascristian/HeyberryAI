@@ -189,7 +189,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         self.wake_word_save_path = listener_config.get('wake_word_save_path')
         self.utterance_save_path = listener_config.get('utterance_save_path')
         self.save_wake_words = listener_config.get('record_wake_words') \
-            or self.upload_config['enable']
+                               or self.upload_config['enable']
         self.upload_lock = Lock()
         self.save_wake_words_dir = join(gettempdir(), 'mycroft_wake_words')
         self.filenames_to_upload = []
@@ -335,7 +335,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
             keyfile = userfile
 
         address = self.upload_config['user'] + '@' + \
-            server + ':' + self.upload_config['folder']
+                  server + ':' + self.upload_config['folder']
 
         self.upload_lock.acquire()
         try:

@@ -208,7 +208,7 @@ def get_handler_name(handler):
     """
     name = ''
     if '__self__' in dir(handler) and \
-            'name' in dir(handler.__self__):
+                    'name' in dir(handler.__self__):
         name += handler.__self__.name + '.'
     name += handler.__name__
     return name

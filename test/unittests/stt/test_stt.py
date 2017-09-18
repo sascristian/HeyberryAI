@@ -10,13 +10,13 @@ class TestSTT(unittest.TestCase):
         mycroft.stt.STTApi = mock.MagicMock()
 
         config = {'stt': {
-                 'module': 'mycroft',
-                 'wit': {'credential': {'token': 'FOOBAR'}},
-                 'google': {'credential': {'token': 'FOOBAR'}},
-                 'ibm': {'credential': {'token': 'FOOBAR'}},
-                 'kaldi': {'uri': 'https://test.com'},
-                 'mycroft': {'uri': 'https://test.com'}
-            },
+            'module': 'mycroft',
+            'wit': {'credential': {'token': 'FOOBAR'}},
+            'google': {'credential': {'token': 'FOOBAR'}},
+            'ibm': {'credential': {'token': 'FOOBAR'}},
+            'kaldi': {'uri': 'https://test.com'},
+            'mycroft': {'uri': 'https://test.com'}
+        },
             'lang': 'en-US'
         }
         mock_get.return_value = config
@@ -44,9 +44,9 @@ class TestSTT(unittest.TestCase):
     def test_stt(self, mock_get):
         mycroft.stt.STTApi = mock.MagicMock()
         config = {'stt': {
-                 'module': 'mycroft',
-                 'mycroft': {'uri': 'https://test.com'}
-            },
+            'module': 'mycroft',
+            'mycroft': {'uri': 'https://test.com'}
+        },
             'lang': 'en-US'
         }
         mock_get.return_value = config
@@ -72,9 +72,9 @@ class TestSTT(unittest.TestCase):
     def test_mycroft_stt(self, mock_get):
         mycroft.stt.STTApi = mock.MagicMock()
         config = {'stt': {
-                 'module': 'mycroft',
-                 'mycroft': {'uri': 'https://test.com'}
-            },
+            'module': 'mycroft',
+            'mycroft': {'uri': 'https://test.com'}
+        },
             'lang': 'en-US'
         }
         mock_get.return_value = config
@@ -88,9 +88,9 @@ class TestSTT(unittest.TestCase):
     def test_google_stt(self, mock_get):
         mycroft.stt.Recognizer = mock.MagicMock
         config = {'stt': {
-                 'module': 'google',
-                 'google': {'credential': {'token': 'FOOBAR'}},
-            },
+            'module': 'google',
+            'google': {'credential': {'token': 'FOOBAR'}},
+        },
             "lang": "en-US"
         }
         mock_get.return_value = config
@@ -104,9 +104,9 @@ class TestSTT(unittest.TestCase):
     def test_ibm_stt(self, mock_get):
         mycroft.stt.Recognizer = mock.MagicMock
         config = {'stt': {
-                 'module': 'ibm',
-                 'ibm': {'credential': {'token': 'FOOBAR'}},
-            },
+            'module': 'ibm',
+            'ibm': {'credential': {'token': 'FOOBAR'}},
+        },
             "lang": "en-US"
         }
         mock_get.return_value = config
@@ -120,9 +120,9 @@ class TestSTT(unittest.TestCase):
     def test_wit_stt(self, mock_get):
         mycroft.stt.Recognizer = mock.MagicMock
         config = {'stt': {
-                 'module': 'wit',
-                 'wit': {'credential': {'token': 'FOOBAR'}},
-            },
+            'module': 'wit',
+            'wit': {'credential': {'token': 'FOOBAR'}},
+        },
             "lang": "en-US"
         }
         mock_get.return_value = config
@@ -137,17 +137,17 @@ class TestSTT(unittest.TestCase):
     def test_kaldi_stt(self, mock_get, mock_post):
         mycroft.stt.Recognizer = mock.MagicMock
         config = {'stt': {
-                 'module': 'kaldi',
-                 'kaldi': {'uri': 'https://test.com'},
-            },
+            'module': 'kaldi',
+            'kaldi': {'uri': 'https://test.com'},
+        },
             "lang": "en-US"
         }
         mock_get.return_value = config
 
         kaldiResponse = mock.MagicMock()
         kaldiResponse.json.return_value = {
-                'hypotheses': [{'utterance': '     [noise]     text'},
-                               {'utterance': '     asdf'}]
+            'hypotheses': [{'utterance': '     [noise]     text'},
+                           {'utterance': '     asdf'}]
         }
         mock_post.return_value = kaldiResponse
         audio = mock.MagicMock()

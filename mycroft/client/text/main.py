@@ -472,7 +472,7 @@ def draw_screen():
     if find_str:
         scr.addstr(0, 0, "Search Results: ", CLR_HEADING)
         scr.addstr(0, 16, find_str, CLR_FIND)
-        scr.addstr(0, 16+len(find_str), " ctrl+X to end" +
+        scr.addstr(0, 16 + len(find_str), " ctrl+X to end" +
                    " " * (curses.COLS - 31 - 12 - len(find_str)) +
                    str(start) + "-" + str(end) + " of " + str(cLogs),
                    CLR_HEADING)
@@ -525,18 +525,18 @@ def draw_screen():
         y += 1
 
     # Log legend in the lower-right
-    y_log_legend = curses.LINES - (3+cy_chat_area)
+    y_log_legend = curses.LINES - (3 + cy_chat_area)
     scr.addstr(y_log_legend, curses.COLS / 2 + 2,
                make_titlebar("Log Output Legend", curses.COLS / 2 - 2),
                CLR_HEADING)
-    scr.addstr(y_log_legend+1, curses.COLS / 2 + 2,
+    scr.addstr(y_log_legend + 1, curses.COLS / 2 + 2,
                "DEBUG output",
                CLR_LOG_DEBUG)
-    scr.addstr(y_log_legend+2, curses.COLS / 2 + 2,
+    scr.addstr(y_log_legend + 2, curses.COLS / 2 + 2,
                os.path.basename(log_files[0]) + ", other",
                CLR_LOG1)
     if len(log_files) > 1:
-        scr.addstr(y_log_legend+3, curses.COLS / 2 + 2,
+        scr.addstr(y_log_legend + 3, curses.COLS / 2 + 2,
                    os.path.basename(log_files[1]), CLR_LOG2)
 
     # Meter
@@ -546,7 +546,7 @@ def draw_screen():
                    CLR_HEADING)
 
     # History log in the middle
-    y_chat_history = curses.LINES - (3+cy_chat_area)
+    y_chat_history = curses.LINES - (3 + cy_chat_area)
     chat_width = curses.COLS / 2 - 2
     chat_out = []
     scr.addstr(y_chat_history, 0, make_titlebar("History", chat_width),
@@ -571,7 +571,7 @@ def draw_screen():
         idx_chat -= 1
 
     # Output the chat
-    y = curses.LINES - (2+cy_chat_area)
+    y = curses.LINES - (2 + cy_chat_area)
     for txt in chat_out:
         if txt.startswith(">> ") or txt.startswith("   "):
             clr = CLR_CHAT_RESP
@@ -594,7 +594,7 @@ def draw_screen():
                    CLR_HEADING)
         scr.addstr(curses.LINES - 1, 0, ">", CLR_HEADING)
 
-    draw_meter(cy_chat_area+2)
+    draw_meter(cy_chat_area + 2)
     scr.addstr(curses.LINES - 1, 2, l, CLR_INPUT)
     scr.refresh()
 
@@ -632,8 +632,8 @@ def show_help():
     scr.addstr(15, 0,  ":filter [remove] 'str'  adds or removes a log filter")
     scr.addstr(16, 0,  ":filter (clear|reset)   reset filters")
     scr.addstr(17, 0,  ":filter (show|list)     display current filters")
-    scr.addstr(18, 0,  ":history (# lines)      set number of history lines")
-    scr.addstr(19, 0,  ":find 'str'             show logs containing 'str'")
+    scr.addstr(18, 0, ":history (# lines)      set number of history lines")
+    scr.addstr(19, 0, ":find 'str'             show logs containing 'str'")
 
     scr.addstr(curses.LINES - 1, 0,  center(23) + "Press any key to return",
                CLR_HEADING)

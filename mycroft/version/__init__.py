@@ -69,7 +69,7 @@ def check_version(version_string):
     elif CORE_VERSION_MAJOR == major and CORE_VERSION_MINOR > minor:
         return True
     elif major == CORE_VERSION_MAJOR and minor == CORE_VERSION_MINOR and \
-            CORE_VERSION_BUILD >= build:
+                    CORE_VERSION_BUILD >= build:
         return True
     else:
         return False

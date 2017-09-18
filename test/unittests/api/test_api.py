@@ -10,9 +10,8 @@ CONFIG = {
         'version': 'v1',
         'update': True,
         'metrics': False
-        }
     }
-
+}
 
 mycroft.api.requests.post = mock.MagicMock()
 

@@ -7,7 +7,6 @@ import time
 import json
 from os.path import isfile
 
-
 logger = getLogger(__name__)
 
 

@@ -3,7 +3,6 @@ import mock
 
 import mycroft.version
 
-
 VERSION_INFO = """
 {
     "coreVersion": "1505203453",
