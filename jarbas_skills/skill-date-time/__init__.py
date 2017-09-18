@@ -27,8 +27,7 @@ from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 import time
 from threading import Timer
-from tzwhere import tzwhere
-from geopy.geocoders import Nominatim
+from geopy import geocoders
 
 __author__ = 'ryanleesipes', 'jdorleans', 'connorpenrod', 'michaelnguyen', \
              'jarbas'
@@ -84,14 +83,9 @@ class TimeSkill(MycroftSkill):
                 return timezone(locale)
             except:
                 try:
-                    # get timezone from coordinates of OpenStreetMap Nominatim
-                    #  for this location
-                    geolocator = Nominatim()
-                    location = geolocator.geocode(locale)
-                    lat = float(location.latitude)
-                    lon = float(location.longitude)
-                    tz = tzwhere.tzwhere().tzNameAt(lat, lon)
-                    return timezone(tz)
+                    geolocator = geocoders.Nominatim()
+                    location = geolocator.geocode(locale).address
+                    return timezone(location)
                 except Exception as e:
                     self.log.error(e)
                     return None
