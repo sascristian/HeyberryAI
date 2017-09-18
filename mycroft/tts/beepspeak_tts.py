@@ -63,5 +63,3 @@ class BeepSpeakValidator(TTSValidator):
 
     def get_tts_class(self):
         return BeepSpeak
-
-

@@ -243,13 +243,11 @@ class RecognizerLoop(EventEmitter):
 
     def create_hot_word_engines(self):
         LOG.info("creating hotword engines")
-        hot_words = self.config_core.get("hot_words", {})
+        hot_words = self.config_core.get("hotwords", {})
         for word in hot_words:
             data = hot_words[word]
-            if word == self.wakeup_recognizer.key_phrase or word == \
-                    self.wakeword_recognizer.key_phrase:
-                continue
-            if not data.get("active", True):
+            if word == self.wakeup_recognizer.key_phrase or word == self.wakeword_recognizer.key_phrase or not data.get(
+                    "active", True):
                 continue
             type = data["module"]
             ding = data.get("sound")

@@ -24,6 +24,7 @@ from mycroft.skills.core import FallbackSkill
 from mycroft.util.log import getLogger
 from mycroft.skills.intent_service import IntentParser
 from adapt.intent import IntentBuilder
+from time import sleep
 
 __author__ = 'jarbas'
 
@@ -64,14 +65,16 @@ class AIMLChatbotFallback(FallbackSkill):
         self.speak(self.ask_brain(query))
 
     def handle_talk_to_yourself_intent(self, message):
-        text = random.choice["Hello", "Do you believe in god", "lets chat",
-                             "lets play a game", "are you a terminator",
-                             "are you human", "are you alive", "do you love me", "are you evil"]
-        i = 100
+        bot1 = "do you exist?"
+        i = 10
         while i>0:
-            text = self.ask_brain(text)
-            self.speak(text)
+            self.speak(bot1)
+            bot2 = self.ask_brain(bot1)
+            sleep(3)
+            self.speak(bot2)
+            bot1 = self.ask_brain(bot2)
             i -= 1
+            sleep(3)
 
     def handle_chat_start_intent(self, message):
         self.chat_mode = True

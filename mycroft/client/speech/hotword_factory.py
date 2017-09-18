@@ -34,7 +34,7 @@ class HotWordEngine(object):
         self.lang = str(lang).lower()
         self.key_phrase = str(key_phrase).lower()
         # rough estimate 1 phoneme per 2 chars
-        self.num_phonemes = len(key_phrase) / 2 + 1
+        self.num_phonemes = len(key_phrase)
         if config is None:
             config = ConfigurationManager.get().get("hotwords", {})
             config = config.get(self.key_phrase, {})

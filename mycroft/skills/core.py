@@ -410,7 +410,10 @@ class MycroftSkill(object):
                 # Indicate that the skill handler is starting
                 name = get_handler_name(handler)
                 self.emitter.emit(Message("mycroft.skill.handler.start",
-                                          data={'handler': name}))
+                                          data={'handler': name,
+                                                "intent": message.type,
+                                                "data": message.data,
+                                                "context": message.context}))
                 if need_self:
                     # When registring from decorator self is required
                     if len(getargspec(handler).args) == 2:
@@ -438,10 +441,16 @@ class MycroftSkill(object):
                 # indicate completion with exception
                 self.emitter.emit(Message('mycroft.skill.handler.complete',
                                           data={'handler': name,
-                                                'exception': e.message}))
+                                                'exception': e.message,
+                                                "intent": message.type,
+                                                "data": message.data,
+                                                "context": message.context}))
             # Indicate that the skill handler has completed
             self.emitter.emit(Message('mycroft.skill.handler.complete',
-                                      data={'handler': name}))
+                                      data={'handler': name,
+                                            "intent": message.type,
+                                            "data": message.data,
+                                            "context": message.context}))
         if handler:
             self.emitter.on(name, self.handle_update_message_context)
             self.emitter.on(name, wrapper)
