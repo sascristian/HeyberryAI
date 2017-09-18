@@ -36,7 +36,7 @@ class HotWordEngine(object):
         # rough estimate 1 phoneme per 2 chars
         self.num_phonemes = len(key_phrase) / 2 + 1
         if config is None:
-            config = ConfigurationManager.get().get("hot_words", {})
+            config = ConfigurationManager.get().get("hotwords", {})
             config = config.get(self.key_phrase, {})
         self.config = config
         self.listener_config = ConfigurationManager.get().get("listener", {})
@@ -105,22 +105,29 @@ class SnowboyHotWord(HotWordEngine):
     def __init__(self, key_phrase="hey mycroft", config=None, lang="en-us"):
         super(SnowboyHotWord, self).__init__(key_phrase, config, lang)
         # Hotword module imports
-        from snowboydecoder import HotwordDetector
+        try:
+            from snowboydecoder import HotwordDetector
+        except:
+            from mycroft.client.speech.recognizer.snowboy.snowboydecoder \
+                import HotwordDetector
         # Hotword module config
         module = self.config.get("module")
         if module != "snowboy":
             LOG.warning(module + " module does not match with Hotword class "
                                  "snowboy")
         # Hotword params
+        self.config = self.config.get("data", {})
         models = self.config.get("models", {})
         paths = []
         for key in models:
-            paths.append(models[key])
+            path = models[key]
+            if "/" not in path:
+                path = dirname(
+                    __file__) + "/recognizer/snowboy/resources/" + path
+            paths.append(path)
         sensitivity = self.config.get("sensitivity", 0.5)
         self.snowboy = HotwordDetector(paths,
                                        sensitivity=[sensitivity] * len(paths))
-        self.lang = str(lang).lower()
-        self.key_phrase = str(key_phrase).lower()
 
     def found_wake_word(self, frame_data):
         wake_word = self.snowboy.detector.RunDetection(frame_data)
