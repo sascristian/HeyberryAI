@@ -65,5 +65,3 @@ class BeepSpeakValidator(TTSValidator):
         return BeepSpeak
 
 
-tts = BeepSpeak()
-tts.execute("8")
