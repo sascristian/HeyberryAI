@@ -253,7 +253,7 @@ The KnowledgeQuery class can be imported and used from other skills as follows
 
     self.service = KnowledgeQuery()
 
-    self.service.adquire("subject", "optionally desired knowledge backend here")
+    self.service._adquire("subject", "optionally desired knowledge backend here")
 
 Depending on the kind of question LILACS will now try to retrieve information,
 for this LILACS uses a number of different sources:

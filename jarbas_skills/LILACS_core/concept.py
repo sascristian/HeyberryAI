@@ -94,8 +94,12 @@ class ConceptNode():
         return node_dict
 
     def load_from_dict(self, node_dict):
-        self.connections.update(node_dict["connections"])
-        self.data.update(node_dict.get("data", {}))
+        cons = node_dict.get("connections", {})
+        data = node_dict.get("data", {})
+        for con in cons:
+            self.connections[con] = cons[con]
+        for key in data:
+            self.data[key] = data[key]
 
     def get_parents(self):
         return self.connections["parents"]

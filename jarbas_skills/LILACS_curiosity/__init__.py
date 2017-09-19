@@ -44,7 +44,6 @@ class LILACSCuriositySkill(MycroftSkill):
         self.get_node_info = False
         self.parser = None
         self.service = None
-        self.TIMEOUT = 2
 
     def initialize(self):
         # register intents
@@ -52,22 +51,22 @@ class LILACSCuriositySkill(MycroftSkill):
         self.service = KnowledgeQuery(self.name, self.emitter)
         self.build_intents()
 
-        timer_thread = Timer(60, self.make_active)
-        timer_thread.setDaemon(True)
-        timer_thread.start()
-
     def build_intents(self):
         self.emitter.on("speak", self.handle_speak)
-
+        self.emitter.on("recognizer_loop:utterance", self.handle_utterance)
         # build intents
         deactivate_intent = IntentBuilder("DeactivateCuriosityIntent") \
             .require("deactivateCuriosityKeyword").build()
-        activate_intent=IntentBuilder("ActivateCuriosityIntent") \
+        activate_intent = IntentBuilder("ActivateCuriosityIntent") \
             .require("activateCuriosityKeyword").build()
 
         # register intents
         self.register_intent(deactivate_intent, self.handle_deactivate_intent)
         self.register_intent(activate_intent, self.handle_activate_intent)
+
+    def handle_utterance(self, message):
+        utterances = message.data.get("utterances")
+        self.curiosity(utterances[0])
 
     def handle_speak(self, message):
         utterance = message.data["utterance"]
@@ -97,56 +96,16 @@ class LILACSCuriositySkill(MycroftSkill):
         self.log.info("nodes: " + str(nodes))
         self.log.info("parents: " + str(parents))
         self.log.info("synonims: " + str(synonims))
-        # if flag get info for nodes
-        # TODO use appropriate backends fo each field
+
+        # if flag get info for nodes, these will be loaded into lilacs_core
+        #  memory
         if self.get_node_info:
             backend = "dbpedia"
             for node in nodes:
-                node_info = self.service.adquire(node, backend)
-                print node_info
+                node_dict = self.service._adquire(node, backend)
+                print node_dict
 
-        #signal core to create nodes
-        for node in nodes:
-            node_dict = {}
-            node_dict["name"] = node
-            connections = {}
-            connections["parents"] = {}
-            connections["childs"] = {}
-            connections["synonims"] = {}
-            connections["antonims"] = {}
-            node_dict["connections"] = connections
-            node_dict["data"] = {}
-
-            self.emitter.emit(Message("new_node", node_dict, self.message_context))
-        for node in parents:
-            node_dict = {}
-            node_dict["name"] = node
-            connections = {}
-            connections["parents"] = {}
-            for p in parents[node]:
-                connections["parents"][p] = 5
-            connections["childs"] = {}
-            connections["synonims"] = {}
-            connections["antonims"] = {}
-            node_dict["connections"] = connections
-            node_dict["data"] = {}
-            self.emitter.emit(Message("new_node", node_dict, self.message_context))
-        for node in synonims:
-            node_dict = {}
-            node_dict["name"] = node
-            connections = {}
-            connections["parents"] = {}
-            connections["childs"] = {}
-            connections["synonims"] = {synonims[node]: 5}
-            connections["antonims"] = {}
-            node_dict["connections"] = connections
-            node_dict["data"] = {}
-            self.emitter.emit(Message("new_node", node_dict, self.message_context))
-
-    def converse(self, utterances, lang="en-us"):
-        self.curiosity(utterances[0])
-        # tell intent skill you did not handle intent
-        return False
+        return True
 
 
 def create_skill():

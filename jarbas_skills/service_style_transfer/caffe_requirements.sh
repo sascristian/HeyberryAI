@@ -1,1 +1,0 @@
-curl "http://www.robots.ox.ac.uk/~vgg/software/very_deep/caffe/VGG_ILSVRC_16_layers.caffemodel" -o models/vgg16/VGG_ILSVRC_16_layers.caffemodel

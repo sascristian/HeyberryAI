@@ -1,4 +1,0 @@
-# Stop Skill
-
-## Usage:
-* `stop`

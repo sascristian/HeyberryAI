@@ -189,7 +189,7 @@ class KnowledgeQuery(QueryBackend):
 
     def ask_dbpedia(self, subject):
         return self.send_request("dbpedia.request",
-                                 {"TargetKeywordt": subject})
+                                 {"TargetKeyword": subject})
 
     def ask_wolfram(self, subject):
         return self.send_request("wolframalpha.request", {"TargetKeyword":

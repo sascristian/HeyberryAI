@@ -31,7 +31,9 @@ from questions import *
 from jarbas_utils.skill_tools import KnowledgeQuery
 from mycroft.util.log import getLogger
 from mycroft.skills.core import FallbackSkill
+from mycroft.skills.LILACS_fallback import LILACSFallback
 from mycroft.skills.displayservice import DisplayService
+from mycroft.messagebus.message import Message
 
 logger = getLogger("Skills")
 
@@ -74,9 +76,10 @@ class LilacsCoreSkill(FallbackSkill):
 
     def initialize(self):
         self.display_service = DisplayService(self.emitter, "LILACS")
-        self.register_fallback(self.handle_fallback, 0)
+        self.register_fallback(self.deduce_answer, 0)
         #self.emitter.on("intent_failure", self.handle_fallback)
         self.emitter.on("LILACS_feedback", self.feedback)
+        self.emitter.on("LILACS.node.update", self.handle_node_update)
 
         self.parser = LILACSQuestionParser()
         self.service = KnowledgeQuery(self.name, self.emitter)
@@ -183,6 +186,40 @@ class LilacsCoreSkill(FallbackSkill):
         self.speak_dialog("whatisLILACS")
 
     # core methods
+    def enable_fallback(self, name):
+        self.emitter.emit(Message("LILACS.fallback.enable", {"name": name},
+                                  {self.message_context}))
+
+    def disable_fallback(self, name):
+        self.emitter.emit(Message("LILACS.fallback.disable", {"name": name},
+                                  {self.message_context}))
+
+    def handle_node_update(self, message):
+        ''' update a node in connector '''
+        node_dict = message.data.get("node_dict", {})
+        node_type = node_dict.get("type", "info")
+        self.add_node(node_dict, node_type)
+
+    def add_node(self, node_dict, node_type="info", load_connections=True):
+        '''  load node and all its connections '''
+        # add node
+        node_name = node_dict["name"]
+        self.connector.add_concept(node_name, node_dict, node_type)
+        # load its connections
+        connections = node_dict.get("connections", {})
+        for connection in connections.keys():
+            data = connections[connections]
+            if isinstance(data, dict):
+                for node2 in data.keys():
+                    node_dict = {"name": node2, "type": node_type,
+                                 connection: {node_name: data[node2]}}
+                    self.connector.add_concept(node2, node_dict, node_type)
+            elif isinstance(data, list):
+                for node2 in data:
+                    node_dict = {"name": node2, "type": node_type,
+                                 connection: [node_name]}
+                    self.connector.add_concept(node2, node_dict, node_type)
+
     def save_nodes(self, nodes=None):
         if nodes is None:
             nodes = self.connector.get_concept_names()
@@ -221,7 +258,8 @@ class LilacsCoreSkill(FallbackSkill):
         # TODO save nodes in storage
         return center_node, target_node, parents, synonims, midle, question
 
-    def deduce_answer(self, utterance):
+    def deduce_answer(self, message):
+        utterance = message.data["utterance"]
         # try to undestand what user asks
         self.log.info("Deducing answer to: " + utterance)
         try:
@@ -230,7 +268,7 @@ class LilacsCoreSkill(FallbackSkill):
             # set adapt context for current subject
             self.set_context("CenterNode", center_node)
             self.set_context("TargetNode", target_node)
-            self.set_context("RelevantNodes", center_node)
+            self.set_context("QuestionType", question)
         except Exception as e:
             logger.error(e)
             center_node = ""
@@ -271,40 +309,24 @@ class LilacsCoreSkill(FallbackSkill):
             self.answered = self.handle_learning(utterance)
             return self.answered
 
-
         # update nodes in connector
-        nodes = [center_node, target_node]
-        for node in midle:
-            nodes.append(node)
-        # load all nodes from memory
-        total_nodes = nodes
-        for node in parents:
-            total_nodes.extend(parents[node])
-        for node in synonims:
-            total_nodes.append(synonims[node])
-
-        loaded = []
-        for node in total_nodes:
-            if node is None or node in loaded or node == "" or node == " ":
-                continue
-            loaded.append(node)
-            #if node not in self.connector.get_concept_names():
-            self.connector.load_concept(node)
-
-        #nodes += midle
+        nodes = [center_node, target_node] + midle
         childs = {}
         antonims = {}
-        self.handle_update_connector(nodes, parents, childs, synonims, antonims)
+        self.update_connector_from_parse(nodes, parents, childs, synonims,
+                                         antonims)
 
         # try to answer what user asks depending on question type
+        # TODO enable/disable fallbacks per question type
+        fallbacks = None  # select depending on question type
         self.answered = False
         if question == "what":
             self.answered = self.handle_what_intent(center_node)
         elif question == "how to" or question == "how do i":
-            self.answered = self.handle_how_intent(utterance)
+            pass
         elif question == "who":
             # TODO find a good backend for persons only!
-            self.answered = self.handle_who_intent(center_node)
+            pass
         elif question == "when":
             pass
         elif question == "where":
@@ -332,33 +354,34 @@ class LilacsCoreSkill(FallbackSkill):
             #self.answered = self.handle_what_of_intent(center_node)
         # target_node)
         else:# question == "unknown":
-            self.answered, answer = self.handle_unknown_intent(utterance)
+            self.answered, answer = self.handle_unknown_question(utterance)
 
         self.log.info("answered: " + str(self.answered))
         if self.debug:
             self.speak("answered: " + str(self.answered))
 
-        # if no answer ask user
+        # if no answer search web
         if not self.answered:
-            self.answered = self.handle_learning(utterance, center_node, True)
-            self.log.info("learned: " + str(self.answered))
-            if self.debug:
-                self.speak("learned: " + str(self.answered))
+            return self.ask_fallbacks(fallbacks)
 
-        try:
-            self.save_nodes(total_nodes)
-        except Exception as e:
-            self.log.error(e)
-            if self.debug:
-                self.speak(str(e))
-        return self.answered
+        return True
 
-    def handle_update_connector(self, nodes=None, parents=None, childs=None, synonims=None, antonims=None, data=None):
-        # nodes = [ node_names ]
-        # parents = { node_name: [node_parents] }
-        # childs = { node_name: [node_childs] }
-        # synonims = { node_name: [node_synonims] }
-        # antonims = { node_name: [node_antonims] }
+    def ask_fallbacks(self, fallbacks=None):
+        all_fallbacks = ["dbpedia", "wikipedia", "wikidata",
+                         "duckduckgo", "conceptnet",
+                         "wordnik", "wikihow", "wolframalpha"]
+        if fallbacks is None:
+            fallbacks = all_fallbacks
+        for fallback in all_fallbacks:
+            if fallback in fallbacks:
+                self.enable_fallback(fallback)
+            else:
+                self.disable_fallback(fallback)
+        return LILACSFallback.make_LILACS_handler(self.emitter)()
+
+    def update_connector_from_parse(self, nodes=None, parents=None,
+                                    childs=None, synonims=None, antonims=None,
+                                    data=None):
         if nodes is None:
             nodes = []
         if parents is None:
@@ -371,15 +394,16 @@ class LilacsCoreSkill(FallbackSkill):
             antonims = {}
         if data is None:
             data = {}
-        # create_concept(self, new_concept_name, data={},
-        #                   child_concepts={}, parent_concepts={}, synonims=[], antonims=[])
-
 
         total_nodes = nodes
         total_nodes.extend(parents.keys())
         total_nodes.extend(childs.keys())
         total_nodes.extend(synonims.keys())
         total_nodes.extend(antonims.keys())
+        for node in total_nodes:
+            if node is None or node == "" or node == " ":
+                continue
+            self.connector.load_concept(node)
 
         # make empty nodes
         for node in nodes:
@@ -393,7 +417,7 @@ class LilacsCoreSkill(FallbackSkill):
                 pdict = {}
                 for p in parents[node]:
                     self.log.info("parent: " + p)
-                    pdict.setdefault(p, 5)  # gen 5 for auto-adquire
+                    pdict.setdefault(p, 5)  # gen 5 for auto-_adquire
                 self.connector.create_concept(node, parent_concepts=pdict)
         # make all nodes with childs
         for node in childs:
@@ -402,7 +426,7 @@ class LilacsCoreSkill(FallbackSkill):
                 cdict = {}
                 for c in childs[node]:
                     self.log.info("child: " + c)
-                    cdict.setdefault(c, 5)  # gen 5 for auto-adquire
+                    cdict.setdefault(c, 5)  # gen 5 for auto-_adquire
                 self.connector.create_concept(node, child_concepts=cdict)
         # make all nodes with synonims
         for node in synonims:
@@ -421,7 +445,7 @@ class LilacsCoreSkill(FallbackSkill):
                 self.connector.create_concept(node, data=data[node])
 
         # update crawler
-        #self.save_nodes(total_nodes)
+        self.save_nodes(total_nodes)
         self.crawler.update_connector(self.connector)
         self.connector.saved = []
 
@@ -431,7 +455,7 @@ class LilacsCoreSkill(FallbackSkill):
         if self.debug:
             self.speak("Searching wolfram alpha")
         # this is placeholder, always call wolfram, when question type is fully implemented wolfram maybe wont be called
-        learned, answer = self.handle_unknown_intent(utterance)
+        learned, answer = self.handle_unknown_question(utterance)
 
         if not learned:
             pass
@@ -441,32 +465,22 @@ class LilacsCoreSkill(FallbackSkill):
         return learned
         # TODO ask user questions about unknown nodes, teach skill handles response
 
-    def handle_fallback(self, message):
-        # try to deduce and learn an answer
-        utterance = message.data["utterance"]
-        return self.deduce_answer(utterance)
-
     # questions methods
 
+    # TODO enable/disable fallbacks, emit trigger message
     def get_wordnik(self, node):
 
         # check wordnik backend for more related nodes
         try:
             wordnik = self.connector.get_data(node, "wordnik")
         except:
-            wordnik = self.service.adquire(node, "wordnik")["wordnik"]
+            wordnik = self.service._adquire(node, "wordnik")["node_dict"][
+                "data"]
             #self.connector.add_data(node, "wordnik", wordnik)
             #definition = wordnik["definitions"][0]
             #self.connector.add_data(node, "definition", definition)
 
-        w_dict = wordnik
         wordnik = wordnik["relations"]
-        if "antonym" in wordnik.keys():
-            # antonyms are legit
-            for antonim in wordnik["antonym"]:
-                self.connector.add_antonim(node, antonim)
-        else:
-            self.log.info("no antonyms in wordnik")
 
         # other fields not very reliable, make cousins
         related = ["unknown"]
@@ -493,7 +507,7 @@ class LilacsCoreSkill(FallbackSkill):
                         self.connector.add_cousin(node, c)
             else:
                 self.log.info("no " + r + " in wordnik")
-        return w_dict
+        return wordnik
 
     def handle_think_about(self, node, related=None):
         if related is None:
@@ -503,7 +517,7 @@ class LilacsCoreSkill(FallbackSkill):
         talked = self.handle_what_intent(node)
         if not talked:
             # no what ask wolfram
-            talked , ans = self.handle_unknown_intent(node)
+            talked, ans = self.handle_unknown_question(node)
         else:
             # save updated data, only start node will be saved otherwise
             self.connector.save_concept(node)
@@ -590,7 +604,7 @@ class LilacsCoreSkill(FallbackSkill):
             # talk about it
             more = self.handle_think_about(choice, related)
             if not more:
-                f, ans = self.handle_unknown_intent(choice)
+                f, ans = self.handle_unknown_question(choice)
         except Exception as e:
             if self.debug:
                 self.speak("could not find related info")
@@ -609,7 +623,7 @@ class LilacsCoreSkill(FallbackSkill):
         talked = self.handle_what_intent(node)
         if not talked:
             # no what ask wolfram
-            talked, ans = self.handle_unknown_intent(utterance)
+            talked, ans = self.handle_unknown_question(utterance)
 
         # get related nodes
         related = self.connector.get_cousins(node)
@@ -637,7 +651,7 @@ class LilacsCoreSkill(FallbackSkill):
             # talk about it
             more = self.handle_what_intent(choice)
             if not more:
-                f, ans = self.handle_unknown_intent(choice)
+                f, ans = self.handle_unknown_question(choice)
         except:
             if self.debug:
                 self.speak("could not find related info")
@@ -661,7 +675,6 @@ class LilacsCoreSkill(FallbackSkill):
 
     def handle_why(self, center_node, target_node):
         # is this that
-        # is this that
         self.crawler.update_connector(self.connector)
         flag = is_this_that(center_node, target_node, self.crawler)
         self.speak("answer to is " + center_node + " a " + target_node + " is " + str(flag))
@@ -676,18 +689,7 @@ class LilacsCoreSkill(FallbackSkill):
         return True
 
     def handle_how_intent(self, utterance):
-        how_to = self.service.adquire(utterance, "wikihow")
-        # TODO emit bus message for connector to update node with info
-        how_to = how_to["wikihow"]
-        # TODO check for empty how to and return false
-        # the following how_tos are available
-        self.speak("the following how tos are available")
-        for step in how_to[0]["steps"]:
-            self.speak(step)
-        # TODO create intent tree
-        # TODO start selection query
-        # TODO speak how to
-        return True
+        return False
 
     def handle_compare_intent(self, center_node, target_node):
         self.crawler.update_connector(self.connector)
@@ -695,24 +697,11 @@ class LilacsCoreSkill(FallbackSkill):
         self.speak("answer to is " + center_node + " a " + target_node + " is " + str(flag))
         return True
 
-    def handle_unknown_intent(self, utterance):
+    def handle_unknown_question(self, utterance):
         # get answer from wolfram alpha
-        result = self.service.adquire(utterance, "wolfram alpha")
-
-        result = result["wolfram alpha"]
-        answer = result["answer"]
-        parents = result["parents"]
-        synonims = result["synonims"]
-        relevant = result["relevant"]
-        childs = {}
-        antonims = {}
-        if self.debug:
-            self.speak("new nodes from wolfram alpha answer: " + str(answer))
-            self.speak("parents: " + str(parents))
-            self.speak("synonims: " + str(synonims))
-            self.speak("relevant: " + str(relevant))
-        # TODO load/update nodes
-        self.handle_update_connector(relevant, parents, childs, synonims, antonims)
+        result = self.service._adquire(utterance, "wolframalpha")
+        result = result["node_dict"]["data"]
+        answer = result["wolfram_descriptions"][0]
         # say answer to user
         if answer != "no answer":
             self.speak(answer)
@@ -723,12 +712,11 @@ class LilacsCoreSkill(FallbackSkill):
         self.log.info("searching examples of: " + node)
         if self.debug:
             self.speak("searching examples of: " + node)
-        self.crawler.update_connector(self.connector)
         examples = examples_of_this(node, self.crawler)
         if self.debug:
             self.speak("examples: " + str(examples))
         if not examples:
-            #self.speak("i dont know any examples of " + node)
+            self.speak("i dont know any examples of " + node)
             return False
 
         c = 0
@@ -756,11 +744,6 @@ class LilacsCoreSkill(FallbackSkill):
 
     def handle_what_intent(self, node):
         data = self.connector.get_data(node)
-        dbpedia = {}
-        wikidata = {}
-        wikipedia = {}
-        wordnik = {}
-
         if self.debug:
             self.speak("answering what")
             self.speak("node name:" + node)
@@ -773,138 +756,37 @@ class LilacsCoreSkill(FallbackSkill):
             else:
                 self.speak(random.choice(list))
                 return True
-
         # get data from web
         elif data == {}:
             self.log.info("no node data available")
-            if self.debug:
-                self.speak("seaching dbpedia")
-            self.log.info("adquiring dbpedia")
-            try:
-                dbpedia = self.service.adquire(node, "dbpedia")["dbpedia"][node]
-            except:
-                if self.debug:
-                    self.speak("no results from dbpedia")
-                self.log.info("no results from dbpedia")
+        # answer from available data
+        else:
+            # read node data
+            pics = data.get("pics")
+            if pics:
+                self.display_service.display(pics)
+            metadata = {}
+            links = data.get("links")
+            if links:
+                metadata["links"] = links
 
-                if self.debug:
-                    self.speak("seaching wikidata")
-                self.log.info("adquiring wikidata")
-                try:
-                    wikidata = self.service.adquire(node, "wikidata")["wikidata"]
-                except:
-                    if self.debug:
-                        self.speak("no results from wikidata")
-                    self.log.info("no results from wikidata")
-
-                    if self.debug:
-                        self.speak("seaching wikipedia")
-                    self.log.info("adquiring wikipedia")
-                    try:
-                        wikipedia = self.service.adquire(node, "wikipedia")["wikipedia"]
-                    except:
-                        if self.debug:
-                            self.speak("no results from wikipedia")
-                        self.log.info("no results from wikipedia")
-                        if self.debug:
-                            self.speak("seaching wordnik")
-                        self.log.info("adquiring wordnik")
-                        try:
-                            wordnik = self.get_wordnik(node)
-                        except:
-                            if self.debug:
-                                self.speak("no results from wordnik")
-                            self.log.info("no results from wordnik")
-
-           # debug available data
-
-            if self.debug:
-                self.speak("dbpedia data: " + str(dbpedia))
-                self.speak("wikidata data: " + str(wikidata))
-                self.speak("wikipedia data: " + str(wikipedia))
-                self.speak("wordnik data: " + str(wordnik))
-
-        # update data from web
-        try:
-            # dbpedia parents are handled in pre-processing / curiosity
-            abstract = dbpedia["page_info"]["abstract"]
-            data["abstract"] = abstract
-            self.connector.add_data(node, "abstract", abstract)
-            pic = dbpedia["page_info"]["picture"]
-            data["pic"] = pic
-            self.connector.add_data(node, "pic", pic)
-            links = dbpedia["page_info"]["external_links"]
-            self.connector.add_data(node, "links", links)
-            cousins = dbpedia["page_info"]["related_subjects"]
-            concepts = self.connector.get_concept_names()
-            for cousin in cousins:
-                if cousin not in concepts:
-                    if self.debug:
-                        self.speak("creating concept: " + cousin)
-                    self.connector.create_concept(new_concept_name=cousin.lower())
-
-                if cousin not in self.connector.get_cousins(node):
-                    if self.debug:
-                        self.speak("adding cousin: " + cousin + " to concept: " + node)
-                    self.log.info("adding cousin: " + cousin + " to concept: " + node)
-                    self.connector.add_cousin(node, cousin.lower())
-        except:
-            self.log.error("no dbpedia for " + node)
-            try:
-                # TODO all fields
-                description = wikidata["description"]
-                data["description"] = description
-                self.connector.add_data(node, "description", description)
-            except:
-                self.log.error("no wikidata for " + node)
-                try:
-                    # TODO all fields
-                    summary = wikipedia["summary"]
-                    data["summary"] = summary
-                    self.connector.add_data(node, "summary", summary)
-                    description = wikipedia["description"]
-                    data["description"] = description
-                    self.connector.add_data(node, "description", description)
-                except:
-                    self.log.error("no wikipedia for " + node)
-                    try:
-                        definition = wordnik["definitions"][0]
-                        data["definition"] = definition
-                        self.connector.add_data(node, "definition", definition)
-                    except:
-                        self.log.error("no wordnik for " + node)
-
-        self.crawler.update_connector(self.connector)
-        #self.save_nodes([node])
-
-        # read node data
-        pics = data.get("pic")
-        if pics:
-            self.display_service.display(pics)
-
-        metadata = {}
-        links = data.get("links")
-        if links:
-            self.set_context("RelatedUrls", links)
-            metadata = {"links": links}
-
-        answer = data.get("abstract", "")
-        if answer == "":
-            answer = data.get("description", "")
+            answer = data.get("abstract", "")
             if answer == "":
-                answer = data.get("summary", "")
+                answer = data.get("description", "")
                 if answer == "":
-                    answer = data.get("definition", "")
+                    answer = data.get("summary", "")
                     if answer == "":
-                        answer = data.get("wolfram_description", "")
+                        answer = data.get("definition", "")
+                        if answer == "":
+                            answer = data.get("wolfram_descriptions", [""])[0]
 
-        # TODO use intent tree to give interactive dialog suggesting more info
-        # self.speak("Do you want examples of " + node)
-        # activate yes intent
-        # use converse method to disable or do something
-        if answer != "":
-            self.speak(answer, metadata=metadata)
-            return True
+            # TODO use intent tree to give interactive dialog suggesting more info
+            # self.speak("Do you want examples of " + node)
+            # activate yes intent
+            # use converse method to disable or do something
+            if answer != "":
+                self.speak(answer, metadata=metadata)
+                return True
         return False
 
     def handle_who_intent(self, node):
@@ -921,27 +803,15 @@ class LilacsCoreSkill(FallbackSkill):
             return self.handle_what_intent(node)
 
     def handle_when_intent(self, node):
-        self.crawler.update_connector(self.connector)
-        if node == "self":
-            data = self.connector.get_data("self")
         return False
 
     def handle_where_intent(self, node):
-        self.crawler.update_connector(self.connector)
-        if node == "self":
-            data = self.connector.get_data("self")
         return False
 
     def handle_which_intent(self, node):
-        self.crawler.update_connector(self.connector)
-        if node == "self":
-            data = self.connector.get_data("self")
         return False
 
     def handle_whose_intent(self, node):
-        self.crawler.update_connector(self.connector)
-        if node == "self":
-            data = self.connector.get_data("self")
         return False
 
     # feedback

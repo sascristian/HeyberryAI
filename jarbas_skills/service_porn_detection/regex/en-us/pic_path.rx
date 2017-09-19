@@ -1,1 +1,0 @@
-(path is|pic is!picture is|image is|file is)  (?P<PicturePath>.*)
