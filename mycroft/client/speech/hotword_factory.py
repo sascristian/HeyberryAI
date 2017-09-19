@@ -117,7 +117,7 @@ class SnowboyHotWord(HotWordEngine):
                                  "snowboy")
         # Hotword params
         self.config = self.config.get("data", {})
-        models = self.config.get("models", {})
+        models = self.config.get("models", {"hey jarbas.pmdl"})
         paths = []
         for key in models:
             path = models[key]
