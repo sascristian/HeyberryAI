@@ -114,7 +114,9 @@ class LILACSFallback(FallbackSkill):
         return False
 
     def handle_fallback(self, message):
-        ''' answer lilacs fallback query, return True if answered '''
+        ''' answer lilacs fallback query, return True if answered
+        when lilacs fails to answer from nodes in memory this will be
+        triggered in all fallbacks '''
         return False
 
     def handle_test_intent(self, message):
