@@ -31,6 +31,7 @@ from requests import HTTPError
 import re
 import wolframalpha
 from jarbas_utils.LILACS.LILACS_fallback import LILACSFallback
+from jarbas_utils.LILACS.question_parser import RegexQuestionParser
 
 PIDS = ['Value', 'NotableFacts:PeopleData', 'BasicInformation:PeopleData',
         'Definition', 'DecimalApproximation']
@@ -79,18 +80,18 @@ class LILACSwolframalphaSkill(LILACSFallback):
             self.speak("Could not get info about " + node + " from " +
                        self.name)
             return
-        ## update node in memory ##
-        self.update_node(node,
-                         node_data=result.get("data", {}),
-                         node_connections=result.get("connections", {}))
+        ## update node in memory ## already called inside _adquire
+        # self.update_node(node,
+        #                 node_data=result.get("data", {}),
+        #                 node_connections=result.get("connections", {}))
 
         ### speak results back ###
-        answer = result.get("data", {}).get("wolfram_descriptions",
+        answer = result.get("data", {}).get("Result",
                                             ["no answer"])[0]
         self.speak(answer)
 
-    def get_name(self, name):
-        node_dict = self.get_node_from_res()
+    def get_name(self, name, center_node="", target_node=None):
+        node_dict = self.get_node_from_res(self.res, center_node, target_node)
         node_name = node_dict.get("name", name)
         if node_name:
             return node_name
@@ -109,12 +110,13 @@ class LILACSwolframalphaSkill(LILACSFallback):
             self.log.error("Failed to retrieve data from " + self.name)
         return node_cons
 
-    def get_data(self, subject):
+    def get_data(self, subject, center_node="", target_node=None):
         ''' implement parsing of data here '''
         node_data = {}
         # get knowledge about
         try:
-            node_dict = self.get_node_from_res()
+            node_dict = self.get_node_from_res(self.res, center_node,
+                                               target_node)
             node_data = node_dict.get("data", {})
         except:
             self.log.error("Failed to retrieve data from " + self.name)
@@ -376,12 +378,22 @@ class LILACSwolframalphaSkill(LILACSFallback):
         else:
             self.res = self.client.query(subject)
             try:
-                node_name = self.get_name(subject)
-                node_data = self.get_data(subject)
+                parse = RegexQuestionParser().parse(subject)
+                target_node = None
+                if "Query1" in parse and "Query2" in parse:
+                    center_node = parse["Query1"]
+                    target_node = parse["Query2"]
+                elif "Query" in parse:
+                    center_node = parse["Query"]
+                else:
+                    center_node = subject
+                node_data = self.get_data(subject, center_node, target_node)
                 node_connections = self.get_connections(subject)
+                node_name = self.get_name(subject, center_node, target_node)
                 node_dict = {"name": node_name, "data": node_data,
                              "connections": node_connections}
                 result[self.name]["node_dict"] = node_dict
+                self.set_context("LastConcept", node_name)
                 self.emitter.emit(Message("LILACS.node.update",
                                           {"node_dict": node_dict}))
             except Exception as e:

@@ -56,9 +56,9 @@ class LILACSWikiHowSkill(LILACSFallback):
                        self.name)
             return
         ## update node in memory ##
-        self.update_node(node,
-                         node_data=result.get("data", {}),
-                         node_connections=result.get("connections", {}))
+        # self.update_node(node,
+        #                 node_data=result.get("data", {}),
+        #                 node_connections=result.get("connections", {}))
 
         ### speak results back ###
         how_tos = result.get("data", {}).get("how_tos", [])

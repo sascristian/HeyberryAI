@@ -64,9 +64,9 @@ class LILACSWordnikSkill(LILACSFallback):
                        self.name)
             return
         ## update node in memory ##
-        self.update_node(node,
-                         node_data=result.get("data", {}),
-                         node_connections=result.get("connections", {}))
+        # self.update_node(node,
+        #                 node_data=result.get("data", {}),
+        #                 node_connections=result.get("connections", {}))
 
         ### speak results back ###
         result = result.get("data", {})
@@ -87,11 +87,10 @@ class LILACSWordnikSkill(LILACSFallback):
     def get_connections(self, subject):
         ''' implement getting a dict of parsed connections here '''
         node_cons = {"antonims": {}}
-        for antonim in wordnik["antonym"]:
-            rels = self.get_related_words(subject)
-            if "antonym" in rels:
-                for ant in rels["antonym"]:
-                    node_cons["antonims"][ant] = 5
+        rels = self.get_related_words(subject)
+        if "antonym" in rels:
+            for ant in rels["antonym"]:
+                node_cons["antonims"][ant] = 5
 
         # TODO parse relations node_data["relations"] = self.get_related_words(subject)
         return node_cons

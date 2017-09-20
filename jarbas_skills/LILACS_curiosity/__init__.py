@@ -75,7 +75,8 @@ class LILACSCuriositySkill(MycroftSkill):
         self.speak_dialog("curiosity_on")
 
     def stop(self):
-        self.handle_deactivate_intent("global stop")
+        if self.active:
+            self.handle_deactivate_intent("global stop")
 
     def curiosity(self, utterance):
         if not self.active:

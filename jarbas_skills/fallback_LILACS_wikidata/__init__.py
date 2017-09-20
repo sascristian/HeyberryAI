@@ -55,11 +55,10 @@ class LILACSwikidataSkill(LILACSFallback):
             self.speak("Could not get info about " + node + " from " +
                        self.name)
             return
-        ## update node in memory ##
-        self.update_node(node,
-                         node_data=result.get("data", {}),
-                         node_connections=result.get("connections", {}))
-
+        ## update node in memory ## already called inside _adquire
+        # self.update_node(node,
+        #                 node_data=result.get("data", {}),
+        #                 node_connections=result.get("connections", {}))
         ### speak results back ###
         result = result.get("data", {})
         self.speak("parsing for conceptnet speech not yet implemented")

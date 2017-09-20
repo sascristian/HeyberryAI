@@ -57,8 +57,9 @@ class LILACSWikipediaSkill(LILACSFallback):
                        self.name)
             return
         ## update node in memory ##
-        result = result.get("data", {})
-        self.update_node(node, node_data=result)
+        # self.update_node(node,
+        #                 node_data=result.get("data", {}),
+        #                 node_connections=result.get("connections", {}))
 
         ### speak results back ###
         url = result.get("url")

@@ -55,10 +55,10 @@ class LILACSConceptNetSkill(LILACSFallback):
             self.speak("Could not get info about " + node + " from " +
                        self.name)
             return
-        ## update node in memory ##
-        self.update_node(node,
-                         node_data=result.get("data", {}),
-                         node_connections=result.get("connections", {}))
+        ## update node in memory ## already called inside _adquire
+        # self.update_node(node,
+        #                 node_data=result.get("data", {}),
+        #                 node_connections=result.get("connections", {}))
 
         ### speak results back ###
         if len(result.get("connections").get("parents", {}).keys()):
