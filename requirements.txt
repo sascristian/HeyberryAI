@@ -14,7 +14,7 @@ PyAudio==0.2.11
 pyee==1.0.1
 SpeechRecognition==3.7.1
 tornado==4.2.1
-websocket-client==0.32.0
+websocket-client>=0.32.0
 adapt-parser==0.3.0
 pyowm==2.6.1
 wolframalpha==3.0

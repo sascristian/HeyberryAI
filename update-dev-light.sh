@@ -9,6 +9,6 @@ fi
 source "${VIRTUALENV_ROOT}/bin/activate"
 easy_install pip
 pip install --upgrade virtualenv
-pip install -r requirements.txt
+pip install -r requirements_light.txt
 python -m nltk.downloader wordnet
 python -m nltk.downloader punkt
