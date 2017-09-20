@@ -28,7 +28,6 @@ from jarbas_utils.question_parser import LILACSQuestionParser
 from mycroft.messagebus.message import Message
 
 from requests import HTTPError
-from StringIO import StringIO
 import re
 import wolframalpha
 from mycroft.skills.LILACS_fallback import LILACSFallback
@@ -59,6 +58,10 @@ class LILACSwolframalphaSkill(LILACSFallback):
     def handle_fallback(self, message):
         ''' this is activated by LILACS core, should answer the question
         asked, LILACS parsed data is available in message data '''
+        query = message.data.get("Query", "")
+        response = self.ask_wolfram(query, self.lang)[0]
+        if response and response != "no answer":
+            return True
         return False
 
     def handle_test_intent(self, message):
@@ -84,19 +87,22 @@ class LILACSwolframalphaSkill(LILACSFallback):
                                             ["no answer"])[0]
         self.speak(answer)
 
+    def get_name(self, name):
+        node_dict = self.get_node_from_res()
+        node_name = node_dict.get("name", name)
+        if node_name:
+            return node_name
+        else:
+            return name
+
     def get_connections(self, subject):
         ''' implement getting a dict of parsed connections here '''
         node_cons = {"parents": {}, "synonims": {}}
         # get knowledge about
         try:
-            response, parents, synonims, midle = self.wolfram_to_nodes(
-                subject)
-            for node in parents:
-                if node == subject:
-                    node_cons["parents"][parents[node]] = 5
-            for node in synonims:
-                if node == subject:
-                    node_cons["synonims"][synonims[node]] = 5
+            synonims, parents = self.get_connections_from_res()
+            node_cons["parents"] = parents
+            node_cons["synonims"] = synonims
         except:
             self.log.error("Failed to retrieve data from " + self.name)
         return node_cons
@@ -106,14 +112,13 @@ class LILACSwolframalphaSkill(LILACSFallback):
         node_data = {}
         # get knowledge about
         try:
-            responses, parents, synonims, midle = self.wolfram_to_nodes(
-                subject)
-            node_data = {"wolfram_descriptions": responses, "relevant": midle}
+            node_dict = self.get_node_from_res()
+            node_data = node_dict.get("data", {})
         except:
             self.log.error("Failed to retrieve data from " + self.name)
         return node_data
 
-    def wolfram_to_nodes(self, query):
+    def wolfram_to_nodes_dbpedia(self, query):
         responses = self.ask_wolfram(query)
         txt = query.lower().replace("the ", "").replace("an ", "").replace(
             "a ",
@@ -248,6 +253,139 @@ class LILACSwolframalphaSkill(LILACSFallback):
             text = match.group('Definition')
 
         return text
+
+    def get_connections_from_res(self, res=None):
+        synonims = {}
+        parents = {}
+        if res is None:
+            res = self.res
+        if res is None:
+            return synonims, parents
+        for unit in res:
+            if "assumption" in unit.keys():
+                # gets parents from wolfram disambiguation
+                assumption = unit["assumption"]
+                type = assumption["@type"]
+                if type == "Clash":
+                    node = assumption["@word"]
+                    if "value" in assumption:
+                        if node not in parents:
+                            parents[node] = {}
+                        for ass in assumption["value"]:
+                            parents[node][ass["@name"]] = 5
+            if "infos" in unit.keys():
+                info = unit["infos"]["info"]
+                if "unit" in info:
+                    # gets units and constants "km" : "kilometers"
+                    units = info["units"]["unit"]
+                    for unit in units:
+                        synonims[unit["@short"]] = unit["@long"]
+                elif "link" in info:
+                    url = info["link"]["@url"]
+                else:
+                    print info
+        return synonims, parents
+
+    def get_node_from_res(self, res=None, center_node="", target_node=None):
+        node_dict = {"name": center_node, "data": {}, "connections": {}}
+        node_data = {}
+        if res is None:
+            res = self.res
+        if res is None:
+            return node_dict
+        atr = None
+        for unit in res:
+            try:
+                categorie = unit["@title"]
+                if categorie not in node_data.keys():
+                    node_data[categorie] = []
+                data = unit["subpod"]
+                if isinstance(data, dict):
+                    info = data["plaintext"]
+                    if categorie == "Input interpretation":
+                        name, atr = info.split("|")
+                        if "\n" in name:
+                            center_node, target_node = name.split("\n")
+
+                    if categorie == "Interpretation":
+                        atr = info
+                    elif info:
+                        if "\n" in info:
+                            fields = []
+                            for field in [field for field in info.split("\n")
+                                          if
+                                          "(script capital r)" not in field]:
+                                if "|" in field:
+                                    key, value = field.split("|")[:2]
+                                    info = {key: value}
+                                    fields.append(info)
+                                else:
+                                    fields.append(field)
+                            node_data[categorie].extend(fields)
+                        elif "|" in info:
+                            values = info.split("|")
+                            node_data[categorie].extend(values)
+                        else:
+                            node_data[categorie].append(info)
+
+                elif isinstance(data, list):
+                    for field in data:
+                        if isinstance(field, dict):
+                            info = field["plaintext"].replace("|",
+                                                              "").replace(
+                                ":", "")
+                            if "\n" in info:
+                                key, value = info.split("\n")
+                                if "|" in value:
+                                    value = value.split("|")
+                                info = {key: value}
+                            elif "|" in info:
+                                info = info.split("|")
+                            node_data[categorie].append(info)
+
+                if node_data[categorie] == []:
+                    node_data.pop(categorie)
+            except:
+                if "infos" in unit.keys():
+                    info = unit["infos"]["info"]
+                    if "link" in info:
+                        url = info["link"]["@url"]
+                        node_data["url"] = url
+            if atr is None and target_node is not None:
+                atr = target_node
+                target_node = None
+            if atr is not None:
+                if target_node is not None:
+                    node_dict["data"] = {atr: {target_node: node_data}}
+                else:
+                    node_dict["data"] = {atr: node_data}
+            else:
+                node_dict["data"] = node_data
+        node_dict["name"] = center_node
+        return node_dict
+
+    def _adquire(self, subject):
+        ''' call get data '''
+        self.log.info(self.name + '_Adquire')
+        result = {self.name: {"node_dict": {}}}
+        if subject is None:
+            self.log.error("No subject to _adquire knowledge about")
+            self.res = None
+        else:
+            self.res = self.client.query(subject)
+            try:
+                node_data = self.get_data(subject)
+                node_connections = self.get_connections(subject)
+                node_dict = {"name": subject, "data": node_data,
+                             "connections": node_connections}
+                result[self.name]["node_dict"] = node_dict
+                self.emitter.emit(Message("LILACS.node.update",
+                                          {"node_dict": node_dict}))
+            except Exception as e:
+                self.log.warning(
+                    "Could not parse " + self.name + " for " + str(subject))
+                self.log.error(str(e))
+        return result
 
 
 def create_skill():

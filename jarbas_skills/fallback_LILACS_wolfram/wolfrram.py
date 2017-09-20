@@ -209,7 +209,7 @@ def get_node(res, center_node="", target_node=None):
     return node_dict
 
 
-query = "what is the speed of light"
+query = "how much wood can a woodchuck chuck"
 res = client.query(query)
 
 node = get_node(res, "light", "speed")

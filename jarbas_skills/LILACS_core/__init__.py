@@ -259,6 +259,8 @@ class LilacsCoreSkill(FallbackSkill):
         # TODO try to load concepts from storage
         # TODO input relevant nodes in connector
         # TODO update crawler with new nodes
+        for key in parse:
+            self.set_context(key, parse[key])
         return center_node, target_node, parents, synonims, midle, question
 
     def deduce_answer(self, message):

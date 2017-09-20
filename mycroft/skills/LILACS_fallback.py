@@ -17,7 +17,10 @@ class LILACSFallback(FallbackSkill):
         self.active = False
         self.LILACS_data = {}
         self.relevant_data = ["CenterNode", "TargetNode", "LastConcept",
-                              "TargetKeyword", "QuestionType"]
+                              "TargetKeyword", "QuestionType", "Query",
+                              "Query1", "Query2", "QuestionWord",
+                              "QuestionVerb",
+                              "QuestionTargetWord", "QuestionTargetWord2"]
 
     @classmethod
     def make_LILACS_handler(cls, ws):
@@ -137,6 +140,9 @@ class LILACSFallback(FallbackSkill):
         self.speak(self.name + " seems to work ")
         self.speak(str(result))
 
+    def get_name(self, name):
+        return name
+
     def get_data(self, subject):
         ''' implement getting a dict of parsed data from this backend,
         this will be returned to LILACS queries '''
@@ -166,9 +172,10 @@ class LILACSFallback(FallbackSkill):
             self.log.error("No subject to _adquire knowledge about")
         else:
             try:
+                node_name = self.get_name(subject)
                 node_data = self.get_data(subject)
                 node_connections = self.get_connections(subject)
-                node_dict = {"name": subject, "data": node_data,
+                node_dict = {"name": node_name, "data": node_data,
                              "connections": node_connections}
                 result[self.name]["node_dict"] = node_dict
                 self.emitter.emit(Message("LILACS.node.update",
