@@ -18,11 +18,8 @@
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from adapt.intent import IntentBuilder
-from os.path import dirname
-import sys
 import random
-sys.path.append(dirname(dirname(__file__)))
-from LILACS_core.concept import ConceptConnector
+from jarbas_utils.LILACS.concept import ConceptConnector
 from mycroft.util.parse import normalize
 __author__ = 'jarbas'
 

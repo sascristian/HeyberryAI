@@ -15,10 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
-from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill
+
 from mycroft.util.log import getLogger
-from mycroft.messagebus.message import Message
 
 __author__ = 'jarbas'
 
@@ -27,7 +25,7 @@ logger = getLogger(__name__)
 ### imports for this LILACS fallback
 
 import requests
-from mycroft.skills.LILACS_fallback import LILACSFallback
+from jarbas_utils.LILACS.LILACS_fallback import LILACSFallback
 
 
 class LILACSConceptNetSkill(LILACSFallback):

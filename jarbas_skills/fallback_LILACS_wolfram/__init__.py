@@ -24,13 +24,13 @@ logger = getLogger(__name__)
 
 ### imports for this LILACS fallback
 
-from jarbas_utils.question_parser import LILACSQuestionParser
+from jarbas_utils.LILACS.question_parser import LILACSQuestionParser
 from mycroft.messagebus.message import Message
 
 from requests import HTTPError
 import re
 import wolframalpha
-from mycroft.skills.LILACS_fallback import LILACSFallback
+from jarbas_utils.LILACS.LILACS_fallback import LILACSFallback
 
 PIDS = ['Value', 'NotableFacts:PeopleData', 'BasicInformation:PeopleData',
         'Definition', 'DecimalApproximation']
@@ -61,6 +61,8 @@ class LILACSwolframalphaSkill(LILACSFallback):
         query = message.data.get("Query", "")
         response = self.ask_wolfram(query, self.lang)[0]
         if response and response != "no answer":
+            # trigger node update
+            self._adquire(query)
             return True
         return False
 
@@ -374,9 +376,10 @@ class LILACSwolframalphaSkill(LILACSFallback):
         else:
             self.res = self.client.query(subject)
             try:
+                node_name = self.get_name(subject)
                 node_data = self.get_data(subject)
                 node_connections = self.get_connections(subject)
-                node_dict = {"name": subject, "data": node_data,
+                node_dict = {"name": node_name, "data": node_data,
                              "connections": node_connections}
                 result[self.name]["node_dict"] = node_dict
                 self.emitter.emit(Message("LILACS.node.update",

@@ -19,9 +19,8 @@
 import random
 
 from adapt.intent import IntentBuilder
-from os.path import dirname
 
-from jarbas_utils.question_parser import LILACSQuestionParser
+from jarbas_utils.LILACS.question_parser import LILACSQuestionParser
 from jarbas_utils.skill_tools import KnowledgeQuery
 from mycroft.skills.core import MycroftSkill
 

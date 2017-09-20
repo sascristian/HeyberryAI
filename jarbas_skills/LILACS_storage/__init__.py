@@ -18,7 +18,6 @@
 
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
-from mycroft.messagebus.message import Message
 from os.path import dirname
 import json
 import os

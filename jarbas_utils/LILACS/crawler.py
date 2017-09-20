@@ -1,10 +1,7 @@
 import math
 import random
-import sys
-from os.path import dirname
-sys.path.append(dirname(dirname(__file__)))
 
-from LILACS_core.crawl_log import getLogger as CrawlLogger
+from jarbas_utils.LILACS.crawl_log import getLogger as CrawlLogger
 
 __authors__ = ["jarbas", "heinzschmidt"]
 

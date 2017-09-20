@@ -16,15 +16,9 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import sys
-from threading import Timer
-
 from adapt.intent import IntentBuilder
-from os.path import dirname
 
-sys.path.append(dirname(dirname(__file__)))
-from mycroft.messagebus.message import Message
-from jarbas_utils.question_parser import LILACSQuestionParser
+from jarbas_utils.LILACS.question_parser import LILACSQuestionParser
 from jarbas_utils.skill_tools import KnowledgeQuery
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
