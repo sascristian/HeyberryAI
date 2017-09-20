@@ -31,23 +31,10 @@ from requests import HTTPError
 from StringIO import StringIO
 import re
 import wolframalpha
-from mycroft.api import Api
 from mycroft.skills.LILACS_fallback import LILACSFallback
 
 PIDS = ['Value', 'NotableFacts:PeopleData', 'BasicInformation:PeopleData',
         'Definition', 'DecimalApproximation']
-
-
-class WAApi(Api):
-    def __init__(self):
-        super(WAApi, self).__init__("wa")
-
-    def get_data(self, response):
-        return response
-
-    def query(self, input):
-        data = self.request({"query": {"input": input}})
-        return wolframalpha.Result(StringIO(data.content))
 
 
 class LILACSwolframalphaSkill(LILACSFallback):
@@ -55,16 +42,15 @@ class LILACSwolframalphaSkill(LILACSFallback):
         super(LILACSwolframalphaSkill, self).__init__(
             name="wolframalpha")
         self.parser = LILACSQuestionParser()
-        if False:
-            # if self.config_core.get("WolframAlphaSkill").get("proxy"):
-            self.client = WAApi()
-        else:
+        try:
+            self.api = self.APIS["WolframAlpha"]
+        except:
             try:
-                self.api = self.APIS.get("WolframAlpha")
+                self.api = self.APIS["WolframAlphaSkill"]
             except:
-                self.api = self.config_core.get("WolframAlphaSkill").get(
+                self.api = self.config_core.get("WolframAlphaSkill", {}).get(
                     "api_key")
-            self.client = wolframalpha.Client(self.api)
+        self.client = wolframalpha.Client(self.api)
 
     def start_up(self):
         ''' Use instead of initialize method '''

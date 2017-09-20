@@ -71,8 +71,8 @@ class LILACSWikipediaSkill(LILACSFallback):
             metadata["url"] = url
         if pics[0]:
             metadata["picture"] = pics[0]
-            self.display_service.display(pics, utterance=message.data.get[
-                "utterance"])
+            self.display_service.display(pics, utterance=message.data.get(
+                "utterance", ""))
 
         if result.get("description", "") != "":
             self.speak("wikipedia description says ")
