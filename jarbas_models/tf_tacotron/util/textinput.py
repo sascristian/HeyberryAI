@@ -1,6 +1,6 @@
 import re
 import unicodedata
-from jarbas_models.tf_tacotron.util import cmudict, numbers
+from jarbas_models.tf_tacotron.text import cmudict, numbers
 import string
 
 # Input alphabet (63 symbols), plus ARPAbet (84 symbols):
@@ -39,9 +39,11 @@ def num_symbols():
 def to_sequence(text, force_lowercase=True, expand_abbreviations=True):
     '''Converts a string of text to a sequence of IDs for the symbols in the text'''
     text = text.strip()
-    text = text.replace('"', '')
-    text = unicodedata.normalize('NFKD', text.decode('utf-8')).encode('ascii',
-                                                                      'ignore').decode()
+    text = unicode(text.replace('"', ''))
+    # text = unicodedata.normalize('NFKD', text.decode('utf-8')).encode(
+    # 'ascii',
+    #
+    # 'ignore').decode()
 
     sequence = []
     while len(text):
@@ -73,7 +75,7 @@ def to_string(sequence, remove_eos=False):
 
 
 def _text_to_sequence(text, force_lowercase, expand_abbreviations):
-    text = numbers.normalize(text)
+    text = numbers.normalize_numbers(text)
     text = str(text).translate(_trans_table)
     if force_lowercase:
         text = text.lower()

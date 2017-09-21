@@ -14,4 +14,4 @@ thread.start_new_thread(connect, ())
 
 tts = TTSFactory.create()
 tts.init(ws)
-tts.execute("gra")
+tts.execute("hello world, my names is jarbas, death to all but metal")

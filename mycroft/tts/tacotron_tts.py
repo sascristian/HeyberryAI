@@ -41,6 +41,7 @@ class Tacotron(TTS):
             from jarbas_models.tf_tacotron.synthesizer import Synthesizer
             self.synthesizer = Synthesizer()
             self.synthesizer.load(path)
+            LOGGER.info("Loaded Tacotron")
         except Exception as e:
             LOGGER.error(e)
             LOGGER.error("Install tacotron by running "
@@ -48,12 +49,16 @@ class Tacotron(TTS):
             self.synthesizer = None
 
     def execute(self, sentence, output="/tmp/tacotron_tts.wav"):
+        if self.synthesizer is None:
+            LOGGER.error("Tacotron failed to load")
+            return
         self.begin_audio()
         try:
             start = time.time()
+            LOGGER.info("Tacotron, Synthethize")
             self.synthesizer.synthesize(sentence, output)
             play_wav(output)
-            LOGGER.info("elapsed time", time.time() - start)
+            LOGGER.info("elapsed time" + str(time.time() - start))
         except Exception as e:
             LOGGER.error(e)
             LOGGER.error("Install tacotron by running "

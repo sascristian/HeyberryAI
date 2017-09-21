@@ -1,4 +1,4 @@
-from .tacotron import Tacotron
+from jarbas_models.tf_tacotron.models.tacotron import Tacotron
 
 
 def create_model(name, hparams):

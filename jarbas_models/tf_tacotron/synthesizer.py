@@ -29,8 +29,10 @@ class Synthesizer:
             self.model.inputs: [np.asarray(seq, dtype=np.int32)],
             self.model.input_lengths: np.asarray([len(seq)], dtype=np.int32)
         }
+
         spec = self.session.run(self.model.linear_outputs[0],
                                 feed_dict=feed_dict)
+
         if save_path is not None:
             out = save_path
             audio.save_wav(audio.inv_spectrogram(spec.T), out)
