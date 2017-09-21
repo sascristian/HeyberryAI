@@ -167,3 +167,6 @@ cd "${TOP}"
 "${TOP}/scripts/install-pygtk.sh" " ${CORES}"
 
 # md5sum requirements.txt dev_setup.sh > .installed
+
+# PicoTTS
+"${TOP}/scripts/install-pico.sh"

@@ -44,3 +44,4 @@ pyopenssl
 twisted
 python-gnupg
 autobahn
+ttspico
