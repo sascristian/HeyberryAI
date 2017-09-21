@@ -144,12 +144,11 @@ class PicoEngine(object):
 class Pico(TTS):
     def __init__(self, lang, voice):
         super(Pico, self).__init__(lang, voice, PicoValidator(self))
-        self.engine = PicoEngine('en-us')
+        self.engine = PicoEngine(self.lang)
 
-    def execute(self, sentence, output="tmp/pico_tts.raw"):
+    def execute(self, sentence, output="/tmp/pico_tts.raw"):
         self.begin_audio()
         audio = self.engine.speak(unicode(sentence))
-        output = "/tmp/pico_tts.raw"
         with open(output, "wb") as outfile:
             outfile.write(audio)
         subprocess.call(
