@@ -76,3 +76,4 @@ nltk
 cleverwrap
 unirest
 scikit-image
+ttspico
