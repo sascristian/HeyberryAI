@@ -77,3 +77,4 @@ cleverwrap
 unirest
 scikit-image
 ttspico
+boto3
