@@ -148,7 +148,7 @@ class Pico(TTS):
 
     def execute(self, sentence, output="tmp/pico_tts.raw"):
         self.begin_audio()
-        audio = self.engine.speak(sentence)
+        audio = self.engine.speak(unicode(sentence))
         output = "/tmp/pico_tts.raw"
         with open(output, "wb") as outfile:
             outfile.write(audio)
