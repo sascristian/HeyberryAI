@@ -131,7 +131,7 @@ if [ ! -d "${VIRTUALENV_ROOT}" ]; then
 fi
 source "${VIRTUALENV_ROOT}/bin/activate"
 cd "${TOP}"
-easy_install pip==7.1.2 # force version of pip
+easy_install pip
 pip install --upgrade virtualenv
 
 # Add JarbasAI to the virtualenv path

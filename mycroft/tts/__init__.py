@@ -331,6 +331,7 @@ class TTSFactory(object):
     from mycroft.tts.morse_code_tts import MorseCode
     from mycroft.tts.beepspeak_tts import BeepSpeak
     from mycroft.tts.pico_tts import Pico
+    from mycroft.tts.deep_throat_tts import DeepThroat
     #from mycroft.tts.pymimic_tts import Pymimic
 
     CLASSES = {
@@ -343,7 +344,8 @@ class TTSFactory(object):
         #"pymimic": Pymimic,
         "morse": MorseCode,
         "beep_speak": BeepSpeak,
-        "pico": Pico
+        "pico": Pico,
+        "deep_throat": DeepThroat
     }
 
     @staticmethod
