@@ -16,18 +16,18 @@
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
+
 import inflection
 import re
 from genericpath import exists, isfile
 from os.path import join, dirname, expanduser
 from os import mkdir
 
-from mycroft.util.log import getLogger
 from mycroft.util.json_helper import load_commented_json
+from mycroft.util.log import LOG
 
 __author__ = 'seanfitz, jdorleans'
 
-LOG = getLogger(__name__)
 
 DEFAULT_CONFIG = join(dirname(__file__), 'jarbas.conf')
 SYSTEM_CONFIG = '/etc/jarbas/jarbas.conf'
@@ -161,7 +161,8 @@ class RemoteConfiguration(object):
                 RemoteConfiguration.__load(config, setting)
                 RemoteConfiguration.__store_cache(setting)
             except Exception as e:
-                LOG.warn("Failed to fetch remote configuration: %s" % repr(e))
+                LOG.warning("Failed to fetch remote configuration: %s" %
+                            repr(e))
                 RemoteConfiguration.__load_cache(config)
 
         else:

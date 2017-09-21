@@ -25,7 +25,10 @@ from threading import Thread, Timer
 import serial
 
 import mycroft.dialog
+from mycroft.api import has_been_paired
 from mycroft.client.enclosure.arduino import EnclosureArduino
+from mycroft.client.enclosure.display_manager import \
+    initiate_display_manager_ws
 from mycroft.client.enclosure.eyes import EnclosureEyes
 from mycroft.client.enclosure.mouth import EnclosureMouth
 from mycroft.client.enclosure.weather import EnclosureWeather
@@ -35,14 +38,9 @@ from mycroft.messagebus.message import Message
 from mycroft.util import play_wav, create_signal, connected, \
     wait_while_speaking
 from mycroft.util.audio_test import record
-from mycroft.util.log import getLogger
-from mycroft.client.enclosure.display_manager import \
-    initiate_display_manager_ws
-from mycroft.api import is_paired, has_been_paired
+from mycroft.util.log import LOG
 
 __author__ = 'aatchison', 'jdorleans', 'iward'
-
-LOG = getLogger("EnclosureClient")
 
 
 class EnclosureReader(Thread):
@@ -96,14 +94,12 @@ class EnclosureReader(Thread):
                 self.ws.emit(Message("mycroft.stop"))
 
         if "volume.up" in data:
-            self.ws.emit(
-                Message("VolumeSkill:IncreaseVolumeIntent",
-                        {'play_sound': True}))
+            self.ws.emit(Message("mycroft.volume.increase",
+                                 {'play_sound': True}))
 
         if "volume.down" in data:
-            self.ws.emit(
-                Message("VolumeSkill:DecreaseVolumeIntent",
-                        {'play_sound': True}))
+            self.ws.emit(Message("mycroft.volume.decrease",
+                                 {'play_sound': True}))
 
         if "system.test.begin" in data:
             self.ws.emit(Message('recognizer_loop:sleep'))
@@ -294,7 +290,7 @@ class Enclosure(object):
             # One last check to see if connection was established
             return
 
-        if time.time()-Enclosure._last_internet_notification < 30:
+        if time.time() - Enclosure._last_internet_notification < 30:
             # don't bother the user with multiple notifications with 30 secs
             return
 
@@ -389,7 +385,7 @@ class Enclosure(object):
                                  " Either plug in a network cable or hold the "
                                  "button on top for two seconds, then select "
                                  "wifi from the menu"
-                    }))
+                }))
             else:
                 # Begin the unit startup process, this is the first time it
                 # is being run with factory defaults.

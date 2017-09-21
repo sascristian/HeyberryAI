@@ -14,20 +14,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
+
 from abc import ABCMeta, abstractmethod
 
 from speech_recognition import Recognizer, UnknownValueError, RequestError
 
 from mycroft.api import STTApi
 from mycroft.configuration import ConfigurationManager
-from mycroft.util.log import getLogger
 import re
 
 from requests import post
+from mycroft.util.log import LOG
 
 __author__ = "jdorleans"
-
-LOG = getLogger("STT")
 
 
 class STT(object):
@@ -85,9 +84,7 @@ class WITSTT(TokenSTT):
         super(WITSTT, self).__init__()
 
     def execute(self, audio, language=None):
-        LOG.warn("WITSTT language should be configured at wit.ai settings.")
-        print self.credential
-        print self.token
+        LOG.warning("WITSTT language should be configured at wit.ai settings.")
         return self.recognizer.recognize_wit(audio, self.token)
 
 

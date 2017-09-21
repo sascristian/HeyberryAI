@@ -1,8 +1,10 @@
-from mycroft.util.signal import check_for_signal
+import time
+
 import psutil
 import mycroft
 
-import time
+from mycroft.util.signal import check_for_signal
+
 __author__ = "forslund"
 
 

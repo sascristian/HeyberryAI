@@ -29,7 +29,6 @@ sys.stderr = StringIO()  # capture any output
 import os                                                   # nopep8
 import os.path                                              # nopep8
 import time                                                 # nopep8
-import subprocess                                           # nopep8
 import curses                                               # nopep8
 import curses.ascii                                         # nopep8
 import textwrap                                             # nopep8
@@ -38,12 +37,10 @@ from threading import Thread, Lock                          # nopep8
 from mycroft.messagebus.client.ws import WebsocketClient    # nopep8
 from mycroft.messagebus.message import Message              # nopep8
 from mycroft.util import get_ipc_directory                  # nopep8
-from mycroft.util.log import getLogger                      # nopep8
-from mycroft.configuration import ConfigurationManager      # nopep8
+from mycroft.util.log import LOG                      # nopep8
 
 ws = None
 mutex = Lock()
-logger = getLogger("CLIClient")
 
 utterances = []
 chat = []   # chat history, oldest at the lowest index
@@ -484,7 +481,7 @@ def draw_screen():
     y = 2
     len_line = 0
     for i in range(start, end):
-        if i >= cLogs-1:
+        if i >= cLogs - 1:
             log = '   ^--- NEWEST ---^ '
         else:
             log = filteredLog[i]
@@ -858,7 +855,7 @@ def gui_main(stdscr):
         # User hit Ctrl+C to quit
         pass
     except KeyboardInterrupt, e:
-        logger.exception(e)
+        LOG.exception(e)
     finally:
         scr.erase()
         scr.refresh()
@@ -886,7 +883,7 @@ def simple_cli():
         # User hit Ctrl+C to quit
         print("")
     except KeyboardInterrupt, e:
-        logger.exception(e)
+        LOG.exception(e)
         event_thread.exit()
         sys.exit()
 
@@ -917,6 +914,7 @@ def main():
         curses.wrapper(gui_main)
         curses.endwin()
         save_settings()
+
 
 if __name__ == "__main__":
     main()

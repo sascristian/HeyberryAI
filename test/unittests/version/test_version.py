@@ -1,4 +1,5 @@
 import unittest
+
 import mock
 
 import mycroft.version
