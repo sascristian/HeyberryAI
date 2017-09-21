@@ -37,7 +37,7 @@ from threading import Thread, Lock                          # nopep8
 from mycroft.messagebus.client.ws import WebsocketClient    # nopep8
 from mycroft.messagebus.message import Message              # nopep8
 from mycroft.util import get_ipc_directory                  # nopep8
-from mycroft.util.log import LOG                      # nopep8
+from mycroft.util.log import LOG  # nopep8
 
 ws = None
 mutex = Lock()

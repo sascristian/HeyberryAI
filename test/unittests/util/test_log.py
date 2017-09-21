@@ -19,7 +19,7 @@ class CaptureLogs(list):
 
     def __exit__(self, *args):
         self.extend(self._stringio.getvalue().splitlines())
-        del self._stringio    # free up some memory
+        del self._stringio  # free up some memory
         sys.stdout = self._stdout
         LOG.init()
 
@@ -51,6 +51,7 @@ class TestLog(unittest.TestCase):
                 if 'testing ' + msg in line:
                     found_msg = True
             assert found_msg
+
 
 if __name__ == "__main__":
     unittest.main()

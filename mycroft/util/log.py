@@ -23,7 +23,7 @@ from os.path import isfile
 from mycroft.util.json_helper import load_commented_json
 
 
-def getLogger(name="MYCROFT"):
+def getLogger(name="Jarbas"):
     """Depreciated. Use LOG instead"""
     return logging.getLogger(name)
 
@@ -59,6 +59,7 @@ class LOG:
             @classmethod
             def method(cls, *args, **kwargs):
                 cls._log(fn, *args, **kwargs)
+
             method.__func__.__doc__ = fn.__doc__
             return method
 
@@ -100,5 +101,6 @@ class LOG:
             module_name = mod.__name__ if mod else ''
             name = module_name + ':' + record[3] + ':' + str(record[2])
         func(cls.create_logger(name), *args, **kwargs)
+
 
 LOG.init()

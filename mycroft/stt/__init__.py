@@ -84,7 +84,8 @@ class WITSTT(TokenSTT):
         super(WITSTT, self).__init__()
 
     def execute(self, audio, language=None):
-        LOG.warning("WITSTT language should be configured at wit.ai settings.")
+        LOG.warning(
+            "WITSTT language should be configured at wit.ai settings.")
         return self.recognizer.recognize_wit(audio, self.token)
 
 

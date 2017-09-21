@@ -35,8 +35,15 @@ from os.path import isfile, join
 
 from mycroft.api import DeviceApi
 from mycroft.util.log import LOG
+from mycroft import MYCROFT_ROOT_PATH
+from mycroft.configuration import ConfigurationManager
 
-SKILLS_DIR = "/opt/mycroft/skills"
+skills_config = ConfigurationManager.instance().get("skills")
+config_dir = skills_config.get("directory", "default")
+if config_dir == "default":
+    SKILLS_DIR = join(MYCROFT_ROOT_PATH, "jarbas_skills")
+else:
+    SKILLS_DIR = config_dir
 
 
 # TODO: allow deleting skill when skill is deleted
