@@ -330,6 +330,7 @@ class TTSFactory(object):
     from mycroft.tts.spdsay_tts import SpdSay
     from mycroft.tts.morse_code_tts import MorseCode
     from mycroft.tts.beepspeak_tts import BeepSpeak
+    from mycroft.tts.pico_tts import Pico
     #from mycroft.tts.pymimic_tts import Pymimic
 
     CLASSES = {
@@ -341,7 +342,8 @@ class TTSFactory(object):
         "spdsay": SpdSay,
         #"pymimic": Pymimic,
         "morse": MorseCode,
-        "beep_speak": BeepSpeak
+        "beep_speak": BeepSpeak,
+        "pico": Pico
     }
 
     @staticmethod

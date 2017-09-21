@@ -36,7 +36,7 @@ class BeepSpeak(TTS):
                 string.replace(char.upper(), "").replace(char, "")
 
     def execute(self, msg):
-
+        self.begin_audio()
         self.verify(msg)
 
         for char in msg:
@@ -47,7 +47,7 @@ class BeepSpeak(TTS):
                                    char.upper() + '_beep.wav'
                 self.process = play_wav(morse_sound_path)
                 time.sleep(self.time_step)  # ~sound duration
-
+        self.end_audio()
 
 class BeepSpeakValidator(TTSValidator):
     def __init__(self, tts):

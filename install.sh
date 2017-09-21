@@ -83,7 +83,8 @@ install_deps() {
             libfann-dev \
             libgeos-dev \
             libatlas-base-dev \
-            python-xlib
+            python-xlib \
+            screen
 
         # try firefox in seperate command because name is different in ubuntu
         $SUDO apt-get install -y firefox-esr || $SUDO apt-get install -y firefox
@@ -223,7 +224,15 @@ sudo cp /usr/lib/python2.7/dist-packages/cv* $VIRTUALENV_ROOT/lib/python2.7/site
 
 # tensorflow from binary
 # TODO detect host env and select package
-pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
+
+if found_exe apt-get; then
+    pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/protobuf-3.1.0-cp27-none-linux_x86_64.whl
+    pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.3.0-cp27-none-linux_x86_64.whl
+else
+    echo
+    echo "${green}Could not install tensorflow"
+    echo $reset
+fi
 
 # nltk
 python -m nltk.downloader wordnet
@@ -235,3 +244,6 @@ tar -xvzf geckodriver-v0.18.0-linux64.tar.gz
 chmod +x geckodriver
 sudo mv geckodriver /usr/local/bin/
 sudo rm -rf geckodriver-v0.18.0-linux64.tar.gz
+
+# PicoTTS
+"${TOP}/scripts/install-pico.sh"
