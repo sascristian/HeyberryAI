@@ -186,12 +186,13 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
         self.save_wake_words = listener_config.get('record_wake_words', False)
         self.save_hot_words = listener_config.get('record_hot_words', False)
         self.save_utterances = listener_config.get('record_utterances', False)
-        self.wake_word_save_path = listener_config.get('wake_word_save_path')
-        self.utterance_save_path = listener_config.get('utterance_save_path')
+        self.wake_word_save_path = listener_config.get(
+            'wake_word_save_path', join(gettempdir(), 'mycroft_wake_words'))
+        self.utterance_save_path = listener_config.get(
+            'utterance_save_path', join(gettempdir(), 'mycroft_utterances'))
         self.save_wake_words = listener_config.get('record_wake_words') \
-                               or self.upload_config['enable']
+                               or self.upload_config.get('enable', False)
         self.upload_lock = Lock()
-        self.save_wake_words_dir = join(gettempdir(), 'mycroft_wake_words')
         self.filenames_to_upload = []
         self.mic_level_file = os.path.join(get_ipc_directory(), "mic_level")
         self._stop_signaled = False
@@ -453,12 +454,13 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
 
                     with open(filename, 'wb') as filea:
                         filea.write(audio.get_wav_data())
-                    if self.upload_config['enable']:
+                    if self.upload_config.get('enable', False):
                         t = Thread(target=self._upload_file, args=(filename,))
                         t.daemon = True
                         t.start()
 
-                if not said_wake_word and self.check_for_hotwords(audio_data, emitter):
+                if not said_wake_word and self.check_for_hotwords(
+                        audio_data, emitter):
                     said_wake_word = True
                     if self.save_hot_words and said_wake_word:
                         logger.info("Recording hotword")

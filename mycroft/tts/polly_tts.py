@@ -48,16 +48,9 @@ class Polly(TTS):
         self.key_id = config.get("key_id", '')
         self.key = config.get("key", '')
         self.region = config.get("region", 'us-west-2')
-        if self.profile:
-            # create a client using the credentials and region defined
-            # in the AWS_PROFILE section of the AWS credentials and config files
-            session = Session(profile_name=self.profile)
-            logger.info('Using profile name: {0}'.format(self.profile))
-        else:
-            session = Session(aws_access_key_id=self.key_id,
-                              aws_secret_access_key=self.key,
-                              region_name=self.region)
-            logger.info('Using without credentials and config files')
+        session = Session(aws_access_key_id=self.key_id,
+                          aws_secret_access_key=self.key,
+                          region_name=self.region)
 
         self.polly = session.client('polly')
 

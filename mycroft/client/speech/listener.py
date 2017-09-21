@@ -235,10 +235,10 @@ class RecognizerLoop(EventEmitter):
         self.wakeword_recognizer = self.create_wake_word_recognizer()
         # TODO - localization
         self.wakeup_recognizer = self.create_wakeup_recognizer()
-        self.responsive_recognizer = ResponsiveRecognizer(
-            self.wakeword_recognizer)
         self.hot_word_engines = {}
         self.create_hot_word_engines()
+        self.responsive_recognizer = ResponsiveRecognizer(
+            self.wakeword_recognizer, self.hot_word_engines)
         self.state = RecognizerLoopState()
 
     def create_hot_word_engines(self):
