@@ -333,6 +333,7 @@ class TTSFactory(object):
     from mycroft.tts.pico_tts import Pico
     from mycroft.tts.deep_throat_tts import DeepThroat
     from mycroft.tts.tacotron_tts import Tacotron
+    from mycroft.tts.polly_tts import Polly
     #from mycroft.tts.pymimic_tts import Pymimic
 
     CLASSES = {
@@ -347,7 +348,8 @@ class TTSFactory(object):
         "beep_speak": BeepSpeak,
         "pico": Pico,
         "deep_throat": DeepThroat,
-        "tacotron": Tacotron
+        "tacotron": Tacotron,
+        "polly": Polly
     }
 
     @staticmethod
