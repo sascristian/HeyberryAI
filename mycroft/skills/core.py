@@ -451,6 +451,7 @@ class MycroftSkill(object):
                                             "intent": message.type,
                                             "data": message.data,
                                             "context": message.context}))
+
         if handler:
             self.emitter.on(name, self.handle_update_message_context)
             self.emitter.on(name, wrapper)
@@ -589,9 +590,10 @@ class MycroftSkill(object):
         return message_context
 
     def check_for_ssml(self, text):
-        ''' checks if current TTS engine supports SSML , if it doesn't
+        """ checks if current TTS engine supports SSML , if it doesn't
         removes all SSML tags, if it does removes unsupported SSML tags,
-        returns processed text '''
+        returns processed text """
+
         module = self.config_core.get("tts", {}).get("module")
         config = self.config_core.get("tts", {}).get(module, {})
         ssml_support = config.get("ssml", False)
@@ -614,10 +616,10 @@ class MycroftSkill(object):
         tags = re.findall('<[^>]*>', text)
 
         for tag in tags:
-            flag = False # not supported
+            flag = False  # not supported
             for supported in supported_tags:
                 if supported in tag:
-                    flag = True # supported
+                    flag = True  # supported
             if not flag:
                 # remove unsupported tag
                 text = text.replace(tag, "")
@@ -724,7 +726,6 @@ class MycroftSkill(object):
     def is_stop(self):
         passed_time = time.time() - self.stop_time
         return passed_time < self.stop_threshold
-
 
     def shutdown(self):
         """
