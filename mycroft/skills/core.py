@@ -588,6 +588,39 @@ class MycroftSkill(object):
         message_context["source"] = self.name
         return message_context
 
+    def check_for_ssml(self, text):
+        ''' checks if current TTS engine supports SSML , if it doesn't
+        removes all SSML tags, if it does removes unsupported SSML tags,
+        returns processed text '''
+        module = self.config_core.get("tts", {}).get("module")
+        config = self.config_core.get("tts", {}).get(module, {})
+        ssml_support = config.get("ssml", False)
+        if not ssml_support:
+            return re.sub('<[^>]*>', '', text)
+
+        # check for engine specific tags
+        default_tags = ["speak", "lang", "p", "phoneme", "prosody", "s",
+                        "say-as", "sub", "w"]
+        all_tags = self.config_core.get("ssml_tags", default_tags)
+        supported_tags = config.get("supported_tags", all_tags)
+        extra_tags = config.get("extra_tags", ["drc", "whispered"])
+        supported_tags = supported_tags + extra_tags
+
+        # find tags in string
+        tags = re.findall('<[^>]*>', text)
+
+        for tag in tags:
+            flag = False # not supported
+            for supported in supported_tags:
+                if supported in tag:
+                    flag = True # supported
+            if not flag:
+                # remove unsupported tag
+                text = text.replace(tag, "")
+
+        # return text with supported ssml tags only
+        return text
+
     def speak(self, utterance, expect_response=False, metadata=None,
               message_context=None):
         """
@@ -606,6 +639,8 @@ class MycroftSkill(object):
             metadata = {}
         # registers the skill as being active
         self.enclosure.register(self.name)
+        # check utterance for ssml
+        utterance = self.check_for_ssml(utterance)
         data = {'utterance': utterance,
                 'expect_response': expect_response,
                 "metadata": metadata}
@@ -685,6 +720,7 @@ class MycroftSkill(object):
     def is_stop(self):
         passed_time = time.time() - self.stop_time
         return passed_time < self.stop_threshold
+
 
     def shutdown(self):
         """
