@@ -595,14 +595,18 @@ class MycroftSkill(object):
         module = self.config_core.get("tts", {}).get("module")
         config = self.config_core.get("tts", {}).get(module, {})
         ssml_support = config.get("ssml", False)
+
+        # if ssml is not supported by TTS engine remove all tags
         if not ssml_support:
             return re.sub('<[^>]*>', '', text)
 
-        # check for engine specific tags
+        # default ssml tags all engines should support
         default_tags = ["speak", "lang", "p", "phoneme", "prosody", "s",
                         "say-as", "sub", "w"]
         all_tags = self.config_core.get("ssml_tags", default_tags)
+        # check for engine overrided default supported tags
         supported_tags = config.get("supported_tags", all_tags)
+        # engine supported tags
         extra_tags = config.get("extra_tags", ["drc", "whispered"])
         supported_tags = supported_tags + extra_tags
 
