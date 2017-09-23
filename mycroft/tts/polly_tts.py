@@ -39,8 +39,6 @@ class Polly(TTS):
             logger.error("Missing boto3 python requirement for PollyTTS")
         # FS cache
         self.cache = self.config.get("cache", True)
-        # Voice ID
-        self.voice = self.config.get("voice", 'Joanna')
         self.key_id = self.config.get("key_id", '')
         self.key = self.config.get("key", '')
         self.region = self.config.get("region", 'us-west-2')

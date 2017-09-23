@@ -17,7 +17,6 @@
 
 
 import subprocess
-import ctts
 from os import path
 
 from mycroft.tts import TTS, TTSValidator
@@ -37,6 +36,8 @@ class PicoEngine(object):
         lang_dir: An optional language directory where the requested language
         definition files can be found.
         """
+        import ctts
+        self.ctts = ctts
         _LANG_DIR = path.join(path.abspath(path.dirname(__file__)),
                               "languages")
         if not path.isdir(_LANG_DIR):
@@ -51,8 +52,8 @@ class PicoEngine(object):
         self.__e = None
         for ldir in lang_dirs:
             try:
-                self.__e = ctts.engine_create(language_dir=ldir,
-                                              language=language)
+                self.__e = self.ctts.engine_create(language_dir=ldir,
+                                                   language=language)
             except RuntimeError as ex:
                 pass  # Try next directory to find language...
             if self.__e:
@@ -77,7 +78,7 @@ class PicoEngine(object):
         data = []
         if callback is None:
             callback = lambda format, audio, fin: data.append(audio)
-        ctts.engine_speak(self.__e, text, callback)
+        self.ctts.engine_speak(self.__e, text, callback)
         if data:
             return b''.join(data)
 
@@ -126,25 +127,26 @@ class PicoEngine(object):
         """
         Set an engine property. Returns the effective property value.
         """
-        return ctts.engine_set_property(self.__e, property_name, value)
+        return self.ctts.engine_set_property(self.__e, property_name, value)
 
     def get_property(self, property_name):
         """
         Get an engine property value.
         """
-        return ctts.engine_get_property(self.__e, property_name)
+        return self.ctts.engine_get_property(self.__e, property_name)
 
     def stop(self):
         """
         Stop speech synthesis.
         """
-        return ctts.engine_stop(self.__e)
+        return self.ctts.engine_stop(self.__e)
 
 
 class Pico(TTS):
     def __init__(self, lang, voice):
         super(Pico, self).__init__(lang, voice, PicoValidator(self))
         self.engine = PicoEngine(self.lang)
+        self.type = "raw"
 
     def execute(self, sentence, output="/tmp/pico_tts.raw"):
         self.begin_audio()
