@@ -128,6 +128,9 @@ def load_skill(skill_descriptor, emitter, skill_id, BLACKLISTED_SKILLS=None):
                 callable(skill_module.create_skill)):
             # v2 skills framework
             skill = skill_module.create_skill()
+            if not skill.is_current_language_supported():
+                logger.info("SKILL DOES NOT SUPPORT CURRENT LANGUAGE")
+                return None
             skill.bind(emitter)
             skill.skill_id = skill_id
             skill.load_data_files(dirname(skill_descriptor['info'][1]))
@@ -283,6 +286,16 @@ class MycroftSkill(object):
         Usually used to create intents rules and register them.
         """
         LOG.debug("No initialize function implemented")
+    
+    def is_current_language_supported(self):
+        # if skill does not use vocab/regex it supports all languages
+        # if vocab/regex folder exists we can assume it supports language
+        if exists(join(self._dir, 'vocab', self.lang)) or \
+                exists(join(self._dir, 'regex', self.lang)) or \
+                (not exists(join(self._dir, 'vocab')) and not
+                    exists(join(self._dir, 'regex'))):
+            return True
+        return False
 
     def converse(self, utterances, lang="en-us"):
         """
