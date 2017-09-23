@@ -35,12 +35,13 @@ class RemoteTTS(TTS):
     whole sentence into small ones.
     """
 
-    def __init__(self, lang, config, api_path, validator):
+    def __init__(self, lang, config, validator):
         super(RemoteTTS, self).__init__(lang, config, validator)
-        self.api_path = api_path
-        url = self.config.get("url")
+        self.api_path = self.config.get("api_path")
+        url = self.config.get("url", "")
         self.url = remove_last_slash(url)
         self.session = FuturesSession()
+        self.auth = None
 
     def execute(self, sentence):
         phrases = self.__get_phrases(sentence)
@@ -69,6 +70,11 @@ class RemoteTTS(TTS):
         return reqs
 
     def __request(self, p):
+        if self.auth:
+            return self.session.get(
+                self.url + self.api_path,
+                auth=self.auth, params=self.build_request_params(p),
+                timeout=10, verify=False)
         return self.session.get(
             self.url + self.api_path, params=self.build_request_params(p),
             timeout=10, verify=False)

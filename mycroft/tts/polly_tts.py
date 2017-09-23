@@ -22,7 +22,6 @@ from contextlib import closing
 from tempfile import gettempdir
 
 from mycroft.tts import TTS, TTSValidator
-from mycroft.configuration import ConfigurationManager
 from mycroft.util.log import getLogger
 from mycroft.util import play_mp3
 
@@ -34,20 +33,17 @@ __author__ = 'jarbas'
 class Polly(TTS):
     def __init__(self, lang, voice):
         super(Polly, self).__init__(lang, voice, PollyValidator(self))
-        config = ConfigurationManager.get().get('tts', {}).get("polly", {})
         try:
             from boto3 import Session
         except:
             logger.error("Missing boto3 python requirement for PollyTTS")
         # FS cache
-        self.cache = config.get("cache", True)
+        self.cache = self.config.get("cache", True)
         # Voice ID
-        self.voice = config.get("voice", 'Joanna')
-        # AWS data: if profile is defined it has priority
-        self.profile = config.get("profile", 'default')
-        self.key_id = config.get("key_id", '')
-        self.key = config.get("key", '')
-        self.region = config.get("region", 'us-west-2')
+        self.voice = self.config.get("voice", 'Joanna')
+        self.key_id = self.config.get("key_id", '')
+        self.key = self.config.get("key", '')
+        self.region = self.config.get("region", 'us-west-2')
         session = Session(aws_access_key_id=self.key_id,
                           aws_secret_access_key=self.key,
                           region_name=self.region)
