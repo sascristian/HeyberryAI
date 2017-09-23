@@ -276,10 +276,14 @@ class MycroftSkill(object):
         self.message_context = self.get_message_context()
 
     def is_current_language_supported(self):
-        # for backward compatibility, by default,
-        # en-US is the only language supported.
-        # return unconditionally True if all languages are supported.
-        return self.lang == "en-us"
+        # if skill does not use vocab/regex it supports all languages
+        # if vocab/regex folder exists we can assume it supports language
+        if exists(join(self._dir, 'vocab', self.lang)) or \
+                exists(join(self._dir, 'regex', self.lang)) or \
+                (not exists(join(self._dir, 'vocab')) and not
+                exists(join(self._dir, 'regex'))):
+            return True
+        return False
 
     @property
     def location(self):
