@@ -164,7 +164,7 @@ echo "Building with $CORES cores."
 cd "${TOP}"
 
 # install pygtk for desktop_launcher skill
-"${TOP}/scripts/install-pygtk.sh" " ${CORES}"
+# "${TOP}/scripts/install-pygtk.sh" " ${CORES}"
 
 # md5sum requirements.txt dev_setup.sh > .installed
 
