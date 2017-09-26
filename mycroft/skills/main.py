@@ -55,12 +55,12 @@ PRIORITY_SKILLS = skills_config.get("priority_skills", [])
 
 SKILLS_DIR = skills_config.get("directory")
 if SKILLS_DIR is None or SKILLS_DIR == "default":
-    SKILLS_DIR = join(MYCROFT_ROOT_PATH, "mycroft/skills/jarbas_skills")
+    SKILLS_DIR = join(MYCROFT_ROOT_PATH, "mycroft/jarbas_skills")
 
 # TODO remove this, only for dev testing
-SKILLS_DIR = join(MYCROFT_ROOT_PATH, "mycroft/skills/jarbas_skills")
+SKILLS_DIR = join(MYCROFT_ROOT_PATH, "mycroft/jarbas_skills")
 
-DEFAULT_SKILLS = skills_config.get("default_skills",
+DEFAULT_SKILLS = skills_config.get("msm_skills",
                                    ["skill-alarm", "skill-audio-record",
                                     "skill-date-time",
                                     "skill-desktop-launcher",
