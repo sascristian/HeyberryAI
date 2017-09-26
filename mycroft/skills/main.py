@@ -26,7 +26,6 @@ import os
 from os.path import exists, join
 
 import mycroft.dialog
-from mycroft import MYCROFT_ROOT_PATH
 from mycroft.api import is_paired
 from mycroft.configuration import ConfigurationManager
 from mycroft.lock import Lock  # Creates PID file for single instance
@@ -39,6 +38,7 @@ from mycroft.skills.intent_service import IntentService
 from mycroft.skills.padatious_service import PadatiousService
 from mycroft.util import connected
 from mycroft.util.log import LOG
+from mycroft import MYCROFT_ROOT_PATH
 
 __author__ = 'seanfitz'
 
@@ -53,10 +53,49 @@ skills_config = ConfigurationManager.instance().get("skills")
 BLACKLISTED_SKILLS = skills_config.get("blacklisted_skills", [])
 PRIORITY_SKILLS = skills_config.get("priority_skills", [])
 
-SKILLS_DIR = '/opt/mycroft/skills'
+SKILLS_DIR = skills_config.get("directory")
+if SKILLS_DIR is None or SKILLS_DIR == "default":
+    SKILLS_DIR = join(MYCROFT_ROOT_PATH, "mycroft/skills/jarbas_skills")
+
+# TODO remove this, only for dev testing
+SKILLS_DIR = join(MYCROFT_ROOT_PATH, "mycroft/skills/jarbas_skills")
+
+DEFAULT_SKILLS = skills_config.get("default_skills",
+                                   ["skill-alarm", "skill-audio-record",
+                                    "skill-date-time",
+                                    "skill-desktop-launcher",
+                                    "skill-ip", "skill-joke",
+                                    "skill-hello-world",
+                                    "skill-media",
+                                    "skill-naptime", "skill-personal",
+                                    "skill-playback-control",
+                                    "skill-reminder",
+                                    "skill-installer", "skill-singing",
+                                    "skill-speak",
+                                    "skill-spelling", "skill-stop",
+                                    "skill-stock",
+                                    "skill-volume"])
 
 installer_config = ConfigurationManager.instance().get("SkillInstallerSkill")
-MSM_BIN = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm', 'msm'))
+MSM_PATH = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm'))
+MSM_BIN = join(MSM_PATH, 'msm')
+
+
+def msm_skills_dir():
+    try:
+        if not exists(SKILLS_DIR):
+            os.mkdir(SKILLS_DIR)
+        LOG.info("updating msm SKILLS_DIR from config")
+        msm_skills = join(MSM_PATH, "msm_skills_path")
+        with open(msm_skills, "w") as f:
+            f.write(SKILLS_DIR)
+        LOG.info("updating msm DEFAULT_SKILLS from config")
+        msm_defaults = join(MSM_PATH, "msm_skills_defaults")
+        with open(msm_defaults, "w") as f:
+            for skill in DEFAULT_SKILLS:
+                f.write(skill + " ")
+    except Exception as e:
+        LOG.error(e)
 
 
 def connect():
@@ -71,6 +110,8 @@ def install_default_skills(speak=True):
         Args:
             speak (optional): Enable response for success. Default True
     """
+    # update skills dir for msm
+    msm_skills_dir()
     if exists(MSM_BIN):
         p = subprocess.Popen(MSM_BIN + " default", stderr=subprocess.STDOUT,
                              stdout=subprocess.PIPE, shell=True)
@@ -139,8 +180,8 @@ def _starting_up():
 
     # Create skill_manager listener and invoke the first time
     ws.on('skill_manager', skills_manager)
-    ws.on('mycroft.internet.connected', install_default_skills)
     ws.emit(Message('skill_manager', {}))
+    ws.on('mycroft.internet.connected', install_default_skills)
 
     # Create the Intent manager, which converts utterances to intents
     # This is the heart of the voice invoked skill system
@@ -283,7 +324,7 @@ class WatchSkills(Thread):
                         continue
                     # checking if skill was modified
                     elif (skill.get("instance") and modified >
-                            last_modified_skill):
+                        last_modified_skill):
                         # checking if skill should be reloaded
                         if not skill["instance"].reload_skill:
                             continue
@@ -298,7 +339,7 @@ class WatchSkills(Thread):
                                 "After shutdown of {} there are still "
                                 "{} references remaining. The skill "
                                 "won't be cleaned from memory."
-                                .format(skill['instance'].name, refs))
+                                    .format(skill['instance'].name, refs))
                         del skill["instance"]
                     skill["loaded"] = True
                     skill["instance"] = load_skill(

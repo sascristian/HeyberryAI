@@ -45,20 +45,14 @@ function help() {
   exit 1
 }
 
-
+TOP=$(cd $(dirname $0) && pwd -L)
 # These skills are automatically installed on all mycroft-core
 # installations.
-DEFAULT_SKILLS="skill-alarm skill-audio-record skill-configuration "\
-"skill-date-time skill-desktop-launcher skill-ip skill-joke "\
-"skill-hello-world skill-media skill-npr-news skill-naptime skill-pairing "\
-"skill-personal skill-playback-control skill-reminder skill-installer "\
-"skill-singing skill-speak skill-spelling skill-stop skill-stock "\
-"skill-volume skill-weather skill-wiki "\
-"fallback-aiml skill-mark1-demo "
-
+DEFAULT_SKILLS=$(cat $TOP/msm_skills_defaults)
 
 # Determine the location of the Skill folder
-mycroft_skill_folder=${mycroft_skill_folder:-"/opt/mycroft/skills"}
+mycroft_skill_folder=$(cat $TOP/msm_skills_path)
+
 if [[ ! -d "${mycroft_skill_folder}" ]] ; then
   echo "ERROR: Unable to find/access ${mycroft_skill_folder}!"
   exit 101
