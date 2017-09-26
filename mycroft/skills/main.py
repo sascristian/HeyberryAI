@@ -52,18 +52,54 @@ last_modified_skill = 0
 skill_reload_thread = None
 skills_manager_timer = None
 id_counter = 0
-installer_config = ConfigurationManager.instance().get("SkillInstallerSkill")
-MSM_BIN = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm', 'msm'))
 
 skills_config = ConfigurationManager.instance().get("skills")
-config_dir = skills_config.get("directory", "default")
-if config_dir == "default":
-    SKILLS_DIR = join(MYCROFT_ROOT_PATH, "jarbas_skills")
-else:
-    SKILLS_DIR = config_dir
-
 PRIORITY_SKILLS = skills_config["priority_skills"]
 BLACKLISTED_SKILLS = skills_config["blacklisted_skills"]
+
+SKILLS_DIR = skills_config.get("directory")
+if SKILLS_DIR is None or SKILLS_DIR == "default":
+    SKILLS_DIR = join(MYCROFT_ROOT_PATH, "jarbas_skills")
+
+# TODO remove this, only for dev testing
+# SKILLS_DIR = join(MYCROFT_ROOT_PATH, "mycroft/jarbas_skills")
+
+DEFAULT_SKILLS = skills_config.get("msm_skills",
+                                   ["skill-alarm", "skill-audio-record",
+                                    "skill-date-time",
+                                    "skill-desktop-launcher",
+                                    "skill-ip", "skill-joke",
+                                    "skill-hello-world",
+                                    "skill-media",
+                                    "skill-naptime", "skill-personal",
+                                    "skill-playback-control",
+                                    "skill-reminder",
+                                    "skill-installer", "skill-singing",
+                                    "skill-speak",
+                                    "skill-spelling", "skill-stop",
+                                    "skill-stock",
+                                    "skill-volume"])
+
+installer_config = ConfigurationManager.instance().get("SkillInstallerSkill")
+MSM_PATH = installer_config.get("path", join(MYCROFT_ROOT_PATH, 'msm'))
+MSM_BIN = join(MSM_PATH, 'msm')
+
+
+def msm_skills_dir():
+    try:
+        if not exists(SKILLS_DIR):
+            os.mkdir(SKILLS_DIR)
+        LOG.info("updating msm SKILLS_DIR from config")
+        msm_skills = join(MSM_PATH, "msm_skills_path")
+        with open(msm_skills, "w") as f:
+            f.write(SKILLS_DIR)
+        LOG.info("updating msm DEFAULT_SKILLS from config")
+        msm_defaults = join(MSM_PATH, "msm_skills_defaults")
+        with open(msm_defaults, "w") as f:
+            for skill in DEFAULT_SKILLS:
+                f.write(skill + " ")
+    except Exception as e:
+        LOG.error(e)
 
 
 def connect():
@@ -78,6 +114,7 @@ def install_default_skills(speak=True):
         Args:
             speak (optional): Enable response for success. Default True
     """
+    msm_skills_dir()
     if exists(MSM_BIN):
         p = subprocess.Popen(MSM_BIN + " default", stderr=subprocess.STDOUT,
                              stdout=subprocess.PIPE, shell=True)
@@ -150,8 +187,9 @@ def _starting_up():
     # Create skill_manager listener and invoke the first time
     if msm:
         ws.on('skill_manager', skills_manager)
-        ws.on('mycroft.internet.connected', install_default_skills)
         ws.emit(Message('skill_manager', {}))
+        ws.on('mycroft.internet.connected', install_default_skills)
+
 
     # Create the Intent manager, which converts utterances to intents
     # This is the heart of the voice invoked skill system
