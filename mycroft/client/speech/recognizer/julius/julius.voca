@@ -1,0 +1,121 @@
+% NS_B
+<s>        sil
+
+% NS_E
+</s>        sil
+
+% WAKEWORD
+A'BODY     ey b aa d iy
+A'COURT    ey k ao r t
+A'GHA      ey g ah
+A'GOIN     ey g oy n
+A'LL       ey l
+LUX l uh k s
+LACER l ae z er
+ALEXIA ae l ax k s iy ax
+PI p ay
+A'M        ey m
+A'MIGHTY   ey m ay t iy
+A'MOST     ey m ow s t
+AAANTHOR   t r ih p ah l ey n th er
+AABERG     aa b er g
+AACHEN     aa k ah n
+AACHENER   aa k ah n er
+MOULTHROP  m aw l th r ah p
+MOULTING   m aw l t ih ng
+MOULTON    m ow l t ah n
+MOULTON'S  m ow l t ah n z
+MOULTRIE   m ow l t r iy
+AAGOT      aa g ah t
+AAHMES     aa m z
+AAKER      aa k er
+AALBOM     aa l b ao m
+AALIYAH    aa l iy aa
+AALSETH    aa l s eh th
+SEEX       s iy eh k s
+SEEZ       s iy z
+SEF        s eh f
+SEFCIK     s eh f s ih k
+SEFER      s ih f er
+TOMAHAWK   t aa m ah hh ao k
+WIGGLES    w ih g ah l z
+PHONE        f ow n
+CALL        k ao l
+
+% ABORT
+CANCEL k ae n s ax l
+
+% DOWN
+DOWN d aw n
+
+%QUIT
+
+QUIT k w ih t
+
+%CLEAR
+
+CLEAR k l ih r
+
+% MPC_COMMANDS
+NEXT n eh k s t
+PREV p r iy v
+PAUSE p ao z
+PAUSE ax n p aw
+PAUSE p l ey
+STOP s t aa p
+
+% MUTE
+MUTE m y uw
+MUTE ax n m uw d
+MUTE s ay l ax n s
+MUTE sh ah t ax b
+
+% PERCENT
+PERCENT p er s eh n t
+
+% SET
+SET s eh t
+PLAY p l ey
+TOGGLE t aa g ax l
+MUSIC m y uw z ix k
+
+% SONG
+SONG s ao ng
+
+% SHUT
+SHUT sh ah t
+
+% VOLUME
+VOLUME v aa l y uw m
+
+% DIRECTIONAL_COMMANDS
+UP ah p
+DOWN d aw n
+
+% ONE
+ONE w ah n
+% HUNDRED
+HUNDRED hh ah n d r ax d
+HUNDRED f uh l
+
+% FIVE
+FIVE f ay v
+
+% FIVE_NUMBERS
+ONE w ah n
+TWO t uw
+THREE th r iy
+FOUR f ao r
+FIVE f ay v
+TEN t eh n
+FIFTEEN f ix f t iy n
+
+% TEN_NUMBERS
+TWENTY t w eh n t iy
+THIRTY th er dx iy
+FORTY f ao r dx iy
+FIFTY f ih f t iy
+SIXTY s ih k s t iy
+SEVENTY s eh v ax n t iy
+EIGHTY ey dx iy
+NINTY n ay n t iy
