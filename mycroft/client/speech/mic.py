@@ -1,17 +1,21 @@
-# Copyright 2017 Mycroft AI Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+""" Copyright 2016 Mycroft AI, Inc.
+
+ This file is part of Mycroft Core.
+
+ Mycroft Core is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Mycroft Core is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 import audioop
 import collections
 import datetime
@@ -31,7 +35,7 @@ from speech_recognition import (
     AudioData
 )
 
-from mycroft.configuration import ConfigurationManager
+from mycroft.configuration import Configuration
 from mycroft.session import SessionManager
 from mycroft.util import (
     check_for_signal,
@@ -40,6 +44,8 @@ from mycroft.util import (
     play_wav
 )
 from mycroft.util.log import LOG
+
+__author__ = 'seanfitz'
 
 
 class MutableStream(object):
@@ -156,7 +162,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
 
     def __init__(self, wake_word_recognizer):
 
-        self.config = ConfigurationManager.instance()
+        self.config = Configuration.get()
         listener_config = self.config.get('listener')
         self.upload_config = listener_config.get('wake_word_upload')
         self.wake_word_name = listener_config['wake_word']
@@ -177,7 +183,7 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
 
         self.save_utterances = listener_config.get('record_utterances', False)
         self.save_wake_words = listener_config.get('record_wake_words') \
-            or self.upload_config['enable'] or self.config['opt_in']
+            or self.upload_config['enable']
         self.upload_lock = Lock()
         self.save_wake_words_dir = join(gettempdir(), 'mycroft_wake_words')
         self.filenames_to_upload = []
@@ -424,27 +430,39 @@ class ResponsiveRecognizer(speech_recognition.Recognizer):
                 chopped = byte_data[-test_size:] \
                     if test_size < len(byte_data) else byte_data
                 audio_data = chopped + silence
-                said_wake_word = \
-                    self.wake_word_recognizer.found_wake_word(audio_data)
+                if self.wake_word_recognizer.need_wav:
+                    wav_path = self.audio_to_wave(byte_data, source, "temp")
+                    said_wake_word = \
+                        self.wake_word_recognizer.found_wake_word_from_wav(
+                            wav_path)
+                else:
+                    said_wake_word = \
+                        self.wake_word_recognizer.found_wake_word(audio_data)
                 # if a wake word is success full then record audio in temp
                 # file.
                 if self.save_wake_words and said_wake_word:
-                    audio = self._create_audio_data(byte_data, source)
-                    stamp = str(int(1000 * get_time()))
-                    uid = SessionManager.get().session_id
-                    if not isdir(self.save_wake_words_dir):
-                        mkdir(self.save_wake_words_dir)
-
-                    dr = self.save_wake_words_dir
-                    ww = self.wake_word_name.replace(' ', '-')
-                    filename = join(dr, ww + '.' + stamp + '.' + uid + '.wav')
-                    with open(filename, 'wb') as f:
-                        f.write(audio.get_wav_data())
-
-                    if self.upload_config['enable'] or self.config['opt_in']:
+                    filename = self.audio_to_wave(byte_data, source)
+                    if self.upload_config['enable']:
                         t = Thread(target=self._upload_file, args=(filename,))
                         t.daemon = True
                         t.start()
+
+    def audio_to_wave(self, byte_data, source, name=None):
+        audio = self._create_audio_data(byte_data, source)
+        stamp = str(int(1000 * get_time()))
+        uid = SessionManager.get().session_id
+        if not isdir(self.save_wake_words_dir):
+            mkdir(self.save_wake_words_dir)
+
+        dr = self.save_wake_words_dir
+        ww = self.wake_word_name.replace(' ', '-')
+        if name:
+            filename = join(dr, name + '.' + uid + '.wav')
+        else:
+            filename = join(dr, ww + '.' + stamp + '.' + uid + '.wav')
+        with open(filename, 'wb') as f:
+            f.write(audio.get_wav_data())
+        return filename
 
     @staticmethod
     def _create_audio_data(raw_data, source):
