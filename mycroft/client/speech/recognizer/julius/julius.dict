@@ -9,7 +9,6 @@
 2	[BOB]	b aa b
 2	[JOHNSTON]	jh aa n s t ah n
 2	[JOHN]	jh aa n
-2	[JORDAN]	jh ao r d ah n
 2	[JOE]	jh ow
 2	[DUMMY]	f ow n
 2	[DUMMY]	k ao l
@@ -43,11 +42,9 @@
 15	[EIGHT]	ey t
 15	[OH]	ow
 15	[ONE]	w ah n
-15	[SEVEN]	s eh v ah n
 15	[SIX]	s ih k s
 15	[THREE]	th r iy
 15	[TWO]	t uw
-15	[ZERO]	z iy r ow
 16	[HUNDRED]	hh ah n d r ax d
 16	[HUNDRED]	f uh l
 17	[TEN]	t eh n

@@ -14,7 +14,6 @@ YOUNG      y ah ng
 BOB        b aa b
 JOHNSTON   jh aa n s t ah n
 JOHN       jh aa n
-JORDAN     jh ao r d ah n
 JOE        jh ow
 DUMMY      f ow n
 DUMMY      k ao l
@@ -76,11 +75,9 @@ NINE       n ay n
 EIGHT      ey t
 OH         ow
 ONE        w ah n
-SEVEN      s eh v ah n
 SIX        s ih k s
 THREE      th r iy
 TWO        t uw
-ZERO       z iy r ow
 
 % HUNDRED
 HUNDRED hh ah n d r ax d
