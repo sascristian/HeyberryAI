@@ -1,23 +1,18 @@
 0	[<s>]	sil
 1	[</s>]	sil
-2	[A'COURT]	ey k ao r t
-2	[A'LL]	ey l
 2	[LUX]	l uh k s
 2	[LACER]	l ae z er
 2	[ALEXIA]	ae l ax k s iy ax
 2	[PI]	p ay
-2	[A'M]	ey m
-2	[AABERG]	aa b er g
-2	[MOUL]	m ow l
-2	[AAGA]	aa g ah
-2	[AAHMES]	aa m z
-2	[AAKER]	aa k er
-2	[AALIYAH]	aa l iy aa
-2	[SEEX]	s iy eh k s
-2	[SEEZ]	s iy z
-2	[SEFER]	s ih f er
-2	[PHONE]	f ow n
-2	[CALL]	k ao l
+2	[STEVE]	s t iy v
+2	[YOUNG]	y ah ng
+2	[BOB]	b aa b
+2	[JOHNSTON]	jh aa n s t ah n
+2	[JOHN]	jh aa n
+2	[JORDAN]	jh ao r d ah n
+2	[JOE]	jh ow
+2	[DUMMY]	f ow n
+2	[DUMMY]	k ao l
 3	[CANCEL]	k ae n s ax l
 4	[DOWN]	d aw n
 5	[QUIT]	k w ih t
@@ -42,22 +37,26 @@
 13	[VOLUME]	v aa l y uw m
 14	[UP]	ah p
 14	[DOWN]	d aw n
+15	[FIVE]	f ay v
+15	[FOUR]	f ao r
+15	[NINE]	n ay n
+15	[EIGHT]	ey t
+15	[OH]	ow
 15	[ONE]	w ah n
+15	[SEVEN]	s eh v ah n
+15	[SIX]	s ih k s
+15	[THREE]	th r iy
+15	[TWO]	t uw
+15	[ZERO]	z iy r ow
 16	[HUNDRED]	hh ah n d r ax d
 16	[HUNDRED]	f uh l
-17	[FIVE]	f ay v
-18	[ONE]	w ah n
-18	[TWO]	t uw
-18	[THREE]	th r iy
-18	[FOUR]	f ao r
-18	[FIVE]	f ay v
-18	[TEN]	t eh n
-18	[FIFTEEN]	f ix f t iy n
-19	[TWENTY]	t w eh n t iy
-19	[THIRTY]	th er dx iy
-19	[FORTY]	f ao r dx iy
-19	[FIFTY]	f ih f t iy
-19	[SIXTY]	s ih k s t iy
-19	[SEVENTY]	s eh v ax n t iy
-19	[EIGHTY]	ey dx iy
-19	[NINTY]	n ay n t iy
+17	[TEN]	t eh n
+17	[FIFTEEN]	f ix f t iy n
+17	[TWENTY]	t w eh n t iy
+17	[THIRTY]	th er dx iy
+17	[FORTY]	f ao r dx iy
+17	[FIFTY]	f ih f t iy
+17	[SIXTY]	s ih k s t iy
+17	[SEVENTY]	s eh v ax n t iy
+17	[EIGHTY]	ey dx iy
+17	[NINTY]	n ay n t iy

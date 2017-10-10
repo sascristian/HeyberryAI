@@ -5,42 +5,19 @@
 </s>        sil
 
 % WAKEWORD
-A'BODY     ey b aa d iy
-A'COURT    ey k ao r t
-A'GHA      ey g ah
-A'GOIN     ey g oy n
-A'LL       ey l
 LUX l uh k s
 LACER l ae z er
 ALEXIA ae l ax k s iy ax
 PI p ay
-A'M        ey m
-A'MIGHTY   ey m ay t iy
-A'MOST     ey m ow s t
-AAANTHOR   t r ih p ah l ey n th er
-AABERG     aa b er g
-AACHEN     aa k ah n
-AACHENER   aa k ah n er
-MOULTHROP  m aw l th r ah p
-MOULTING   m aw l t ih ng
-MOULTON    m ow l t ah n
-MOULTON'S  m ow l t ah n z
-MOULTRIE   m ow l t r iy
-AAGOT      aa g ah t
-AAHMES     aa m z
-AAKER      aa k er
-AALBOM     aa l b ao m
-AALIYAH    aa l iy aa
-AALSETH    aa l s eh th
-SEEX       s iy eh k s
-SEEZ       s iy z
-SEF        s eh f
-SEFCIK     s eh f s ih k
-SEFER      s ih f er
-TOMAHAWK   t aa m ah hh ao k
-WIGGLES    w ih g ah l z
-PHONE        f ow n
-CALL        k ao l
+STEVE	   s t iy v
+YOUNG      y ah ng
+BOB        b aa b
+JOHNSTON   jh aa n s t ah n
+JOHN       jh aa n
+JORDAN     jh ao r d ah n
+JOE        jh ow
+DUMMY      f ow n
+DUMMY      k ao l
 
 % ABORT
 CANCEL k ae n s ax l
@@ -92,25 +69,26 @@ VOLUME v aa l y uw m
 UP ah p
 DOWN d aw n
 
-% ONE
-ONE w ah n
+% DIGITS
+FIVE       f ay v
+FOUR       f ao r
+NINE       n ay n
+EIGHT      ey t
+OH         ow
+ONE        w ah n
+SEVEN      s eh v ah n
+SIX        s ih k s
+THREE      th r iy
+TWO        t uw
+ZERO       z iy r ow
+
 % HUNDRED
 HUNDRED hh ah n d r ax d
 HUNDRED f uh l
 
-% FIVE
-FIVE f ay v
-
-% FIVE_NUMBERS
-ONE w ah n
-TWO t uw
-THREE th r iy
-FOUR f ao r
-FIVE f ay v
+% TEN_NUMBERS
 TEN t eh n
 FIFTEEN f ix f t iy n
-
-% TEN_NUMBERS
 TWENTY t w eh n t iy
 THIRTY th er dx iy
 FORTY f ao r dx iy
