@@ -36,6 +36,7 @@ pychromecast==0.7.7
 python-vlc==1.1.2
 pulsectl==17.7.4
 aiml==0.8.6
+pronouncing==0.1.5
 
 # Also update in mycroft/skills/padatious_service.py
 padatious==0.3.4
