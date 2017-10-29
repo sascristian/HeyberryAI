@@ -1,4 +1,4 @@
-from speech_recognition import Recognizer, AudioData, RequestError, \
+from speech_recognition import AudioData, RequestError, \
     PortableNamedTemporaryFile, UnknownValueError
 from mycroft import MYCROFT_ROOT_PATH
 import os
@@ -6,7 +6,7 @@ import os
 from pocketsphinx import pocketsphinx, Jsgf, FsgModel
 
 
-class PS_Recognizer(Recognizer):
+class PS_Recognizer(object):
     def __init__(self, language="en-US", language_directory=None,
                  acoustic_parameters_directory=None,
                  language_model_file=None, phoneme_dictionary_file=None):
