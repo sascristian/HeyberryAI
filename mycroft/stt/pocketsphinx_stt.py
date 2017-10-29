@@ -20,9 +20,9 @@ class PS_Recognizer(object):
                 "missing PocketSphinx language data directory: \"{}\"".format(
                     language_directory))
 
-        acoustic_parameters_directory = acoustic_parameters_directory or \
-                                        os.path.join(language_directory,
-                                                     "hmm")
+        acoustic_parameters_directory = \
+            acoustic_parameters_directory or \
+            os.path.join(language_directory, "hmm")
         if not os.path.isdir(acoustic_parameters_directory):
             raise RequestError(
                 "missing PocketSphinx language model parameters directory: "
@@ -72,10 +72,10 @@ class PS_Recognizer(object):
         # obtain recognition results
         if keyword_entries is not None:  # explicitly specified set of keywords
             with PortableNamedTemporaryFile("w") as f:
-                # generate a keywords file - Sphinx documentation recommendeds sensitivities between 1e-50 and 1e-5
+                # generate a keywords file
                 f.writelines(
-                    "{} /1e{}/\n".format(keyword, 100 * sensitivity - 110) for
-                    keyword, sensitivity in keyword_entries)
+                    "{} /1e{}/\n".format(keyword, 100 * sensitivity - 110)
+                    for keyword, sensitivity in keyword_entries)
                 f.flush()
 
                 # perform the speech recognition with the keywords file
@@ -114,5 +114,6 @@ class PS_Recognizer(object):
 
         # return results
         hypothesis = self.decoder.hyp()
-        if hypothesis is not None: return hypothesis.hypstr
+        if hypothesis is not None: 
+            return hypothesis.hypstr
         raise UnknownValueError()  # no transcriptions available
