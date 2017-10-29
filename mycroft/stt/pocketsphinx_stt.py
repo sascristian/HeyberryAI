@@ -114,6 +114,6 @@ class PS_Recognizer(object):
 
         # return results
         hypothesis = self.decoder.hyp()
-        if hypothesis is not None: 
+        if hypothesis is not None:
             return hypothesis.hypstr
         raise UnknownValueError()  # no transcriptions available
