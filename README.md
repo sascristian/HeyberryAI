@@ -4,6 +4,12 @@
 
 Jarbas is a fork of mycroft-core
 
+This repo is now deprecated, fork being redone from scratch, updated links
+
+* new account -https://github.com/JarbasAl
+* dev branch - https://github.com/JarbasAl/jarbas-core
+* private edition -https://github.com/JarbasAl/jarbas-core/tree/private
+* server edition - https://github.com/JarbasAl/jarbas-core/tree/server
 
 # THERE BE DRAGONS
 
