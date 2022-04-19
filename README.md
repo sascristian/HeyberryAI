@@ -12,13 +12,9 @@ HeyBerry & Jarbas is a fork of mycroft-core
 # THERE BE DRAGONS
 
 everything can break anytime!
-things designed for mycroft may not work with HeyBerry and Jarbas!
-some things designed for Jarbas and HeyBerry wont work in ycroft!
-support for this branch is limited to me alone, folks from mycroft community may not be able to help
+things designed for Mycroft may not work with HeyBerry and Jarbas!
+some things designed for Jarbas and HeyBerry wont work in Mycroft!
 
-
-that said, everything that works in mycroft i try to make work with jarbas,
-but i give absolutely no warranty of this!
 
 - bus address is different, but it is supposed to be configured in config file,
 that means the 3rd party should support it and not hard code it
