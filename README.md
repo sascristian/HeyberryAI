@@ -1,8 +1,8 @@
 
 
-# Jarbas
+# HeyBerry A.I
 
-Jarbas is a fork of mycroft-core
+HeyBerry & Jarbas is a fork of mycroft-core
 
 
 # THERE BE DRAGONS
@@ -12,8 +12,8 @@ Jarbas is a fork of mycroft-core
 # THERE BE DRAGONS
 
 everything can break anytime!
-things designed for mycroft may not work with jarbas!
-some things designed for jarbas wont work in mycroft!
+things designed for mycroft may not work with HeyBerry and Jarbas!
+some things designed for Jarbas and HeyBerry wont work in ycroft!
 support for this branch is limited to me alone, folks from mycroft community may not be able to help
 
 
