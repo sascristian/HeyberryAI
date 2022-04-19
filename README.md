@@ -1,7 +1,7 @@
 
 
 # HeyBerry A.I
-
+From A.I to AGI/ASI and beyond.
 HeyBerry & Jarbas is a fork of mycroft-core
 
 This repo is now deprecated, fork being redone from scratch, updated links
