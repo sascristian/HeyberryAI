@@ -30,7 +30,7 @@ wifi==0.3.8
 pyric==0.1.6
 inflection==0.3.1
 pytz==2017.2
-pillow==9.0.1
+pillow==9.3.0
 python-dateutil==2.6.0
 pychromecast==0.7.7
 python-vlc==1.1.2
